@@ -1,6 +1,6 @@
 # Welcome to our Article Translation Workflow
 
-## Hey there, awesome community!##
+## Hey there, awesome community!
 
 Excited to have you on board for our localization mission! Here's a simple guide to get you started:
 
