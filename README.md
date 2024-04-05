@@ -10,7 +10,7 @@ Please sign up through [this form](https://forms.gle/1w8umSbTF4JTPwyj9) if you h
 
 ### Pick Your Article
 
-Once you're in as a Collaborator, it's time to choose which article you'd like to work on. Check out the list of available issues/articles and pick the one that speaks to you.
+Once you're in as a Collaborator, it's time to choose which article you'd like to work on. Check out the list of available issues/articles and pick the one that speaks to you from the Project of the spoken language you would like to help on.
 
 ### Claim Your Article
 
