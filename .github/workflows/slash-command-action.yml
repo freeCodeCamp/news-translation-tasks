@@ -5,33 +5,36 @@ name: Issue Comments
 permissions:
   issues: write
 jobs:
-  check_comments:
-    name: Check comments for commands
+  validate_command:
+    name: Validate command
     runs-on: ubuntu-latest
-
-    # Run the jobs only if the new comment starts with '/'
+    # Run the job only if the new comment starts with '/'
     if: |
       !github.event.issue.pull_request && startsWith(github.event.comment.body, '/')
+    outputs:
+      valid_command: ${{ steps.command_check.outputs.valid_command }}
+      command: ${{ steps.command_check.outputs.command }}
+      target_status: ${{ steps.command_check.outputs.target_status }} # Which status to move the card to
     steps:
       - name: Validate command
         id: command_check
         run: |
           if [[ "${{ github.event.comment.body }}" == /translate* ]]; then
-            echo "COMMAND=translate" >> $GITHUB_ENV
-            echo "TARGET_STATUS=in Translation" >> $GITHUB_ENV
-            echo "VALID_COMMAND=true" >> $GITHUB_ENV
+            echo "::set-output name=command::translate"
+            echo "::set-output name=target_status::in Translation"
+            echo "::set-output name=valid_command::true"
           elif [[ "${{ github.event.comment.body }}" == /review* ]]; then
-            echo "COMMAND=review" >> $GITHUB_ENV
-            echo "TARGET_STATUS=in Review" >> $GITHUB_ENV
-            echo "VALID_COMMAND=true" >> $GITHUB_ENV
+            echo "::set-output name=command::review"
+            echo "::set-output name=target_status::in Review"
+            echo "::set-output name=valid_command::true"
           else
             echo "::warning::Invalid command. The comment must start with /translate or /review."
-            echo "VALID_COMMAND=false" >> $GITHUB_ENV
+            echo "::set-output name=valid_command::false"
           fi
 
       # Reply to the user if the command was invalid
-      - name: Feedback for invalid command # Notify user if the command was invalid
-        if: env.VALID_COMMAND == 'false'
+      - name: Feedback for invalid command
+        if: steps.command_check.outputs.valid_command != 'true'
         uses: actions/github-script@v7
         with:
           script: |
@@ -47,14 +50,18 @@ jobs:
             });
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      # Update the status according to the command
-      - name: Start processing a valid command
-        if: env.VALID_COMMAND == 'true'
-        run: |
-          echo "The command is '${{ env.COMMAND }}'"
-          echo "github.event.issue.node_id is ${{ github.event.issue.node_id }}"
+  get_project_card_info:
+      name: Get project card information
+      needs: validate_command
+      if: needs.validate_command.outputs.valid_command == 'true'
+      runs-on: ubuntu-latest
+      outputs:
+        cardId: ${{ steps.get_card.outputs.cardId }}
+        projectUrl: ${{ steps.get_card.outputs.projectUrl }}
+        projectName: ${{ steps.get_card.outputs.projectName }}
+      steps:
       - name: Get project card
-        if: env.VALID_COMMAND == 'true'
+        id: get_card
         uses: actions/github-script@v7
         env:
           ISSUE_NODE_ID: ${{ github.event.issue.node_id }}
@@ -69,6 +76,7 @@ jobs:
                       node {
                         id
                         url
+                        title
                         items(first: 100) {
                           edges {
                             node {
@@ -93,67 +101,59 @@ jobs:
             };
             const result = await github.graphql(query, variables);
             console.log(`Result: ${JSON.stringify(result)}`);
+
             const cardId = result.node.projectsV2.edges[0].node.items.edges.find(edge => edge.node.content.id === process.env.ISSUE_NODE_ID).node.id;
             const projectUrl = result.node.projectsV2.edges[0].node.url;
+            const projectName = result.node.projectsV2.edges[0].node.title;
+
             console.log(`Card ID: ${cardId}`);
             console.log(`Project URL: ${projectUrl}`);
+            console.log(`Project Name: ${projectName}`);
+
             core.setOutput('cardId', cardId);
             core.setOutput('projectUrl', projectUrl);
+            core.setOutput('projectName', projectName);
           github-token: ${{ secrets.MOVE_CARDS_TOKEN }}
-        id: get_card
-      - name: Update status in project
-        if: env.VALID_COMMAND == 'true'
-        uses: titoportas/update-project-fields@v0.1.0
-        with:
-          project-url: ${{ steps.get_card.outputs.projectUrl }}
-          github-token: ${{ secrets.MOVE_CARDS_TOKEN }}
-          item-id: ${{ steps.get_card.outputs.cardId }}
-          field-keys: Status
-          field-values: ${{ env.TARGET_STATUS }}
+
+  assign_issue:
+    name: Assign issue
+    needs: [validate_command, get_project_card_info]
+    if: needs.validate_command.outputs.valid_command == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout # Prepare to run the following scripts
+        uses: actions/checkout@v3
       - name: Assign issue to the commenter as translator
-        if: env.VALID_COMMAND == 'true' && env.COMMAND == 'translate'
+        if: needs.validate_command.outputs.command == 'translate'
         uses: actions/github-script@v7
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           script: |
-            let issueComment = '';
+            const script = require('./scripts/assignTranslator.js');
+            await script({github, context, core});
+      - name: Assign issue to the reviewer
+        if: needs.validate_command.outputs.command == 'review'
+        uses: actions/github-script@v7
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          script: |
+            const script = require('./scripts/assignReviewer.js');
+            const projectName = '${{ needs.get_project_card_info.outputs.projectName }}';
+            await script({github, context, core, projectName});
 
-            // Check that no one else is assigned yet before assigning the current user
-            try {
-              const issue = await github.rest.issues.get({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: context.issue.number
-              });
-
-              if (issue.data.assignees.length === 0) {
-                try {
-                  const response = await github.rest.issues.addAssignees({
-                    issue_number: context.issue.number,
-                    owner: context.repo.owner,
-                    repo: context.repo.repo,
-                    assignees: [context.actor]
-                  });
-                  issueComment = `@${{ github.event.comment.user.login }} We have assigned this article to you.`;
-                } catch (error) {
-                  issueComment = `@${{ github.event.comment.user.login }} Something went wrong while assigning the issue to you.
-                  Please contact your language lead if the problem persists.`;
-                }
-              } else if (issue.data.assignees.length === 1 && issue.data.assignees[0].login === context.actor) {
-                issueComment = `@${{ github.event.comment.user.login }} The article is already assigned to you.`;
-              } else {
-                issueComment = `@${{ github.event.comment.user.login }} The article is already assigned to someone else.
-                Please choose a different article to translate.`;
-              }
-            } catch (error) {
-              console.error('An error occurred while checking assignee:', error);
-              issueComment = `@${{ github.event.comment.user.login }} Something went wrong while checking the current assignee.
-              Please contact your language lead if the problem persists.`;
-            }
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: issueComment
-            });
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
+  update_project_card:
+    name: Update project card
+    needs: [validate_command, get_project_card_info, assign_issue]
+    if: needs.validate_command.outputs.valid_command == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update project card status
+        uses: titoportas/update-project-fields@v0.1.0
+        with:
+          project-url: ${{ needs.get_project_card_info.outputs.projectUrl }}
+          github-token: ${{ secrets.MOVE_CARDS_TOKEN }}
+          item-id: ${{ needs.get_project_card_info.outputs.cardId }}
+          field-keys: Status
+          field-values: ${{ needs.validate_command.outputs.target_status }}
