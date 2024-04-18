@@ -40,7 +40,6 @@ jobs:
           script: |
             const issueComment = `
             @${{ github.event.comment.user.login }} The command was invalid. The comment must start with /translate or /review.
-            If you are not sure how to use the command, reach out to your language lead. Thank you for contributing!
             `;
             github.rest.issues.createComment({
               issue_number: context.issue.number,
