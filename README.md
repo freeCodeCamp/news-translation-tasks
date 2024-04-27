@@ -20,7 +20,7 @@ Found the perfect piece to translate? Awesome! Just comment `/translate` on the 
 
 ### Ready for Review
 
-After you've translated your piece, give us a heads up by commenting `/review`. This will automatically move the card to the "in Revision" and let our Language Leads or Proofreaders know that it's time to revise your translation and prepare before potentially publishing it.
+After you've translated your piece, give us a heads up by commenting `/review`. This will automatically move the card to the "in Review" status and let our Language Leads or Proofreaders know that it's time to revise your translation and prepare before potentially publishing it.
 
 Easy peasy, right? We're stoked to have your help in bringing these articles and handbooks to new audiences around the world. 
 
