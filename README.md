@@ -14,11 +14,13 @@ Once you're in as a Collaborator, it's time to choose which article you'd like t
 
 ### Claim Your Article
 
-Found the perfect piece to translate? Awesome! Comment on the issue or article saying, "Assign this article to me." We'll then assign it to you, and you'll be all set to work your magic.
+Found the perfect piece to translate? Awesome! Just comment `/translate` on the issue. This will automatically assign the issue to you and move the card to the "in Translation" status.
 
-### Ready for Review: 
+*It may take a few minutes before the GitHub Actions workflow responds to the command. When it's done, it will add a comment "@username We have assigned this article to you."
 
-After you've translated your piece, give us a heads up by commenting, "Ready for Review." This will let our Language Leads or Proofreaders know that it's time to give your translation the once-over before potentially publishing it.
+### Ready for Review
+
+After you've translated your piece, give us a heads up by commenting `/review`. This will automatically move the card to the "in Review" status and let our Language Leads or Proofreaders know that it's time to revise your translation and prepare before potentially publishing it.
 
 Easy peasy, right? We're stoked to have your help in bringing these articles and handbooks to new audiences around the world. 
 
