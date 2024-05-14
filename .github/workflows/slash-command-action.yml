@@ -1,7 +1,7 @@
 on:
   issue_comment:
     types: [created]
-name: Issue Comments
+name: Move Project Cards
 
 jobs:
   validate_and_get_card:
