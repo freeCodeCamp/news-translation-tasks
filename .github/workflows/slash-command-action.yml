@@ -1,11 +1,11 @@
 on:
   issue_comment:
     types: [created]
-name: Issue Comments
+name: Move Project Cards
 
 jobs:
-  validate_command:
-    name: Validate command
+  validate_and_get_card:
+    name: Validate command and get project card info
     runs-on: ubuntu-latest
     permissions:
       issues: read
@@ -16,6 +16,9 @@ jobs:
       valid_command: ${{ steps.command_check.outputs.valid_command }}
       command: ${{ steps.command_check.outputs.command }}
       target_status: ${{ steps.command_check.outputs.target_status }} # Which status to move the card to
+      card_id: ${{ steps.get_card.outputs.card_id }}
+      project_url: ${{ steps.get_card.outputs.project_url }}
+      project_name: ${{ steps.get_card.outputs.project_name }}
     steps:
       - name: Validate command
         id: command_check
@@ -34,46 +37,9 @@ jobs:
             echo "::warning::Invalid command. The comment must start with /translate or /review."
             echo "::set-output name=valid_command::false"
           fi
-  command_feedback:
-    name: Command feedback
-    runs-on: ubuntu-latest
-    needs: validate_command
-    if: needs.validate_command.outputs.valid_command != 'true'
-    permissions:
-      issues: write
-    steps:
-      # Reply to the user if the command was invalid
-      - name: Add comment for invalid command
-        uses: actions/github-script@v7
-        env:
-          USER_LOGIN: ${{ github.event.comment.user.login }}
-        with:
-          script: |
-            const issueComment = `
-            @${process.env.USER_LOGIN} The command was invalid. The comment must start with /translate or /review.
-            `;
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: issueComment
-            });
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-  get_project_card_info:
-      name: Get project card information
-      needs: validate_command
-      permissions:
-        issues: read
-      if: needs.validate_command.outputs.valid_command == 'true'
-      runs-on: ubuntu-latest
-      outputs:
-        cardId: ${{ steps.get_card.outputs.cardId }}
-        projectUrl: ${{ steps.get_card.outputs.projectUrl }}
-        projectName: ${{ steps.get_card.outputs.projectName }}
-      steps:
       - name: Get project card
         id: get_card
+        if: steps.command_check.outputs.valid_command == 'true'
         uses: actions/github-script@v7
         env:
           ISSUE_NODE_ID: ${{ github.event.issue.node_id }}
@@ -122,23 +88,41 @@ jobs:
             console.log(`Project URL: ${projectUrl}`);
             console.log(`Project Name: ${projectName}`);
 
-            core.setOutput('cardId', cardId);
-            core.setOutput('projectUrl', projectUrl);
-            core.setOutput('projectName', projectName);
+            core.setOutput('card_id', cardId);
+            core.setOutput('project_url', projectUrl);
+            core.setOutput('project_name', projectName);
           github-token: ${{ secrets.MOVE_CARDS_TOKEN }}
 
   assign_issue:
-    name: Assign issue
-    needs: [validate_command, get_project_card_info]
-    if: needs.validate_command.outputs.valid_command == 'true'
+    name: Assign issue and update project card
+    needs: validate_and_get_card
     runs-on: ubuntu-latest
     permissions:
       issues: write
     steps:
-      - name: Checkout # Prepare to run the following scripts
+      - name: Add comment for invalid command # Reply to the user if the command was invalid
+        if: needs.validate_and_get_card.outputs.valid_command != 'true'
+        uses: actions/github-script@v7
+        env:
+          USER_LOGIN: ${{ github.event.comment.user.login }}
+        with:
+          script: |
+            const issueComment = `
+            @${process.env.USER_LOGIN} The command was invalid. The comment must start with /translate or /review.
+            `;
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: issueComment
+            });
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout # Checkout the scripts in this repo onto the runner
+        if: needs.validate_and_get_card.outputs.valid_command == 'true'
         uses: actions/checkout@v3
       - name: Assign issue to the commenter as translator
-        if: needs.validate_command.outputs.command == 'translate'
+        id: assign_translator
+        if: needs.validate_and_get_card.outputs.valid_command == 'true' && needs.validate_and_get_card.outputs.command == 'translate'
         uses: actions/github-script@v7
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -147,29 +131,22 @@ jobs:
             const script = require('./scripts/assignTranslator.js');
             await script({github, context, core});
       - name: Assign issue to the reviewer
-        if: needs.validate_command.outputs.command == 'review'
+        id: assign_reviewer
+        if: needs.validate_and_get_card.outputs.valid_command == 'true' && needs.validate_and_get_card.outputs.command == 'review'
         uses: actions/github-script@v7
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           script: |
             const script = require('./scripts/assignReviewer.js');
-            const projectName = '${{ needs.get_project_card_info.outputs.projectName }}';
+            const projectName = '${{ needs.validate_and_get_card.outputs.project_name }}';
             await script({github, context, core, projectName});
-
-  update_project_card:
-    name: Update project card
-    needs: [validate_command, get_project_card_info, assign_issue]
-    if: needs.validate_command.outputs.valid_command == 'true'
-    runs-on: ubuntu-latest
-    permissions:
-      issues: write
-    steps:
       - name: Update project card status
+        if: steps.assign_translator.outcome == 'success' || steps.assign_reviewer.outcome == 'success'
         uses: titoportas/update-project-fields@v0.1.0
         with:
-          project-url: ${{ needs.get_project_card_info.outputs.projectUrl }}
+          project-url: ${{ needs.validate_and_get_card.outputs.project_url }}
           github-token: ${{ secrets.MOVE_CARDS_TOKEN }}
-          item-id: ${{ needs.get_project_card_info.outputs.cardId }}
+          item-id: ${{ needs.validate_and_get_card.outputs.card_id }}
           field-keys: Status
-          field-values: ${{ needs.validate_command.outputs.target_status }}
+          field-values: ${{ needs.validate_and_get_card.outputs.target_status }}
