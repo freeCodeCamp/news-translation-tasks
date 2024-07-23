@@ -1,8 +1,8 @@
 ---
-name: Tarea de Traducción (Rastreo Automático)
-about: "Añadir nuevos artículos para traducir, usando acciones automáticas de GitHub para el rastreo automático."
-title: "[Auto][es-es] (reemplazar aquí con el título traducido en chino)"
-labels: Traducción-necesaria
+name: Tarea de Revisión (Traducción automática)
+about: "Añade nuevos artículos para revisar, usando acciones automáticas de GitHub para el rastreo y  la traducción automática."
+title: "[Auto][es-es] (reemplaza esta porción con el título traducido en español)"
+labels: Necesita-revisión
 assignees: ''
 ---
 
