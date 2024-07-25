@@ -24,7 +24,7 @@ module.exports = async ({ github, context, core }) => {
       // 如果分配成功（HTTP 状态码以 '2' 开头）
       if (response.status.toString().startsWith('2')) {
         // 设置评论内容，通知用户他们已被分配到该文章
-        issueComment = `@${context.actor} We have assigned this article to you.`;
+        issueComment = `@${context.actor} We have assigned this article to you for proofreading.`;
       } else {
         // 如果分配失败，记录错误状态码
         console.error('addAssignees returned HTTP status:', response.status);
@@ -40,16 +40,16 @@ module.exports = async ({ github, context, core }) => {
       issue.data.assignees[0].login === context.actor
     ) {
       // 设置评论内容，通知用户该文章已经分配给他们
-      issueComment = `@${context.actor} The article is already assigned to you.`;
+      issueComment = `@${context.actor} The article is already assigned to you for proofreading.`;
       // 标记工作流失败
       core.setFailed('The article is already assigned to the commenter.');
       // 如果当前 issue 已经被分配给其他用户
     } else {
-      // 设置评论内容，通知用户该文章已经分配给其他人，并建议他们选择其他文章进行翻译
+      // 设置评论内容，通知用户该文章已经分配给其他人，并建议他们选择其他文章进行校对
       issueComment = `@${context.actor} The article is already assigned to someone else.
-        Please choose a different article to translate.`;
+        Please choose a different article to proofread.`;
       // 标记工作流失败
-      core.setFailed('The article is already assigned to other contributor.');
+      core.setFailed('The article is already assigned to another contributor.');
     }
     // 捕获获取 issue 详情或分配任务过程中发生的错误
   } catch (error) {

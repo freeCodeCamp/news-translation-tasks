@@ -1,0 +1,32 @@
+name: 'article-auto-translate'
+description: 'Automatically translate markdown files with OpenAI GPT-4o.'
+author: ''
+inputs:
+  with_issue_title:
+    description: 'Issue title.'
+    required: true
+  with_issue_body:
+    description: 'Issue body.'
+    required: true
+  with_github_token:
+    description: 'GitHub token.'
+    required: true
+  with_task_fetch_to_save_path:
+    description: 'The path to save the fetched HTML.'
+    required: true
+  with_task_fetch_to_include_selector:
+    description: 'The selector to include in the fetched HTML.'
+    required: true
+  with_task_fetch_to_ignore_selector:
+    description: 'The selector to ignore in the fetched HTML.'
+    required: true
+  with_task_translate_openai_api_key:
+    description: 'OpenAI API key.'
+    required: true
+  with_task_translate_to_save_path:
+    description: 'The path to save the translated markdown.'
+    required: true
+
+runs:
+  using: 'node20'
+  main: 'dist/index.js'

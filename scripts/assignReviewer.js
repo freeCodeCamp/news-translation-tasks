@@ -1,4 +1,4 @@
-module.exports = async ({github, context, core, projectName}) => {
+module.exports = async ({ github, context, core, projectName }) => {
   let issueComment = '';
 
   // List of the language leads
@@ -11,7 +11,7 @@ module.exports = async ({github, context, core, projectName}) => {
     chinese: 'miyaliu666',
     korean: 'AlisonYoon',
     'test project': 'sidemt' // for testing
-  }
+  };
 
   try {
     // Expecting the project name to be in  "[NEWS I18N] - Spanish" format
@@ -29,7 +29,9 @@ module.exports = async ({github, context, core, projectName}) => {
       issue_number: context.issue.number
     });
 
-    if (issue.data.assignees.some(assignee => assignee.login === context.actor)) {
+    if (
+      issue.data.assignees.some((assignee) => assignee.login === context.actor)
+    ) {
       const response = await github.rest.issues.addAssignees({
         issue_number: context.issue.number,
         owner: context.repo.owner,
@@ -37,22 +39,22 @@ module.exports = async ({github, context, core, projectName}) => {
         assignees: [languageLead]
       });
       if (response.status.toString().startsWith('2')) {
-        issueComment = `@${ languageLead } This article is ready for review.`;
+        issueComment = `@${languageLead} This article is ready for review.`;
       } else {
         console.error('addAssignees returned HTTP status:', response.status);
-        issueComment = `@${ context.actor } Something went wrong while assigning the issue to the reviewer. (HTTP status: ${ response.status })
-        Please contact your language lead if the problem persists.`;
+        issueComment = `@${context.actor} Something went wrong while assigning the issue to the reviewer. (HTTP status: ${response.status})
+          Please contact your language lead if the problem persists.`;
         core.setFailed('addAssignees returned an unexpected HTTP status.');
       }
     } else {
-      issueComment = `@${ context.actor } Could not assign this issue to the reviewer.
-      Check if you have translated this article as an assignee.`;
+      issueComment = `@${context.actor} Could not assign this issue to the reviewer.
+        Check if you have translated this article as an assignee.`;
       core.setFailed('The commenter was not the translator of this issue.');
     }
   } catch (error) {
     console.error('An error has occurred while assigning the issue:', error);
-    issueComment = `@${ context.actor } An error has occurred while assigning the issue to the reviewer.
-    Please contact your language lead if the problem persists.`;
+    issueComment = `@${context.actor} An error has occurred while assigning the issue to the reviewer.
+      Please contact your language lead if the problem persists.`;
     core.setFailed('An error has occurred while assigning the issue.');
   }
   await github.rest.issues.createComment({
@@ -61,4 +63,4 @@ module.exports = async ({github, context, core, projectName}) => {
     repo: context.repo.repo,
     body: issueComment
   });
-}
+};

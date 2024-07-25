@@ -102,3 +102,10 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Use pnpm and ignore lock files of other package managers
+package-lock.json
+yarn.lock
+
+# Ignore macOS system file
+.DS_Store
