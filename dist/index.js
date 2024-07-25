@@ -53744,7 +53744,7 @@
             );
         if (q.type === 'block-seq') {
           const { anchor: a, newlineAfterProp: C } = Pt;
-          const q = a && Ar ? (a.offset > Ar.offset ? a : Ar) : a ?? Ar;
+          const q = a && Ar ? (a.offset > Ar.offset ? a : Ar) : (a ?? Ar);
           if (q && (!C || C.offset < q.offset)) {
             const a = 'Missing newline after block sequence props';
             Wt(q, 'MISSING_CHAR', a);
@@ -80196,7 +80196,7 @@
         a.step_01_result_metas.push(re);
       }
     }
-    const hl = '4.52.7';
+    const hl = '4.53.0';
     let ml = false;
     let fl = undefined;
     let gl = undefined;
@@ -81696,7 +81696,7 @@
           'X-Stainless-Runtime-Version':
             typeof Deno.version === 'string'
               ? Deno.version
-              : Deno.version?.deno ?? 'unknown'
+              : (Deno.version?.deno ?? 'unknown')
         };
       }
       if (typeof EdgeRuntime !== 'undefined') {
@@ -84846,6 +84846,33 @@
     (function (a) {
       a.BatchesPage = BatchesPage;
     })(Batches || (Batches = {}));
+    class Parts extends APIResource {
+      create(a, C, q) {
+        return this._client.post(
+          `/uploads/${a}/parts`,
+          multipartFormRequestOptions({ body: C, ...q })
+        );
+      }
+    }
+    (function (a) {})(Parts || (Parts = {}));
+    class Uploads extends APIResource {
+      constructor() {
+        super(...arguments);
+        this.parts = new Parts(this._client);
+      }
+      create(a, C) {
+        return this._client.post('/uploads', { body: a, ...C });
+      }
+      cancel(a, C) {
+        return this._client.post(`/uploads/${a}/cancel`, C);
+      }
+      complete(a, C, q) {
+        return this._client.post(`/uploads/${a}/complete`, { body: C, ...q });
+      }
+    }
+    (function (a) {
+      a.Parts = Parts;
+    })(Uploads || (Uploads = {}));
     var PA;
     class OpenAI extends APIClient {
       constructor({
@@ -84890,6 +84917,7 @@
         this.fineTuning = new FineTuning(this);
         this.beta = new Beta(this);
         this.batches = new Batches(this);
+        this.uploads = new Uploads(this);
         this._options = Ue;
         this.apiKey = C;
         this.organization = q;
@@ -84961,6 +84989,7 @@
       a.Beta = Beta;
       a.Batches = Batches;
       a.BatchesPage = BatchesPage;
+      a.Uploads = Uploads;
     })(OpenAI || (OpenAI = {}));
     class AzureOpenAI extends (null && OpenAI) {
       constructor({
