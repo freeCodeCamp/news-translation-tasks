@@ -32,6 +32,9 @@ importers:
       turndown-plugin-gfm:
         specifier: ^1.0.2
         version: 1.0.2
+      yaml:
+        specifier: ^2.5.0
+        version: 2.5.0
     devDependencies:
       '@lint-md/cli':
         specifier: ^2.0.0
@@ -48,6 +51,9 @@ importers:
       '@types/turndown':
         specifier: ^5.0.4
         version: 5.0.4
+      '@types/yaml':
+        specifier: ^1.9.7
+        version: 1.9.7
       '@vercel/ncc':
         specifier: ^0.38.1
         version: 0.38.1
@@ -627,6 +633,10 @@ packages:
 
   '@types/vfile@3.0.2':
     resolution: {integrity: sha512-b3nLFGaGkJ9rzOcuXRfHkZMdjsawuDD0ENL9fzTophtBg8FJHSGbH7daXkEpcwy3v7Xol3pAvsmlYyFhR4pqJw==}
+
+  '@types/yaml@1.9.7':
+    resolution: {integrity: sha512-8WMXRDD1D+wCohjfslHDgICd2JtMATZU8CkhH8LVJqcJs6dyYj5TGptzP8wApbmEullGBSsCEzzap73DQ1HJaA==}
+    deprecated: This is a stub types definition. yaml provides its own type definitions, so you do not need this installed.
 
   '@types/yargs-parser@21.0.3':
     resolution: {integrity: sha512-I4q9QU9MQv4oEOz4tAHJtNz1cwuLxn2F3xcc2iV5WdqLPpUnj30aUuxt1mAxYTG+oe8CZMV/+6rU4S4gRDzqtQ==}
@@ -3178,8 +3188,8 @@ packages:
     resolution: {integrity: sha512-8aAvwVUSHpfEqTQ4w/KMlf3HcRdt50E5ODIQJBw1fQ5RL34xabzxtUlzTXVqc4rkZsPbvrXKWnABCD7kWSmocA==}
     engines: {node: '>= 14'}
 
-  yaml@2.4.2:
-    resolution: {integrity: sha512-B3VqDZ+JAg1nZpaEmWtTXUlBneoGx6CPM9b0TENK6aoSu5t73dItudwdgmi6tHlIZZId4dZ9skcAQ2UbcyAeVA==}
+  yaml@2.5.0:
+    resolution: {integrity: sha512-2wWLbGbYDiSqqIKoPjar3MPgB94ErzCtrNE1FdqGuaO0pi2JGjmE8aW8TDZwzU7vuxcGRdL/4gPQwQ7hD5AMSw==}
     engines: {node: '>= 14'}
     hasBin: true
 
@@ -4011,6 +4021,10 @@ snapshots:
       '@types/node': 20.14.11
       '@types/unist': 2.0.10
       '@types/vfile-message': 2.0.0
+
+  '@types/yaml@1.9.7':
+    dependencies:
+      yaml: 2.5.0
 
   '@types/yargs-parser@21.0.3': {}
 
@@ -7215,11 +7229,11 @@ snapshots:
     dependencies:
       eslint-visitor-keys: 3.4.3
       lodash: 4.17.21
-      yaml: 2.4.2
+      yaml: 2.5.0
 
   yaml@2.3.4: {}
 
-  yaml@2.4.2: {}
+  yaml@2.5.0: {}
 
   yargs-parser@21.1.1: {}
 
