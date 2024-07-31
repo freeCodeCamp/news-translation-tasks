@@ -1,7 +1,7 @@
 ---
 title: How to get a FAANG Dev Job in your 40s with Coding Interview University
   creator John Washam [#134]
-date: 2024-07-31T10:36:48.581Z
+date: 2024-07-31T10:37:42.527Z
 author: Quincy Larson
 authorURL: https://www.freecodecamp.org/news/author/quincy/
 originalURL: https://www.freecodecamp.org/news/how-john-washam-crammed-for-8-months-got-a-job-at-amazon-then-taught-1000s-of-other-devs-134/
