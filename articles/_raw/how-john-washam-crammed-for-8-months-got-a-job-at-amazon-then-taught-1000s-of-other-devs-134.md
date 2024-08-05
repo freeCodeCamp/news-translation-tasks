@@ -1,12 +1,12 @@
 ---
 title: How to get a FAANG Dev Job in your 40s with Coding Interview University
   creator John Washam [#134]
-date: 2024-07-28T08:28:28.746Z
+date: 2024-07-31T10:37:42.527Z
 author: Quincy Larson
 authorURL: https://www.freecodecamp.org/news/author/quincy/
-OriginalURL: https://www.freecodecamp.org/news/how-john-washam-crammed-for-8-months-got-a-job-at-amazon-then-taught-1000s-of-other-devs-134/
-Proofreader: ""
-
+originalURL: https://www.freecodecamp.org/news/how-john-washam-crammed-for-8-months-got-a-job-at-amazon-then-taught-1000s-of-other-devs-134/
+translator: ""
+reviewer: ""
 ---
 
 On this week's episode of the podcast, I interview John Washam, a software engineer at Amazon. John's also creator of one of the most popular open source projects of all time, Coding Interview University.
@@ -47,8 +47,22 @@ Links we talk about during our conversation:
 -   Follow John on LinkedIn: [https://www.linkedin.com/in/johnawasham/][5]
     
 
+---
+
+![Quincy Larson](https://cdn.hashnode.com/res/hashnode/image/upload/v1640878938509/PLqvxeH9g.jpeg)
+
+Read [more posts][6].
+
+---
+
+If you read this far, thank the author to show them you care. Say Thanks
+
+Learn to code for free. freeCodeCamp's open source curriculum has helped more than 40,000 people get jobs as developers. [Get started][7]
+
 [1]: https://www.freecodecamp.org/donate
 [2]: https://github.com/jwasham/coding-interview-university
 [3]: https://startupnextdoor.com/
 [4]: https://www.amazon.com/Talent-Code-Greatness-Born-Grown/dp/055380684X
 [5]: https://www.linkedin.com/in/johnawasham/
+[6]: /news/author/quincy/
+[7]: https://www.freecodecamp.org/learn/

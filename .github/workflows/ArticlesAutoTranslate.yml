@@ -26,28 +26,31 @@ jobs:
 
       - uses: actions/checkout@v3
       - name: Crawl pages and generate Markdown files
-        uses: freeCodeCamp-China/article-webpage-to-markdown-action@v1
+        id: fetch-webpage-to-markdown
+        continue-on-error: true
+        uses: budblack/article-webpage-to-markdown-action@dev
         with:
           newsLink: '${{ github.event.issue.Body }}'
+          includeSelector: 'span.author-card-name,section.post-full-content'
           ignoreSelector: '.ad-wrapper'
-          markDownFilePath: './articles/_raw/'
-          githubToken: ${{ github.token }}
+          skipSameArticleCheck: true
+          skipIssueComment: true
+          markDownFilePath: './articles/_tmp/'
+          githubToken: '${{ github.token }}'
 
-      # Use this repo-self as an action
-      - uses: actions/checkout@v3
       - name: Articles auto translate
-        uses: budblack/news-translation-allinone@main
+        uses: budblack/articles-auto-translate-action@main
         with:
           with_issue_title: '${{ github.event.issue.title }}'
           with_issue_body: '${{ github.event.issue.Body }}'
           with_github_token: '${{ github.token }}'
-          with_task_fetch_and_save_force: false
+          with_orginal_markdown_file_path: ${{ steps.fetch-webpage-to-markdown.outputs.markdown_file_path }}
           with_task_fetch_to_save_path: './articles/_raw/'
           with_task_fetch_to_include_selector: '.author-card-name,.post-content'
           with_task_fetch_to_ignore_selector: '.ad-wrapper'
           with_task_translate_openai_api_key: ${{ secrets.OPENAI_API_KEY }}
           with_task_translate_to_save_path: './articles/{lang}/'
-
+          
       # Commit the local changes
       - name: Git Auto Commit
         uses: stefanzweifel/git-auto-commit-action@v5
