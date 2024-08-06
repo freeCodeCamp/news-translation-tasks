@@ -28,7 +28,7 @@ jobs:
       - name: Crawl pages and generate Markdown files
         id: fetch-webpage-to-markdown
         continue-on-error: true
-        uses: budblack/article-webpage-to-markdown-action@dev
+        uses: freeCodeCamp/article-webpage-to-markdown-action@dev
         with:
           newsLink: '${{ github.event.issue.Body }}'
           includeSelector: 'span.author-card-name,section.post-full-content'
@@ -39,7 +39,7 @@ jobs:
           githubToken: '${{ github.token }}'
 
       - name: Articles auto translate
-        uses: budblack/articles-auto-translate-action@main
+        uses: freeCodeCamp/articles-auto-translate-action@main
         with:
           with_issue_title: '${{ github.event.issue.title }}'
           with_issue_body: '${{ github.event.issue.Body }}'
@@ -50,7 +50,7 @@ jobs:
           with_task_fetch_to_ignore_selector: '.ad-wrapper'
           with_task_translate_openai_api_key: ${{ secrets.OPENAI_API_KEY }}
           with_task_translate_to_save_path: './articles/{lang}/'
-          
+
       # Commit the local changes
       - name: Git Auto Commit
         uses: stefanzweifel/git-auto-commit-action@v5
