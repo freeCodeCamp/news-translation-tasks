@@ -12,19 +12,6 @@ jobs:
       issues: write
       contents: write
     steps:
-      # Debug step to print the values of github.event.label.name and github.event.issue.labels
-      - name: Print debug information
-        run: |
-          echo "Action Type: ${{ github.event.action }}"
-          echo "Label Name: ${{ github.event.label.name }}"
-          echo "Issue Labels: ${{ toJson(github.event.issue.labels) }}"
-
-      - name: debug if condition 1
-        if: |
-          github.event.action == 'labeled' && github.event.label.name == 'auto'
-        shell: bash
-        run: echo "labeled && auto true"
-
       # Check if the label is 'auto'. If not, exit the action
       - name: Check if 'auto' label is added
         if: ${{ github.event.label.name != 'auto' }}
@@ -32,7 +19,7 @@ jobs:
         run: echo "The newly added label is not 'auto'." 1>&2; exit 1;
 
       # Check if the issue body is empty. If so, exit the action.
-      - name: The description of the issue is empty
+      - name: Check if the description of the issue is empty
         if: ${{ !github.event.issue.body }}
         shell: bash
         run: echo "The description of the issue is empty." 1>&2; exit 1;
