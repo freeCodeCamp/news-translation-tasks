@@ -13,11 +13,17 @@ jobs:
       issues: write
       contents: write
     steps:
+      # Debug step to print the values of github.event.label.name and github.event.issue.labels
+      - name: Print debug information
+        run: |
+          echo "Label Name: ${{ github.event.label.name }}"
+          echo "Issue Labels: ${{ toJson(github.event.issue.labels) }}"
+
       # Check if the label is 'auto'. If not, exit the action
       - name: Check if 'auto' label is added
         if: |
-          ${{ (github.event.action == 'labeled' && github.event.label.name != 'auto') ||
-              (github.event.action == 'opened' && !contains(github.event.issue.labels.*.name, 'auto')) }}
+          ${{ !((github.event.action == 'labeled' && github.event.label.name == 'auto') ||
+                (github.event.action == 'opened' && contains(github.event.issue.labels.*.name, 'auto'))) }}
         shell: bash
         run: echo "The newly added label is not 'auto'." 1>&2; exit 1;
 
