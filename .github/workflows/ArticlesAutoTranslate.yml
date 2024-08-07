@@ -3,6 +3,7 @@ on:
   issues:
     types:
       - opened
+      - labeled
 jobs:
   ArticlesAutoTranslate:
     runs-on: ubuntu-latest
@@ -12,11 +13,13 @@ jobs:
       issues: write
       contents: write
     steps:
-      # Check if the issue title starts with '[Auto]'. If not, exit the action.
-      - name: Issue does not need to generate markdown
-        if: ${{ !startsWith(github.event.issue.title, '[Auto]') }}
+      # Check if the label is 'auto'. If not, exit the action
+      - name: Check if 'auto' label is added
+        if: |
+          ${{ (github.event.action == 'labeled' && github.event.label.name != 'auto') ||
+              (github.event.action == 'opened' && !contains(github.event.issue.labels.*.name, 'auto')) }}
         shell: bash
-        run: echo "This issue does not need to generate a markdown file." 1>&2; exit 1;
+        run: echo "The newly added label is not 'auto'." 1>&2; exit 1;
 
       # Check if the issue body is empty. If so, exit the action.
       - name: The description of the issue is empty
