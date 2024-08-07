@@ -16,6 +16,7 @@ jobs:
       # Debug step to print the values of github.event.label.name and github.event.issue.labels
       - name: Print debug information
         run: |
+          echo "Action Type: ${{ github.event.action }}"
           echo "Label Name: ${{ github.event.label.name }}"
           echo "Issue Labels: ${{ toJson(github.event.issue.labels) }}"
 
