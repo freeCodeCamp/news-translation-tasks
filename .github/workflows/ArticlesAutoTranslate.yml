@@ -2,7 +2,6 @@ name: Articles auto translate
 on:
   issues:
     types:
-      - opened
       - labeled
 jobs:
   ArticlesAutoTranslate:
@@ -26,17 +25,9 @@ jobs:
         shell: bash
         run: echo "labeled && auto true"
 
-      - name: debug if condition 2
-        if: |
-          github.event.action == 'opened' && contains(github.event.issue.labels.*.name, 'auto')
-        shell: bash
-        run: echo "opened && auto true"
-
       # Check if the label is 'auto'. If not, exit the action
       - name: Check if 'auto' label is added
-        if: |
-          !((github.event.action == 'labeled' && github.event.label.name == 'auto') ||
-          (github.event.action == 'opened' && contains(github.event.issue.labels.*.name, 'auto')))
+        if: ${{ github.event.label.name != 'auto' }}
         shell: bash
         run: echo "The newly added label is not 'auto'." 1>&2; exit 1;
 
