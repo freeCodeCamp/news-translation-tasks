@@ -1,11 +1,11 @@
 name: Articles auto translate
+run-name: ${{ github.event.label.name }} - ${{ github.event.issue.title }}
 on:
   issues:
     types:
       - labeled
 jobs:
   ArticlesAutoTranslate:
-    name: ${{ github.event.label.name }} - ${{ github.event.issue.title }}
     runs-on: ubuntu-latest
     env:
       ACTIONS_RUNNER_DEBUG: true
