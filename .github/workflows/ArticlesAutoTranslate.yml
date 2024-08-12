@@ -44,6 +44,7 @@ jobs:
         with:
           with_issue_title: '${{ github.event.issue.title }}'
           with_issue_body: '${{ github.event.issue.Body }}'
+          with_label_name: '${{ github.event.label.name }}'
           with_github_token: '${{ github.token }}'
           with_orginal_markdown_file_path: ${{ steps.fetch-webpage-to-markdown.outputs.markdown_file_path }}
           with_task_fetch_to_save_path: './articles/_raw/'
