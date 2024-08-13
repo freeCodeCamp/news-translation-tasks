@@ -12,13 +12,9 @@ jobs:
     permissions:
       issues: write
       contents: write
+    # Check if the label is 'auto'. If not, skip the entire job.
+    if: ${{ github.event.label.name != 'auto' }}
     steps:
-      # Check if the label is 'auto'. If not, exit the action
-      - name: Check if 'auto' label is added
-        if: ${{ github.event.label.name != 'auto' }}
-        shell: bash
-        run: echo "The newly added label is not 'auto'." 1>&2; exit 1;
-
       # Check if the issue body is empty. If so, exit the action.
       - name: Check if the description of the issue is empty
         if: ${{ !github.event.issue.body }}
