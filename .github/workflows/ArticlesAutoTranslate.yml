@@ -13,7 +13,7 @@ jobs:
       issues: write
       contents: write
     # Check if the label is 'auto'. If not, skip the entire job.
-    if: ${{ github.event.label.name != 'auto' }}
+    if: ${{ github.event.label.name == 'auto' }}
     steps:
       # Check if the issue body is empty. If so, exit the action.
       - name: Check if the description of the issue is empty
