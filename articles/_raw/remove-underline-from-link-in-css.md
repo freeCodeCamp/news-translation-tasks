@@ -1,6 +1,6 @@
 ---
 title: How to Remove Underline from a Link in CSS – HTML Style Guide
-date: 2024-08-06T10:46:16.743Z
+date: 2024-08-14T09:21:50.965Z
 author: Kolade Chris
 authorURL: https://www.freecodecamp.org/news/author/koladechris/
 originalURL: https://www.freecodecamp.org/news/remove-underline-from-link-in-css/
