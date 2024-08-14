@@ -1,8 +1,9 @@
 name: Articles auto translate
+run-name: ${{ github.event.label.name }} - ${{ github.event.issue.title }}
 on:
   issues:
     types:
-      - opened
+      - labeled
 jobs:
   ArticlesAutoTranslate:
     runs-on: ubuntu-latest
@@ -11,15 +12,11 @@ jobs:
     permissions:
       issues: write
       contents: write
+    # Check if the label is 'auto'. If not, skip the entire job.
+    if: ${{ github.event.label.name == 'auto' }}
     steps:
-      # Check if the issue title starts with '[Auto]'. If not, exit the action.
-      - name: Issue does not need to generate markdown
-        if: ${{ !startsWith(github.event.issue.title, '[Auto]') }}
-        shell: bash
-        run: echo "This issue does not need to generate a markdown file." 1>&2; exit 1;
-
       # Check if the issue body is empty. If so, exit the action.
-      - name: The description of the issue is empty
+      - name: Check if the description of the issue is empty
         if: ${{ !github.event.issue.body }}
         shell: bash
         run: echo "The description of the issue is empty." 1>&2; exit 1;
@@ -43,6 +40,7 @@ jobs:
         with:
           with_issue_title: '${{ github.event.issue.title }}'
           with_issue_body: '${{ github.event.issue.Body }}'
+          with_label_name: '${{ github.event.label.name }}'
           with_github_token: '${{ github.token }}'
           with_orginal_markdown_file_path: ${{ steps.fetch-webpage-to-markdown.outputs.markdown_file_path }}
           with_task_fetch_to_save_path: './articles/_raw/'
