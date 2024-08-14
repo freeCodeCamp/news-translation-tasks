@@ -21,7 +21,7 @@ module.exports = async ({github, context, core, projectName}) => {
       throw new Error(`Language lead not found for language: ${language}`);
     }
 
-    // Make sure that the current user is the translator for this article,
+    // Make sure that the current user is the proofreader for this article,
     // then assign it to the language lead for review
     const issue = await github.rest.issues.get({
       owner: context.repo.owner,
@@ -46,8 +46,8 @@ module.exports = async ({github, context, core, projectName}) => {
       }
     } else {
       issueComment = `@${ context.actor } Could not assign this issue to the reviewer.
-      Check if you have translated this article as an assignee.`;
-      core.setFailed('The commenter was not the translator of this issue.');
+      Check if you have proofread this article as an assignee.`;
+      core.setFailed('The commenter was not the proofreader of this issue.');
     }
   } catch (error) {
     console.error('An error has occurred while assigning the issue:', error);
