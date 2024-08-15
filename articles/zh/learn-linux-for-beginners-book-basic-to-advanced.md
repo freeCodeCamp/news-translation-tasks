@@ -5,7 +5,7 @@ author: Zaira Hira
 authorURL: https://www.freecodecamp.org/news/author/zaira/
 originalURL: https://www.freecodecamp.org/news/learn-linux-for-beginners-book-basic-to-advanced/
 translator: ""
-reviewer: ""
+reviewer: "miyaliu66"
 ---
 
 学习 Linux 是科技行业中最有价值的技能之一。它能帮助你更快、更高效地完成任务。世界上许多强大的服务器和超级计算机都运行在 Linux 上。
@@ -103,7 +103,7 @@ reviewer: ""
 
 Linux 是一个开源操作系统，基于 Unix 操作系统。它由 Linus Torvalds 在 1991 年创建。
 
-开源意味着操作系统的源代码是公开的。这允许任何人修改原始代码，自定义它，并将新的操作系统分发给潜在用户。
+开源意味着操作系统的源代码是公开的。这允许任何人修改原始代码、自定义它，并将新的操作系统分发给潜在用户。
 
 #### 为什么你应该学习 Linux？
 
