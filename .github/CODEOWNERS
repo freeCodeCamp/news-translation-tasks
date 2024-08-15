@@ -26,5 +26,15 @@ package-lock.json
 
 # --- Owned by none (negate rule above) ---
 
+*.md
 /package.json
 /package-lock.json
+
+# -------------------------------------------------
+# Files that need attention from each language lead
+# -------------------------------------------------
+
+/articles/es/*.md @RafaelDavisH
+/articles/ja/*.md @sidemt
+/articles/pt/*.md @DanielRosa74
+/articles/zh/*.md @miyaliu666
