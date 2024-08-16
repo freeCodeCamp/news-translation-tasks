@@ -22,9 +22,7 @@ jobs:
         with:
           script: |
             console.log("*****");
-            console.log("github.event:", JSON.stringify(github.event, null, 2));
-            console.log("github.event:", JSON.stringify(github.event.pull_request, null, 2));
-            console.log("github.event:", JSON.stringify(github.event.issue, null, 2));
+            console.log("github.event:", JSON.stringify(${{ github.event }}, null, 2));
       # - name: Get project card
       #   id: get_card
       #   uses: actions/github-script@v7
