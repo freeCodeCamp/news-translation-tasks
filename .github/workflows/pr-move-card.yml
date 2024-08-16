@@ -1,0 +1,114 @@
+on:
+  pull_request:
+    types: [opened, reopened]
+name: Move Project Cards on Opening Pull Request
+
+jobs:
+  get_card:
+    # Find the GitHub project information from the pull request
+    name: Get project card info
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+      issues: read
+    outputs:
+      target_status: 'in Review' # Which status to move the card to
+      card_id: ${{ steps.get_card_node_id.outputs.card_id }}
+      project_url: ${{ steps.get_card_node_id.outputs.project_url }}
+      project_name: ${{ steps.get_card_node_id.outputs.project_name }}
+    steps:
+      - name: Get project card from Pull Request
+        id: get_card_node_id
+        uses: actions/github-script@v7
+        env:
+          PR_NODE_ID: ${{ github.event.pull_request.node_id }}
+        with:
+          script: |
+            // Debug log
+            console.log("context:", JSON.stringify(context, null, 2));
+
+            // GitHub GraphQL API query
+            // Find the relevant GitHub project card's node id by `Closes #XXXXX` reference in the pull request
+            const query = `
+            query ($id: ID!) {
+              node(id: $id) {
+                ... on PullRequest {
+                  title
+                  closingIssuesReferences(first: 1, userLinkedOnly: false) {
+                    totalCount
+                    nodes {
+                      id
+                      title
+                      projectsV2(first: 1) {
+                        edges {
+                          node {
+                            id
+                            url
+                            title
+                            items(first: 100) {
+                              edges {
+                                node {
+                                  id
+                                  content {
+                                    ... on Issue {
+                                      id
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            `;
+            const variables = {
+              id: process.env.PR_NODE_ID
+            };
+            const result = await github.graphql(query, variables);
+            console.log(`Result: ${JSON.stringify(result)}`);
+
+            // Find the GitHub project card ID
+            const issueNodeId = result.node.closingIssuesReferences.nodes[0].id;
+            const projectNode = result.node.closingIssuesReferences.nodes[0].projectsV2.edges[0].node;
+            const cardId = projectNode.items.edges.find(edge => edge.node.content.id === issueNodeId).node.id;
+            const projectUrl = projectNode.url;
+            const projectName = projectNode.title;
+
+            // Debug log
+            console.log(`Card ID: ${cardId}`);
+            console.log(`Project URL: ${projectUrl}`);
+            console.log(`Project Name: ${projectName}`);
+
+            // Set output values
+            core.setOutput('card_id', cardId);
+            core.setOutput('project_url', projectUrl);
+            core.setOutput('project_name', projectName);
+          github-token: ${{ secrets.MOVE_CARDS_TOKEN }} # Needed to access project data
+
+  move_card:
+    name: Update project card
+    needs: get_card
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Checkout # Checkout the scripts in this repo onto the runner
+        uses: actions/checkout@v3
+      - name: Debug outputs
+        run: |
+          echo "Card ID: ${{ needs.get_card.outputs.card_id }}"
+          echo "Project URL: ${{ needs.get_card.outputs.project_url }}"
+          echo "Target Status: ${{ needs.get_card.outputs.target_status }}"
+      - name: Update project card status
+        uses: titoportas/update-project-fields@v0.1.0
+        with:
+          project-url: ${{ needs.get_card.outputs.project_url }}
+          github-token: ${{ secrets.MOVE_CARDS_TOKEN }}
+          item-id: ${{ needs.get_card.outputs.card_id }}
+          field-keys: Status
+          field-values: ${{ needs.get_card.outputs.target_status }}
