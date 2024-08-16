@@ -99,6 +99,11 @@ jobs:
     steps:
       - name: Checkout # Checkout the scripts in this repo onto the runner
         uses: actions/checkout@v3
+      - name: Debug outputs
+        run: |
+          echo "Card ID: ${{ needs.get_card.outputs.card_id }}"
+          echo "Project URL: ${{ needs.get_card.outputs.project_url }}"
+          echo "Target Status: ${{ needs.get_card.outputs.target_status }}"
       - name: Update project card status
         uses: titoportas/update-project-fields@v0.1.0
         with:
