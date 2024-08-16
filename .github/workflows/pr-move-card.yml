@@ -24,6 +24,8 @@ jobs:
           PR_NODE_ID: ${{ github.event.pull_request.node_id }}
         with:
           script: |
+            const core = require('@actions/core');
+
             // Debug log
             console.log("context:", JSON.stringify(context, null, 2));
 
