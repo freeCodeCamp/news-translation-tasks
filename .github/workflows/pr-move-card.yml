@@ -19,10 +19,16 @@ jobs:
     steps:
       - name: Log pull request event data
         uses: actions/github-script@v7
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           script: |
             console.log("*****");
             console.log("github.event:", JSON.stringify(${{ github.event }}, null, 2));
+            console.log("2*****");
+            console.log("github.event:", JSON.stringify(github.event, null, 2));
+            console.log("3*****");
+            console.log("context:", JSON.stringify(context, null, 2));
       # - name: Get project card
       #   id: get_card
       #   uses: actions/github-script@v7
