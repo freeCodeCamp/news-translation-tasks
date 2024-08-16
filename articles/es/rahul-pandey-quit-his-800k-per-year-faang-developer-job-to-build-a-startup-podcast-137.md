@@ -8,6 +8,8 @@ translator: ""
 reviewer: ""
 ---
 
+Test
+
 En el episodio de esta semana del podcast, el fundador de freeCodeCamp Quincy Larson entrevista a Rahul Pandey. Él es un ingeniero de software que dejó su trabajo en FAANG de $800K / año para construir su propia startup.
 
 <!-- more -->
