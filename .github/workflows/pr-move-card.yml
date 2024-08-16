@@ -20,7 +20,7 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            console.log(JSON.stringify(github.event.pull_request, null, 2));
+            console.log(JSON.stringify(github.event, null, 2));
       # - name: Get project card
       #   id: get_card
       #   uses: actions/github-script@v7
