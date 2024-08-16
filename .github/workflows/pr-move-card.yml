@@ -9,6 +9,7 @@ jobs:
     name: Get project card info
     runs-on: ubuntu-latest
     permissions:
+      pull-requests: read
       issues: read
     # outputs:
     #   target_status: ${{ steps.command_check.outputs.target_status }} # Which status to move the card to
