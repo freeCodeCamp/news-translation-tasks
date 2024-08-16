@@ -25,7 +25,13 @@ jobs:
         env:
           COMMENT: ${{ github.event.comment.body }}
         run: |
-          if [[ "$COMMENT" == /translate* ]]; then
+          if [[ "$COMMENT" == /proofread* ]]; then
+            echo "::set-output name=command::proofread"
+            echo "::set-output name=target_status::in Proofreading"
+            echo "::set-output name=valid_command::true"
+          # We can remove this elif condition for /translate when we move to /proofread command completely.
+          # Keeping this for now to make the old command work during the transition period.
+          elif [[ "$COMMENT" == /translate* ]]; then
             echo "::set-output name=command::translate"
             echo "::set-output name=target_status::in Translation"
             echo "::set-output name=valid_command::true"
@@ -34,7 +40,7 @@ jobs:
             echo "::set-output name=target_status::in Review"
             echo "::set-output name=valid_command::true"
           else
-            echo "::warning::Invalid command. The comment must start with /translate or /review."
+            echo "::warning::Invalid command. The comment must start with /proofread or /review."
             echo "::set-output name=valid_command::false"
           fi
       - name: Get project card
@@ -108,7 +114,7 @@ jobs:
         with:
           script: |
             const issueComment = `
-            @${process.env.USER_LOGIN} The command was invalid. The comment must start with /translate or /review.
+            @${process.env.USER_LOGIN} The command was invalid. The comment must start with /proofread or /review.
             `;
             github.rest.issues.createComment({
               issue_number: context.issue.number,
@@ -120,15 +126,16 @@ jobs:
       - name: Checkout # Checkout the scripts in this repo onto the runner
         if: needs.validate_and_get_card.outputs.valid_command == 'true'
         uses: actions/checkout@v3
-      - name: Assign issue to the commenter as translator
-        id: assign_translator
-        if: needs.validate_and_get_card.outputs.valid_command == 'true' && needs.validate_and_get_card.outputs.command == 'translate'
+      - name: Assign issue to the commenter as proofreader
+        id: assign_proofreader
+        # We can remove the check for 'translate' when we move to /proofread command completely.
+        if: needs.validate_and_get_card.outputs.valid_command == 'true' && (needs.validate_and_get_card.outputs.command == 'proofread' || needs.validate_and_get_card.outputs.command == 'translate' )
         uses: actions/github-script@v7
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           script: |
-            const script = require('./scripts/assignTranslator.js');
+            const script = require('./scripts/assignProofreader.js');
             await script({github, context, core});
       - name: Assign issue to the reviewer
         id: assign_reviewer
@@ -142,7 +149,7 @@ jobs:
             const projectName = '${{ needs.validate_and_get_card.outputs.project_name }}';
             await script({github, context, core, projectName});
       - name: Update project card status
-        if: steps.assign_translator.outcome == 'success' || steps.assign_reviewer.outcome == 'success'
+        if: steps.assign_proofreader.outcome == 'success' || steps.assign_reviewer.outcome == 'success'
         uses: titoportas/update-project-fields@v0.1.0
         with:
           project-url: ${{ needs.validate_and_get_card.outputs.project_url }}

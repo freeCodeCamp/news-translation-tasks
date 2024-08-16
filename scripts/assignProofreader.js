@@ -29,7 +29,7 @@ module.exports = async ({github, context, core}) => {
       core.setFailed('The article is already assigned to the commenter.');
     } else {
       issueComment = `@${ context.actor } The article is already assigned to someone else.
-      Please choose a different article to translate.`;
+      Please choose a different article.`;
       core.setFailed('The article is already assigned to other contributor.');
     }
   } catch (error) {
