@@ -13,19 +13,17 @@ jobs:
       issues: read
     outputs:
       target_status: 'in Review' # Which status to move the card to
-      card_id: ${{ steps.get_card.outputs.card_id }}
-      project_url: ${{ steps.get_card.outputs.project_url }}
-      project_name: ${{ steps.get_card.outputs.project_name }}
+      card_id: ${{ steps.get_card_node_id.outputs.card_id }}
+      project_url: ${{ steps.get_card_node_id.outputs.project_url }}
+      project_name: ${{ steps.get_card_node_id.outputs.project_name }}
     steps:
       - name: Get project card from Pull Request
-        id: get_issue_node_id
+        id: get_card_node_id
         uses: actions/github-script@v7
         env:
           PR_NODE_ID: ${{ github.event.pull_request.node_id }}
         with:
           script: |
-            const core = require('@actions/core');
-
             // Debug log
             console.log("context:", JSON.stringify(context, null, 2));
 
