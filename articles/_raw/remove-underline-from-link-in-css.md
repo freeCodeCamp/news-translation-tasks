@@ -1,6 +1,6 @@
 ---
 title: How to Remove Underline from a Link in CSS – HTML Style Guide
-date: 2024-08-14T09:21:50.965Z
+date: 2024-08-18T10:50:38.140Z
 author: Kolade Chris
 authorURL: https://www.freecodecamp.org/news/author/koladechris/
 originalURL: https://www.freecodecamp.org/news/remove-underline-from-link-in-css/
@@ -76,17 +76,3 @@ I hope this article helps you learn how to remove the default underline from lin
 If you find the article helpful, don’t hesitate to share it with your friends and family.
 
 Thanks for reading.
-
----
-
-![Kolade Chris](https://cdn.hashnode.com/res/hashnode/image/upload/v1720467520534/YTa5HE3R0.jpg)
-
-I'm a software developer and tech writer focusing on frontend technologies
-
----
-
-If you read this far, thank the author to show them you care. Say Thanks
-
-Learn to code for free. freeCodeCamp's open source curriculum has helped more than 40,000 people get jobs as developers. [Get started][1]
-
-[1]: https://www.freecodecamp.org/learn/
