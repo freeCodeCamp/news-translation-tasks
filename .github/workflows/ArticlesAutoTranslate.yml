@@ -28,7 +28,7 @@ jobs:
         uses: freeCodeCamp/article-webpage-to-markdown-action@dev
         with:
           newsLink: '${{ github.event.issue.Body }}'
-          includeSelector: 'span.author-card-name,section.post-full-content'
+          includeSelector: 'span.author-card-name,section.post-content'
           ignoreSelector: '.ad-wrapper'
           skipSameArticleCheck: true
           skipIssueComment: true
