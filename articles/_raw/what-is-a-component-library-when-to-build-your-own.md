@@ -1,7 +1,7 @@
 ---
 title: What is a Component Library? When to Build Your Own and When to Use
   Someone Else's
-date: 2024-08-19T09:02:46.869Z
+date: 2024-08-19T09:58:26.377Z
 author: Andrico Karoulla
 authorURL: https://www.freecodecamp.org/news/author/andrico1234/
 originalURL: https://www.freecodecamp.org/news/what-is-a-component-library-when-to-build-your-own/
