@@ -1,10 +1,12 @@
 on:
-  pull_request:
+  pull_request_target: # Use pull_request_target to access secrets
     types: [opened, reopened]
     paths:
       - 'articles/**/**.md'
       - '!articles/_raw/**'
 name: Move Project Cards on Opening Pull Request
+permissions:
+  contents: none # Override the default permission of pull_request_target for safety
 
 jobs:
   get_card:
