@@ -1,6 +1,9 @@
 on:
-  pull_request:
+  pull_request_target:
     types: [opened, reopened]
+    paths:
+      - 'articles/**/**.md'
+      - '!articles/_raw/**'
 name: Move Project Cards on Opening Pull Request
 
 jobs:
@@ -94,11 +97,7 @@ jobs:
     name: Update project card
     needs: get_card
     runs-on: ubuntu-latest
-    permissions:
-      issues: write
     steps:
-      - name: Checkout # Checkout the scripts in this repo onto the runner
-        uses: actions/checkout@v3
       - name: Debug outputs
         run: |
           echo "Card ID: ${{ needs.get_card.outputs.card_id }}"
