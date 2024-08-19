@@ -1,6 +1,6 @@
 ---
 title: How to Create an Interactive Terminal-Based Portfolio Website
-date: 2024-08-19T12:05:23.406Z
+date: 2024-08-19T12:26:46.002Z
 author: Jakub T. Jankiewicz
 authorURL: https://www.freecodecamp.org/news/author/jcubic/
 originalURL: https://www.freecodecamp.org/news/how-to-create-interactive-terminal-based-portfolio/#what-is-jquery-terminal
