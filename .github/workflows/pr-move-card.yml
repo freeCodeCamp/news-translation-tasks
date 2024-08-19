@@ -72,15 +72,33 @@ jobs:
             const variables = {
               id: process.env.PR_NODE_ID
             };
-            const result = await github.graphql(query, variables);
-            console.log(`Result: ${JSON.stringify(result)}`);
+
+            try {
+              const result = await github.graphql(query, variables);
+              console.log(`Result: ${JSON.stringify(result)}`);
+            } catch (error) {
+              console.error('Failed to retrieve project card information from GitHub API:', error.message);
+              core.setFailed(error.message);
+            }
 
             // Find the GitHub project card ID
-            const issueNodeId = result.node.closingIssuesReferences.nodes[0].id;
-            const projectNode = result.node.closingIssuesReferences.nodes[0].projectsV2.edges[0].node;
-            const cardId = projectNode.items.edges.find(edge => edge.node.content.id === issueNodeId).node.id;
-            const projectUrl = projectNode.url;
-            const projectName = projectNode.title;
+            try {
+              if (result.node.closingIssuesReferences.totalCount === 0) {
+                throw new Error('The PR is not linked to the issue. Try adding the `Closes #XXXXX` keyword in the description and reopeneing the PR.');
+              }
+              const issueNodeId = result.node.closingIssuesReferences.nodes[0].id;
+
+              if (result.node.closingIssuesReferences.nodes[0].projectsV2.edges.length === 0) {
+                throw new Error('The linked issue is not in any GitHub project. Ask your language lead to add it to the relevant project.');
+              }
+              const projectNode = result.node.closingIssuesReferences.nodes[0].projectsV2.edges[0].node;
+              const cardId = projectNode.items.edges.find(edge => edge.node.content.id === issueNodeId).node.id;
+              const projectUrl = projectNode.url;
+              const projectName = projectNode.title;
+            } catch (error) {
+              console.error('Failed to find the project card:', error.message);
+              core.setFailed(error.message);
+            }
 
             // Debug log
             console.log(`Card ID: ${cardId}`);
