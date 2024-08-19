@@ -31,7 +31,7 @@ jobs:
         with:
           script: |
             // Debug log
-            console.log("context:", JSON.stringify(context, null, 2));
+            console.log("github.event.pull_request.node_id:", process.env.PR_NODE_ID));
 
             // GitHub GraphQL API query
             // Find the relevant GitHub project card's node id by `Closes #XXXXX` reference in the pull request
@@ -108,7 +108,7 @@ jobs:
               console.error('Failed to retrieve project card information:', error.message);
               core.setFailed(error.message);
             }
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.MOVE_CARDS_TOKEN }} # Need to use PAT to access ProjectsV2
 
   move_card:
     name: Update project card
@@ -126,7 +126,7 @@ jobs:
         uses: titoportas/update-project-fields@v0.1.0
         with:
           project-url: ${{ needs.get_card.outputs.project_url }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.MOVE_CARDS_TOKEN }}
           item-id: ${{ needs.get_card.outputs.card_id }}
           field-keys: Status
           field-values: ${{ needs.get_card.outputs.target_status }}
