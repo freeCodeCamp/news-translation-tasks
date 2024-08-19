@@ -1,7 +1,7 @@
 ---
 title: "Rahul Pandey quit his $800,000/year FAANG developer job to build a
   startup [Podcast #137]"
-date: 2024-08-16T13:23:48.142Z
+date: 2024-08-18T10:55:05.623Z
 author: Quincy Larson
 authorURL: https://www.freecodecamp.org/news/author/quincy/
 originalURL: https://www.freecodecamp.org/news/rahul-pandey-quit-his-800k-per-year-faang-developer-job-to-build-a-startup-podcast-137/
@@ -49,18 +49,6 @@ Links we talk about during our conversation:
 -   Rahul on LinkedIn: [https://www.linkedin.com/in/rpandey1234/][7]
     
 
----
-
-![Quincy Larson](https://cdn.hashnode.com/res/hashnode/image/upload/v1640878938509/PLqvxeH9g.jpeg)
-
-Read [more posts][8].
-
----
-
-If you read this far, thank the author to show them you care. Say Thanks
-
-Learn to code for free. freeCodeCamp's open source curriculum has helped more than 40,000 people get jobs as developers. [Get started][9]
-
 [1]: https://www.freecodecamp.org/donate
 [2]: https://www.freecodecamp.org/news/learn-how-to-build-and-publish-an-android-app-from-scratch/
 [3]: https://www.youtube.com/watch?v=rceUVaiXQgU
@@ -68,5 +56,3 @@ Learn to code for free. freeCodeCamp's open source curriculum has helped more th
 [5]: https://anandsanwal.me/2018/06/19/dad-company-sale/
 [6]: https://www.youtube.com/watch?v=VpPPHDxR9aM
 [7]: https://www.linkedin.com/in/rpandey1234/
-[8]: /news/author/quincy/
-[9]: https://www.freecodecamp.org/learn/
