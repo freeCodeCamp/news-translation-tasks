@@ -1,5 +1,5 @@
 on:
-  pull_request_target:
+  pull_request:
     types: [opened, reopened]
     paths:
       - 'articles/**/**.md'
@@ -14,6 +14,7 @@ jobs:
     permissions:
       pull-requests: read
       issues: read
+      repository-projects: read # Needed to access project data using secrets.GITHUB_TOKEN
     outputs:
       target_status: 'in Review' # Which status to move the card to
       card_id: ${{ steps.get_card_node_id.outputs.card_id }}
@@ -76,15 +77,10 @@ jobs:
             try {
               const result = await github.graphql(query, variables);
               console.log(`Result: ${JSON.stringify(result)}`);
-            } catch (error) {
-              console.error('Failed to retrieve project card information from GitHub API:', error.message);
-              core.setFailed(error.message);
-            }
 
-            // Find the GitHub project card ID
-            try {
+              // Find the GitHub project card ID
               if (result.node.closingIssuesReferences.totalCount === 0) {
-                throw new Error('The PR is not linked to the issue. Try adding the `Closes #XXXXX` keyword in the description and reopeneing the PR.');
+                throw new Error('The PR is not linked to the issue. Try adding the `Closes #XXXXX` keyword in the description and reopening the PR.');
               }
               const issueNodeId = result.node.closingIssuesReferences.nodes[0].id;
 
@@ -95,26 +91,29 @@ jobs:
               const cardId = projectNode.items.edges.find(edge => edge.node.content.id === issueNodeId).node.id;
               const projectUrl = projectNode.url;
               const projectName = projectNode.title;
+
+              // Debug log
+              console.log(`Card ID: ${cardId}`);
+              console.log(`Project URL: ${projectUrl}`);
+              console.log(`Project Name: ${projectName}`);
+
+              // Set output values
+              core.setOutput('card_id', cardId);
+              core.setOutput('project_url', projectUrl);
+              core.setOutput('project_name', projectName);
+
             } catch (error) {
-              console.error('Failed to find the project card:', error.message);
+              console.error('Failed to retrieve project card information:', error.message);
               core.setFailed(error.message);
             }
-
-            // Debug log
-            console.log(`Card ID: ${cardId}`);
-            console.log(`Project URL: ${projectUrl}`);
-            console.log(`Project Name: ${projectName}`);
-
-            // Set output values
-            core.setOutput('card_id', cardId);
-            core.setOutput('project_url', projectUrl);
-            core.setOutput('project_name', projectName);
-          github-token: ${{ secrets.MOVE_CARDS_TOKEN }} # Needed to access project data
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
   move_card:
     name: Update project card
     needs: get_card
     runs-on: ubuntu-latest
+    permissions:
+      repository-projects: write # Needed to access project data using secrets.GITHUB_TOKEN
     steps:
       - name: Debug outputs
         run: |
@@ -125,7 +124,7 @@ jobs:
         uses: titoportas/update-project-fields@v0.1.0
         with:
           project-url: ${{ needs.get_card.outputs.project_url }}
-          github-token: ${{ secrets.MOVE_CARDS_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           item-id: ${{ needs.get_card.outputs.card_id }}
           field-keys: Status
           field-values: ${{ needs.get_card.outputs.target_status }}
