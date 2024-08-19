@@ -8,10 +8,10 @@
 # -------------------------------------------------
 
 # -------------------------------------------------
-# All files are owned by dev team
+# All files are owned by i18n team
 # -------------------------------------------------
 
-* @freecodecamp/dev-team
+* @freecodecamp/i18n
 
 # --- Owned by none (negate rule above) ---
 
@@ -19,14 +19,13 @@ package.json
 package-lock.json
 
 # -------------------------------------------------
-# All files in the root are owned by dev team
+# All files in the root are owned by i18n team
 # -------------------------------------------------
 
-/* @freecodecamp/dev-team
+/* @freecodecamp/i18n
 
 # --- Owned by none (negate rule above) ---
 
-*.md
 /package.json
 /package-lock.json
 
