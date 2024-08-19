@@ -16,7 +16,6 @@ jobs:
     permissions:
       pull-requests: read
       issues: read
-      repository-projects: read # Needed to access project data using secrets.GITHUB_TOKEN
     outputs:
       target_status: 'in Review' # Which status to move the card to
       card_id: ${{ steps.get_card_node_id.outputs.card_id }}
@@ -31,7 +30,7 @@ jobs:
         with:
           script: |
             // Debug log
-            console.log("github.event.pull_request.node_id:", process.env.PR_NODE_ID));
+            console.log("github.event.pull_request.node_id:", process.env.PR_NODE_ID);
 
             // GitHub GraphQL API query
             // Find the relevant GitHub project card's node id by `Closes #XXXXX` reference in the pull request
@@ -114,8 +113,6 @@ jobs:
     name: Update project card
     needs: get_card
     runs-on: ubuntu-latest
-    permissions:
-      repository-projects: write # Needed to access project data using secrets.GITHUB_TOKEN
     steps:
       - name: Debug outputs
         run: |
@@ -126,7 +123,7 @@ jobs:
         uses: titoportas/update-project-fields@v0.1.0
         with:
           project-url: ${{ needs.get_card.outputs.project_url }}
-          github-token: ${{ secrets.MOVE_CARDS_TOKEN }}
+          github-token: ${{ secrets.MOVE_CARDS_TOKEN }} # Need to use PAT to access ProjectsV2
           item-id: ${{ needs.get_card.outputs.card_id }}
           field-keys: Status
           field-values: ${{ needs.get_card.outputs.target_status }}
