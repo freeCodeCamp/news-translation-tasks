@@ -1,11 +1,11 @@
 ---
 title: "Learn Linux for Beginners: From Basics to Advanced Techniques [Full Book]"
-date: 2024-08-15T09:05:25.577Z
+date: 2024-08-19T09:06:00.637Z
 author: Zaira Hira
 authorURL: https://www.freecodecamp.org/news/author/zaira/
 originalURL: https://www.freecodecamp.org/news/learn-linux-for-beginners-book-basic-to-advanced/
-translator: ""
-reviewer: ""
+posteditor: ""
+proofreader: ""
 ---
 
 Learning Linux is one of the most valuable skills in the tech industry. It can help you get things done faster and more efficiently. Many of the world's powerful servers and supercomputers run on Linux.
