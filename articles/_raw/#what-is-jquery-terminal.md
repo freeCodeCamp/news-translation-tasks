@@ -1,6 +1,6 @@
 ---
 title: How to Create an Interactive Terminal-Based Portfolio Website
-date: 2024-08-19T09:36:22.186Z
+date: 2024-08-19T12:05:23.406Z
 author: Jakub T. Jankiewicz
 authorURL: https://www.freecodecamp.org/news/author/jcubic/
 originalURL: https://www.freecodecamp.org/news/how-to-create-interactive-terminal-based-portfolio/#what-is-jquery-terminal
@@ -964,18 +964,6 @@ If you have some idea that is not listed here you can ask on [StackOverflow with
 
 If you like this post, you can [check my website][55], (that has a terminal portfolio similar to this one, and also a chat), and [follow me on Twitter/X][56] and [LinkedIn][57].
 
----
-
-![Jakub T. Jankiewicz](https://cdn.hashnode.com/res/hashnode/image/upload/v1627237590042/HRgKaoTrr.jpeg)
-
-I'm a web developer from Poland. I'm also Wikimedian, Wiki Mentor, and Wiki Trainer for Polish Wikipedia.
-
----
-
-If you read this far, thank the author to show them you care. Say Thanks
-
-Learn to code for free. freeCodeCamp's open source curriculum has helped more than 40,000 people get jobs as developers. [Get started][58]
-
 [1]: https://terminal.jcubic.pl/
 [2]: https://itnext.io/how-to-create-interactive-terminal-like-website-888bb0972288
 [3]: #heading-table-of-contents
@@ -1033,4 +1021,3 @@ Learn to code for free. freeCodeCamp's open source curriculum has helped more th
 [55]: https://jakub.jankiewicz.org/
 [56]: https://twitter.com/jcubic
 [57]: https://www.linkedin.com/in/jakubjankiewicz/
-[58]: https://www.freecodecamp.org/learn/
