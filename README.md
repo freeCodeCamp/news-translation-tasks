@@ -12,7 +12,7 @@ Please sign up through [this form](https://forms.gle/1w8umSbTF4JTPwyj9) if you h
 
 Once you're in as a Collaborator, it's time to choose which article you'd like to work on.
 
-In this repository, you will **post-edit** the machine translations.
+In this repository, you will [post-edit](https://en.wikipedia.org/wiki/Postediting) the machine translations.
 
 There are machine-translated markdown files. Carefully revise it and make any corrections or improvements. Then, open a PR to propose the changes. The language lead will review your PR and publish it in our publication.
 
