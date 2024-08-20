@@ -1,6 +1,6 @@
 ---
 title: Conda Remove Environment – How to Delete an Env
-date: 2024-08-20T10:49:45.520Z
+date: 2024-08-20T14:16:52.843Z
 author: Ihechikara Abba
 authorURL: https://www.freecodecamp.org/news/author/Ihechikara/
 originalURL: https://www.freecodecamp.org/news/how-to-delete-an-environment-in-conda/
