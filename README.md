@@ -40,7 +40,7 @@ In this guide, we will explain the steps using [github.dev web-based editor](htt
 ![Issue comment containing links to relevant files](images/gh-issue-link.png)
 
 Click the link **click to open github.dev**. It will open the machine-translated file in the github.dev editor. It looks just like VS Code.
-![github.dev eitor](images/ghdev-open.png)
+![github.dev editor](images/ghdev-open.png)
 
 2. In the "posteditor" field at the beginning of the file, write your username on Ghost.
 ![Update posteditor field](images/ghdev-name.png)
