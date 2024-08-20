@@ -37,24 +37,21 @@ Note: If you are already used to working with fork and pull requests, you can us
 In this guide, we will explain the steps using [github.dev web-based editor](https://docs.github.com/en/codespaces/the-githubdev-web-based-editor).
 
 1. In the issue, you can find a comment like this:
-
 ![Issue comment containing links to relevant files](images/gh-issue-link.png)
 
-    Click the link **click to open github.dev**. It will open the machine-translated file in the github.dev editor. It looks just like VS Code.
-
+Click the link **click to open github.dev**. It will open the machine-translated file in the github.dev editor. It looks just like VS Code.
 ![github.dev eitor](images/ghdev-open.png)
 
 2. In the "posteditor" field at the beginning of the file, write your username on Ghost.
-
 ![Update posteditor field](images/ghdev-name.png)
 
 3. To see the original article before the translation, you can `Ctrl + click` the original URL to open the original article in your browser.
 ![Open original URL](images/ghdev-original.png)
 
-    Or you can find the original markdown file in the articles/_raw directory with the same file name. Be careful not to edit the raw file.
+Or you can find the original markdown file in the articles/_raw directory with the same file name. Be careful not to edit the raw file.
 ![Open original URL](images/ghdev-raw-markdown.png)
 
-4. Go through the translated file and revise it. This process of revising machine translation is called post-editing. Fix any mistranslations or improve awkward phrasing.
+4. Go through the translated file and make changes, such as fixing mistranslations or improving awkward phrasing. This process of revising machine translation is called post-editing.
 
 5. You can temporarily save your work with `Ctrl + S`. This way, the changes will be saved in your browser's local storage.
 
@@ -67,41 +64,32 @@ When you are done with the post-editing, or you would like to save your changes 
 By committing and pushing, you can save your changes on GitHub.
 
 1. In the left sidebar, click `Source Control` icon.
-
 ![Source Control icon](images/ghdev-source-control.png)
 
 2. Click `+` next to the file you've changed to stage your changes.
-
 ![Stage Changes icon](images/ghdev-stage.png)
 
 3. In the commit message, enter the translated title of the article. (If you make multiple commits, use a commit message that describes the change you've made.)
-
 ![Commit message](images/ghdev-commit-msg.png)
 
 4. Click `Commit & Push`. 
-
 ![Commit & Push](images/ghdev-commit.png)
 
 5. You will be prompted to name the new branch. It would be helpful to give it a short, descriptive name so that you can easily find it later. Press Enter to confirm.
-
 ![Name new branch](images/ghdev-branch-name.png)
 
 6. Your changes will automatically be pushed to your branch in your fork on GitHub. If the following pop-up appears, click `Switch to Fork`
-
 ![Switch to Fork](images/ghdev-switch-fork.png)
 
 6. It will switch to the new branch you have just created, and you can continue working there. You can find the file you were working on in the Explorer.
-
 ![New branch in fork](images/ghdev-fork-branch.png)
 
 ### Create a pull request
 
 1. After you've finished post-editing the entire file and committed all the changes, click the branch name at the bottom and select `Open Branch on Github...`.
-
 ![Open Branch on Github](images/ghdev-open-branch.png)
 
 2. It will open your branch on github.com. Click `Compare & pull request` button.
-
 ![Open Branch on Github](images/compare-and-pr.png)
 
 3. It will open the page to create a new pull request.
