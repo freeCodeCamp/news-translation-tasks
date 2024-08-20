@@ -1,20 +1,20 @@
 ---
-title: Conda 環境の削除方法 - 環境を削除する方法
+title: conda remove コマンド – Conda 環境を削除する方法
 date: 2024-08-20T14:16:52.843Z
 author: Ihechikara Abba
 authorURL: https://www.freecodecamp.org/news/author/Ihechikara/
 originalURL: https://www.freecodecamp.org/news/how-to-delete-an-environment-in-conda/
-posteditor: ""
+posteditor: まつだようこ
 proofreader: ""
 ---
 
-Conda は、異なるコード環境を分離して作成するためのオープンソースのパッケージ管理および環境管理システムです。
+Conda とは、隔離されたコード環境を作成できるオープンソースのパッケージ管理および環境管理システムです。
 
 <!-- more -->
 
-Conda を使えば、特定のプロジェクトごとに別々の環境を作成できます。例えば、機械学習用の環境とデータ分析用の環境を別々に用意することも可能です。
+Conda を使えば、特定のプロジェクトごとに別々の環境を作成できます。例えば、機械学習用の環境とデータ分析用の環境を別々に用意することが可能です。
 
-各環境にはそれぞれ独自のパッケージが含まれており、ある環境にインストールされたパッケージは他の環境からアクセスできません。
+各環境にはそれぞれ独自のパッケージが含まれます。ある環境にインストールされたパッケージは、他の環境からアクセスできません。
 
 この記事では、Conda の組み込みコマンドを使って環境を削除する方法を解説します。
 
@@ -26,7 +26,7 @@ Conda を使えば、特定のプロジェクトごとに別々の環境を作�
 conda env list
 ```
 
-環境を削除する前に、まずその環境を非アクティブ化（deactivate）する必要があります。以下のコマンドを使います。
+環境を削除する前に、まずその環境を非アクティブ化 (deactivate) する必要があります。以下のコマンドを使います。
 
 ```
 conda deactivate
