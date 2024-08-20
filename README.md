@@ -45,15 +45,11 @@ Click the link **click to open github.dev**. It will open the machine-translated
 2. In the "posteditor" field at the beginning of the file, write your username on Ghost.
 ![Update posteditor field](images/ghdev-name.png)
 
-3. To see the original article before the translation, you can `Ctrl + click` the original URL to open the original article in your browser.
-![Open original URL](images/ghdev-original.png)
-
-Or you can find the original markdown file in the articles/_raw directory with the same file name. Be careful not to edit the raw file.
-![Open original URL](images/ghdev-raw-markdown.png)
+3. To see the original article in English, you can `Ctrl + click` the original URL to open the original article in your browser. Or you can find the original markdown file in the `articles/_raw` directory with the same file name. Be careful not to edit the raw file.
 
 4. Go through the translated file and make changes, such as fixing mistranslations or improving awkward phrasing. This process of revising machine translation is called post-editing.
 
-5. You can temporarily save your work with `Ctrl + S`. This way, the changes will be saved in your browser's local storage.
+5. You can temporarily save your work with keyboard shortcut `Ctrl + S`. This way, the changes will be saved in your browser's local storage.
 
 If you want to make sure you don't lose your work, it would be better to commit it. This will be explained in the next step.
 
