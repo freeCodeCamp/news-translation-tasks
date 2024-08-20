@@ -8,6 +8,8 @@ posteditor: ""
 proofreader: ""
 ---
 
+test draft
+
 Conda は、オープンソースのパッケージ管理および環境管理システムで、異なるコード環境を作成することができます。
 
 <!-- more -->
