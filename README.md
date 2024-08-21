@@ -42,7 +42,7 @@ In this guide, we will explain the steps using [github.dev web-based editor](htt
 Click the link **click to open github.dev**. It will open the machine-translated file in the github.dev editor. It looks just like VS Code.
 ![github.dev editor](images/ghdev-open.png)
 
-2. In the "posteditor" field at the beginning of the file, write your username on Ghost.
+2. In the "posteditor" field at the beginning of the file, write your Ghost username.
 ![Update posteditor field](images/ghdev-name.png)
 
 3. To see the original article in English, you can `Ctrl + click` the original URL to open the original article in your browser. Or you can find the original markdown file in the `articles/_raw` directory with the same file name. Be careful not to edit the raw file.
