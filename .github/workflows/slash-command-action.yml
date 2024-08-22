@@ -127,8 +127,8 @@ jobs:
       - name: Checkout # Checkout the scripts in this repo onto the runner
         if: needs.validate_and_get_card.outputs.valid_command == 'true'
         uses: actions/checkout@v3
-      - name: Assign issue to the commenter as postediter
-        id: assign_postediter
+      - name: Assign issue to the commenter as posteditor
+        id: assign_posteditor
         # We can remove the check for 'translate' when we move to /postedit command completely.
         if: needs.validate_and_get_card.outputs.valid_command == 'true' && (needs.validate_and_get_card.outputs.command == 'postedit' || needs.validate_and_get_card.outputs.command == 'translate' )
         uses: actions/github-script@v7
@@ -136,7 +136,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           script: |
-            const script = require('./scripts/assignPostediter.js');
+            const script = require('./scripts/assignPosteditor.js');
             await script({github, context, core});
       - name: Assign issue to the reviewer
         id: assign_reviewer
@@ -150,7 +150,7 @@ jobs:
             const projectName = '${{ needs.validate_and_get_card.outputs.project_name }}';
             await script({github, context, core, projectName});
       - name: Update project card status
-        if: steps.assign_postediter.outcome == 'success' || steps.assign_reviewer.outcome == 'success'
+        if: steps.assign_posteditor.outcome == 'success' || steps.assign_reviewer.outcome == 'success'
         uses: titoportas/update-project-fields@v0.1.0
         with:
           project-url: ${{ needs.validate_and_get_card.outputs.project_url }}
