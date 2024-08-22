@@ -103,7 +103,7 @@ Check the following points:
 
 Wait for the language lead to review your pull request. If you get feedback comments, make changes accordingly.
 
-When the review is done, the language lead will merge your pull request and publish the translation.
+When the review is done, the language lead will merge your pull request.
 
 5. Final Review and Publication Preparation
 
