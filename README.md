@@ -105,6 +105,14 @@ Wait for the language lead to review your pull request. If you get feedback comm
 
 When the review is done, the language lead will merge your pull request and publish the translation.
 
+5. Final Review and Publication Preparation
+
+Once your pull request is merged, the language lead will take over the final steps. This includes a through final revision to ensure quality and consistency. The language lead will also handle the transfer of the content to our publication platform, complete with a thumbnail, slug, tags, and the link to the original English article.
+
+**What is next ?** You are free to pick another translation and repeat the same process 1-4. 
+
+Thank you ahead of time!
+
 ## Tips
 
 ### How to add a table of contents
