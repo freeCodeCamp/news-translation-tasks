@@ -40,7 +40,7 @@ conda deactivate
 conda remove --name ENV_NAME --all
 ```
 
-`ENV_NAME` は、削除したい環境の名前を示します。前述の通り、`conda deactivate` コマンドを実行して環境を非アクティブ化してから削除するようにしてください。
+`ENV_NAME` は、削除したい環境の名前を指定します。前述の通り、`conda deactivate` コマンドで当該環境を非アクティブ化してから削除するようにしてください。
 
 `--all` フラグは、その環境にインストールされているすべてのパッケージを削除します。
 
