@@ -1,6 +1,6 @@
 ---
 title: How to Create a Portfolio Website Using HTML, CSS, JavaScript, and Bootstrap 5
-date: 2024-08-27T06:20:49.446Z
+date: 2024-08-27T07:45:43.927Z
 author: Sampurna Chapagain
 authorURL: https://www.freecodecamp.org/news/author/sampurna/
 originalURL: https://www.freecodecamp.org/news/how-to-create-a-portfolio-website-using-html-css-javascript-and-bootstrap/
