@@ -1,6 +1,6 @@
 ---
 title: The Generative AI Handbook – How GenAI is Impacting Business and Innovation
-date: 2024-08-19T08:29:27.005Z
+date: 2024-08-27T15:35:01.969Z
 author: Vahe Aslanyan
 authorURL: https://www.freecodecamp.org/news/author/vaheaslanyan/
 originalURL: https://www.freecodecamp.org/news/generative-ai-handbook/
@@ -638,18 +638,6 @@ You can check out our [Ultimate Data Science Bootcamp][92] and join [a free tria
 
 If you want to learn more about a career in Data Science, Machine Learning and AI, and learn how to secure a Data Science job, you can download this free [Data Science and AI Career Handbook][102].
 
----
-
-![Vahe Aslanyan](https://cdn.hashnode.com/res/hashnode/image/upload/v1723152184433/Kh2F8p0oh.jpeg)
-
-Read [more posts][103].
-
----
-
-If this article was helpful, share it.
-
-Learn to code for free. freeCodeCamp's open source curriculum has helped more than 40,000 people get jobs as developers. [Get started][104]
-
 [1]: https://ideas.repec.org/a/eee/jbrese/v175y2024ics0148296324000468.html
 [2]: https://www.gartner.com/en/articles/beyond-chatgpt-the-future-of-generative-ai-for-enterprises
 [3]: https://www.gartner.com/en/articles/beyond-chatgpt-the-future-of-generative-ai-for-enterprises
@@ -752,5 +740,3 @@ Learn to code for free. freeCodeCamp's open source curriculum has helped more th
 [100]: https://vaheaslanyan.com/
 [101]: https://tatevaslanyan.substack.com/
 [102]: https://downloads.tatevaslanyan.com/six-figure-data-science-ebook
-[103]: /news/author/vaheaslanyan/
-[104]: https://www.freecodecamp.org/learn/
