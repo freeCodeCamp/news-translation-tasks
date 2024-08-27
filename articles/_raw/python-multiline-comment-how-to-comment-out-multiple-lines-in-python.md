@@ -1,6 +1,6 @@
 ---
 title: Python Multiline Comment – How to Comment Out Multiple Lines in Python
-date: 2024-08-27T07:35:05.247Z
+date: 2024-08-27T07:51:56.323Z
 author: Kolade Chris
 authorURL: https://www.freecodecamp.org/news/author/koladechris/
 originalURL: https://www.freecodecamp.org/news/python-multiline-comment-how-to-comment-out-multiple-lines-in-python/
