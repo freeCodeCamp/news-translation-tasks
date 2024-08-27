@@ -1,7 +1,7 @@
 ---
 title: The JavaScript Interview Prep Handbook – Essential Topics to Know + Code
   Examples
-date: 2024-08-19T08:41:41.590Z
+date: 2024-08-27T16:06:20.626Z
 author: Kunal Nalawade
 authorURL: https://www.freecodecamp.org/news/author/kunal-nalawade-25/
 originalURL: https://www.freecodecamp.org/news/js-interview-prep-handbook/
@@ -903,18 +903,6 @@ If you are unable to understand the content or find the explanation unsatisfacto
 
 Good luck with your interviews !!!
 
----
-
-![Kunal Nalawade](https://www.freecodecamp.org/news/content/images/size/w60/2023/01/prof.jpeg)
-
-Read [more posts][37].
-
----
-
-If you read this far, thank the author to show them you care. Say Thanks
-
-Learn to code for free. freeCodeCamp's open source curriculum has helped more than 40,000 people get jobs as developers. [Get started][38]
-
 [1]: #how-to-use-var-let-and-const-keywords
 [2]: #what-is-hoisting
 [3]: #how-do-closures-work
@@ -951,5 +939,3 @@ Learn to code for free. freeCodeCamp's open source curriculum has helped more th
 [34]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Event_loop
 [35]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/GeneratorFunction
 [36]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#the_iterator_protocol
-[37]: /news/author/kunal-nalawade-25/
-[38]: https://www.freecodecamp.org/learn/
