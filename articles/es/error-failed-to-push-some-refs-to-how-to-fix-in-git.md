@@ -38,7 +38,7 @@ Aquí tienes cómo puedes hacerlo:
 git pull origin main
 ```
 
-Si estás trabajando con una rama diferente, entonces tendrías que reemplazar `main` en el ejemplo anterior con el nombre de tu rama.
+Si estás trabajando con una rama diferente, entonces tendrías que reemplazar main en el ejemplo de arriba con el nombre de tu rama.
 
 Solo ten en cuenta que existen posibilidades de fracaso al usar este comando para sincronizar tus repositorios remoto y local para deshacerte del error. Si la solicitud tiene éxito, entonces continúa y ejecuta el siguiente comando para enviar tus propios cambios:
 
@@ -52,7 +52,7 @@ Si el error persiste, obtendrás un error que dice: `fatal: refusing to merge un
 
 El comando `git pull --rebase` es útil en situaciones donde tu rama local está un commit detrás de la rama remota.
 
-Para solucionar el error, sigue adelante y ejecuta los siguientes comandos:
+Para solucionar el error, vamos a ejecutar los siguientes comandos:
 
 ```
 git pull --rebase origin main
