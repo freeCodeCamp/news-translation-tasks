@@ -1,6 +1,6 @@
 ---
 title: Procedural Macros in Rust – A Handbook for Beginners
-date: 2024-08-19T12:09:28.479Z
+date: 2024-09-04T15:52:15.042Z
 author: Anshul Sanghi
 authorURL: https://www.freecodecamp.org/news/author/anshulsanghi/
 originalURL: https://www.freecodecamp.org/news/procedural-macros-in-rust/
