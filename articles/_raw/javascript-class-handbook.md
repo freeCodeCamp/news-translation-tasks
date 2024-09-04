@@ -1,7 +1,7 @@
 ---
 title: The JavaScript Class Handbook – Complete Guide to Class Fields and the
   Super Keyword
-date: 2024-08-19T08:57:10.891Z
+date: 2024-09-04T15:22:50.195Z
 author: Oluwatobi Sofela
 authorURL: https://www.freecodecamp.org/news/author/oluwatobiss/
 originalURL: https://www.freecodecamp.org/news/javascript-class-handbook/
@@ -1666,18 +1666,6 @@ It uses a scalable project to explain the fundamentals of building and managing 
 
 [![Creating NPM Package ReactJS book is now available at Amazon](https://www.freecodecamp.org/news/content/images/2024/01/creating-npm-package-reactjs-book-codesweetly.png)][111]
 
----
-
-![Oluwatobi Sofela](https://cdn.hashnode.com/res/hashnode/image/upload/v1723166572499/FyCz19TsZ.jpg)
-
-Read [more posts][112].
-
----
-
-If you read this far, thank the author to show them you care. Say Thanks
-
-Learn to code for free. freeCodeCamp's open source curriculum has helped more than 40,000 people get jobs as developers. [Get started][113]
-
 [1]: #heading-what-is-a-javascript-class
 [2]: #heading-why-classes-in-javascript
 [3]: #heading-syntax-of-a-javascript-class
@@ -1789,5 +1777,3 @@ Learn to code for free. freeCodeCamp's open source curriculum has helped more th
 [109]: https://codesweetly.com/web-tech-terms-s#static-initialization-blocks
 [110]: https://amzn.to/48NjBdY
 [111]: https://amzn.to/48NjBdY
-[112]: /news/author/oluwatobiss/
-[113]: https://www.freecodecamp.org/learn/
