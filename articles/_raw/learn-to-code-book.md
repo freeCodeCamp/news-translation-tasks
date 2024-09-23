@@ -1,6 +1,6 @@
 ---
 title: How to Learn to Code and Get a Developer Job [Full Book]
-date: 2024-09-06T15:51:54.328Z
+date: 2024-09-23T10:23:16.498Z
 author: Quincy Larson
 authorURL: https://www.freecodecamp.org/news/author/quincy/
 originalURL: https://www.freecodecamp.org/news/learn-to-code-book/
