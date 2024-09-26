@@ -24,7 +24,7 @@ Here are the detailed steps.
 
 Check out the list of available articles in the GitHub Projects of your language, and pick the issue that you'd like to work on.
 
-2. Comment `/postedit` on the issue. This will automatically assign the issue to you and move the card to the "in Post-edit" status.
+2. Comment `/postedit` on the issue. This will automatically assign the issue to you and move the card to the "in Postediting" status.
 
 *It may take a few minutes before the GitHub Actions workflow responds to the command. When it's done, it will add a comment "@username We have assigned this article to you."
 
