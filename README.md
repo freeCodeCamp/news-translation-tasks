@@ -1,4 +1,4 @@
-# Welcome to our Article Post-Editing Workflow
+# Welcome to our Article Localization Workflow
 
 ## Hey there, awesome community!
 
@@ -7,17 +7,20 @@ Excited to have you on board for our localization mission! Here's a simple guide
 Please sign up through [this form](https://forms.gle/1w8umSbTF4JTPwyj9) if you have not already done so. This will enable us to send you an invitation to join the "news-translation-tasks" as a Collaborator. 
 
 **Can't wait to have you officially join the team!**
+
+## Two methods for our localization
+
 We are currently localizing handbooks and articles in two ways:
 
-1. Traditional translation process: As a collaborator, you can pick an article, translate it, and submit it for review.
+- **(A) Traditional translation process**: As a collaborator, you can pick an article, translate it, and submit it for review.
 
-2. Post-editing process: As a collaborator, you can pick an AI-translated handbook or lengthy article to post-edit, ensuring it's grammatically correct and fixing any possible AI errors, such as untranslated words or paragraphs, missing content, or incorrectly wrapped paragraphs in backticks.
+- **(B) Post-editing process**: As a collaborator, you can pick an AI-translated article to [post-edit](https://en.wikipedia.org/wiki/Postediting), ensuring it's grammatically correct and fixing any possible AI errors, such as untranslated words or paragraphs, missing content, or incorrectly wrapped paragraphs in backticks.
 
 In both localization methods, the collaborator's meticulous revision is crucial, especially on AI-translated handbooks and articles, since AI translations are known to make mistakes or miss certain details.
 
 Please take a look and decide which of these two methods you would like to collaborate on.
 
-## Article Translation Process
+## (A) Traditional translation process
 
 ### Pick Your Article
 Once you're in as a Collaborator, it's time to choose which article you'd like to work on. Check out the list of available issues/articles and pick the one that speaks to you from the Project of the spoken language you would like to help on.
@@ -30,13 +33,9 @@ Found the perfect piece to translate? Awesome! Just comment /translate on the is
 ### Ready for Review
 After you've translated your piece, give us a heads up by commenting /review. This will automatically move the card to the "in Review" status and let our Language Leads or Proofreaders know that it's time to revise your translation and prepare before potentially publishing it.
 
-## How to post-edit an article
+## (B) Post-editing process
 
-Once you're in as a Collaborator, it's time to choose which article you'd like to work on.
-
-In this repository, you will [post-edit](https://en.wikipedia.org/wiki/Postediting) the machine translations.
-
-There are machine-translated markdown files. Carefully revise it and make any corrections or improvements. Then, open a PR to propose the changes. The language lead will review your PR and publish it in our publication.
+There are machine-translated markdown files in this repository. Select an article and revise it. Then, open a PR to propose the changes. The language lead will review your PR and publish it in our publication.
 
 Here are the detailed steps.
 
@@ -62,7 +61,6 @@ In this guide, we will explain the steps using [github.dev web-based editor](htt
 ![Issue comment containing links to relevant files](images/gh-issue-link.png)
 
 Click the link **click to open github.dev**. It will open the machine-translated file in the github.dev editor. It looks just like VS Code.
-![github.dev editor](images/ghdev-open.png)
 
 2. In the "posteditor" field at the beginning of the file, write your Ghost username.
 ![Update posteditor field](images/ghdev-name.png)
