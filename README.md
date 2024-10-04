@@ -94,7 +94,7 @@ By committing and pushing, you can save your changes on GitHub.
 5. You will be prompted to name the new branch. It would be helpful to give it a short, descriptive name so that you can easily find it later. Press Enter to confirm.
 ![Name new branch](images/ghdev-branch-name.png)
 
-6. Your changes will automatically be pushed to your branch in your fork on GitHub. If the following pop-up appears, click `Switch to Fork`
+6. Your changes will automatically be pushed to your branch in your fork on GitHub. If the following pop-up appears, click `Switch to Fork`  
 ![Switch to Fork](images/ghdev-switch-fork.png)
 
 6. It will switch to the new branch you have just created, and you can continue working there. You can find the file you were working on in the Explorer.
