@@ -28,7 +28,7 @@ freeCodeCamp.org は、[寄付によって支えられている 501(c)(3) の慈
 
 ![Image](https://www.freecodecamp.org/news/content/images/2020/12/Free_Code_Camp_Inc_-_GuideStar_Profile.png) _非営利団体透明性サイト GuideStar.org のスクリーンショット_
 
-### freeCodeCamp のどのくらい効率的ですか？
+### freeCodeCamp はどのくらい効率的ですか？
 
 freeCodeCamp の予算は、同規模の他非営利団体に比べて以上に少ない状況です。その一因としては、私が資金調達活動が不得手だということもあるでしょう。私たちは資金調達の専門家を雇用することなく、すべて私自身がその役目を担っています。
 
