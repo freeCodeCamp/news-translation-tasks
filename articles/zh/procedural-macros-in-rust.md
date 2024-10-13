@@ -4,75 +4,75 @@ date: 2024-08-19T12:09:28.479Z
 author: Anshul Sanghi
 authorURL: https://www.freecodecamp.org/news/author/anshulsanghi/
 originalURL: https://www.freecodecamp.org/news/procedural-macros-in-rust/
-posteditor: ""
+posteditor: hezean
 proofreader: ""
 ---
 
-在这本手册中，你将了解 Rust 中的过程宏及其用途。你还会学习如何通过假想和实际的例子编写自己的过程宏。
+在这本手册中，你将了解 Rust 中的过程宏（Procedural Macros）及其用途。我们还将通过一些虚构的场景以及实际的例子来学习如何编写过程宏。
 
 <!-- more -->
 
-本指南假定你已经熟悉 Rust 及其基本概念，如数据类型、迭代器和 traits。如果你需要建立或复习 Rust 的基础知识，请[查看这个互动课程][1]。
+本指南假定你已经熟悉 Rust 及其基本概念，如数据类型、迭代器和特质（traits）。如果你需要学习或复习 Rust 的基础知识，请[查看这个互动课程（仅英文）](https://www.freecodecamp.org/news/rust-in-replit/)。
 
 你不需要具备宏的前置知识，因为这篇文章会从头开始进行讲解。
 
 ## 目录
 
-1.  [Rust 中的宏是什么？][2]
-    1.  [Rust 中的宏类型][3]
-    2.  [过程宏的类型][4]
-2.  [先决条件][5]
-    1.  [有用的依赖项][6]
-3.  [如何编写一个简单的 Derive 宏][7]
-    1.  [`IntoStringHashMap` Derive 宏][8]
-    2.  [如何声明一个 Derive 宏][9]
-    3.  [如何解析宏输入][10]
-    4.  [如何确保宏针对的是结构体][11]
-    5.  [如何构建输出代码][12]
-    6.  [如何使用你的 Derive 宏][13]
-    7.  [如何改进我们的实现][14]
-4.  [更复杂的 Derive 宏][15]
-    1.  [`DeriveCustomModel` 宏][16]
-    2.  [如何将实现与声明分离][17]
-    3.  [如何解析 Derive 宏参数][18]
-    4.  [如何实现 `DeriveCustomModel`][19]
-    5.  [如何生成每个自定义模型][20]
-    6.  [如何使用你的 `DeriveCustomModal` 宏][21]
-5.  [一个简单的属性宏][22]
-    1.  [`log_duration` 属性][23]
-    2.  [如何声明一个属性宏][24]
-    3.  [如何实现 `log_duration` 属性宏][25]
-    4.  [如何使用你的 `log_duration` 宏][26]
-6.  [更复杂的属性宏][27]
-    1.  [`cached_fn` 属性][28]
-    2.  [如何实现 `cached_fn` 属性宏][29]
-    3.  [`cached_fn` 属性参数][30]
-    4.  [如何使用 `cached_fn` 宏][31]
-7.  [一个简单的函数式宏][32]
-    1.  [`constant_string` 宏][33]
-    2.  [如何声明一个函数式宏][34]
-    3.  [如何实现 `constant_string` 宏][35]
-    4.  [如何使用 `constant_string` 宏][36]
-8.  [更复杂的函数式宏][37]
-    1.  [`hash_mapify` 宏][38]
-    2.  [如何实现 `hash_mapify` 宏][39]
-    3.  [如何解析 `hash_mapify` 的输入][40]
-    4.  [如何生成输出代码][41]
-    5.  [如何将自定义数据类型转换为输出标记][42]
-    6.  [如何使用 `hash_mapify` 宏][43]
-9.  [编写宏之外][44]
-    1.  [有用的库/工具][45]
-10.  [宏的缺点][46]
-    1.  [调试（或缺乏调试）][47]
-    2.  [编译时间成本][48]
-    3.  [缺乏自动补全和代码检查][49]
-    4.  [我们该在何处止步？][50]
-11.  [总结][51]
-    1.  [喜欢我的作品吗？][52]
+1.  [Rust 中的宏是什么？](#what-are-macros-in-rust)
+    1.  [Rust 中的宏类型](#types-of-macros-in-rust)
+    2.  [过程宏的类型](#types-of-procedural-macros)
+2.  [准备工作](#prerequisites)
+    1.  [有用的依赖项](#helpful-dependencies)
+3.  [如何编写一个简单的派生宏](#how-to-write-a-simple-derive-macro)
+    1.  [`IntoStringHashMap` 派生宏](#the-intostringhashmap-derive-macro)
+    2.  [如何声明一个派生宏](#how-to-declare-a-derive-macro)
+    3.  [如何解析宏输入](#how-to-parse-macro-input)
+    4.  [如何确保宏的目标是一个结构体](#how-to-ensure-a-struct-target-for-macro)
+    5.  [如何构建输出代码](#how-to-build-the-output-code)
+    6.  [如何使用你的派生宏](#how-to-use-your-derive-macro)
+    7.  [如何改进我们的实现](#how-to-improve-our-implementation)
+4.  [更复杂的派生宏](#a-more-elaborate-derive-macro)
+    1.  [`DeriveCustomModel` 宏](#the-derivecustommodel-macro)
+    2.  [如何将实现与声明分离](#how-to-separate-implementation-from-declaration)
+    3.  [如何解析派生宏的参数](#how-to-parse-derive-macro-arguments)
+    4.  [如何实现 `DeriveCustomModel`](#how-to-implement-derivecustommodel)
+    5.  [如何生成每个自定义模型](#how-to-generate-each-custom-model)
+    6.  [如何使用这个 `DeriveCustomModal` 宏](#how-to-use-your-derivecustommodal-macro)
+5.  [一个简单的属性宏](#a-simple-attribute-macro)
+    1.  [`log_duration` 属性](#the-logduration-attribute)
+    2.  [如何声明一个属性宏](#how-to-declare-an-attribute-macro)
+    3.  [如何实现 `log_duration` 属性宏](#how-to-implement-the-logduration-attribute-macro)
+    4.  [如何使用这个 `log_duration` 宏](#how-to-use-your-log-duration-macro)
+6.  [更复杂的属性宏](#a-more-elaborate-attribute-macro)
+    1.  [`cached_fn` 属性](#the-cachedfn-attribute)
+    2.  [如何实现 `cached_fn` 属性宏](#how-to-implement-the-cachedfn-attribute-macro)
+    3.  [`cached_fn` 的属性参数](#cachedfn-attribute-arguments)
+    4.  [如何使用 `cached_fn` 宏](#how-to-use-the-cachedfn-macro)
+7.  [一个简单的函数式宏](#a-simple-function-like-macro)
+    1.  [`constant_string` 宏](#the-constantstring-macro)
+    2.  [如何声明一个函数式宏](#how-to-declare-a-function-like-macro)
+    3.  [如何实现 `constant_string` 宏](#how-to-implement-the-constantstring-macro)
+    4.  [如何使用 `constant_string` 宏](#how-to-use-the-constantstring-macro)
+8.  [更复杂的函数式宏](#a-more-elaborate-function-like-macro)
+    1.  [`hash_mapify` 宏](#the-hashmapify-macro)
+    2.  [如何实现 `hash_mapify` 宏](#how-to-implement-the-hashmapify-macro)
+    3.  [如何解析 `hash_mapify` 的输入](#how-to-parse-hash-mapifys-input)
+    4.  [如何生成输出代码](#how-to-generate-output-code)
+    5.  [如何将自定义数据类型转换为输出标记](#how-to-convert-custom-data-types-to-output-tokens)
+    6.  [如何使用 `hash_mapify` 宏](#how-to-use-the-hashmapify-macro)
+9.  [编写宏 —— 更进一步](#beyond-writing-macros)
+    1.  [有用的库/工具](#helpful-cratestools)
+10.  [宏的缺点](#downsides-of-macros)
+    1.  [调试（或者说缺乏调试）](#debugging-or-lack-thereof)
+    2.  [编译时成本](#compile-time-costs)
+    3.  [缺乏自动补全和代码检查](#lack-of-auto-complete-and-code-checks)
+    4.  [我们应该止步于何处？](#where-do-we-draw-the-line)
+11.  [总结](#wrapping-up)
+    1.  [喜欢我的作品吗？](#enjoying-my-work)
 
-## **Rust 中的宏是什么？**
+<h2 id="what-are-macros-in-rust">Rust 中的宏是什么？</h2>
 
-宏是 Rust 编程语言的重要组成部分。当你开始学习这门语言时，很快就会遇到它们。
+宏（Macro）是 Rust 编程语言的重要组成部分。一旦你开始学习这门语言，你很快就会遇到它们。
 
 在最简单的形式下，Rust 中的宏允许你在编译时执行一些代码。实际上，Rust 几乎允许你随心所欲地编写和使用宏。此功能最常见的用例是编写代码来生成其他代码。
 
@@ -97,6 +97,8 @@ proofreader: ""
 -   **SQLx** 项目使用宏在编译时验证所有 SQL 查询和语句（只要你使用提供的宏创建它们），通过实际在运行的数据库实例中执行它们（是的，在编译时）。
 -   **typed\_html** 使用宏实现了一个完整的 HTML 解析器，并在编译时进行验证，同时使用了熟悉的 JSX 语法。
 
+<h2 id="types-of-macros-in-rust">Rust 中的宏类型</h2>
+
 在 Rust 中，有两种不同类型的宏：声明性宏和过程宏。
 
 ### 声明性宏
@@ -115,9 +117,9 @@ proofreader: ""
 
 过程宏进一步分为三类：派生宏、属性宏和函数式宏。
 
-### 过程宏的类型
+<h3 id="types-of-procedural-macros">过程宏的类型</h3>
 
-#### 派生宏
+#### 派生宏（Derive Macro）
 
 总体来说，派生宏应用于 Rust 中的数据类型。它们是一种扩展类型声明的方法，允许自动为其 "派生" 功能。
 
@@ -183,7 +185,7 @@ impl core::fmt::Debug for User {
 
 请注意，原始类型声明在输出代码中保留。这是派生宏与其他宏之间的主要区别之一。派生宏保留输入类型而不做修改。它们只向输出中添加附加代码。另一方面，所有其他宏的行为则不相同。它们仅在宏自身的输出中包含目标时才保留目标。
 
-#### 属性宏
+#### 属性宏（Attribute Macro）
 
 属性宏除了数据类型外，通常还应用于代码块，如函数、impl 块、内联块等。它们通常用于以某种方式转换目标代码，或使用附加信息注释它。
 
@@ -202,7 +204,7 @@ impl core::fmt::Debug for User {
 
 属性宏也是Rust中[条件编译][54]的驱动力。
 
-#### 功能性宏
+#### 函数式宏（Function-like Macro）
 
 功能性宏是伪装成函数的宏。这些是限制最少的过程宏，因为只要它们输出的代码在使用上下文中是有效的，它们几乎可以在任何地方使用。
 
@@ -212,7 +214,7 @@ impl core::fmt::Debug for User {
 
 在对宏的基本信息进行了这么长时间的描述之后，终于可以深入实际编写过程宏了。
 
-## 先决条件
+<h2 id="prerequisites">准备工作</h2>
 
 编写自己的过程宏有一定的规则，你需要遵循这些规则。这些规则适用于所有三种类型的过程宏。它们是：
 
@@ -269,7 +271,7 @@ my-app-macros = { path = "./my-app-macros" }
 
 你需要将依赖解析器版本设置为“2”，并将你的宏项目添加为`my-app`项目的依赖。
 
-### 有用的依赖项
+<h3 id="helpful-dependencies">有用的依赖项</h3>
 
 从编译器的角度来看，宏是这样工作的：
 
@@ -295,15 +297,15 @@ my-app-macros = { path = "./my-app-macros" }
 cargo add syn quote proc-macro2 darling
 ```
 
-## 如何编写一个简单的 Derive 宏
+<h2 id="how-to-write-a-simple-derive-macro">如何编写一个简单的派生宏</h2>
 
 在本节中，你将学习如何编写一个 `Derive` 宏。到现在为止，你应该已经了解了不同类型的宏及其含义，因为我们在前面的部分中已经讨论过它们。
 
-### `IntoStringHashMap` Derive 宏
+<h3 id="the-intostringhashmap-derive-macro"><code>IntoStringHashMap</code> 派生宏</h3>
 
 假设你有一个应用程序，你需要能够将结构体转换为使用 `String` 类型作为键和值的哈希映射。这意味着它应该适用于所有字段都可以使用 `Into` 特性转换为 `String` 类型的任何结构体。
 
-### 如何声明一个 Derive 宏
+<h3 id="how-to-declare-a-derive-macro">如何声明一个派生宏</h3>
 
 你通过创建一个函数并使用属性宏注解该函数来声明宏，这些属性宏告诉编译器将该函数视为宏声明。由于你的 `lib.rs` 现在是空的，你还需要将 `proc-macro2` 声明为外部 crate:
 
@@ -363,7 +365,7 @@ error: could not compile `my-app` (bin "my-app") due to 1 previous error
 
 这意味着我们的宏声明和其用法都有效。我们现在可以继续实际实现这个宏了。
 
-### 如何解析宏的输入
+<h3 id="how-to-parse-macro-input">如何解析宏输入</h3>
 
 首先，你使用 `syn` 将输入令牌流解析为 `DeriveInput`，这是任何可以使用 derive 宏的目标的表示：
 
@@ -433,7 +435,7 @@ pub fn into_hash_map(item: TokenStream) -> TokenStream {
 
 这里发生了很多事情，让我们分解一下:
 
-### 如何确保宏的目标是 `struct`
+<h3 id="how-to-ensure-a-struct-target-for-macro">如何确保宏的目标是一个结构体</h3>
 
 `let struct_identifier = &input.ident;`：你将结构体标识符存储在一个单独的变量中，这样你以后就可以轻松使用它。
 
@@ -446,7 +448,7 @@ match &input.data {
 
 你在 `DeriveInput` 的解析数据字段上进行匹配。如果它是 `DataStruct` 类型（一个 Rust 结构体），则继续，否则恐慌，因为宏尚未为其他类型实现。
 
-### 如何构建输出代码
+<h3 id="how-to-build-the-output-code">如何构建输出代码</h3>
 
 让我们看看当你确实有 `DataStruct` 时，匹配分支的实现：
 
@@ -606,7 +608,7 @@ pub fn into_hash_map(item: TokenStream) -> TokenStream {
 
 **是时候享受你劳动的成果了。**
 
-### 如何使用你的 Derive 宏
+<h3 id="how-to-use-your-derive-macro">如何使用你的派生宏</h3>
 
 回到你的 `my-app/main.rs` 文件中，让我们调试打印一下你使用宏创建的哈希图。你的 `main.rs` 应该看起来像这样：
 
@@ -648,7 +650,7 @@ fn main() {
 
 就是这样！
 
-### 如何改进我们的实现
+<h3 id="how-to-improve-our-implementation">如何改进我们的实现</h3>
 
 在原始实现中，我有意跳过了一种更好地使用迭代器和 `quote` 的方式，因为它需要我们学习更多 `quote` 特有的语法。
 
@@ -692,11 +694,11 @@ let input = syn::parse_macro_input!(item as syn::DeriveInput);
 
 在这种情况下，你首先创建一个 `field_identifiers` 迭代器，这是目标结构体中所有字段标识符的集合。然后你编写 `hash_map` 插入语句，同时直接将迭代器用作单个项目。`#()*` 包装器将其转换为预期的多行输出，每行对应迭代器中的一个项目。
 
-## 更复杂的 Derive 宏
+<h2 id="a-more-elaborate-derive-macro">更复杂的派生宏</h2>
 
 现在你已经熟悉如何编写简单的 Derive 宏，是时候进一步创建一个在实际场景中更有用的宏了，特别是当你处理数据库模型时。
 
-### `DeriveCustomModel` 宏
+<h3 id="the-derivecustommodel-macro"><code>DeriveCustomModel</code> 宏</h3>
 
 你将要构建一个 Derive 宏，帮助你从原始结构体生成派生结构体。在处理数据库时，你会经常需要这个，尤其是当你只想加载部分数据时。
 
@@ -725,7 +727,7 @@ pub fn derive_custom_model(item: TokenStream) -> TokenStream {
 touch src/custom_model.rs
 ```
 
-### 如何将实现与声明分离
+<h3 id="how-to-separate-implementation-from-declaration">如何将实现与声明分离</h3>
 
 定义一个实现 `DeriveCustomModel` 宏的函数。我们还将立即添加所有的导入，以避免后续的混淆：
 
@@ -758,7 +760,7 @@ pub fn derive_custom_model(item: TokenStream) -> TokenStream {
 }
 ```
 
-### 如何解析派生宏参数
+<h3 id="how-to-parse-derive-macro-arguments">如何解析派生宏参数</h3>
 
 要解析我们的派生宏的参数（通常是通过应用于目标或其字段的属性提供的参数），我们将依赖 `darling` crate，使其像定义数据类型一样简单。
 
@@ -804,7 +806,7 @@ struct CustomModel {
 
 在这个结构中，我们有两个必需的参数：`name` 和 `fields`，以及一个可选的参数 `extra_derives`。由于在它上面有 `#[darling(default)]` 注解，它是可选的。
 
-### 如何实现 `DeriveCustomModel`
+<h3 id="how-to-implement-derivecustommodel">如何实现 <code>DeriveCustomModel</code></h3>
 
 现在我们已经定义了所有的数据类型，让我们开始解析——这就像调用我们的参数结构上的一个方法一样简单！完整的函数实现看起来应该像这样：
 
@@ -866,7 +868,7 @@ pub(crate) fn derive_custom_model_impl(input: TokenStream) -> TokenStream {
 
 生成每个模型的 token 的代码已被抽取到我们称之为 `generate_custom_model` 的另一个函数中。我们也来实现这个函数：
 
-### 如何生成每个自定义模型
+<h3 id="how-to-generate-each-custom-model">如何生成每个自定义模型</h3>
 
 
 ```rust
@@ -954,7 +956,7 @@ fn generate_custom_model(fields: &Fields, model: &CustomModel) -> proc_macro2::T
 }
 ```
 
-### 如何使用 `DeriveCustomModel` 宏
+<h3 id="how-to-use-your-derivecustommodal-macro">如何使用这个 <code>DeriveCustomModel</code> 宏</h3>
 
 回到你的 `my-app/main.rs`，让我们调试打印用你实现的宏创建的新结构体的哈希映射。你的 `main.rs` 应该如下所示：
 
@@ -1013,15 +1015,15 @@ fn main() {
 
 我们将在这里结束派生宏的部分。
 
-## 一个简单的属性宏
+<h2 id="a-simple-attribute-macro">一个简单的属性宏</h2>
 
 在本节中，你将学习如何编写一个**属性**宏。
 
-### `log_duration` 属性
+<h3 id="the-logduration-attribute"><code>log_duration</code> 属性</h3>
 
 你将编写一个简单的属性宏，它可以应用于任何函数（或方法），并在每次调用函数时记录函数的总运行时间。
 
-### 如何声明属性宏
+<h3 id="how-to-declare-an-attribute-macro">如何声明一个属性宏</h3>
 
 通过创建一个函数并使用 `proc_macro_attribute` 宏注解该函数来声明属性宏，该宏告诉编译器将该函数视为宏声明。让我们看看它是什么样的：
 
@@ -1041,7 +1043,7 @@ pub fn log_duration(args: TokenStream, item: TokenStream) -> TokenStream {
 ```rust
 ```
 
-### 如何实现 `log_duration` 属性宏
+<h3 id="how-to-implement-the-logduration-attribute-macro">如何实现 <code>log_duration</code> 属性宏</h3>
 
 我将首先为您提供完整的实现，然后我会分解一些我之前没有使用的部分：
 
@@ -1110,7 +1112,7 @@ pub(crate) fn log_duration_impl(_args: TokenStream, input: TokenStream) -> Token
 
 在这个例子中，你需要修改函数体，这就是为什么你要创建一个新的块来封装原始函数块。
 
-### 如何使用你的 `log_duration` 宏
+<h3 id="how-to-use-your-log-duration-macro">如何使用这个 <code>log_duration</code> 宏</h3>
 
 回到 `main.rs`，使用属性宏比你想象的要简单：
 
@@ -1142,9 +1144,9 @@ function_to_benchmark 耗时 498μs
 
 我们现在准备好转向更复杂的用例。
 
-## 一个更复杂的属性宏
+<h2 id="a-more-elaborate-attribute-macro">一个更复杂的属性宏</h2>
 
-### `cached_fn` 属性
+<h3 id="the-cachedfn-attribute"><code>cached_fn</code> 属性</h3>
 
 你将编写一个属性宏，它将允许你为任何函数添加缓存功能。对于这个示例，我们假设我们的函数总是具有 `String` 参数，并且也返回一个 `String` 值。
 
@@ -1175,7 +1177,7 @@ cacache = { version = "13.0.0", default-features = false, features = ["mmap"] }
 macros = { path = "./macros" }
 ```
 
-### 如何实现 `cached_fn` 属性宏
+<h3 id="how-to-implement-the-cachedfn-attribute-macro">如何实现 <code>cached_fn</code> 属性宏</h3>
 
 让我们从 `lib.rs` 中声明这个宏开始：
 
@@ -1196,7 +1198,7 @@ touch my-app-macros/src/cached_fn.rs
 
 让我们在实现之前定义下我们的参数应该是什么样子的：
 
-### `cached_fn` 属性参数
+<h3 id="cachedfn-attribute-arguments"><code>cached_fn</code> 的属性参数</h3>
 
 ```
 // my-app-macros/src/cached_fn.rs
@@ -1298,7 +1300,7 @@ pub fn cached_fn_impl(args: TokenStream, item: TokenStream) -> TokenStream {
 
 我们还添加了一些日志记录来帮助我们验证宏是否按预期工作。
 
-### 如何使用 `cached_fn` 宏
+<h3 id="how-to-use-the-cachedfn-macro">如何使用 <code>cached_fn</code> 宏</h3>
 
 要将任何函数变为记忆化或缓存的，我们只需使用 `cached_fn` 属性对其进行注释：
 
@@ -1331,12 +1333,13 @@ Data is not fetched from cached
 
 例如，我编写了属性宏来使用 `redis` 缓存 HTTP 处理函数，以用于生产服务器。它们的实现与此非常相似，但包含许多特性以适应特定用例。
 
-## 一个简单的函数式宏
+<h2 id="a-simple-function-like-macro">一个简单的函数式宏</h2>
 
 现在终于可以再次享受一些 _乐趣_ 了。我们将从简单的开始，但第二个示例将包含解析自定义语法。_有趣_，对吧？
 
 免责声明：如果你熟悉声明式宏（使用 `macro_rules!` 语法），你可能会意识到以下示例可以轻松地使用该语法编写，并且不需要过程宏。如果你还想保持简单，写出不能作为声明式宏编写的过程宏示例是非常困难的，这就是选择这些示例的原因，尽管如此。
-```
+
+<h3 id="the-constantstring-macro"><code>constant_string</code> 宏</h3>
 
 我们将构建一个非常简单的宏，它将一个字符串字面量（类型为`&str`）作为输入，并为其创建一个全局公共常量（变量名称与值相同）。基本上，我们的宏将生成以下内容：
 
@@ -1344,7 +1347,7 @@ Data is not fetched from cached
 pub const STRING_LITERAL: &str = "STRING_LITERAL";
 ```
 
-### 如何声明一个类函数的宏
+<h3 id="how-to-declare-a-function-like-macro">如何声明一个类函数的宏</h3>
 
 你可以通过创建一个函数并使用`proc_macro`宏注解该函数来声明类函数的宏。它告诉编译器将该函数视为宏声明。让我们看看这是什么样子的：
 
@@ -1359,7 +1362,7 @@ pub fn constant_string(item: TokenStream) -> TokenStream {
 
 对于这些宏，函数名称非常重要，因为它也成为宏的名称。如你所见，这些宏只接受一个参数，即你传递给宏的内容。它可以是任何东西，甚至是无效的Rust代码的自定义语法。
 
-### 如何实现`constant_string`宏
+<h3 id="how-to-implement-the-constantstring-macro">如何实现 <code>constant_string</code> 宏</h3>
 
 对于实现，让我们创建一个新的文件`constant_string.rs`：
 
@@ -1390,7 +1393,7 @@ pub fn constant_string_impl(item: TokenStream) -> TokenStream {
 
 我们所做的只是将输入解析为字符串字面量。如果你传递的内容不是字符串字面量，它将抛出一个错误。然后我们获取字符串，创建一个标识符，并生成输出代码。简短且简单。
 
-### 如何使用`constant_string`宏
+<h3 id="how-to-use-the-constantstring-macro">如何使用 <code>constant_string</code> 宏</h3>
 
 使用此宏也非常简单：
 
@@ -1406,11 +1409,11 @@ constant_string!("SOME_CONSTANT_STRING_VALUE");
 pub const SOME_CONSTANT_STRING_VALUE: &str = "SOME_CONSTANT_STRING_VALUE";
 ```
 
-## 更复杂的类函数宏
+<h2 id="a-more-elaborate-function-like-macro">更复杂的类函数宏</h2>
 
 顾名思义，类函数宏可以类似于调用函数的方式使用。你还可以在任何可以调用函数的地方使用它们，以及其他地方。
 
-### `hash_mapify`宏
+<h3 id="the-hashmapify-macro"><code>hash_mapify</code> 宏</h3>
 
 进入有趣的部分：你现在将编写的宏将允许你通过简单地传递一组键值对来生成一个`HashMap`。例如：
 
@@ -1430,7 +1433,7 @@ hash_mapify!(
 
 为了简化处理，因为这个过程很容易变得复杂，我们只支持字符串、整数、浮点数和布尔值等基本类型。因此，我们不支持创建非字符串键或具有枚举和结构体值的`hash_map`。
 
-### 如何实现`hash_mapify`宏
+<h3 id="how-to-implement-the-hashmapify-macro">如何实现 <code>hash_mapify</code> 宏</h3>
 
 我们将像往常一样开始声明宏：
 
@@ -1453,7 +1456,7 @@ pub fn hash_mapify(item: TokenStream) -> TokenStream {
 touch my-app-macros/src/hash_mapify.rs
 ```
 
-### 如何解析`hash_mapify`的输入
+<h3 id="how-to-parse-hash-mapifys-input">如何解析 <code>hash_mapify</code> 的输入</h3>
 
 ```
 // my-app-macros/src/hash_mapify.rs
@@ -1706,7 +1709,7 @@ impl Parse for ParsedMap {
 }
 ```
 
-### 如何生成输出代码
+<h3 id="how-to-generate-output-code">如何生成输出代码</h3>
 
 现在你终于可以编写实际的宏实现了，这会是相当直接的：
 
@@ -1748,7 +1751,7 @@ pub fn hash_mapify_impl(item: TokenStream) -> TokenStream {
 
 但是，如果我们尝试手动编写实现，在其中遍历自己，在每个循环中生成单独的 token 流，并扩展现有的 token 流，将会非常繁琐。是否有更好的解决方案呢？确实有：`ToTokens` trait。
 
-### 如何将自定义数据类型转换为输出 Tokens
+<h3 id="how-to-convert-custom-data-types-to-output-tokens">如何将自定义数据类型转换为输出标记</h3>
 
 这个 trait 可以为我们的任何自定义类型实现，并定义类型在转换为 token 流时的样子。
 
@@ -1890,7 +1893,7 @@ quote!({
 }
 ```
 
-### 如何使用 `hash_mapify` 宏
+<h3 id="how-to-use-the-hashmapify-macro">如何使用 <code>hash_mapify</code> 宏</h3>
 
 我们可以通过编写一个简单的用例来验证我们的宏是否有效：
 
@@ -1938,11 +1941,11 @@ fn test_hashmap() {
 
 现在我们已经涵盖了所有三种类型的过程宏，我们将在此处结束示例。
 
-## 编写宏之外
+<h2 id="beyond-writing-macros">编写宏 —— 更进一步</h2>
 
 既然你已经学会了如何编写基本的派生宏，我想花点时间快速介绍一些在处理宏时很有帮助的工具和技术。我还会指出一些为什么以及何时避免使用它们的缺点。
 
-### 有用的 Crates/工具
+<h3 id="helpful-cratestools">有用的库/工具</h3>
 
 [**cargo-expand**][58]
 
@@ -1972,9 +1975,9 @@ cargo expand
 
 如果你想单元测试你的过程宏的扩展形式或断言任何预期的编译错误，这两个 crates 非常有用。
 
-## 宏的缺点
+<h2 id="downsides-of-macros">宏的缺点</h2>
 
-### 调试（或缺乏 thereof）
+<h3 id="debugging-or-lack-thereof">调试（或者说缺乏调试）</h3>
 
 你不能在由宏生成的代码的任何行中设置断点。在错误的栈追踪中，你也无法到达它。这使得调试生成的代码变得非常困难。
 
@@ -1982,32 +1985,31 @@ cargo expand
 
 可能还有更好的方法，如果你知道任何方法，我将不胜感激。
 
-### 编译时成本
+<h3 id="compile-time-costs">编译时成本</h3>
 
 宏扩展需要编译器运行和处理的非零成本，然后检查它生成的代码是否有效。当涉及递归宏时，这变得更加昂贵。
 
 作为一个非常粗略的估算，每个宏扩展为项目的编译时间增加 10 毫秒。如果你感兴趣，我鼓励你阅读这篇关于编译器如何内部处理宏的[入门介绍][62]。
 
-### 缺乏自动完成和代码检查
+<h3 id="lack-of-auto-complete-and-code-checks">缺乏自动补全和代码检查</h3>
 
 目前，作为宏输出部分编写的代码未完全由任何 IDE 支持，也未由 rust-analyzer 支持。因此，在大多数情况下，你是在不依赖于自动完成、自动建议等功能的情况下编写代码。
 
-### 我们何时画线？
+<h3 id="where-do-we-draw-the-line">我们应该止步于何处？</h3>
 
 鉴于宏的无限潜力，很容易在使用它们时迷失。重要的是要记住所有的缺点，并相应地做出决定，确保你不会沉溺于提前的抽象。
 
 作为一般规则，我个人避免使用宏来实现任何“业务逻辑”，也不尝试编写宏来生成需要反复调试的代码。或者是需要进行微小变更以进行性能测试和改进的代码。
 
-## 结束
+<h2 id="wrapping-up">总结</h2>
 
 这是一段很长的旅程！但我希望任何具有基本 Rust 知识和经验的人都能跟上，并在此之后能够在自己的项目中编写宏。
-```
 
 你可以在[https://github.com/anshulsanghi-blog/macros-handbook][63] 仓库中找到本文中所提到的所有代码。
 
 另外，如果你有任何问题或对本主题有任何意见，欢迎**[联系我][64]**。
 
-### **喜欢我的作品吗？**
+<h3 id="enjoying-my-work">喜欢我的作品吗？</h3>
 
 考虑请我喝杯咖啡来支持我的工作吧！
 
@@ -2015,58 +2017,6 @@ cargo expand
 
 下次再见，祝你编程愉快，天空晴朗！
 
-[1]: https://www.freecodecamp.org/news/rust-in-replit/
-[2]: #heading-what-are-macros-in-rust
-[3]: #heading-types-of-macros-in-rust
-[4]: #heading-types-of-procedural-macros
-[5]: #heading-prerequisites
-[6]: #heading-helpful-dependencies
-[7]: #heading-how-to-write-a-simple-derive-macro
-[8]: #heading-the-intostringhashmap-derive-macro
-[9]: #heading-how-to-declare-a-derive-macro
-[10]: #how-to-parse-macro-input
-[11]: #how-to-ensure-a-struct-target-for-macro
-[12]: #heading-how-to-build-the-output-code
-[13]: #heading-how-to-use-your-derive-macro
-[14]: #heading-how-to-improve-our-implementation
-[15]: #heading-a-more-elaborate-derive-macro
-[16]: #heading-the-derivecustommodel-macro
-[17]: #how-to-separate-implementation-from-declaration
-[18]: #heading-how-to-parse-derive-macro-arguments
-[19]: #heading-how-to-implement-derivecustommodel
-[20]: #heading-how-to-generate-each-custom-model
-[21]: #how-to-use-your-derivecustommodal-macro
-[22]: #heading-a-simple-attribute-macro
-[23]: #heading-the-logduration-attribute
-[24]: #heading-how-to-declare-an-attribute-macro
-[25]: #heading-how-to-implement-the-logduration-attribute-macro
-[26]: #how-to-use-your-log-duration-macro
-[27]: #heading-a-more-elaborate-attribute-macro
-[28]: #heading-the-cachedfn-attribute
-[29]: #heading-how-to-implement-the-cachedfn-attribute-macro
-[30]: #heading-cachedfn-attribute-arguments
-[31]: #heading-how-to-use-the-cachedfn-macro
-[32]: #heading-a-simple-function-like-macro
-[33]: #heading-the-constantstring-macro
-[34]: #heading-how-to-declare-a-function-like-macro
-[35]: #heading-how-to-implement-the-constantstring-macro
-[36]: #heading-how-to-use-the-constantstring-macro
-[37]: #heading-a-more-elaborate-function-like-macro
-[38]: #heading-the-hashmapify-macro
-[39]: #heading-how-to-implement-the-hashmapify-macro
-[40]: #how-to-parse-hash-mapifys-input
-[41]: #how-to-generate-output-code
-[42]: #heading-how-to-convert-custom-data-types-to-output-tokens
-[43]: #heading-how-to-use-the-hashmapify-macro
-[44]: #heading-beyond-writing-macros
-[45]: #heading-helpful-cratestools
-[46]: #heading-downsides-of-macros
-[47]: #heading-debugging-or-lack-thereof
-[48]: #heading-compile-time-costs
-[49]: #heading-lack-of-auto-complete-and-code-checks
-[50]: #heading-where-do-we-draw-the-line
-[51]: #heading-wrapping-up
-[52]: #heading-enjoying-my-work
 [53]: https://doc.rust-lang.org/reference/macros-by-example.html
 [54]: https://doc.rust-lang.org/reference/conditional-compilation.html
 [55]: https://dev.to/balapriya/abstract-syntax-tree-ast-explained-in-plain-english-1h38
