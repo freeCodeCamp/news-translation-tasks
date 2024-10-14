@@ -277,7 +277,7 @@ my-app-macros = { path = "./my-app-macros" }
 
 从编译器的角度来看，宏是这样工作的：
 
--   它们将一个标记流作为输入（也可选地接收一系列标记作为宏本身的参数）。
+-   它们将一个标记（Token）流作为输入（也可选地接收一系列标记作为宏本身的参数）。
 -   它们返回一个标记流作为输出。
 
 这就是编译器所知道的全部！正如你将会看到的，这对编译器来说已经足够了。
@@ -303,8 +303,6 @@ cargo add syn quote proc-macro2 darling
 
 <h2 id="how-to-write-a-simple-derive-macro">如何编写一个简单的派生宏</h2>
 
-<!-- TODO: continue -->
-
 在本节中，你将学习如何编写一个 `Derive` 宏。到现在为止，你应该已经了解了不同类型的宏及其含义，因为我们在前面的部分中已经讨论过它们。
 
 <h3 id="the-intostringhashmap-derive-macro"><code>IntoStringHashMap</code> 派生宏</h3>
@@ -315,7 +313,7 @@ cargo add syn quote proc-macro2 darling
 
 你通过创建一个函数并使用属性宏注解该函数来声明宏，这些属性宏告诉编译器将该函数视为宏声明。由于你的 `lib.rs` 现在是空的，你还需要将 `proc-macro2` 声明为外部 crate:
 
-```
+```rust
 // my-app-macros/src/lib.rs
 extern crate proc_macro;
 
@@ -327,11 +325,11 @@ pub fn derive_into_hash_map(item: TokenStream) -> TokenStream {
 }
 ```
 
-我们在这里所做的只是将我们的宏声明为具有标识符 `IntoStringHashMap` 的 derive 宏。注意，这里的函数名称并不重要。重要的是传递给 `proc_macro_derive` 属性宏的标识符。
+我们在这里所做的只是将我们的宏声明为具有标识符 `IntoStringHashMap` 的派生宏。注意，这里的函数名称并不重要。重要的是传递给 `proc_macro_derive` 属性宏的标识符。
 
-让我们立即看看你如何使用它——我们稍后会回来完成实现：
+让我们先看看你可以如何使用它 —— 我们稍后再来实现它：
 
-```
+```rust
 // my-app/src/main.rs
 
 use my_app_macros::IntoStringHashMap;
@@ -349,7 +347,7 @@ fn main() {
 }
 ```
 
-你可以像使用任何其他 derive 宏一样使用你的宏，使用你为它声明的标识符（在本例中是 `IntoStringHashMap`）。
+通过你为它声明的标识符（在本例中是 `IntoStringHashMap`），你可以像使用任何其他派生宏一样使用你的宏。
 
 如果你在此阶段尝试编译代码，你应该会看到以下编译错误：
 
@@ -367,19 +365,19 @@ error: proc-macro derive panicked
 error: could not compile `my-app` (bin "my-app") due to 1 previous error
 ```
 
-这清楚地证明了我们的宏在编译阶段被执行了，因为，如果你不熟悉 `todo!()` 宏，它会在执行时因 `help: message: not yet implemented` 而恐慌。
+这清楚地证明了我们的宏在编译阶段被执行了，因为，编译阶段抛出了 panic 异常 `help: message: not yet implemented`，这正是 `todo!()` 宏所做的事。
 
-这意味着我们的宏声明和其用法都有效。我们现在可以继续实际实现这个宏了。
+这意味着我们的宏声明和其用法都有效。接下来，我们现在来实际实现这个宏了。
 
 <h3 id="how-to-parse-macro-input">如何解析宏输入</h3>
 
-首先，你使用 `syn` 将输入令牌流解析为 `DeriveInput`，这是任何可以使用 derive 宏的目标的表示：
+首先，你使用 `syn` 将输入标记流解析为 `DeriveInput`，这是任何可以使用派生宏的目标的表示：
 
-```
+```rust
 let input = syn::parse_macro_input!(item as syn::DeriveInput);
 ```
 
-`syn` 为我们提供了 `parse_macro_input` 宏，它使用一种自定义语法作为其参数。你为它提供输入变量的名称，`as` 关键字，以及 `syn` 中的数据类型，它应该将输入令牌流解析为（在我们的例子中是 `DeriveInput`）。
+`syn` 为我们提供了 `parse_macro_input` 宏，它使用一种自定义语法作为其参数。你为它提供输入变量的名称，`as` 关键字，以及输入标记流应被解析为的 `syn` 中的数据类型（在我们的例子中是 `DeriveInput`）。
 
 如果你查看 `DeriveInput` 的源代码，你会看到它给了我们以下信息：
 
@@ -387,7 +385,7 @@ let input = syn::parse_macro_input!(item as syn::DeriveInput);
 -   `vis`：此类型声明的可见性说明符。
 -   `ident`：类型的标识符（名称）。
 -   `generics`：此类型采用的泛型参数的信息，包括生命周期。
--   `data`：一个枚举，描述目标是结构体、枚举还是联合体，并向我们提供这些信息。
+-   `data`：一个枚举，描述目标是结构体、枚举还是联合体，并向我们提供更多相关信息。
 
 这些字段名称及其类型（除了 `data` 字段）在 `syn` 支持的目标中相当标准，如函数、枚举等。
 
@@ -395,7 +393,7 @@ let input = syn::parse_macro_input!(item as syn::DeriveInput);
 
 这个宏的完整实现如下：
 
-```
+```rust
 // my-app/my-app-macros/lib.rs
 
 extern crate proc_macro2;
@@ -445,34 +443,34 @@ pub fn into_hash_map(item: TokenStream) -> TokenStream {
 
 `let struct_identifier = &input.ident;`：你将结构体标识符存储在一个单独的变量中，这样你以后就可以轻松使用它。
 
-```
+```rust
 match &input.data {
     Data::struct(syn::DataStruct { fields, .. }) => { ... },
     _ => unimplemented!()
 }
 ```
 
-你在 `DeriveInput` 的解析数据字段上进行匹配。如果它是 `DataStruct` 类型（一个 Rust 结构体），则继续，否则恐慌，因为宏尚未为其他类型实现。
+你在 `DeriveInput` 的解析数据字段上进行匹配。如果它是 `DataStruct` 类型（一个 Rust 结构体），则继续，否则抛出 panic 异常，因为宏尚未为其他类型实现。
 
 <h3 id="how-to-build-the-output-code">如何构建输出代码</h3>
 
-让我们看看当你确实有 `DataStruct` 时，匹配分支的实现：
+让我们看看当目标类型为 `DataStruct` 时，匹配分支的实现：
 
-```
+```rust
 let mut implementation = quote!{
     let mut hash_map = std::collections::HashMap::<String, String>::new();
 };
 ```
 
-在这里，你使用 `quote` 创建了一个新的 `TokenStream`。这个 `TokenStream` 与标准库提供的不同，所以不要与之混淆。它需要是可变的，因为我们很快会向这个 `TokenStream` 添加更多代码。
+在这里，你使用 `quote` 创建了一个新的 `TokenStream`。这个 `TokenStream` 与标准库提供的不同，不要与之混淆。它需要是可变的，因为我们很快会向这个 `TokenStream` 添加更多代码。
 
-`TokenStream` 基本上是 AST 的逆表示。你将实际的 Rust 代码提供给 `quote` 宏，它会给我们之前称之为的“令牌流”。
+`TokenStream` 基本上是 AST 的逆表示。你将实际的 Rust 代码提供给 `quote` 宏，它会给我们之前称之为的“标记流”。
 
 这个 `TokenStream` 要么可以转换为宏的输出类型，要么可以使用 `quote` 提供的方法进行操作，例如 `extend`。
 
-继续，
+让我们继续，
 
-```
+```rust
 for field in fields {
     let identifier = field.ident.as_ref().unwrap();
     implementation.extend(quote!{
@@ -486,11 +484,11 @@ for field in fields {
 
 你遍历所有字段。在每次迭代中，你首先创建一个变量 `identifier` 来保存字段的名称以便以后使用。然后你使用 `extend` 方法在我们之前创建的 `TokenStream` 上添加额外的代码。
 
-`extend` 方法只需要另一个 `TokenStream`，这可以很容易地使用 `quote` 宏生成。对于扩展，你只需要编写代码将一个新条目插入将在宏输出中创建的 `hash_map`。
+`extend` 方法接受另一个 `TokenStream` 作为输入，这可以很容易地使用 `quote` 宏生成。对于要扩展的代码，你只需要编写代码将一个新条目插入将在宏输出中创建的 `hash_map`。
 
 让我们仔细看看：
 
-```
+```rust
 hash_map.insert(
     stringify!(#identifier).to_string(),
     String::from(value.#identifier)
@@ -505,21 +503,26 @@ hash_map.insert(
 
 同样，你可以使用熟悉的 `struct_variable.field_name` 语法来访问字段的值，但使用标识符变量代替字段名称。这就是你在 insert 语句中传递该值时所做的：`String::from(value.#identifier)`。
 
-如果你仔细看代码，你会意识到 `value` 从何而来，但如果不是，它只是 trait 实现方法在进一步声明其输入参数时使用的。
+如果你仔细看代码，你会意识到 `value` 从何而来，但如果没有，它只是 trait 实现方法在进一步声明其输入参数时使用的。
 
-一旦你使用 for 循环为结构体中的每个字段构建了实现，你就有了一个 `TokenStream`，代表性的包含以下代码：
+一旦你使用 for 循环为结构体中的每个字段构建了实现，你就有了一个 `TokenStream`，在上面的例子中，它包含以下代码：
 
-```
+```rust
 let mut hash_map = std::collections::HashMap::<String, String>::new();
 hash_map.insert("username".to_string(), String::from(value.username));
 hash_map.insert("first_name".to_string(), String::from(value.first_name));
 hash_map.insert("last_name".to_string(), String::from(value.last_name));
 ```
 
-继续生成我们的宏的输出，你有：
+继续生成我们的宏的输出，你可以看到：
 
-```
-hash_map
+```rust
+quote! {
+    impl From<#struct_identifier> for std::collections::HashMap<String, String> {
+        fn from(value: #struct_identifier) -> Self {
+            #implementation
+
+            hash_map
         }
     }
 }
@@ -527,15 +530,15 @@ hash_map
 
 这里，你首先使用 `quote` 创建另一个 `TokenStream`。你在这个代码块中编写你的 `From` 特性实现。
 
-接下来的这一行再次使用我们刚刚看到的带 `#` 前缀的语法，声明特性实现应该基于结构体的标识符用于你的目标结构体。在这种情况下，如果你将派生宏应用于 `User` 结构体，这个标识符将被替换为 `User`。
+接下来的这一行再次使用我们刚刚看到的带 `#` 前缀的语法，通过填入结构体的标识符，你声明了特性实现应该基于你的目标结构体。在这种情况下，如果你将派生宏应用于 `User` 结构体，这个标识符将被替换为 `User`。
 
-```
+```rust
 impl From<#struct_identifier> for std::collections::HashMap<String, String> {}
 ```
 
-最后，你有实际的方法体：
+最后，实际的方法体如下：
 
-```
+```rust
 fn from(value: #struct_identifier) -> Self {
     #implementation
 
@@ -547,16 +550,16 @@ fn from(value: #struct_identifier) -> Self {
 
 在这里，你声明你的哈希映射实现应插入函数的前几行。然后你简单地返回同一个 `hash_map`。这完成了你的特性实现。
 
-作为最后一步，你在 `match` 块的返回类型上调用 `.into()`，它返回 `quote` 宏调用的输出。这将 `quote` 使用的 `TokenStream` 类型转换为标准库使用的 `TokenStream` 类型，并由编译器预期从宏返回。
+作为最后一步，你在 `match` 块的返回类型上调用 `.into()`，它返回 `quote` 宏调用的输出。这将 `quote` 中的 `TokenStream` 类型转换为标准库中的 `TokenStream` 类型，并由编译器预期从宏返回。
 
 如果我逐行分解时理解起来比较困难，你可以查看下面的完整但带注释的代码：
 
-```
+```rust
 // 告诉编译器这个函数是一个派生宏，而派生的标识符是 `IntoHashMap`。
 #[proc_macro_derive(IntoHashMap)]
 // 声明一个函数，该函数接收一个输入 `TokenStream` 并输出 `TokenStream`。
 pub fn into_hash_map(item: TokenStream) -> TokenStream {
-    // 将输入的 token stream 解析为 `syn` crate 提供的 `DeriveInput` 类型。
+    // 将输入的 token stream 解析为 `syn` 库提供的 `DeriveInput` 类型。
     let input = syn::parse_macro_input!(item as syn::DeriveInput);
 
     // 将结构体标识符（名称）存储到一个变量中，以便你可以将其插入到输出代码中。
@@ -592,7 +595,7 @@ pub fn into_hash_map(item: TokenStream) -> TokenStream {
                 // 键和值均为 `String` 的 HashMap。
                 // 就像先前一样，`#struct_identifier` 在输出代码中被替换为目标结构体的实际名称。
                 impl From<#struct_identifier> for std::collections::HashMap<String, String> {
-                    // 只是 `From` 特性要求你实现的一个方法。
+                    // `From` 特性要求你实现的一个方法。
                     // 输入值的类型再次为 `#struct_identifier`，在输出代码中被替换为目标结构体的名称。
                     fn from(value: #struct_identifier) -> Self {
                         // 使用 `quote!` 将你创建的 `implementation` 块包含在这个方法体中。
@@ -605,20 +608,22 @@ pub fn into_hash_map(item: TokenStream) -> TokenStream {
                 }
             }
         }
-        // 如果目标类型是任何其他类型，则 panic。
+        // 如果目标类型是任何其他类型，则抛出 panic 异常。
         _ => unimplemented!()
         // 将 `quote` 使用的 `TokenStream` 类型转换为标准库和编译器使用的 `TokenStream` 类型。
     }.into()
 }
 ```
 
+就是这样。你现在写好了你的第一个 Rust 过程宏！
+
 **是时候享受你劳动的成果了。**
 
 <h3 id="how-to-use-your-derive-macro">如何使用你的派生宏</h3>
 
-回到你的 `my-app/main.rs` 文件中，让我们调试打印一下你使用宏创建的哈希图。你的 `main.rs` 应该看起来像这样：
+回到你的 `my-app/main.rs` 文件中，让我们调试打印一下你使用宏创建的哈希表。你的 `main.rs` 应该看起来像这样：
 
-```
+```rust
 // my-app/src/main.rs
 
 use std::collections::HashMap;
@@ -658,11 +663,11 @@ fn main() {
 
 <h3 id="how-to-improve-our-implementation">如何改进我们的实现</h3>
 
-在原始实现中，我有意跳过了一种更好地使用迭代器和 `quote` 的方式，因为它需要我们学习更多 `quote` 特有的语法。
+在原始实现中，我有意跳过了一种更好地使用迭代器和 `quote` 的方式，因为这能促使我们学习更多 `quote` 特有的语法。
 
 让我们看看使用这种方式会是怎样的，然后再深入了解它的工作原理：
 
-```
+```rust
 let input = syn::parse_macro_input!(item as syn::DeriveInput);
     let struct_identifier = &input.ident;
 
@@ -690,7 +695,7 @@ let input = syn::parse_macro_input!(item as syn::DeriveInput);
 
 这看起来更加简洁易懂！让我们看看使这一切成为可能的特殊语法 – 特别是以下这一行：
 
-```
+```rust
 #(
     hash_map.insert(stringify!(#field_identifiers).to_string(), String::from(value.#field_identifiers));
 )*
@@ -698,13 +703,15 @@ let input = syn::parse_macro_input!(item as syn::DeriveInput);
 
 我们来分解一下。首先，将整个代码块包裹在 `#()*` 中，代码将放在括号内。这种语法允许你在括号内使用任何迭代器，并且它会为迭代器中的每个项目重复该代码块，同时在每次迭代中用正确的项目替换变量。
 
-在这种情况下，你首先创建一个 `field_identifiers` 迭代器，这是目标结构体中所有字段标识符的集合。然后你编写 `hash_map` 插入语句，同时直接将迭代器用作单个项目。`#()*` 包装器将其转换为预期的多行输出，每行对应迭代器中的一个项目。
+在这种情况下，你首先创建一个 `field_identifiers` 迭代器，这是目标结构体中所有字段标识符的集合。然后你为迭代器中的每个项目编写 `hash_map` 插入语句。`#()*` 包装器将其转换为预期的多行输出，每行对应迭代器中的一个项目。
 
 <h2 id="a-more-elaborate-derive-macro">更复杂的派生宏</h2>
 
 现在你已经熟悉如何编写简单的 Derive 宏，是时候进一步创建一个在实际场景中更有用的宏了，特别是当你处理数据库模型时。
 
 <h3 id="the-derivecustommodel-macro"><code>DeriveCustomModel</code> 宏</h3>
+
+<!-- TODO: continue -->
 
 你将要构建一个 Derive 宏，帮助你从原始结构体生成派生结构体。在处理数据库时，你会经常需要这个，尤其是当你只想加载部分数据时。
 
