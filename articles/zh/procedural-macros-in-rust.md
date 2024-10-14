@@ -711,9 +711,7 @@ let input = syn::parse_macro_input!(item as syn::DeriveInput);
 
 <h3 id="the-derivecustommodel-macro"><code>DeriveCustomModel</code> 宏</h3>
 
-<!-- TODO: continue -->
-
-你将要构建一个 Derive 宏，帮助你从原始结构体生成派生结构体。在处理数据库时，你会经常需要这个，尤其是当你只想加载部分数据时。
+你将要构建一个派生宏，帮助你从原始结构体生成派生结构体。在处理数据库时，你会经常需要这个，尤其是当你只想加载部分数据时。
 
 例如，如果你有一个包含所有用户信息的 `User` 结构体，但你只想从数据库加载用户的姓名信息，你就需要一个只包含这些字段的结构体 – 除非你想让所有字段都成为 Option 类型，但这不是一个好主意。
 
@@ -721,7 +719,7 @@ let input = syn::parse_macro_input!(item as syn::DeriveInput);
 
 让我们先在 `lib.rs` 中声明它：
 
-```
+```rust
 // lib.rs
 
 #[proc_macro_derive(DeriveCustomModel, attributes(custom_model))]
@@ -730,13 +728,15 @@ pub fn derive_custom_model(item: TokenStream) -> TokenStream {
 }
 ```
 
-大部分语法你应该已经从我们之前的例子中熟悉了。唯一的增加部分是我们现在还在 `proc_macro_derive` 调用中定义了 `attributes(custom_model)`，这基本上告诉编译器将任何以 `#[custom_model]` 开头的属性视为此 Derive 宏在该目标上的参数。
+大部分语法你应该已经从我们之前的例子中熟悉了。唯一的增加部分是我们现在还在 `proc_macro_derive` 调用中定义了 `attributes(custom_model)`，这基本上告诉编译器将任何以 `#[custom_model]` 开头的属性视为此派生宏在该目标上的参数。
 
 例如，一旦你定义了这个，你可以在目标结构体上应用 `#[custom_model(name = "SomeName")]`，以定义派生结构体应具有的名称 "SomeName"。你需要自己解析并处理它，当然 – 这个定义只是告诉编译器将其传递给你的宏实现，而不要将其视为未知属性。
 
 我们还需要创建一个新文件来包含此宏的实现细节。宏规则规定它需要在 `lib.rs` 中**定义**，我们已经做到了。实现本身可以放在项目中的任何地方。
 
-```
+让我们创建 `custom_model.rs` 文件：
+
+```shell
 touch src/custom_model.rs
 ```
 
@@ -744,7 +744,7 @@ touch src/custom_model.rs
 
 定义一个实现 `DeriveCustomModel` 宏的函数。我们还将立即添加所有的导入，以避免后续的混淆：
 
-```
+```rust
 // custom_model.rs
 
 use syn::{
@@ -766,7 +766,7 @@ pub(crate) fn derive_custom_model_impl(input: TokenStream) -> TokenStream {
 
 这只是一个 Rust 函数，所以这里没有特殊的规则。你可以像调用常规 Rust 函数那样从声明中调用它。
 
-```
+```rust
 #[proc_macro_derive(DeriveCustomModel, attributes(custom_model))]
 pub fn derive_custom_model(item: TokenStream) -> TokenStream {
     custom_model::custom_model_impl(item)
@@ -775,9 +775,9 @@ pub fn derive_custom_model(item: TokenStream) -> TokenStream {
 
 <h3 id="how-to-parse-derive-macro-arguments">如何解析派生宏参数</h3>
 
-要解析我们的派生宏的参数（通常是通过应用于目标或其字段的属性提供的参数），我们将依赖 `darling` crate，使其像定义数据类型一样简单。
+要解析我们的派生宏的参数（通常是通过应用于目标或其字段的属性提供的参数），我们将使用 `darling` 库，使其像定义数据类型一样简单。
 
-```
+```rust
 // custom_model.rs
 
 // 为此结构派生 `FromDeriveInput`，该宏由 darling 提供，
@@ -798,7 +798,7 @@ struct CustomModelArgs {
 
 接下来，让我们定义每个模型的参数：
 
-```
+```rust
 // custom_model.rs
 
 // 为此结构派生 `FromMeta`，该宏由 darling 提供，
@@ -810,8 +810,7 @@ struct CustomModel {
     // 逗号分隔的字段标识符列表，
     // 这些字段将包含在生成的模型中。
     fields: PathList,
-    // 额外的派生列表，用于
-    // 对生成的结构应用，例如 `Eq` 或 `Hash`。
+    // 应对生成的结构应用的额外的派生列表，例如 `Eq` 或 `Hash`。
     #[darling(default)]
     extra_derives: PathList,
 }
@@ -823,7 +822,7 @@ struct CustomModel {
 
 现在我们已经定义了所有的数据类型，让我们开始解析——这就像调用我们的参数结构上的一个方法一样简单！完整的函数实现看起来应该像这样：
 
-```
+```rust
 // custom_model.rs
 
 pub(crate) fn derive_custom_model_impl(input: TokenStream) -> TokenStream {
@@ -837,8 +836,8 @@ pub(crate) fn derive_custom_model_impl(input: TokenStream) -> TokenStream {
         // 从这个数据结构中提取字段
         let DataStruct { fields, .. } = data_struct;
 
-        // `darling` 在结构上提供了这个方法，
-        // 以方便地解析参数，并且还能为我们处理错误。
+        // `darling` 在结构上提供了这个方法让我们方便地解析参数，
+        // 并且还能为我们处理错误。
         let args = match CustomModelArgs::from_derive_input(&original_struct) {
             Ok(v) => v,
             Err(e) => {
@@ -854,7 +853,7 @@ pub(crate) fn derive_custom_model_impl(input: TokenStream) -> TokenStream {
         // 创建一个新的输出
         let mut output = quote!();
 
-        // 如果没有定义模型但使用了宏，则恐慌。
+        // 如果没有定义模型但使用了宏，则抛出 panic 异常。
         if models.is_empty() {
             panic!(
                 "请使用 `model` 属性至少指定1个模型"
@@ -873,13 +872,13 @@ pub(crate) fn derive_custom_model_impl(input: TokenStream) -> TokenStream {
         // 将输出转换为 TokenStream 并返回
         output.into()
     } else {
-        // 如果目标不是命名结构，则恐慌
+        // 如果目标不是命名结构，则抛出 panic 异常
         panic!("DeriveCustomModel 只能用于命名结构")
     }
 }
 ```
 
-生成每个模型的 token 的代码已被抽取到我们称之为 `generate_custom_model` 的另一个函数中。我们也来实现这个函数：
+生成每个模型的标记的代码已被抽取到我们称之为 `generate_custom_model` 的另一个函数中。我们也来实现这个函数：
 
 <h3 id="how-to-generate-each-custom-model">如何生成每个自定义模型</h3>
 
@@ -892,74 +891,67 @@ fn generate_custom_model(fields: &Fields, model: &CustomModel) -> proc_macro2::T
         extra_derives,
     } = model;
 
-    // Create new fields output
+    // 创建用于作为输出的变量 new_fields
     let mut new_fields = quote!();
 
-    // Iterate over all fields in the source struct
+    // 遍历源结构体的所有字段
     for Field {
-        // The identifier for this field
+        // 该字段的标识符
         ident,
-        // Any attributes applied to this field
+        // 该字段的属性
         attrs,
-        // The visibility specifier for this field
+        // 该字段的可见性
         vis,
-        // The colon token `:`
+        // 分隔符 `:`
         colon_token,
-        // The type of this field
+        // 该字段的类型
         ty,
         ..
     } in fields
     {
-        // Make sure that field has an identifier, panic otherwise
+        // 确保该字段有标识符，否则抛出 panic 异常
         let Some(ident) = ident else {
-            panic!("Failed to get struct field identifier")
+            panic!("无法获取字段标识符")
         };
 
-        // Try to convert field identifier to `Path` which is a type provided
-        // by `syn`. We do this because `darling`'s PathList type is just a
-        // collection of this type with additional methods on it.
+        // 尝试将字段标识符转换为 `Path`，这是由 `syn` 提供的一种类型。
+        // 这样做是因为 `darling` 的 PathList 只是一个带有 Path 的集合，并有一些附加方法。
         let path = match Path::from_string(&ident.clone().to_string()) {
             Ok(path) => path,
-            Err(error) => panic!("Failed to convert field identifier to path: {error:?}"),
+            Err(error) => panic!("无法将字段标识符转换为 path: {error:?}"),
         };
 
-        // If the list of target fields doesn't contain this field,
-        // skip to the next field
+        // 如果目标字段列表不包含此字段，则跳过
         if !target_fields.contains(&path) {
             continue;
         }
 
-        // If it does contain it, reconstruct the field declaration
-        // and add it in `new_fields` output so that we can use it
-        // in the output struct.
+        // 如果包含，则重构字段声明，并将其添加到 `new_fields` 输出中，
+        // 以便我们可以在输出结构中使用它。
         new_fields.extend(quote! {
             #(#attrs)*
             #vis #ident #colon_token #ty,
         });
     }
 
-    // Create a new identifier for output struct
-    // from the name provided.
+    // 创建一个新的标识符，用于输出结构的名称
     let struct_ident = match Ident::from_string(name) {
         Ok(ident) => ident,
         Err(error) => panic!("{error:?}"),
     };
 
-    // Create a TokenStream to hold the extra derive declarations
-    // on new struct.
+    // 创建一个 TokenStream，用于保存额外的派生声明
     let mut extra_derives_output = quote!();
 
-    // If extra_derives is not empty,
+    // 如果 extra_derives 不为空，则将其添加到输出中
     if !extra_derives.is_empty() {
-        // This syntax is a bit compact, but you should already
-        // know everything you need to understand it by now.
+        // 这种语法有点紧凑，但你应该已经知道如何理解它。
         extra_derives_output.extend(quote! {
             #(#extra_derives,)*
         })
     }
 
-    // Construct the final struct by combining all the
-    // TokenStreams generated so far.
+    // 构造最终的结构体，将所有生成的 TokenStream 组合在一起。
     quote! {
         #[derive(#extra_derives_output)]
         pub struct #struct_ident {
@@ -971,7 +963,7 @@ fn generate_custom_model(fields: &Fields, model: &CustomModel) -> proc_macro2::T
 
 <h3 id="how-to-use-your-derivecustommodal-macro">如何使用这个 <code>DeriveCustomModel</code> 宏</h3>
 
-回到你的 `my-app/main.rs`，让我们调试打印用你实现的宏创建的新结构体的哈希映射。你的 `main.rs` 应该如下所示：
+回到你的 `my-app/main.rs`，让我们调试打印用你实现的宏创建的新结构体的哈希表。你的 `main.rs` 应该如下所示：
 
 ```rust
 // my-app/src/main.rs
@@ -1053,14 +1045,15 @@ pub fn log_duration(args: TokenStream, item: TokenStream) -> TokenStream {
 
 让我们也实现 `log_duration_impl`。创建一个新的文件 `log_duration.rs`：
 
-```rust
+```shell
+touch src/log_duration.rs
 ```
 
 <h3 id="how-to-implement-the-logduration-attribute-macro">如何实现 <code>log_duration</code> 属性宏</h3>
 
 我将首先为您提供完整的实现，然后我会分解一些我之前没有使用的部分：
 
-```
+```rust
 // my-app-macros/src/log_duration.rs
 
 use proc_macro::TokenStream;
@@ -1117,7 +1110,7 @@ pub(crate) fn log_duration_impl(_args: TokenStream, input: TokenStream) -> Token
 
 你之前可能没见过的唯一事情是 `sig` 和 `block` 字段，它们是通过将输入解析为 `ItemFn` 获得的。`sig` 包含函数的整个签名，而 `block` 包含函数的整个主体。这就是为什么，通过使用下面的代码，我们可以基本上重新构建未修改的函数：
 
-```
+```rust
 // 在宏中重新构建未修改的函数的示例代码
 
 #vis #sig #block
@@ -1129,7 +1122,7 @@ pub(crate) fn log_duration_impl(_args: TokenStream, input: TokenStream) -> Token
 
 回到 `main.rs`，使用属性宏比你想象的要简单：
 
-```
+```rust
 // main.rs
 
 #[log_duration]
@@ -1163,7 +1156,7 @@ function_to_benchmark 耗时 498μs
 
 你将编写一个属性宏，它将允许你为任何函数添加缓存功能。对于这个示例，我们假设我们的函数总是具有 `String` 参数，并且也返回一个 `String` 值。
 
-有些人可能更熟悉它作为“记忆化”函数。
+对这个概念，有些人可能更熟悉将其称为“记忆化”函数。
 
 此外，你需要允许这个宏的用户告诉宏它如何基于函数参数生成一个动态键。
 
@@ -1171,7 +1164,7 @@ function_to_benchmark 耗时 498μs
 
 让我们通过直接编辑 `my-app` 的 `Cargo.toml` 文件来添加它到项目中：
 
-```
+```toml
 // Cargo.toml
 
 workspace = { members = ["my-app-macros"] }
@@ -1182,7 +1175,7 @@ version = "0.1.0"
 edition = "2021"
 resolver = "2"
 
-# 更多键及其定义请参见 https://doc.rust-lang.org/cargo/reference/manifest.html
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 # 新依赖项
@@ -1194,7 +1187,7 @@ macros = { path = "./macros" }
 
 让我们从 `lib.rs` 中声明这个宏开始：
 
-```
+```rust
 // my-app-macros/src/lib.rs
 
 #[proc_macro_attribute]
@@ -1205,7 +1198,7 @@ pub fn cached_fn(args: TokenStream, item: TokenStream) -> TokenStream {
 
 创建一个新的文件 `cached_fn.rs` 来存储实现：
 
-```
+```shell
 touch my-app-macros/src/cached_fn.rs
 ```
 
@@ -1213,7 +1206,7 @@ touch my-app-macros/src/cached_fn.rs
 
 <h3 id="cachedfn-attribute-arguments"><code>cached_fn</code> 的属性参数</h3>
 
-```
+```rust
 // my-app-macros/src/cached_fn.rs
 
 #[derive(FromMeta)]
@@ -1224,13 +1217,15 @@ struct CachedParams {
 }
 ```
 
-唯一的参数是一个可选的 `keygen`，其类型为 `Expr`。`Expr` 表示任何有效的 [Rust 表达式][57]，因此它可以非常动态。在这个例子中，你将传递一个基于目标函数的参数生成键的表达式。
+唯一的参数是一个可选的 `keygen`，其类型为 `Expr`。`Expr` 表示任何有效的 [Rust 表达式](https://rustwiki.org/zh-CN/reference/expressions.html)，因此它可以非常灵活。在这个例子中，你将传递一个基于目标函数的参数生成键的表达式。
 
-```
+一如既往，我们先来看看整体实现，稍后再讲解新知识：
+
+```rust
 // my-app-macros/src/cached_fn.rs
 
 pub fn cached_fn_impl(args: TokenStream, item: TokenStream) -> TokenStream {
-    // 将参数令牌解析为 NestedMeta 项的列表
+    // 将参数标记解析为 NestedMeta 项的列表
     let attr_args = match NestedMeta::parse_meta_list(args.into()) {
         Ok(v) => v,
         Err(e) => {
@@ -1286,11 +1281,11 @@ pub fn cached_fn_impl(args: TokenStream, item: TokenStream) -> TokenStream {
             match cacache::read_sync("./__cache", __cache_key.clone()) {
                 // 如果值存在，将其解析为字符串并返回
                 Ok(value) => {
-                    println!("Data is fetched from cached");
+                    println!("缓存命中");
                     from_utf8(&value).unwrap().to_string()
                 },
                 Err(_) => {
-                    println!("Data is not fetched from cached");
+                    println!("缓存未命中");
                     // 将原始函数块的输出保存到变量中。
                     let output = #block;
 
@@ -1317,7 +1312,7 @@ pub fn cached_fn_impl(args: TokenStream, item: TokenStream) -> TokenStream {
 
 要将任何函数变为记忆化或缓存的，我们只需使用 `cached_fn` 属性对其进行注释：
 
-```
+```rust
 // src/main.rs
 
 #[cached_fn(keygen = "format!(\"{first_name} {last_name}\")")]
@@ -1335,9 +1330,9 @@ fn main() {
 如果运行这个，你应该会看到以下输出：
 
 ```
-Data is not fetched from cached
-Data is fetched from cached
-Data is not fetched from cached
+缓存未命中
+缓存命中
+缓存未命中
 ```
 
 这清楚地表明，如果函数对相同的参数调用多次，则从缓存中返回数据。但如果参数不同，则不会返回为不同参数集缓存的值。
@@ -1348,23 +1343,23 @@ Data is not fetched from cached
 
 <h2 id="a-simple-function-like-macro">一个简单的函数式宏</h2>
 
-现在终于可以再次享受一些 _乐趣_ 了。我们将从简单的开始，但第二个示例将包含解析自定义语法。_有趣_，对吧？
+现在终于可以再次享受一些 _乐趣_ 了。我们将从简单的开始，但第二个示例将包含解析自定义语法。_非常有趣_，对吧？
 
-免责声明：如果你熟悉声明式宏（使用 `macro_rules!` 语法），你可能会意识到以下示例可以轻松地使用该语法编写，并且不需要过程宏。如果你还想保持简单，写出不能作为声明式宏编写的过程宏示例是非常困难的，这就是选择这些示例的原因，尽管如此。
+免责声明：如果你熟悉声明式宏（使用 `macro_rules!` 语法），你可能会意识到以下示例可以轻松地使用该语法编写，并且不需要过程宏。要想写出简单但是无法用声明性宏实现的过程宏是非常困难的，尽管如此，我们还是选择了以下示例。
 
 <h3 id="the-constantstring-macro"><code>constant_string</code> 宏</h3>
 
-我们将构建一个非常简单的宏，它将一个字符串字面量（类型为`&str`）作为输入，并为其创建一个全局公共常量（变量名称与值相同）。基本上，我们的宏将生成以下内容：
+我们将构建一个非常简单的宏，它将一个字符串字面量（类型为 `&str`）作为输入，并为其创建一个全局公共常量（变量名称与值相同）。基本上，我们的宏将生成以下内容：
 
-```
+```rust
 pub const STRING_LITERAL: &str = "STRING_LITERAL";
 ```
 
 <h3 id="how-to-declare-a-function-like-macro">如何声明一个类函数的宏</h3>
 
-你可以通过创建一个函数并使用`proc_macro`宏注解该函数来声明类函数的宏。它告诉编译器将该函数视为宏声明。让我们看看这是什么样子的：
+你可以通过创建一个函数并使用 `proc_macro` 宏注解该函数来声明类函数的宏。它告诉编译器将该函数视为宏声明。让我们看看这是什么样子的：
 
-```
+```rust
 // my-app-macros/src/lib.rs
 
 #[proc_macro]
@@ -1373,19 +1368,19 @@ pub fn constant_string(item: TokenStream) -> TokenStream {
 }
 ```
 
-对于这些宏，函数名称非常重要，因为它也成为宏的名称。如你所见，这些宏只接受一个参数，即你传递给宏的内容。它可以是任何东西，甚至是无效的Rust代码的自定义语法。
+对于这些宏，函数名称非常重要，因为它也成为宏的名称。如你所见，这些宏只接受一个参数，即你传递给宏的内容。它可以是任何东西，甚至是无效的 Rust 代码的自定义语法。
 
 <h3 id="how-to-implement-the-constantstring-macro">如何实现 <code>constant_string</code> 宏</h3>
 
 对于实现，让我们创建一个新的文件`constant_string.rs`：
 
-```
+```shell
 touch my-app-macros/src/constant_string.rs
 ```
 
 实现非常简单：
 
-```
+```rust
 use darling::FromMeta;
 use proc_macro::TokenStream;
 use quote::quote;
@@ -1395,7 +1390,7 @@ pub fn constant_string_impl(item: TokenStream) -> TokenStream {
     // 将输入解析为字符串字面量
     let constant_value = parse_macro_input!(item as LitStr);
 
-    // 从传递的字符串值创建一个新的`Ident`（标识符）。
+    // 从传递的字符串值创建一个新的 `Ident`（标识符）。
     // 这将成为常量变量的名称。
     let constant_value_name = Ident::from_string(&constant_value.value()).unwrap();
 
@@ -1410,7 +1405,7 @@ pub fn constant_string_impl(item: TokenStream) -> TokenStream {
 
 使用此宏也非常简单：
 
-```
+```rust
 // src/main.rs
 
 constant_string!("SOME_CONSTANT_STRING_VALUE");
@@ -1418,7 +1413,7 @@ constant_string!("SOME_CONSTANT_STRING_VALUE");
 
 上面的代码将展开为：
 
-```
+```rust
 pub const SOME_CONSTANT_STRING_VALUE: &str = "SOME_CONSTANT_STRING_VALUE";
 ```
 
@@ -1428,9 +1423,9 @@ pub const SOME_CONSTANT_STRING_VALUE: &str = "SOME_CONSTANT_STRING_VALUE";
 
 <h3 id="the-hashmapify-macro"><code>hash_mapify</code> 宏</h3>
 
-进入有趣的部分：你现在将编写的宏将允许你通过简单地传递一组键值对来生成一个`HashMap`。例如：
+进入有趣的部分：你现在将编写的宏将允许你通过简单地传递一组键值对来生成一个 `HashMap`。例如：
 
-```
+```rust
 let variable = "Some variable";
 
 hash_mapify!(
@@ -1450,7 +1445,7 @@ hash_mapify!(
 
 我们将像往常一样开始声明宏：
 
-```
+```rust
 // my-app-macros/src/lib.rs
 
 #[proc_macro]
@@ -1463,15 +1458,15 @@ pub fn hash_mapify(item: TokenStream) -> TokenStream {
 
 我们将实现部分提取到一个单独的文件，在那里你还将实现数据类型和解析逻辑。
 
-创建新文件`hash_mapify.rs`并声明保存输入数据的数据类型：
+创建新文件 `hash_mapify.rs` 并声明保存输入数据的数据类型：
 
-```
+```shell
 touch my-app-macros/src/hash_mapify.rs
 ```
 
 <h3 id="how-to-parse-hash-mapifys-input">如何解析 <code>hash_mapify</code> 的输入</h3>
 
-```
+```rust
 // my-app-macros/src/hash_mapify.rs
 
 use proc_macro::TokenStream;
@@ -1487,24 +1482,29 @@ pub struct ParsedMap {
 }
 ```
 
-你直接以`TokenStream`类型保存值，因为你需要同时支持字面值和变量，这两者在此上下文中只有一个共同类型`TokenStream`。
+你直接以 `TokenStream` 类型保存值，因为你需要同时支持字面值和变量，这两者在此上下文中只有一个共同类型 `TokenStream`。
 
-你可能还注意到，我们将`value_type`保存为`Type`，这是`syn` crate提供的一种类型，它是Rust值可能具有的类型的枚举。这真是满满的干货！
+你可能还注意到，我们将 `value_type` 保存为 `Type`，这是 `syn` 库提供的一种类型，它是 Rust 值可能具有的类型的枚举。这真是满满的干货！
 
-你不需要处理每个枚举变体，因为这种类型也可以直接转换为`TokenStream`。你很快就会更好地理解这意味着什么。
+你不需要处理每个枚举变体，因为这种类型也可以直接转换为 `TokenStream`。你很快就会更好地理解这意味着什么。
 
-下一步，你需要为之前声明的`ParsedMap`实现`syn::parse::Parse` trait，以便可以从传递给宏的`TokenStream`中计算它。
+下一步，你需要为之前声明的 `ParsedMap` 实现 `syn::parse::Parse` 特质，以便可以从传递给宏的`TokenStream` 中计算它。
 
-```
+```rust
 // my-app-macros/src/hash_mapify.rs
+
+impl Parse for ParsedMap {
+    fn parse(input: ParseStream) -> syn::Result<Self> {
+        let mut entries = Vec::<ParsedMapEntry>::new();
+    }
+}
 ```
 
-```markdown
-`input`（在这种情况下类型为`ParsedStream`）的工作方式类似于迭代器。你需要使用其上的方法`parse`解析出输入的标记，这也会将流推进到下一个标记的开头。
+`input`（在这个例子中类型为`ParsedStream`）的工作方式类似于迭代器。你需要使用其上的方法 `parse` 解析出输入的标记，这也会将流推进到下一个标记的开头。
 
-例如，如果你有一个表示`[a, b, c]`的标记流，当你从这个流中解析出`[`时，该流将被变异为仅包含`a, b, c]`。这非常类似于迭代器，一旦你从中取出一个值，迭代器就会前进一个位置，只保留剩余的项。
+例如，如果你有一个表示 `[a, b, c]` 的标记流，当你从这个流中解析出 `[` 时，该流将被改变为仅包含`a, b, c]`。这非常类似于迭代器，一旦你从中取出一个值，迭代器就会前进一个位置，只保留剩余的项。
 
-在你解析任何内容之前，你需要检查输入是否为空，如果为空，则会触发恐慌：
+在你解析任何内容之前，你需要检查输入是否为空，如果为空，则会触发 panic 异常：
 
 ```rust
 // my-app-macros/src/hash_mapify.rs
@@ -1513,8 +1513,8 @@ impl Parse for ParsedMap {
     fn parse(input: ParseStream) -> syn::Result<Self> {
         // ...
 
-        // 检查输入是否为空（没有传递任何参数）。如果
-        // 为空，则触发恐慌，因为我们无法继续进行。
+        // 检查输入是否为空（没有传递任何参数）。
+        // 如果为空，则触发 panic 异常，因为我们无法继续进行。
         if input.is_empty() {
             panic!("至少需要为一个空的hashmap指定一个类型");
         }
@@ -1542,13 +1542,13 @@ impl Parse for ParsedMap {
 }
 ```
 
-`Parse`接受一个表示要解析内容的单一类型参数。
+`Parse` 接受一个表示要解析内容的单一类型参数。
 
 如果第一个参数无法解析为有效类型，将返回一个错误。请注意，这不会验证你传递的类型是否实际存在，它只会验证第一个参数中的标记是否适合类型定义，仅此而已。
 
 这意味着如果你传递`SomeRandomType`，而`SomeRandomType`实际上并没有定义，解析仍然会成功。只有在编译时扩展宏时，才会失败。
 
-接下来，我们还希望用户使用`,`来分隔参数。让我们将其解析为类型之后的下一个标记：
+接下来，我们还希望用户使用 `,` 来分隔参数。让我们将其解析为类型之后的下一个标记：
 
 ```rust
 // my-app-macros/src/hash_mapify.rs
@@ -1557,7 +1557,7 @@ impl Parse for ParsedMap {
     fn parse(input: ParseStream) -> syn::Result<Self> {
         // ...
 
-        // 下一步解析`,`标记，你期望它被用来分隔参数。
+        // 下一步，解析 `,` 标记，你期望它被用来分隔参数。
         input.parse::<Token![,]>()?;
 
         // ...
@@ -1565,11 +1565,11 @@ impl Parse for ParsedMap {
 }
 ```
 
-你可能会注意到，当为`parse`方法提供类型参数时，使用了`Token!`宏。这是`syn`提供的一个宏，用于轻松转换内置类型，比如关键字（`type`，`async`，`fn`等），标点符号（`,`，`.`，`;`等）以及分隔符（`{`，`[`，`(` 等）。此宏接受一个参数，即需要类型的关键字/标点符号/分隔符字面量。
+你可能会注意到，当为 `parse` 方法提供类型参数时，使用了 `Token!` 宏。这是 `syn` 提供的一个宏，用于轻松转换内置类型，比如关键字（`type`，`async`，`fn` 等），标点符号（`,`，`.`，`;` 等）以及分隔符（`{`，`[`，`(` 等）。此宏接受一个参数，即需要类型的关键字/标点符号/分隔符字面量。
 
 官方文档将其定义为：
 
-> 一个类型宏，扩展为给定标记的Rust类型表示。
+> 一个可扩展为给定标记的 Rust 类型表示的名称的类型宏。
 
 现在你有了值的类型以及第一个分隔符（逗号），是时候开始解析键值对了。所有的键值对都遵循相同的结构`key = value`，并由逗号分隔。
 
@@ -1584,8 +1584,7 @@ impl Parse for ParsedMap {
     fn parse(input: ParseStream) -> syn::Result<Self> {
         // ...
 
-        // 循环直到输入为空（没有剩余的内容
-        // 可以解析）。
+        // 循环直到输入为空（没有剩余的内容可以解析）。
         while !input.is_empty() {
             // ..
         }
@@ -1595,7 +1594,7 @@ impl Parse for ParsedMap {
 }
 ```
 
-如我之前所述，标记是从流中取出并在每次你解析某些内容时前进。这意味着当所有标记都解析完毕时，流将为空。我们在这里利用这一事实来确定何时跳出循环。
+如我之前所述，标记是从流中取出的，并在每次你解析某些内容时前移。这意味着当所有标记都解析完毕时，流将为空。我们在这里利用这一事实来确定何时跳出循环。
 
 每个键值对的解析方式类似于你解析类型参数的方式：
 
@@ -1606,41 +1605,36 @@ impl Parse for ParsedMap {
     fn parse(input: ParseStream) -> syn::Result<Self> {
         // ...
 
-        // 循环直到输入为空（没有剩余的内容
-        // 可以解析）。
+        // 循环直到输入为空（没有剩余的内容可以解析）。
         while !input.is_empty() {
             // 尝试将键解析为标识符
             let key = if let Ok(key) = input.parse::<syn::Ident>() {
                 key.to_string()
-                // 如果它不是标识符，则尝试将其解析为
-                // 字符串字面量
+                // 如果它不是标识符，则尝试将其解析为字符串字面量
             } else if let Ok(key) = input.parse::<LitStr>() {
                 key.value()
                 // 如果它既不是标识符也不是字符串字面量，
-                // 则它不是有效的键，因此触发适当的错误恐慌。
+                // 则它不是有效的键，因此触发适当的 panic 异常。
             } else {
                 panic!("键必须是字符串字面量或标识符！");
             };
 
-            // 解析`=`号，它应该是键之后的下一个标记。
-            input.parse::<Token![=]>()?;
-```
+            // 将解析的键值对推入我们的列表。
+            entries.push(ParsedMapEntry(key, value));
 
-```
-// 将解析的键值对推送到我们的列表中
-entries.push(ParsedMapEntry(key, value));
+            // 检查下一个 token 是否是逗号，不提前推进流
+            if input.peek(Token![,]) {
+                // 如果是的话，先将其解析，然后在继续解析下一个键值对之前推进流
+                input.parse::<Token![,]>()?;
+            }
+        }
 
-// 检查下一个 token 是否是逗号，不提前推进流
-if input.peek(Token![,]) {
-    // 如果是的话，先将其解析，然后在继续解析下一个键值对之前
-    // 推进流
-    input.parse::<Token![,]>()?;
-}
-
-// ...
-}
+    // ...
+    }
 }
 ```
+
+<!-- TODO: continue -->
 
 这里唯一新增的是最后对 `peek` 方法的调用。这是一个特殊的方法，如果传递给 `peek` 的 token 是流中的下一个 token，则返回布尔值，否则返回 false。
 
@@ -2030,8 +2024,6 @@ cargo expand
 
 下次再见，祝你编程愉快，天空晴朗！
 
-[56]: https://crates.io/users/dtolnay
-[57]: https://doc.rust-lang.org/reference/expressions.html
 [58]: https://github.com/dtolnay/cargo-expand
 [59]: https://crates.io/users/dtolnay
 [60]: https://docs.rs/trybuild/latest/trybuild/#
