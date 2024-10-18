@@ -200,7 +200,7 @@ impl core::fmt::Debug for User {
 
 以上我提到的所有这些内容，以及更多内容，结合起来形成了 Rust 中由 `tracing` 库提供的非常流行且有用的 `instrumentation` 宏。当然，我在这里进行了大幅简化，但作为示例已经足够。
 
-如果你用过 Clippy（译者注：Clippy 是一个内置许多规则的代码静态检查工具，可参考[该教程](https://rustycab.github.io/LearnRustEasy/chapter_4/chapter_4_2.html)），它可能已经多次提醒你在函数或方法上添加 `#[must_use]` 属性了。
+如果你习惯使用 Clippy（译者注：Clippy 是一个内置许多规则的代码静态检查工具，可参考[该教程](https://rustycab.github.io/LearnRustEasy/chapter_4/chapter_4_2.html)），它可能已经多次提醒你在函数或方法上添加 `#[must_use]` 属性了。
 
 这是使用宏注解函数附加附加信息的一个示例。它告诉编译器如果这个函数调用的返回值没有被使用，就会警告用户。`Result` 类型默认已经被注解了 `#[must_use]`，这就是为什么当你不使用 `Result` 类型的返回值时会看到警告 `Unused Result<...> that must be used`。
 
