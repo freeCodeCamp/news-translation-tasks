@@ -1,6 +1,6 @@
 ---
 title: freeCodeCamp Turns 10 + Major Certification Updates
-date: 2024-10-29T02:15:27.050Z
+date: 2024-10-30T13:20:36.837Z
 author: Quincy Larson
 authorURL: https://www.freecodecamp.org/news/author/quincy/
 originalURL: https://www.freecodecamp.org/news/freecodecamp-turns-10-major-curriculum-updates/
