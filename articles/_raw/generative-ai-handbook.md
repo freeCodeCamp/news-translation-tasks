@@ -1,6 +1,6 @@
 ---
 title: The Generative AI Handbook – How GenAI is Impacting Business and Innovation
-date: 2024-08-27T15:35:01.969Z
+date: 2024-11-04T08:49:04.748Z
 author: Vahe Aslanyan
 authorURL: https://www.freecodecamp.org/news/author/vaheaslanyan/
 originalURL: https://www.freecodecamp.org/news/generative-ai-handbook/
