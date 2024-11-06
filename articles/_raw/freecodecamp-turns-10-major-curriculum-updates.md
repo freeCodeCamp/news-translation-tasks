@@ -1,6 +1,6 @@
 ---
 title: freeCodeCamp Turns 10 + Major Certification Updates
-date: 2024-10-30T15:08:42.446Z
+date: 2024-11-06T19:29:34.785Z
 author: Quincy Larson
 authorURL: https://www.freecodecamp.org/news/author/quincy/
 originalURL: https://www.freecodecamp.org/news/freecodecamp-turns-10-major-curriculum-updates/
@@ -166,9 +166,9 @@ There will be no automatic "you got up from your chair because your baby started
 
 And once you've passed, you'll earn a free verified, serialized certification that you can add to your Résumé or CV, and embed in your LinkedIn account. It will remain valid for 3 years – at which point you can complete a free continuing education process to re-certify.
 
-Here's a 3 minute video that will walk you through some of the big updates to freeCodeCamp's curriculum.
+Here's a 5 minute video that will walk you through some of the big updates to freeCodeCamp's curriculum.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/24ubTRtvNY0" style="aspect-ratio: 16 / 9; width: 100%; height: auto;" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="" loading="lazy"></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/1fZ0hTX-ut4" style="aspect-ratio: 16 / 9; width: 100%; height: auto;" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="" loading="lazy"></iframe>
 
 ## We're Developing Three Other Certifications as Well
 
