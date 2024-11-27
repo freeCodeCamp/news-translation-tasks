@@ -14,7 +14,7 @@ proofreader: ""
 
 加载时间超过 3 秒的应用程序被认为是慢的，可能会导致用户离开应用程序或网站。
 
-`Next.js` 是一个基于 React 的框架，可以用来构建可伸缩、性能良好且速度快的网络应用程序和网站。随着 [React 服务器组件][1] 在 Next.js 应用程序路由版本中的引入，开发人员有了一个新的心智模型来“用服务器组件的方式思考”。它解决了 SEO 问题，帮助创建 `零包大小` 的 React 组件，最终实现 UI 组件的更快加载。
+`Next.js` 是一个基于 React 的框架，可以用来构建可伸缩、性能良好且速度快的网络应用程序和网站。随着 [React 服务器组件][1] 在 Next.js 应用程序路由版本中的引入，开发人员有了一个新的心智模型来“用服务器组件的方式思考”。它解决了 SEO 问题，帮助创建 `零包装大小(zero bundle size)` 的 React 组件，最终实现 UI 组件的更快加载。
 
 但你的应用程序可能并不总是关于服务器组件。你可能还需要使用客户端组件。此外，你可能希望将它们作为应用程序初始加载的一部分或按需加载（比如点击按钮时）。
 
@@ -28,14 +28,14 @@ proofreader: ""
 
 如果你也喜欢通过视频内容学习，本文还提供了视频教程：🙂
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/gq9bBZru78Y" style="aspect-ratio: 16 / 9; width: 100%; height: auto;" title="YouTube 视频播放器" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="" loading="lazy"></iframe>
+[![YouTube 视频播放器](https://img.youtube.com/vi/gq9bBZru78Y/mqdefault.jpg)](https://www.youtube.com/watch?v=gq9bBZru78Y)
 
 在我们开始之前，有几件事需要告诉你：
 
 -   我们将编写大量代码来构建一个演示懒加载技术的应用程序。你可以从这个 GitHub 存储库找到所有源代码：[https://github.com/tapascript/nextjs-lazy-load][2]。但我强烈建议你在我们进行的过程中自己编写代码，并仅将存储库作为参考。
 -   你也可以通过 [Netlify 上的公开部署][3] 访问应用程序。
 
-让我们开始吧 🚀。哦对了，如果你是 Tom & Jerry 卡通迷，你会更享受这篇文章！
+让我们开始吧 🚀。哦对了，如果你是汤姆和杰瑞的卡通迷，你会更享受这篇文章！
 
 ## **目录**
 
@@ -85,13 +85,13 @@ Next.js 中的懒加载技术用于减少一个路径所需的 JavaScript 量。
 
 为了演示这一点，我们首先用以下命令创建一个 Next.js 应用：
 
-```
+```shell
 npx create-next-app@latest
 ```
 
 您可以使用以下命令在本地启动应用：
 
-```
+```shell
 ## 使用 npm
 npm run dev
 
@@ -103,7 +103,7 @@ yarn dev
 
 现在在 `app/` 目录下创建一个名为 `components` 的文件夹。我们将在这个组件文件夹下创建所有的组件。现在，在 `app/components/` 下创建一个名为 `tom` 的文件夹。最后，在 `app/components/tom/` 目录下创建一个名为 `tom.jsx` 的 React 组件，代码如下：
 
-```
+```jsx
 // tom.jsx
 
 const LazyTom = () => {
@@ -139,7 +139,7 @@ export default LazyTom;
 
 现在，在 `app/components/tom/` 目录下创建另一个名为 `tom-story.jsx` 的文件，代码如下：
 
-```
+```jsx
 // tom-story.jsx
 
 "use client";
@@ -183,7 +183,7 @@ export default TomStory;
 
 现在我们需要测试它。为此，打开 `app/` 目录下的 `page.js` 文件，并用以下代码替换内容：
 
-```
+```typescript
 import TomStory from "./components/tom/tom-story";
 
 export default function Home() {
@@ -213,7 +213,7 @@ export default function Home() {
 
 首先，我们将在 `app/components/` 目录下创建一个名为 `jerry` 的文件夹。现在，在 `app/components/jerry/` 目录下创建一个名为 `jerry.jsx` 的文件，并添加以下代码：
 
-```
+```tsx
 // jerry.jsx
 
 const LazyJerry = () => {
@@ -245,7 +245,7 @@ export default LazyJerry;
 
 像上次一样，我们来创建一个 `jerry-story.jsx` 文件来展示 Jerry 的故事懒加载。将该文件创建在 `app/components/jerry/` 目录下，添加以下代码：
 
-```
+```tsx
 // jerry-story.jsx
 
 "use client";
@@ -285,7 +285,7 @@ Suspense 在等待数据加载时会使用 fallback。如果你想深入了解 R
 
 在这里，由于我们的 `LazyJerry` 组件是懒加载的，我们提供了一个 fallback 信息，在组件代码成功下载并渲染到浏览器之前显示一个加载信息。
 
-```
+```tsx
 {shown && 
     <Suspense fallback={<h1>加载 Jerry 的故事</h1>}>
                 <LazyJerry />
@@ -297,7 +297,7 @@ Suspense 在等待数据加载时会使用 fallback。如果你想深入了解 R
 
 现在通过将其导入 `page.js` 文件并将组件添加到 JSX 中来进行测试。
 
-```
+```tsx
 // page.js
 
 import TomStory from "./components/tom/tom-story";
@@ -332,7 +332,7 @@ export default function Home() {
 
 在 `app/components/` 目录下创建一个名为 `spike` 的文件夹。现在，在 `app/components/spike/` 目录下创建一个名为 `spike.jsx` 的文件，并添加以下代码：
 
-```
+```jsx
 // spike.jsx
 
 export const LazySpike = () => {
@@ -359,7 +359,7 @@ export const LazySpike = () => {
 
 在 `app/components/spike/` 目录下创建一个名为 `spike-story.jsx` 的文件，并添加以下代码：
 
-```
+```jsx
 // spike-story.jsx
 
 "use client";
@@ -404,7 +404,7 @@ const LazySpike = dynamic(() => import("./spike").then((mod) => mod.LazySpike), 
 
 现在，为了测试它，再次将组件导入到 `page.js` 文件中，并像前两次那样在 JSX 中使用它。
 
-```
+```javascript
 // page.js
 
 import TomStory from "./components/tom/tom-story";
@@ -436,7 +436,7 @@ import SpikeStory from "./components/spike/spike-story";
 
 下面是一个包含两个客户端组件作为子组件的服务器组件的示例：
 
-```
+```jsx
 // server-comp.jsx
 
 import ComponentA from "./a-client-comp";
@@ -458,7 +458,7 @@ export default AServerComp
 
 现在，我们将动态导入服务器组件到 `page.js` 文件中并在 JSX 中使用它。动态导入服务器组件的子客户端组件将被懒加载，但服务器组件本身不会。
 
-```
+```jsx
 // page.js
 
 import dynamic from "next/dynamic";
@@ -514,12 +514,9 @@ export default function Home() {
 
 下次见我的文章。不管怎样，请照顾好自己，并保持学习。
 
----
 
-![Tapas Adhikary](https://cdn.hashnode.com/res/hashnode/image/upload/v1645464332466/IynS2q6H6.jpeg)
+<img src="https://cdn.hashnode.com/res/hashnode/image/upload/v1645464332466/IynS2q6H6.jpeg" width="100" />
 
-
----
 
 如果你读到这里，请感谢作者，向他们表示你的关心。说声谢谢
 
