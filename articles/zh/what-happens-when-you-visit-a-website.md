@@ -1,18 +1,18 @@
 ---
 title: 访问网站时会发生什么？网络运行原理详解
-date: 2024-11-19T09：53：40.335Z
+date: 2024-11-19T09:53:40.335Z
 author: Viviana Yanez
-authorURL: https：//www.freecodecamp.org/news/author/vivianay/
-originalURL: https：//www.freecodecamp.org/news/what-happens-when-you-visit-a-website/
+authorURL: https://www.freecodecamp.org/news/author/vivianay/
+originalURL: https://www.freecodecamp.org/news/what-happens-when-you-visit-a-website/
 posteditor: "yiwei"
 proofreader: ""
 ---
 
-在这篇文章中，我将引导你了解使用浏览器访问网站时发生的整个过程概述。
+在这篇文章中，我将引导你了解使用浏览器访问网站时发生的整个过程。
 
 <!-- more -->
 
-无论你是刚接触 web 开发还是已有一些经验，这篇文章都将帮助你更好地理解网络及其核心技术的工作原理。
+无论你是刚接触 web 开发还是已经有一些经验，这篇文章都将帮助你更好地理解网络及其核心技术的工作原理。
 
 ## 目录
 
@@ -38,7 +38,7 @@ proofreader: ""
     - [构建 DOM 树][16]
     - [构建 CSSOM 树][17]
     - [Javascript 编译和执行][18]
-    - [构建无障碍树][19]
+    - [构建可访问性树][19]
     - [渲染树][20]
     - [布局][21]
     - [绘制][22]
@@ -60,17 +60,17 @@ proofreader: ""
 
 每个存储在服务器上的资源都可以通过其对应的 URL 被客户端定位。以下是一个有效 URL 的示例：
 
-![Example of a valid URL, including its scheme, authority, path to resource, two parameters and an anchor.](https://cdn.hashnode.com/res/hashnode/image/upload/v1731414821178/970907db-f349-421e-b410-45f4ee978e0b.jpeg)
+![一个有效的 URL 示例，包括其机制、授权、资源路径、两个参数和一个锚点。](https://cdn.hashnode.com/res/hashnode/image/upload/v1731414821178/970907db-f349-421e-b410-45f4ee978e0b.jpeg)
 
 你可能已经知道 URL 是什么，但让我们详细看看它的每个组成部分:
 
-- **协议**： URL 的第一部分表明应该使用什么协议来获取资源。网站使用 HTTP 和 HTTPS 协议，我们稍后会详细介绍。协议后面的 `:` 用来分隔 URL 的下一部分。
+- **协议类型**： URL 的第一部分表明应该使用哪种协议来获取资源。网站可以使用 HTTP 和 HTTPS 协议，我们稍后会详细介绍。协议类型后面的 `:` 用来分隔 URL 的下一部分。
 
 - **授权**： 这部分由域名和端口号组成，用冒号分隔。只有当 web 服务器不使用 HTTP 协议的标准端口(HTTP 用 80，HTTPS 用 443)时，端口才是必需的。域名前的 `//` 表示授权的开始。
 
 - **资源路径**： 这是 web 服务器上资源的抽象或物理路径。
 
-- **参数**： 一组键/值对，为返回请求的资源添加额外选项。它们用 `&` 分隔，每个 web 服务器都有自己处理参数的方式。这部分以 `？` 开始。
+- **参数**： 一组键/值对，为返回请求的资源添加额外选项。它们用 `&` 分隔，每个 web 服务器都有自己处理参数的方式。这部分以 `?` 开始。
 
 - **锚点**： 如果存在，以 `#` 开始，由浏览器处理以显示返回文档的特定部分。例如，它可以指向 HTML 文档中的特定部分。
 
@@ -90,7 +90,7 @@ proofreader: ""
 
 同样，提供商的 DNS 可能在其缓存中存储了域名的结果，如果没有，它会询问根 DNS 服务器。
 
-### 什么是根 DNS 服务器？ 
+### 什么是根 DNS 服务器？
 
 根 DNS 服务器是实际驱动整个互联网的系统。它由分布在全球的十三个服务器组成。它会用请求域名的相关顶级域服务器来响应解析器的查询。
 
@@ -122,14 +122,14 @@ TLD 返回请求域名的权威域名服务器。DNS 解析器会再次缓存结
 
 这个过程遵循四层模型，数据在一个方向上传输，到达目的地后再反向传输：
 
-![The four-layer model includes the application layer, the transport layer, the internet layer， and the network layer. Data travels back and forth through these layers.](https://cdn.hashnode.com/res/hashnode/image/upload/v1731414848576/178ce64e-2216-487a-b142-c88c2125dcde.jpeg)
+![四层模型包括应用层、传输层、互联网层和网络接口层。数据在这些层间来回传输。](https://cdn.hashnode.com/res/hashnode/image/upload/v1731414848576/178ce64e-2216-487a-b142-c88c2125dcde.jpeg)
 
 
 传输层确保应用程序可以通过建立数据通道来交换数据。它还建立了网络端口的概念，这是一个为应用程序需要的特定通信通道分配的编号数据通道系统。
 
 TCP/IP 模型的传输层包括互联网上最常用的两个协议：TCP 和[用户数据报协议](30)（UDP）。
 
-TCP 包含一些功能，使其在大多数基于互联网的应用程序中普遍存在，所以让我们关注它。
+TCP 包含一些功能，使其在大多数基于互联网的应用程序中普遍存在，所以我们重点讨论它。
 
 ### TCP 连接如何工作？
 
@@ -176,7 +176,7 @@ HTTP 消息有两种类型：
 
 2. **请求头**： 一组键值对。其中两个是必需的。`Host` 表示目标域名，`Connection` 除非必须保持打开，否则总是设置为 close。请求头总是以空行结束。
 
-3. **请求体**： 是一个可选字段，允许向服务器发送数据。
+3. **请求正文**： 是一个可选字段，允许向服务器发送数据。
 
 服务器将用 HTTP 响应回复请求。响应包括有关请求状态的信息，可能包括请求的资源或数据。
 
@@ -184,9 +184,9 @@ HTTP 响应的结构包括以下部分：
 
 1. **状态行**： 包括使用的协议版本、状态代码和状态文本，以及状态代码的人类可读描述。
 
-2. **头部**： 一组键值对，可以是应用于整个消息的通用头部;提供服务器状态附加信息的响应头部;或描述消息数据格式和编码(如果存在)的表示头部。
+2. **响应头**： 一组键值对，可以是应用于整个消息的通用标头、提供服务器状态附加信息的响应标头或描述消息数据格式和编码（如果存在）的表示标头。
 
-3. **主体**： 包含请求的数据或资源。如果客户端不期望数据或资源，响应通常不会包含主体。
+3. **响应正文**： 包含请求的数据或资源。如果客户端不期望数据或资源，响应通常不会包含主体。
 
 当服务器批准网页请求时，响应将包含 `200 OK` 消息。其他现有的 HTTP 响应代码包括：
 
@@ -197,7 +197,7 @@ HTTP 响应的结构包括以下部分：
 - 304 未修改
 - 401 未授权
 
-响应还将包含 HTTP 头部列表和响应主体，包括请求页面对应的 HTML 代码。
+响应还将包含 HTTP 标头列表和响应主体，包括请求页面对应的 HTML 代码。
 
 ### HTTPS
 
@@ -205,13 +205,13 @@ HTTP 响应的结构包括以下部分：
 
 HTTP 是浏览器和服务器之间大多数通信使用的协议，但它缺乏安全性。通过 HTTP 发送的任何数据都可能被网络上的任何人看到。当连接涉及敏感数据时，这尤其危险，比如登录凭证、财务信息、健康信息等。
 
-HTTPS 的主要目的是确保数据隐私、完整性和身份识别。这意味着确保数据只能被预期的接收者访问，不能被中间人截获或修改。同时，发送者和接收者都可以被合法机构识别为他们声称的身份。
+HTTPS 的主要目的是确保数据隐私、完整性和身份识别。这意味着确保数据只能被预期的接收者访问，不能被中间人截获或修改。同时，发送者和接收者都可以通过合法的权威机构确认其身份。
 
 在 HTTPS 中，通信使用 TLS 协议加密，该协议依赖于非对称公钥基础设施。它结合了两个密钥：一个公钥和一个私钥。服务器共享其公钥，客户端可以用它加密消息，而这些消息只能用服务器的私钥解密。
 
 为建立加密通信，客户端和服务器必须启动另一次握手。在握手期间，它们就使用的 TLS 版本以及在连接期间如何加密数据和相互认证达成一致，这一组规则被称为密码套件。
 
-![Steps in the SSL Handshake.](https://cdn.hashnode.com/res/hashnode/image/upload/v1731414891509/541f6b6c-ad54-4301-834a-1056aea524c0.jpeg)
+![SSL 握手的步骤](https://cdn.hashnode.com/res/hashnode/image/upload/v1731414891509/541f6b6c-ad54-4301-834a-1056aea524c0.jpeg)
 
 这个握手或 TLS 协商在建立 TCP 连接后开始，包括以下步骤：
 
@@ -219,7 +219,7 @@ HTTPS 的主要目的是确保数据隐私、完整性和身份识别。这意�
 
 - **服务器问候**： 服务器回应选定的密码套件和 TLS 版本，以及包含服务器公钥的 SSL 证书。
 
-- **认证和预主密钥**： 客户端通过相应的可信机构验证服务器的 SSL 证书，然后使用服务器的公钥(之前在证书中共享)创建预主密钥并与服务器共享。
+- **认证和预主密钥**： 客户端通过相应的可信机构验证服务器的 SSL 证书，然后使用服务器的公钥（之前在证书中共享）创建预主密钥并与服务器共享。
 
 - **预主密钥解密**： 预主密钥只能使用服务器的私钥解密。如果服务器能够解密它，客户端和服务器就可以就会话使用的共享主密钥达成一致。
 
@@ -256,7 +256,7 @@ HTTPS 的主要目的是确保数据隐私、完整性和身份识别。这意�
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width， initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>What Really Happens When You Navigate to a Website</title>
 </head>
 <body>
@@ -268,19 +268,19 @@ HTTPS 的主要目的是确保数据隐私、完整性和身份识别。这意�
         <section>
             <h2>Intro</h2>
             <p>
-                Before entering into the details of every step included in the process， let's review some of the basic concepts we will be discussing throughout the blog.
+                Before entering into the details of every step included in the process let's review some of the basic concepts we will be discussing throughout the blog.
             </p>
             <p>
-                The Internet is a huge network of interconnected computers. The World Wide Web (aka web) is built on top of that technology， as well as other services such as email， chat systems， or file sharing.
+                The Internet is a huge network of interconnected computers. The World Wide Web (aka web) is built on top of that technology, as well as other services such as email, chat systems, or file sharing.
             </p>
 
-            <p>Computers connected to the internet are either：</p>
+            <p>Computers connected to the internet are either:</p>
             <ul>
                 <li>
-                    <p>Clients， the web user's devices and the software that those devices use to access the web.</p>
+                    <p>Clients, the web user's devices and the software that those devices use to access the web.</p>
                 </li>
                 <li>
-                    <p>Servers， computers that store web pages， sites， or apps and the files they need to be displayed in the user's web browser or devices.</p>
+                    <p>Servers, computers that store web pages, sites, or apps and the files they need to be displayed in the user's web browser or devices.</p>
                 </li>
             </ul>
         </section>
@@ -295,7 +295,7 @@ HTTPS 的主要目的是确保数据隐私、完整性和身份识别。这意�
 
 生成的 DOM 树如下所示：
 
-![此图展示了包含所有 HTML 元素、其内容及层次关系的 DOM 树。]
+![此图展示了包含所有 HTML 元素、其内容及层次关系的 DOM 树。](https://cdn.hashnode.com/res/hashnode/image/upload/v1731498370760/4267c646-145e-487c-83af-f97d6f8ce21d.jpeg)
 
 在解析 HTML 时，浏览器会对遇到的资源发出额外请求。CSS 文件和图片是非阻塞资源，这意味着解析器会在等待请求资源的同时继续其任务。但如果遇到 `<script>` 标签，HTML 解析将暂停，这会影响首次渲染时间。
 
@@ -307,64 +307,64 @@ DOM 包含页面内容及其层次结构的所有信息，而 CSSOM 包含如何
 
 给定以下 CSS 代码：
 
-```
+```css
 * {
-    box-sizing： border-box;
+    box-sizing: border-box;
 }
 
 body {
-    font-family： Arial， sans-serif;
-    background-color： #f4f4f9;
-    color： #333;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
 }
 
 main {
-    padding： 20px;
-    max-width： 800px;
-    margin： 0 auto;
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 header {
-    background-color： #005bbb;
-    color： #ffffff;
-    padding： 10px;
-    text-align： center;
+    background-color: #005bbb;
+    color: #ffffff;
+    padding: 10px;
+    text-align: center;
 }
 
 h1 {
-    font-size： 24px;
+    font-size: 24px;
 }
 
 section {
-    margin-top： 20px;
+    margin-top: 20px;
 }
 
 h2 {
-    font-size： 20px;
-    color： #005bbb;
-    display： none;
+    font-size: 20px;
+    color: #005bbb;
+    display: none;
 }
 
 p {
-    margin-bottom： 10px;
+    margin-bottom: 10px;
 }
 
 ul {
-    margin-left： 20px;
-    list-style-type： disc;
+    margin-left: 20px;
+    list-style-type: disc;
 }
 
 footer {
-    margin-top： 40px;
-    text-align： center;
-    font-size： 14px;
-    color： #555;
+    margin-top: 40px;
+    text-align: center;
+    font-size: 14px;
+    color: #555;
 }
 ```
 
 当浏览器处理它时，生成的 CSSOM 会如下所示：
 
-![The CSSOM tree includes each HTML element and their corresponding styles. ](https://cdn.hashnode.com/res/hashnode/image/upload/v1731496962735/f3cb0399-a9fb-48cc-8043-00608d1236db.jpeg)
+![CSSOM 树包括每个HTML元素及其对应的样式。](https://cdn.hashnode.com/res/hashnode/image/upload/v1731496962735/f3cb0399-a9fb-48cc-8043-00608d1236db.jpeg)
 
 它的创建不是增量式的，这意味着浏览器会停止渲染页面，直到处理完所有 CSS。
 
@@ -378,13 +378,13 @@ JavaScript 也由浏览器解析、编译和解释，但如前所述，它在默
 
 一旦浏览器完成解析并执行所有可能修改 DOM 和 CSSOM 的 JavaScript 文件，下一步就是构建渲染树。但在详细了解这一步之前，让我们先关注一下无障碍树。
 
-### 构建无障碍树
+### 构建可访问性树
 
-基于 DOM 树创建的站点结构，浏览器还创建了一个无障碍树。
+基于 DOM 树创建的站点结构，浏览器还创建了一个可访问性树。
 
-无障碍树是网站内容的另一种表示形式，专门设计用于通过[辅助技术]进行网站导航。
+可访问性树是网站内容的另一种表示形式，专门设计用于通过[辅助技术][37]进行网站导航。
 
-在无障碍树中，每个 DOM 元素都表示为一个可访问对象，包含以下信息：
+在可访问性树中，每个 DOM 元素都表示为一个可访问对象，包含以下信息：
 
 - **名称**： 用于引用元素的标识符。
 
@@ -396,11 +396,11 @@ JavaScript 也由浏览器解析、编译和解释，但如前所述，它在默
 
 在主要的网络浏览器中，你可以通过在 DOM 树查看器中选择一个节点并导航到"无障碍"选项卡来访问可访问对象及其信息。
 
-![A unordered list selected and the accessibility tab in Chrome Dev Tools.](https://cdn.hashnode.com/res/hashnode/image/upload/v1731578933460/0a8c7a78-c19a-4d19-a96a-fabd19772156.png)
+![Chrome 开发者工具中的无序列表及辅助功能选项卡。](https://cdn.hashnode.com/res/hashnode/image/upload/v1731578933460/0a8c7a78-c19a-4d19-a96a-fabd19772156.png)
 
-![A unordered list selected and the accessibility tab in Firefox Dev Tools.](https://cdn.hashnode.com/res/hashnode/image/upload/v1731579023128/85aeb312-1632-49c3-80cb-0d5db8ec8502.png)
+![Firefox 开发者工具中的无序列表及辅助功能选项卡。](https://cdn.hashnode.com/res/hashnode/image/upload/v1731579023128/85aeb312-1632-49c3-80cb-0d5db8ec8502.png)
 
-拥有结构良好的无障碍树对于确定网站是否可以使用辅助技术导航至关重要，这将决定包容与排除的差异。
+拥有一个结构良好的可访问性树，是决定网站能否通过辅助技术进行导航的关键，这直接关系到网站是具有包容性还是排他性。
 
 ### 渲染树
 
@@ -410,7 +410,7 @@ JavaScript 也由浏览器解析、编译和解释，但如前所述，它在默
 
 非可见节点，如 `<script>` 或 `<meta>` 标签，以及使用 `display： none` CSS 属性隐藏的元素，不会包含在这个树中。
 
-![The render tree is created from the DOM and CSSOM trees.](https://cdn.hashnode.com/res/hashnode/image/upload/v1731501603172/d3467e9a-e75b-4217-875b-58684edfdbc0.jpeg)
+![渲染树是从 DOM 和 CSSOM 树创建的。](https://cdn.hashnode.com/res/hashnode/image/upload/v1731501603172/d3467e9a-e75b-4217-875b-58684edfdbc0.jpeg)
 
 ### 布局
 
@@ -470,7 +470,7 @@ JavaScript 水合是将 JavaScript 添加到服务器渲染的 HTML 页面以使
 [16]: #构建-dom-树
 [17]: #构建-cssom-树
 [18]: #javascript-编译和执行
-[19]: #构建无障碍树
+[19]: #构建可访问性树
 [20]: #渲染树
 [21]: #布局
 [22]: #绘制
