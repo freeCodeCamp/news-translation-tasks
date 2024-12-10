@@ -1,6 +1,6 @@
 ---
 title: An Introduction to Docker and Containers for Beginners
-date: 2024-12-10T07:37:52.556Z
+date: 2024-12-10T07:43:17.933Z
 author: Kedar Makode
 authorURL: https://www.freecodecamp.org/news/author/Kedar98/
 originalURL: https://www.freecodecamp.org/news/an-introduction-to-docker-and-containers-for-beginners/
