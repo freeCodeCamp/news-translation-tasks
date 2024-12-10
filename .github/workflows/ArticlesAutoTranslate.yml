@@ -36,7 +36,7 @@ jobs:
           githubToken: '${{ github.token }}'
 
       - name: Articles auto translate
-        uses: freeCodeCamp/articles-auto-translate-action@main
+        uses: miyaliu666/articles-auto-translate-action@feat/add-trailing-spaces
         with:
           with_issue_title: '${{ github.event.issue.title }}'
           with_issue_body: '${{ github.event.issue.Body }}'
