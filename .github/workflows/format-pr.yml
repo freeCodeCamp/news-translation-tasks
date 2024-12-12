@@ -7,6 +7,9 @@ on:
     paths:
       - '**/*.md'  # Trigger workflow only when .md files are modified in the PR
 
+permissions:
+  contents: write
+  
 jobs:
   whitespace:
     runs-on: ubuntu-latest
@@ -14,6 +17,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Set up Git config
         run: |
@@ -52,7 +57,7 @@ jobs:
             git checkout $head_branch
             git add "$file"
             git commit -m "Remove trailing spaces from $file"
-            git push origin $head_branch
+            git push origin HEAD:${{ github.event.pull_request.head.ref }}
           else
             echo "No .md files found or no changes to commit."
           fi
