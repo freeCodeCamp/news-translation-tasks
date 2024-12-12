@@ -36,10 +36,10 @@ jobs:
           git fetch upstream ${{ github.event.pull_request.head.ref }}
           git checkout -b pr-branch upstream/${{ github.event.pull_request.head.ref }}
 
-      # Step 4: Determine changed files in the PR commit range
-      - name: Determine changed Markdown files in PR commits
+      # Step 4: Determine changed Markdown files in PR commits
+      - name: Determine changed Markdown files
         run: |
-          echo "Fetching changed files for this PR..."
+          echo "Fetching changed files in this PR..."
           base_commit="${{ github.event.pull_request.base.sha }}"
           head_commit="${{ github.event.pull_request.head.sha }}"
           echo "Base commit: $base_commit"
