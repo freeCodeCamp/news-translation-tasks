@@ -36,11 +36,17 @@ jobs:
           git fetch upstream ${{ github.event.pull_request.head.ref }}
           git checkout -b pr-branch upstream/${{ github.event.pull_request.head.ref }}
 
-      # Step 4: Determine changes in the current PR
-      - name: Determine changed Markdown files
+      # Step 4: Determine changed files in the PR commit range
+      - name: Determine changed Markdown files in PR commits
         run: |
-          echo "Fetching changed files in the current PR..."
-          changed_files=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }} HEAD | grep '\.md$')
+          echo "Fetching changed files for this PR..."
+          base_commit="${{ github.event.pull_request.base.sha }}"
+          head_commit="${{ github.event.pull_request.head.sha }}"
+          echo "Base commit: $base_commit"
+          echo "Head commit: $head_commit"
+
+          # Get changed files between base and head commits
+          changed_files=$(git diff --name-only $base_commit $head_commit | grep '\.md$')
           echo "Markdown files changed in this PR: $changed_files"
 
           if [ -n "$changed_files" ]; then
