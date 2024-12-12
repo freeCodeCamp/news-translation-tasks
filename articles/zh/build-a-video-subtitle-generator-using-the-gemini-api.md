@@ -4,7 +4,7 @@ date: 2024-12-12T03:25:52.102Z
 author: Sanjay R 
 authorURL: https://www.freecodecamp.org/news/author/sanjayxr/ 
 originalURL: https://www.freecodecamp.org/news/build-a-video-subtitle-generator-using-the-gemini-api/ 
-posteditor: "" 
+posteditor: "miyaliu66" 
 proofreader: "" 
 --- 
  
@@ -559,7 +559,7 @@ export default App;
  
 在服务器发送生成的字幕后，前端将其作为响应接收。为了处理该响应并允许用户下载字幕，我们将使用 Blob。Blob（Binary Large Object，二进制大对象）是一种 Web API 对象，表示原始二进制数据，本质上就像一个文件。在我们的例子中，服务器返回的字幕将被转换成 Blob，然后允许我们在用户的浏览器中触发下载。 
  
-## 总结 
+## 结语
  
 在本教程中，您学习了如何使用 Google 的 Gemini API、React 和 Express 构建一个 AI 驱动的字幕生成器。您可以上传视频，发送到 Gemini API 进行字幕生成，并提供生成的字幕供下载。 
  
