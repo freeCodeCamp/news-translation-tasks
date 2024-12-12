@@ -40,7 +40,7 @@ jobs:
       - name: Determine changed Markdown files
         run: |
           echo "Fetching changed files in the current PR..."
-          changed_files=$(git diff --name-only HEAD~$(git rev-list --count HEAD) HEAD | grep '\.md$')
+          changed_files=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }} HEAD | grep '\.md$')
           echo "Markdown files changed in this PR: $changed_files"
 
           if [ -n "$changed_files" ]; then
