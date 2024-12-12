@@ -21,7 +21,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
-          fetch-depth: 0  # Clone full history to enable merge-base
+          fetch-depth: 0
 
       # Step 2: Set up Git configuration
       - name: Set up Git config
@@ -29,7 +29,14 @@ jobs:
           git config --global user.name "miyaliu666"
           git config --global user.email "miyaliu@gmail.com"
 
-      # Step 3: Fetch base branch and determine changes
+      # Step 3: Add upstream remote and fetch PR branch
+      - name: Add upstream and fetch PR branch
+        run: |
+          git remote add upstream https://github.com/${{ github.event.pull_request.head.repo.full_name }}
+          git fetch upstream ${{ github.event.pull_request.head.ref }}
+          git checkout -b pr-branch upstream/${{ github.event.pull_request.head.ref }}
+
+      # Step 4: Fetch base branch and determine changes
       - name: Fetch base branch and determine changes
         run: |
           base_branch="${{ github.event.pull_request.base.ref }}"
@@ -53,15 +60,15 @@ jobs:
               sed -i 's/ $//g' "$file"  # Remove trailing whitespaces
               git add "$file"           # Stage changes
             done
-
-            # Commit changes
             git commit -m "fix: Remove trailing whitespaces from Markdown files"
-
-            # Set the upstream remote URL with authentication
-            git remote set-url upstream https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.event.pull_request.head.repo.full_name }}
 
             # Push changes back to the PR branch
             git push upstream HEAD:${{ github.event.pull_request.head.ref }}
           else
             echo "No Markdown files to process."
           fi
+
+      # Step 5: Debug remotes (optional)
+      - name: Debug remotes
+        run: |
+          git remote -v
