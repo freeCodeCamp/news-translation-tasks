@@ -5,73 +5,54 @@ on:
     types:
       - opened
     paths:
-      - '**/*.md'  # Trigger workflow only when .md files are modified in the PR
+      - '**/*.md'
 
 permissions:
-  contents: write  # Enable write permissions for pushing changes
+  contents: write  # Ensure GITHUB_TOKEN has push permissions
 
 jobs:
   whitespace:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout main repository
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          repository: ${{ github.repository }}  # Main repository
+          ref: ${{ github.event.pull_request.base.ref }}
+
+      - name: Add PR author's remote repository
+        run: |
+          # Add the PR author's repository as an upstream remote
+          git remote add upstream ${{ github.event.pull_request.head.repo.clone_url }}
+          git fetch upstream ${{ github.event.pull_request.head.ref }}
+          git checkout -b pr-branch upstream/${{ github.event.pull_request.head.ref }}
 
       - name: Set up Git config
         run: |
+          # Configure Git user information
           git config --global user.name "miyaliu666"
-          git config --global user.email "miyaliu66666@gmail.com"
+          git config --global user.email "miyaliu@gmail.com"
 
       - name: Remove trailing whitespaces from Markdown files
         run: |
-          echo "Target branch: ${{ github.event.pull_request.base.ref }}"
-          echo "Head branch: ${{ github.event.pull_request.head.ref }}"
+          echo "Checking Markdown files for trailing whitespaces..."
 
-          base_branch="${{ github.event.pull_request.base.ref }}"
-          head_branch="${{ github.event.pull_request.head.ref }}"
+          # Get all .md files that have changed
+          files=$(git ls-files | grep '\.md$')
+          echo "Markdown files: $files"
 
-          # Fetch the base and head branches
-          git fetch origin $base_branch
-          git fetch origin $head_branch
-
-          # Determine the base commit shared by the base and head branches
-          base_commit=$(git merge-base origin/$base_branch origin/$head_branch)
-          echo "Base commit: $base_commit"
-
-          # Get the changed files in the current PR
-          echo "Checking changes in PR..."
-          files=$(git diff --name-only $base_commit HEAD)
-          echo "Changed files: $files"
-
-          # Filter out only .md files
-          file=$(echo "$files" | grep '\.md$')
-          if [ -n "$file" ]; then
-            echo "Filtered .md file(s): $file"
-            for f in $file; do
-              echo "Processing file: $f"
-              # Remove trailing spaces from each line in the file
-              sed -i 's/ $//g' "$f"
-              # Check if changes were made
-              if git diff --exit-code "$f"; then
-                echo "No changes detected in $f"
-              else
-                git add "$f"
-                echo "Changes staged for $f"
-              fi
+          if [ -n "$files" ]; then
+            echo "Processing files..."
+            for file in $files; do
+              echo "Fixing file: $file"
+              sed -i 's/ $//g' "$file"  # Remove trailing whitespaces
+              git add "$file"           # Stage changes
             done
 
-            # Commit and push changes if there are any
-            if git diff --cached --exit-code; then
-              echo "No changes to commit."
-              exit 0
-            fi
-            git commit -m "Remove trailing spaces from Markdown files"
-            git push origin HEAD:$head_branch
+            # Commit and push changes
+            git commit -m "fix: Remove trailing whitespaces from Markdown files"
+            git push upstream HEAD:${{ github.event.pull_request.head.ref }}
           else
-            echo "No Markdown files found or no changes to commit."
-            exit 0
+            echo "No Markdown files to process or no changes detected."
           fi
