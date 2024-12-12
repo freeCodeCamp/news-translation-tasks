@@ -36,26 +36,16 @@ jobs:
           git fetch upstream ${{ github.event.pull_request.head.ref }}
           git checkout -b pr-branch upstream/${{ github.event.pull_request.head.ref }}
 
-      # Step 4: Fetch base branch and determine changes
-      - name: Fetch base branch and determine changes
+      # Step 4: Determine changes in the current PR
+      - name: Determine changed Markdown files
         run: |
-          base_branch="${{ github.event.pull_request.base.ref }}"
-          echo "Base branch: $base_branch"
+          echo "Fetching changed files in the current PR..."
+          changed_files=$(git diff --name-only HEAD~$(git rev-list --count HEAD) HEAD | grep '\.md$')
+          echo "Markdown files changed in this PR: $changed_files"
 
-          # Fetch the base branch
-          git fetch origin $base_branch
-
-          # Determine the base commit
-          base_commit=$(git merge-base origin/$base_branch HEAD)
-          echo "Base commit: $base_commit"
-
-          # Get list of changed Markdown files
-          files=$(git diff --name-only $base_commit HEAD | grep '\.md$')
-          echo "Markdown files changed in PR: $files"
-
-          if [ -n "$files" ]; then
+          if [ -n "$changed_files" ]; then
             echo "Processing changed Markdown files..."
-            for file in $files; do
+            for file in $changed_files; do
               echo "Fixing file: $file"
               sed -i 's/ $//g' "$file"  # Remove trailing whitespaces
               git add "$file"           # Stage changes
