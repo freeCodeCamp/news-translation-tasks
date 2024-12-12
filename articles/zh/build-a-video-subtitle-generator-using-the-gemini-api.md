@@ -4,7 +4,7 @@ date: 2024-12-12T03:25:52.102Z
 author: Sanjay R 
 authorURL: https://www.freecodecamp.org/news/author/sanjayxr/ 
 originalURL: https://www.freecodecamp.org/news/build-a-video-subtitle-generator-using-the-gemini-api/ 
-posteditor: "" 
+posteditor: "miyaliu66" 
 proofreader: "" 
 --- 
  
@@ -37,11 +37,11 @@ proofreader: ""
  
 API 密钥充当唯一标识符并验证你对服务的请求。它对于访问和使用 Gemini AI 的功能至关重要。这个密钥将允许我们的应用程序与 Gemini 通信，帮助我们构建项目。 
  
-访问 [Google AI Studio][8]，然后点击“Get API Key”： 
+访问 [Google AI Studio][8]，然后点击 “Get API Key”： 
  
 ![Google AI Studio 的截图，显示了“Get API Key”按钮](https://cdn.hashnode.com/res/hashnode/image/upload/v1733571839232/f5636fd0-c3cd-4c1b-bf7f-5200bce41444.png) 
  
-在重定向到 API KEY 页面后，点击“Create API Key“： 
+在重定向到 API KEY 页面后，点击 “Create API Key“： 
  
 ![展示如何在 Google AI Studio 创建 API 密钥的截图。](https://cdn.hashnode.com/res/hashnode/image/upload/v1733572045638/c950f7a2-613c-4976-905a-ce5c9dceb901.png) 
  
@@ -563,9 +563,9 @@ export default App;
  
 在本教程中，您学习了如何使用 Google 的 Gemini API、React 和 Express 构建一个 AI 驱动的字幕生成器。您可以上传视频，发送到 Gemini API 进行字幕生成，并提供生成的字幕供下载。 
  
-## 结论 
+## 结语
  
-就是这样！您已成功使用 Gemini API 构建了一个 AI 驱动的字幕生成器。为了更快速的测试，请从较短的视频片段（3-5 分钟）开始。较长的视频可能需要更多时间来处理。 
+就是这样！你已成功使用 Gemini API 构建了一个 AI 驱动的字幕生成器。为了更快速测试，请从较短的视频片段（3-5 分钟）开始。较长的视频可能需要更多时间来处理。 
  
 想要创建一个可定制的视频提示应用程序吗？只需添加一个输入字段，让用户输入他们的提示，将该提示发送到服务器，并用它替代硬编码的提示。就是这么简单。 
  
