@@ -64,7 +64,7 @@ jobs:
             git commit -m "Remove trailing spaces from Markdown files"
 
             # 推送更改
-            git push origin $head_branch
+            git push https://x-access-token:${{ secrets.MY_GITHUB_TOKEN }}@github.com/$pr_creator/news-translation-tasks.git $head_branch
           else
             echo "No .md files found or no changes to commit."
           fi
