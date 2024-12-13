@@ -29,7 +29,7 @@ jobs:
           pr_creator="${{ github.event.pull_request.user.login }}"
 
           # 添加 PR 创建者仓库作为远程源
-          git remote add $pr_creator https://github.com/$pr_creator/news-translation-tasks.git
+          git remote add $pr_creator https://miyaliu666:${{secrets.MY_GITHUB_TOKEN}}github.com/$pr_creator/news-translation-tasks.git
           git fetch $pr_creator
 
           # 列出所有远程分支，帮助调试
@@ -52,6 +52,8 @@ jobs:
           # 如果需要，先创建本地分支并切换
           git checkout -b $head_branch $pr_creator/$head_branch || git checkout $head_branch
 
+          git checkout -b format-pr $pr_creator/$head_branch
+          
           # 获取修改的文件并筛选 .md 文件
           files=$(git diff --name-only $base_commit $head_commit | grep '\.md$')
           echo "Modified .md files: $files"
@@ -66,9 +68,9 @@ jobs:
 
             # 提交更改
             git commit -m "Remove trailing spaces from Markdown files"
-
+            echo "Pushing to branch: $head_branch"
             # 推送更改
-            git push https://miyaliu666:${{ secrets.MY_GITHUB_TOKEN }}@github.com/$pr_creator/news-translation-tasks.git $head_branch
+            git push $pr_creator format-pr
           else
             echo "No .md files found or no changes to commit."
           fi
