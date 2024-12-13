@@ -18,37 +18,29 @@ jobs:
       - name: Set up Git config
         run: |
           git config --global user.name "miyaliu666"
-          git config --global user.email "miyaliu@gmail.com"
-
-      - name: Add upstream remote
-        run: |
-          # Add the upstream remote using the repository URL and the author’s username
-          git remote add upstream https://github.com/${{ github.event.pull_request.base.user.login }}/${{ github.event.pull_request.base.repo.name }}.git
-          
-      - name: Fetch all branches from upstream and origin
-        run: |
-          # Fetch all branches from both origin and upstream
-          git fetch --all
-          # Ensure the remote branch exists
-          git branch -r
+          git config --global user.email "miyaliu66666@gmail.com"
 
       - name: Remove trailing whitespaces from Markdown files
         run: |
           echo "Target branch: ${{ github.event.pull_request.base.ref }}"
           echo "Head branch: ${{ github.event.pull_request.head.ref }}"
-
+          
+          # Get the base commit between the target branch (main) and the source branch (HEAD)
           base_branch="${{ github.event.pull_request.base.ref }}"
           head_branch="${{ github.event.pull_request.head.ref }}"
-
-          # Ensure the remote branch is available
+          
+          git fetch origin $base_branch
           git fetch origin $head_branch
-
+          
           base_commit=$(git merge-base origin/$base_branch origin/$head_branch)
           echo "Base commit: $base_commit"
           
+           # Get the changed files in the current PR
+          echo "Checking changes in PR..."
           files=$(git diff --name-only $base_commit origin/$head_branch)
           echo "Changed files: $files"
 
+          # Filter out .md files
           file=$(echo "$files" | grep '\.md$')
           echo "Filtered .md file: $file"
 
@@ -56,14 +48,8 @@ jobs:
             echo "Processing file: $file"
             # Remove trailing spaces from each line in the file
             sed -i 's/ $//g' "$file"
-            
-            # Check if we are on the correct branch
-            git checkout --track origin/$head_branch || git checkout -b $head_branch  # If $head_branch does not exist, create it
-
-            # Pull the latest changes from the origin remote, use rebase
-            git pull origin $head_branch --rebase
-
-            # Commit and push the changes to the PR's source branch
+            # Switch to the source branch and push the changes
+            git checkout $head_branch
             git add "$file"
             git commit -m "Remove trailing spaces from $file"
             git push origin $head_branch
