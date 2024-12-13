@@ -28,13 +28,21 @@ jobs:
           echo "Target branch: ${{ github.event.pull_request.base.ref }}"
           echo "Head branch: ${{ github.event.pull_request.head.ref }}"
           
-          # Get the base commit between the target branch (main) and the source branch (HEAD)
           base_branch="${{ github.event.pull_request.base.ref }}"
           head_branch="${{ github.event.pull_request.head.ref }}"
           
-          git fetch origin $base_branch
-          git fetch origin $head_branch
+          # Fetch all branches from the remote
+          git fetch --all
           
+          # Check if the source branch exists
+          if git show-ref --verify --quiet refs/heads/$head_branch; then
+            echo "Found source branch: $head_branch"
+          else
+            echo "Branch $head_branch not found, exiting."
+            exit 1
+          fi
+          
+          # Get the base commit between the target branch and the source branch
           base_commit=$(git merge-base origin/$base_branch origin/$head_branch)
           echo "Base commit: $base_commit"
           
