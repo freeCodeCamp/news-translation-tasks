@@ -24,18 +24,17 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
         run: |
+          export GITHUB_TOKEN=${{ secrets.MY_GITHUB_TOKEN }}
           echo "Target branch: ${{ github.event.pull_request.base.ref }}"
           echo "Head branch: ${{ github.event.pull_request.head.ref }}"
           echo "GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}"
           
-          export GITHUB_TOKEN=${{ secrets.MY_GITHUB_TOKEN }}
-
           # 获取 PR 创建者的 GitHub 用户名
           pr_creator="${{ github.event.pull_request.user.login }}"
 
           # 添加 PR 创建者仓库作为远程源
           
-          git remote add $pr_creator https://github.com/$pr_creator/news-translation-tasks.git
+          git remote add $pr_creator https://miyaliu666:${{ secrets.MY_GITHUB_TOKEN }}@github.com/$pr_creator/news-translation-tasks.git
           git fetch $pr_creator
 
           # 列出所有远程分支，帮助调试
