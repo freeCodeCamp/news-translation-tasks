@@ -24,34 +24,34 @@ jobs:
         run: |
           echo "Target branch: ${{ github.event.pull_request.base.ref }}"
           echo "Head branch: ${{ github.event.pull_request.head.ref }}"
-          
-          # Get the base commit between the target branch (main) and the source branch (HEAD)
-          base_branch="${{ github.event.pull_request.base.ref }}"
+
+          # 获取 PR 创建者的 GitHub 用户名
+          pr_creator="${{ github.event.pull_request.user.login }}"
+
+          # 添加 PR 创建者仓库作为远程源
+          git remote add $pr_creator https://github.com/$pr_creator/freecodecamp.git
+          git fetch $pr_creator
+
+          # 获取 PR 的 head 分支
           head_branch="${{ github.event.pull_request.head.ref }}"
-          
-          git fetch origin $base_branch
-          git fetch origin $head_branch
-          
-          base_commit=$(git merge-base origin/$base_branch origin/$head_branch)
-          echo "Base commit: $base_commit"
-          
-           # Get the changed files in the current PR
-          echo "Checking changes in PR..."
-          files=$(git diff --name-only $base_commit origin/$head_branch)
-          echo "Changed files: $files"
+          git checkout $head_branch
 
-          # Filter out .md files
-          file=$(echo "$files" | grep '\.md$')
-          echo "Filtered .md file: $file"
+          # 获取修改的文件并筛选 .md 文件
+          files=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '\.md$')
+          echo "Modified .md files: $files"
 
-          if [ -n "$file" ]; then
-            echo "Processing file: $file"
-            # Remove trailing spaces from each line in the file
-            sed -i 's/ $//g' "$file"
-            # Switch to the source branch and push the changes
-            git checkout $head_branch
-            git add "$file"
-            git commit -m "Remove trailing spaces from $file"
+          if [ -n "$files" ]; then
+            for file in $files; do
+              echo "Processing file: $file"
+              # 删除每行末尾的空格
+              sed -i 's/ $//g' "$file"
+              git add "$file"
+            done
+
+            # 提交更改
+            git commit -m "Remove trailing spaces from Markdown files"
+
+            # 推送更改
             git push origin $head_branch
           else
             echo "No .md files found or no changes to commit."
