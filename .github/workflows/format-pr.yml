@@ -56,6 +56,10 @@ jobs:
             # Remove trailing spaces from each line in the file (Linux-compatible sed command)
             sed -i 's/ $//g' "$file"
             
+            # Check if we are on the correct branch
+            git checkout $head_branch || git checkout -b $head_branch  # If $head_branch does not exist, create it
+
+            # Commit and push the changes to the PR's source branch
             git add "$file"
             git commit -m "Remove trailing spaces from $file"
             git push origin $head_branch
