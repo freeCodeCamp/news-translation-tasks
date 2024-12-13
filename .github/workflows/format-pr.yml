@@ -1,70 +1,65 @@
 name: Format PR Files
 
+permissions:
+  contents: write  # Required permission to allow pushing changes
+
 on:
   pull_request:
     types:
       - opened
     paths:
-      - '**/*.md'
-
-permissions:
-  contents: write  # Ensure GITHUB_TOKEN has push permissions
+      - '**/*.md'  # Trigger workflow only when .md files are modified in the PR
 
 jobs:
   whitespace:
     runs-on: ubuntu-latest
-
+    
     steps:
-      # Step 1: Checkout the PR branch
-      - name: Checkout PR branch
+      - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
-          fetch-depth: 0
 
-      # Step 2: Set up Git configuration
       - name: Set up Git config
         run: |
           git config --global user.name "miyaliu666"
-          git config --global user.email "miyaliu@gmail.com"
+          git config --global user.email "miyaliu66666@gmail.com"
 
-      # Step 3: Add upstream remote and fetch PR branch
-      - name: Add upstream and fetch PR branch
+      - name: Remove trailing whitespaces from Markdown files
         run: |
-          git remote add upstream https://github.com/${{ github.event.pull_request.head.repo.full_name }}
-          git fetch upstream ${{ github.event.pull_request.head.ref }}
-          git checkout -b pr-branch upstream/${{ github.event.pull_request.head.ref }}
-
-      # Step 4: Determine changed Markdown files in PR commits
-      - name: Determine changed Markdown files
-        run: |
-          echo "Fetching changed files in this PR..."
-          base_commit="${{ github.event.pull_request.base.sha }}"
-          head_commit="${{ github.event.pull_request.head.sha }}"
+          echo "Target branch: ${{ github.event.pull_request.base.ref }}"
+          echo "Head branch: ${{ github.event.pull_request.head.ref }}"
+          
+          # Get the base commit between the target branch (main) and the source branch (HEAD)
+          base_branch="${{ github.event.pull_request.base.ref }}"
+          head_branch="${{ github.event.pull_request.head.ref }}"
+          
+          git fetch origin $base_branch
+          git fetch origin $head_branch
+          
+          base_commit=$(git merge-base origin/$base_branch origin/$head_branch)
           echo "Base commit: $base_commit"
-          echo "Head commit: $head_commit"
+          
+           # Get the changed files in the current PR
+          echo "Checking changes in PR..."
+          files=$(git diff --name-only $base_commit origin/$head_branch)
+          echo "Changed files: $files"
 
-          # Get changed files between base and head commits
-          changed_files=$(git diff --name-only $base_commit $head_commit | grep '\.md$')
-          echo "Markdown files changed in this PR: $changed_files"
+          # Filter out .md files
+          file=$(echo "$files" | grep '\.md$')
+          echo "Filtered .md file: $file"
 
-          if [ -n "$changed_files" ]; then
-            echo "Processing changed Markdown files..."
-            for file in $changed_files; do
-              echo "Fixing file: $file"
-              sed -i 's/ $//g' "$file"  # Remove trailing whitespaces
-              git add "$file"           # Stage changes
-            done
-            git commit -m "fix: Remove trailing whitespaces from Markdown files"
-
-            # Push changes back to the PR branch
-            git push upstream HEAD:${{ github.event.pull_request.head.ref }}
+          if [ -n "$file" ]; then
+            echo "Processing file: $file"
+            # Remove trailing spaces from each line in the file
+            sed -i 's/ $//g' "$file"
+            
+            # Commit and push the changes to the PR branch
+            echo "Committing the changes to $head_branch"
+            git checkout $head_branch
+            git add "$file"
+            git commit -m "Remove trailing spaces from $file"
+            
+            # Push the commit to the source branch of the PR
+            git push origin $head_branch
           else
-            echo "No Markdown files to process."
+            echo "No .md files found or no changes to commit."
           fi
-
-      # Step 5: Debug remotes (optional)
-      - name: Debug remotes
-        run: |
-          git remote -v
