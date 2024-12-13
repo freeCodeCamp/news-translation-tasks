@@ -56,11 +56,15 @@ jobs:
             # Remove trailing spaces from each line in the file
             sed -i 's/ $//g' "$file"
             
-            # Ensure you're checking out the correct remote tracking branch
+            # Check if we are on the correct branch
             git checkout --track origin/$head_branch || git checkout -b $head_branch  # If $head_branch does not exist, create it
 
-            # Pull the latest changes from the origin remote, use rebase or merge strategy
-            git pull origin $head_branch --rebase  # Using rebase to avoid merge commits
+            # Ensure no unstaged changes before pulling
+            git add .  # Stage all changes
+            git commit -m "Prepare changes for pull" || echo "No changes to commit"
+
+            # Pull the latest changes from the origin remote, use rebase
+            git pull origin $head_branch --rebase
 
             # Commit and push the changes to the PR's source branch
             git add "$file"
