@@ -23,6 +23,7 @@ jobs:
       - name: Remove trailing whitespaces from Markdown files
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MY_GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
         run: |
           echo "Target branch: ${{ github.event.pull_request.base.ref }}"
           echo "Head branch: ${{ github.event.pull_request.head.ref }}"
@@ -31,7 +32,7 @@ jobs:
           pr_creator="${{ github.event.pull_request.user.login }}"
 
           # 添加 PR 创建者仓库作为远程源
-          git remote add $pr_creator https://github.com/$pr_creator/news-translation-tasks.git
+          git remote add $pr_creator https://miyaliu666:$MY_GITHUB_TOKEN@github.com/$pr_creator/news-translation-tasks.git
           git fetch $pr_creator
 
           # 列出所有远程分支，帮助调试
