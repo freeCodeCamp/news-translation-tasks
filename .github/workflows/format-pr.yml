@@ -10,7 +10,7 @@ on:
 jobs:
   whitespace:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -32,12 +32,21 @@ jobs:
           git remote add $pr_creator https://github.com/$pr_creator/news-translation-tasks.git
           git fetch $pr_creator
 
-          # 获取 PR 的 head 分支
+          # 获取 PR 的 base_commit 和 head_commit
+          base_branch="${{ github.event.pull_request.base.ref }}"
           head_branch="${{ github.event.pull_request.head.ref }}"
-          git checkout $head_branch
+          
+          git fetch origin $base_branch
+          git fetch origin $head_branch
+
+          base_commit=$(git merge-base origin/$base_branch origin/$head_branch)
+          head_commit=$(git rev-parse origin/$head_branch)
+          
+          echo "Base commit: $base_commit"
+          echo "Head commit: $head_commit"
 
           # 获取修改的文件并筛选 .md 文件
-          files=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '\.md$')
+          files=$(git diff --name-only $base_commit $head_commit | grep '\.md$')
           echo "Modified .md files: $files"
 
           if [ -n "$files" ]; then
