@@ -59,8 +59,8 @@ jobs:
             # Check if we are on the correct branch
             git checkout $head_branch || git checkout -b $head_branch  # If $head_branch does not exist, create it
 
-            # Pull the latest changes from the origin remote, use merge strategy
-            git pull origin $head_branch --no-rebase  # Merge strategy
+            # Allow merging unrelated histories when pulling
+            git pull origin $head_branch --allow-unrelated-histories
 
             # Commit and push the changes to the PR's source branch
             git add "$file"
