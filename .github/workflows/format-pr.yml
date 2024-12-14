@@ -17,19 +17,11 @@ jobs:
 
       - name: Set up Git config
         run: |
-          git config --global user.name "miyaliu666"
-          git config --global user.email "miyaliu66666@gmail.com"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Remove trailing whitespaces from Markdown files
-        env:
-          GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
         run: |
-          echo "Target branch: ${{ github.event.pull_request.base.ref }}"
-          echo "Head branch: ${{ github.event.pull_request.head.ref }}"
-          echo "GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}"
-          
-          export GITHUB_TOKEN=${{ secrets.MY_GITHUB_TOKEN }}
-
           # 获取 PR 创建者的 GitHub 用户名
           pr_creator="${{ github.event.pull_request.user.login }}"
 
