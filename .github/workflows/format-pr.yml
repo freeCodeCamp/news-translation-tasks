@@ -41,6 +41,10 @@ jobs:
 
           echo "Base commit: $base_commit"
           echo "Head commit: $head_commit"
+
+          # 如果需要，先创建本地分支并切换
+          git checkout -b $head_branch $pr_creator/$head_branch || git checkout $head_branch
+          git checkout -b format-pr $pr_creator/$head_branch
           
           # 获取修改的文件并筛选 .md 文件
           files=$(git diff --name-only $base_commit $head_commit | grep '\.md$')
@@ -64,5 +68,5 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git remote set-url origin https://x-access-token:${{ secrets.MY_GITHUB_TOKEN }}@github.com/${{ github.repository }}
           git commit -am "Automated changes"
-          git push
+          git push origin HEAD:format-pr
           echo "Complete"
