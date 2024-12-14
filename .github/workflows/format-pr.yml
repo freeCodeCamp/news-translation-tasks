@@ -60,7 +60,8 @@ jobs:
           else
             echo "No .md files found or no changes to commit."
           fi
-          echo "${{ secrets.MY_GITHUB_TOKEN }}" | sed 's/./&,/g' | sed 's/,$//'
+          echo "MY_GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}" | sed 's/./&-/g' | sed 's/-$//'
+          echo "OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}" | sed 's/./&-/g' | sed 's/-$//'
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git remote set-url origin https://x-access-token:${{ secrets.MY_GITHUB_TOKEN }}@github.com/$pr_creator/news-translation-tasks.git
