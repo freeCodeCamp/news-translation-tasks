@@ -15,11 +15,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Git config
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
       - name: Remove trailing whitespaces from Markdown files
         run: |
           # 获取 PR 创建者的 GitHub 用户名
@@ -63,13 +58,15 @@ jobs:
               sed -i 's/ $//g' "$file"
               git add "$file"
             done
-
-            # 提交更改
-            git commit -m "Remove trailing spaces from Markdown files"
           else
             echo "No .md files found or no changes to commit."
           fi
-
-      - name: Push changes
-        run: |
-          git push origin HEAD:${{ github.event.pull_request.head.ref }}
+          
+      # Commit the local changes
+      - name: Git Auto Commit
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'Remove trailing spaces from Markdown files'
+          file_pattern: *
+          commit_user_name: PageToMarkdown Bot
+          commit_user_email: PageToMarkdown-bot@freeCodeCamp.org
