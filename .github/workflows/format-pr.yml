@@ -66,6 +66,7 @@ jobs:
       - name: Git Auto Commit
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
+          branch: ${{ github.event.pull_request.head.ref }}
           commit_message: 'Remove trailing spaces from Markdown files'
           file_pattern: '**/*.md'
           commit_user_name: PageToMarkdown Bot
