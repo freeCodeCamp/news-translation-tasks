@@ -12,9 +12,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Fetch PR branch
-        run: git fetch origin pull/${{ github.event.pull_request.number }}/head:pr-${{ github.event.pull_request.number }}
-
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          ref: "refs/pull/${{ github.event.number }}/merge"
+          
       - name: Remove trailing whitespaces from Markdown files
         run: |
           # 获取 PR 创建者的 GitHub 用户名
