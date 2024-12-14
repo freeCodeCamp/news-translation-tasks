@@ -64,10 +64,9 @@ jobs:
 
       # Commit the local changes
       - name: Git Auto Commit
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          branch: ${{ github.event.pull_request.head.ref }}
-          commit_message: 'Remove trailing spaces from Markdown files'
-          file_pattern: '**/*.md'
-          commit_user_name: PageToMarkdown Bot
-          commit_user_email: PageToMarkdown-bot@freeCodeCamp.org
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git commit -a --amend --no-edit
+          git push --force-with-lease
+          echo "Complete"
