@@ -14,9 +14,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          ref: pull/${{ github.event.pull_request.number }}/head
-          path: the_pr
 
       - name: Remove trailing whitespaces from Markdown files
         run: |
