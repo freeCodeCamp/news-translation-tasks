@@ -17,65 +17,21 @@ jobs:
 
       - name: Set up Git config
         run: |
-          git config --global user.name "miyaliu666"
-          git config --global user.email "miyaliu66666@gmail.com"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Remove trailing whitespaces from Markdown files
-        env:
-          GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
         run: |
-          export GITHUB_TOKEN=${{ secrets.MY_GITHUB_TOKEN }}
-          echo "Target branch: ${{ github.event.pull_request.base.ref }}"
-          echo "Head branch: ${{ github.event.pull_request.head.ref }}"
-          echo "GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}"
-          
-          # 获取 PR 创建者的 GitHub 用户名
-          pr_creator="${{ github.event.pull_request.user.login }}"
+          # 查找所有被修改的文件并追加内容
+          for file in $(git diff --name-only HEAD^ HEAD); do
+            echo "Processing file: $file"
+            # 删除每行末尾的空格
+            sed -i 's/ $//g' "$file"
+            git add "$file"
+          done
+          # 提交更改
+          git commit -m "Remove trailing spaces from Markdown files"
 
-          # 添加 PR 创建者仓库作为远程源
-          
-          git remote add $pr_creator https://miyaliu666:${{ secrets.MY_GITHUB_TOKEN }}@github.com/$pr_creator/news-translation-tasks.git
-          git fetch $pr_creator
-
-          # 列出所有远程分支，帮助调试
-          git branch -r
-
-          # 获取 PR 的 base_commit 和 head_commit
-          base_branch="${{ github.event.pull_request.base.ref }}"
-          head_branch="${{ github.event.pull_request.head.ref }}"
-
-          # 拉取 base 和 head 分支
-          git fetch origin $base_branch
-          git fetch $pr_creator $head_branch
-
-          base_commit=$(git merge-base origin/$base_branch $pr_creator/$head_branch)
-          head_commit=$(git rev-parse $pr_creator/$head_branch)
-
-          echo "Base commit: $base_commit"
-          echo "Head commit: $head_commit"
-
-          # 如果需要，先创建本地分支并切换
-          git checkout -b $head_branch $pr_creator/$head_branch || git checkout $head_branch
-
-          git checkout -b format-pr $pr_creator/$head_branch
-          
-          # 获取修改的文件并筛选 .md 文件
-          files=$(git diff --name-only $base_commit $head_commit | grep '\.md$')
-          echo "Modified .md files: $files"
-
-          if [ -n "$files" ]; then
-            for file in $files; do
-              echo "Processing file: $file"
-              # 删除每行末尾的空格
-              sed -i 's/ $//g' "$file"
-              git add "$file"
-            done
-
-            # 提交更改
-            git commit -m "Remove trailing spaces from Markdown files"
-
-            # 推送更改
-            git push $pr_creator format-pr
-          else
-            echo "No .md files found or no changes to commit."
-          fi
+      - name: Push changes
+        run: |
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
