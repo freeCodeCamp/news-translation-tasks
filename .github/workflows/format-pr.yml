@@ -60,10 +60,7 @@ jobs:
           else
             echo "No .md files found or no changes to commit."
           fi
-
-      # Commit the local changes
-      - name: Git Auto Commit
-        run: |
+          
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git remote set-url origin https://x-access-token:${{ secrets.MY_GITHUB_TOKEN }}@github.com/$pr_creator/news-translation-tasks.git
