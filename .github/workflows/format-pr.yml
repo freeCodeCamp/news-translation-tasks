@@ -12,11 +12,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref }}
-          token: ${{ github.token }}
+      - name: Fetch PR branch
+        run: git fetch origin pull/${{ github.event.pull_request.number }}/head:pr-${{ github.event.pull_request.number }}
 
       - name: Remove trailing whitespaces from Markdown files
         run: |
