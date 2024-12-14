@@ -22,12 +22,17 @@ jobs:
 
       - name: Remove trailing whitespaces from Markdown files
         run: |
-          # 查找所有被修改的文件并追加内容
-          for file in $(git diff --name-only HEAD^ HEAD); do
-            echo "Processing file: $file"
-            # 删除每行末尾的空格
-            sed -i 's/ $//g' "$file"
-            git add "$file"
+          # 找到被修改的文件
+          MODIFIED_FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }})
+
+          # 遍历文件并追加内容
+          for file in $MODIFIED_FILES; do
+            if [ -f "$file" ]; then
+              echo "Processing file: $file"
+              # 删除每行末尾的空格
+              sed -i 's/ $//g' "$file"
+              git add "$file"
+            fi
           done
           # 提交更改
           git commit -m "Remove trailing spaces from Markdown files"
