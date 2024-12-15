@@ -30,7 +30,7 @@ jobs:
 
           # 添加 PR 创建者仓库作为远程源
           
-          git remote add $pr_creator ssh://git@github.com:$pr_creator/news-translation-tasks.git
+          git remote add $pr_creator git@github.com:$pr_creator/news-translation-tasks.git
           git fetch $pr_creator
 
           # 列出所有远程分支，帮助调试
