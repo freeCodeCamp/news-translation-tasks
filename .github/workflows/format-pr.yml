@@ -12,6 +12,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 初始化 SSH 私钥
+      - name: Setup SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.MY_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+
       - name: Checkout code
         uses: actions/checkout@v2
           
@@ -22,7 +30,7 @@ jobs:
 
           # 添加 PR 创建者仓库作为远程源
           
-          git remote add $pr_creator https://x-access-token:${{ secrets.MY_GITHUB_TOKEN }}@github.com/$pr_creator/news-translation-tasks.git
+          git remote add $pr_creator ssh://git@github.com:$pr_creator/news-translation-tasks.git
           git fetch $pr_creator
 
           # 列出所有远程分支，帮助调试
