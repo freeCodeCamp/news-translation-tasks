@@ -70,5 +70,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git commit -am "Automated changes"
-          git push $pr_creator $pr_creator/$head_branch
+          git push $pr_creator $head_branch
           echo "Complete"
