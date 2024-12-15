@@ -12,19 +12,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 初始化 SSH 私钥
-      - name: Setup SSH Key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.MY_SSH_KEY }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
-
       - name: Checkout code
         uses: actions/checkout@v2
           
       - name: Remove trailing whitespaces from Markdown files
         run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.MY_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts
+
           # 获取 PR 创建者的 GitHub 用户名
           pr_creator="${{ github.event.pull_request.user.login }}"
 
