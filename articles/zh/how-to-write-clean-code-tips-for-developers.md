@@ -1,11 +1,11 @@
-```markdown
+
 ---
 title: 如何写出简洁的代码 —— 开发者提示与示例
 date: 2024-11-26T13:00:58.161Z
 author: 编程与 Shahan
 authorURL: https://www.freecodecamp.org/news/author/codewithshahan/
 originalURL: https://www.freecodecamp.org/news/how-to-write-clean-code-tips-for-developers/
-posteditor: ""
+posteditor: "Tong Guan"
 proofreader: ""
 ---
 
