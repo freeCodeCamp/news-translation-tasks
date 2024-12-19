@@ -13,7 +13,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
           
       - name: Remove trailing whitespaces from Markdown files
         run: |
@@ -22,22 +22,18 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
 
-          # 获取 PR 创建者的 GitHub 用户名
+          # Get the PR creator's GitHub username
           pr_creator="${{ github.event.pull_request.user.login }}"
 
-          # 添加 PR 创建者仓库作为远程源
-          
+          # Add a PR creator repository as a remote source
           git remote add $pr_creator git@github.com:$pr_creator/news-translation-tasks.git
           git fetch $pr_creator
 
-          # 列出所有远程分支，帮助调试
-          git branch -r
-
-          # 获取 PR 的 base_commit 和 head_commit
+          # Get the PR's base_commit and head_commit
           base_branch="${{ github.event.pull_request.base.ref }}"
           head_branch="${{ github.event.pull_request.head.ref }}"
 
-          # 拉取 base 和 head 分支
+          # Pull the base and head branches
           git fetch origin $base_branch
           git fetch $pr_creator $head_branch
 
@@ -47,18 +43,18 @@ jobs:
           echo "Base commit: $base_commit"
           echo "Head commit: $head_commit"
 
-          # 如果需要，先创建本地分支并切换
+          # If necessary, create a local branch and switch to it
           git checkout -b $head_branch $pr_creator/$head_branch || git checkout $head_branch
           # git checkout -b feat-xxx $pr_creator/$head_branch
           
-          # 获取修改的文件并筛选 .md 文件
+          # Get modified files and filtering .md files
           files=$(git diff --name-only $base_commit $head_commit | grep '\.md$')
           echo "Modified .md files: $files"
 
           if [ -n "$files" ]; then
             for file in $files; do
               echo "Processing file: $file"
-              # 删除每行末尾的空格
+              # Remove spaces at the end of each line
               sed -i 's/ $//g' "$file"
               git add "$file"
             done
@@ -66,7 +62,6 @@ jobs:
             echo "No .md files found or no changes to commit."
           fi
           
-          # echo "MY_GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}" | sed 's/./&-/g' | sed 's/-$//'
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git commit -am "Automated changes"
