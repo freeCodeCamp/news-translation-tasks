@@ -1,9 +1,9 @@
 --- 
-title: Linux でファイルやディレクトリを削除する方法 – フォルダとその内容を削除するコマンド 
+title: Linux でファイルやディレクトリを削除する方法 – フォルダとフォルダのファイルを削除するコマンド 
 date: 2024-12-11T11:02:41.961Z 
-authorURL: "" 
+authorURL: "https://www.freecodecamp.org/news/author/freeCodeCamp"
 originalURL: https://www.freecodecamp.org/news/how-to-delete-a-file-or-directory-in-linux/ 
-posteditor: "" 
+posteditor: "YUUSUKE OKAMOTO" 
 proofreader: "" 
 --- 
  
@@ -98,6 +98,6 @@ Linuxでディレクトリを削除するには、`rmdir` または `rm` コマ�
  
 [Twitter](https://www.twitter.com/Shittu_Olumide_) または [LinkedIn](https://www.linkedin.com/in/olumide-shittu)でつながりましょう。私の [YouTube](https://www.youtube.com/channel/UCNhFxpk6hGt5uMCKXq0Jl8A) チャンネルにも登録できます。 
  
-プログラミングを楽しんでください！ 
+プログラミングを楽しんでください！
  
  
