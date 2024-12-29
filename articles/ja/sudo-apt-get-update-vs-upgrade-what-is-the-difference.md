@@ -4,7 +4,7 @@ date: 2024-10-18T11:41:07.424Z
 author: Kristofer Koishigawa
 authorURL: https://www.freecodecamp.org/news/author/scissorsneedfoodtoo/
 originalURL: https://www.freecodecamp.org/news/sudo-apt-get-update-vs-upgrade-what-is-the-difference/
-posteditor: ""
+posteditor: "YUUSUKE OKAMOTO"
 proofreader: ""
 ---
 
