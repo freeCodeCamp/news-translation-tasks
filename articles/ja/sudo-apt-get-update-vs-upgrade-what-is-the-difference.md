@@ -26,11 +26,11 @@ proofreader: ""
 
 Debian ベースの Linux ディストリビューション（Debian、Ubuntu、Linux Mint、Kali Linux、Raspberry Pi OS など）で、ターミナルウィンドウを開きます。
 
-ディストリビューションによってターミナルの名称は異なる場合があります。例えば、Ubuntu や Linux Mint ではデフォルトで Gnome Terminal が利用されますが、アプリケーションメニューでは単に「ターミナル」として表示されることもあります。
+ディストリビューションによって、ターミナルの開き方で名称は、異なる場合があります。例えば、Ubuntu や Linux Mint ではデフォルトで Gnome Terminal が利用されますが、アプリケーションメニューでは単に「ターミナル」として表示されることもあります。
 
-ターミナルを開いたら、コマンドラインで `sudo apt-get update` と入力し、管理者パスワードを入力して Enter キーを押します。
+ターミナル上のコマンドラインで `sudo apt-get update` と入力し、管理者パスワードを入力して Enter キーを押します。
 
-もし更新がある場合、次のような出力が表示されます：
+もし更新する項目がある場合、次のような出力が表示されます：
 
 ```
 kris@pihole:~ $ sudo apt-get update
@@ -71,13 +71,13 @@ Reading package lists... Done
 
 ここには、アップグレード可能なパッケージや `apt list --upgradable` を実行するよう指示するメッセージがありません。
 
-ただし、これがシステム上に更新が必要なソフトウェアがないことを意味するわけではなく、単に既に最新のパッケージリストを取得済みということです。`sudo apt-get update` を何度も実行した可能性もあります。
+ただし、メッセージがないことは、システム上に更新が必要なソフトウェアがないことを意味するわけではなく、単に既に最新のパッケージリストを取得済みということです。`sudo apt-get update` を何度も実行した可能性もあります。
 
-いつでも再度 `apt list --upgradable` を実行して、アップグレード可能なものがあるかどうか確認できます。
+いつでも `apt list --upgradable` を再度実行して、アップグレード可能なものがあるかどうか確認できます。
 
 また、よりモダンな `sudo apt update` コマンドを使用することもできます。このコマンドは常にアップグレード可能なパッケージの数を示すか、すべてが最新状態であるというメッセージを表示します。
 
-`apt` と `apt-get` の違いに関する詳細な情報は、以下のセクションで確認できます。[1]
+`apt` と `apt-get` の違いに関する詳細な情報は、[以下のセクションで確認できます](#what-s-the-difference-between-apt-get-and-apt)。
 
 ## `sudo apt-get upgrade` コマンドの使い方
 
@@ -288,7 +288,7 @@ sudo apt-get update && sudo apt-get upgrade
 
 また、[Twitter][3] で感想をお聞かせいただけると嬉しいです。
 
-[1]: #what-s-the-difference-between-apt-get-and-apt
+[1]: 
 [2]: https://askubuntu.com/questions/770135/apt-full-upgrade-versus-apt-get-dist-upgrade
 [3]: https://twitter.com/kriskoishigawa
 
