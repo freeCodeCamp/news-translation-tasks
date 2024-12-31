@@ -99,88 +99,96 @@ After this operation, 1,596 kB of additional disk space will be used.
 Do you want to continue? [Y/n]
 ```
 
-次のパッケージがアップグレードされます:
-  libcamera0 raspi-config rpi-eeprom
-3 個のパッケージがアップグレードされ、0 個の新規インストール、0 個の削除、0 個が未アップグレードです。
+出力の最後に、アップグレードされるパッケージが表示されます。
 
-アップグレードするパッケージがダウンロード時に取得する必要があるデータ量と、インストール後に追加で使用するディスク容量の情報です：
 
 ```
-2,616 kB のアーカイブを取得する必要があります。
-この操作の後、追加で 1,596 kB のディスク容量が使用されます。
+The following packages will be upgraded:
+  libcamera0 raspi-config rpi-eeprom
+3 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+```
+
+
+取得する必要があるデータ量と、アップグレードされたパッケージをインストールする後に使用するディスク容量が表示されます。
+
+```
+Need to get 2,616 kB of archives.
+After this operation, 1,596 kB of additional disk space will be used.
 ```
 
 最後に、アップグレードを続けるかどうかの確認メッセージが表示されます：
 
 ```
-続行しますか? [Y/n]
+Do you want to continue? [Y/n]
 ```
 
-続行するには `y`, `Y` または `yes` を入力し、アップグレードを終了する場合は `n`, `N` または `no` を入力します。
+アップグレードを続行するには `y`, `Y` または `yes` を入力し、終了する場合は `n`, `N` または `no` を入力します。
 
 アップグレードを終了することを選んだ場合、以下のような出力が表示されます：
 
 ```
 kris@pihole:~ $ sudo apt-get upgrade
-パッケージリストを読み込んでいます... 完了
-依存ツリーを作成しています... 完了
-状態情報を読み取っています... 完了
-アップグレードを計算しています... 完了
-次のパッケージがアップグレードされます:
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+Calculating upgrade... Done
+The following packages will be upgraded:
   libcamera0 raspi-config rpi-eeprom
-3 個のパッケージがアップグレードされ、0 個の新規インストール、0 個の削除、0 個が未アップグレードです。
-2,616 kB のアーカイブを取得する必要があります。
-この操作の後、追加で 1,596 kB のディスク容量が使用されます。
-続行しますか? [Y/n] n
-中断しました。
+3 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+Need to get 2,616 kB of archives.
+After this operation, 1,596 kB of additional disk space will be used.
+Do you want to continue? [Y/n] n
+Abort.
 ```
 
 アップグレードを続行することを選んだ場合の出力例：
 
 ```
 kris@pihole:~ $ sudo apt-get upgrade
-パッケージリストを読み込んでいます... 完了
-依存ツリーを作成しています... 完了
-状態情報を読み取っています... 完了
-アップグレードを計算しています... 完了
-次のパッケージがアップグレードされます:
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+Calculating upgrade... Done
+The following packages will be upgraded:
   libcamera0 raspi-config rpi-eeprom
-3 個のパッケージがアップグレードされ、0 個の新規インストール、0 個の削除、0 個が未アップグレードです。
-2,616 kB のアーカイブを取得する必要があります。
-この操作の後、追加で 1,596 kB のディスク容量が使用されます。
-続行しますか? [Y/n] y
+3 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+Need to get 2,616 kB of archives.
+After this operation, 1,596 kB of additional disk space will be used.
+Do you want to continue? [Y/n] y
 Get:1 http://archive.raspberrypi.org/debian bullseye/main armhf libcamera0 armhf 0~git20220426+18e68a9b-1 [548 kB]
 Get:2 http://archive.raspberrypi.org/debian bullseye/main armhf raspi-config all 20220425 [30.3 kB]
 Get:3 http://archive.raspberrypi.org/debian bullseye/main armhf rpi-eeprom armhf 13.13-1 [2,037 kB]
-2,616 kB を 3秒 で取得しました (1,019 kB/s)   
-変更履歴を読んでいます... 完了
-(データベースを読んでいます ... 現在 43496 個のファイルとディレクトリがインストールされています。)
-libcamera0:armhf (0~git20220426+18e68a9b-1) アンパックの準備をしています...
-(以前のバージョンの libcamera0:armhf を処理しています) ...
-raspi-config (20220425) アンパックの準備をしています...
-raspi-config (20220425) をアンパックしています...
-rpi-eeprom (13.13-1) アンパックの準備をしています...
-rpi-eeprom (13.13-1) をアンパックしています...
-rpi-eeprom (13.13-1) を設定しています...
-libcamera0:armhf (0~git20220426+18e68a9b-1) を設定しています...
-raspi-config (20220425) を設定しています...
-man-db (2.9.4-2) のトリガを処理しています...
-libc-bin (2.31-13+rpt2+rpi1+deb11u2) のトリガを処理しています...
+Fetched 2,616 kB in 3s (1,019 kB/s)   
+Reading changelogs... Done
+(Reading database ... 43496 files and directories currently installed.)
+Preparing to unpack .../libcamera0_0~git20220426+18e68a9b-1_armhf.deb ...
+Unpacking libcamera0:armhf (0~git20220426+18e68a9b-1) over (0~git20220303+e68e0f1e-1) ...
+Preparing to unpack .../raspi-config_20220425_all.deb ...
+Unpacking raspi-config (20220425) over (20220419) ...
+Preparing to unpack .../rpi-eeprom_13.13-1_armhf.deb ...
+Unpacking rpi-eeprom (13.13-1) over (13.12-1) ...
+Setting up rpi-eeprom (13.13-1) ...
+Setting up libcamera0:armhf (0~git20220426+18e68a9b-1) ...
+Setting up raspi-config (20220425) ...
+Processing triggers for man-db (2.9.4-2) ...
+Processing triggers for libc-bin (2.31-13+rpt2+rpi1+deb11u2) ...
 ```
 
-これで全ての古いパッケージと依存関係が更新されました。
+処理が完了すると、全ての古いパッケージと依存関係が更新されました。
 
-`sudo apt-get upgrade` コマンドの重要な点は、何も削除せずにアップグレードのみ行うことです。例えば、アップグレードに新しい依存関係が必要な場合、このコマンドはそれをダウンロードおよびインストールしますが、古い依存関係を削除することはありません。古い依存関係を削除するには、別のコマンドが必要です。新しいカーネルバージョンにアップグレードする際によく見られます。
+`sudo apt-get upgrade` コマンドの重要な点は、何も削除せずにアップグレードのみ行うことです。
+
+例えば、アップグレードに新しい依存関係が必要な場合、`upgrade`コマンドは、新しい依存関係をダウンロードおよびインストールしますが、古い依存関係を削除することはありません。古い依存関係を削除するには、別のコマンドが必要です。新しいカーネルバージョンにアップグレードする際によく見られます。
 
 アップグレード後に次のようなメッセージが表示された場合：
 
 ```
-自動的にインストールされた次のパッケージは、もう必要ありません:
+The following packages were automatically installed and are no longer required:
   g++-8 gir1.2-mutter-4 libapache2-mod-php7.2 libcrystalhd3
-'sudo apt autoremove' を使用してそれらを削除できます。
+Use 'sudo apt autoremove' to remove them.
 ```
 
-この提案に従い、`sudo apt autoremove` で不要なパッケージを削除することができます。
+提案通りに、`sudo apt autoremove` で不要なパッケージを削除することができます。
 
 ## `sudo apt-get upgrade` コマンドを特別なオプションで使用する方法
 
