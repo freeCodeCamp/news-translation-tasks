@@ -3,57 +3,105 @@ run-name: ${{ github.event.label.name }} - ${{ github.event.issue.title }}
 on:
   issues:
     types:
-      - labeled
+      - labeled  # Trigger on labeled events in issues
 jobs:
   ArticlesAutoTranslate:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Use the latest Ubuntu environment for the job
     env:
-      ACTIONS_RUNNER_DEBUG: true
+      ACTIONS_RUNNER_DEBUG: true  # Enable debug mode for troubleshooting
     permissions:
-      issues: write
-      contents: write
-    # Check if the label is 'auto'. If not, skip the entire job.
+      issues: write  # Grant write permission to issues
+      contents: write  # Grant write permission to repository contents
+
+    # Only proceed if the label is 'auto', otherwise skip the job
     if: ${{ github.event.label.name == 'auto' }}
+
     steps:
-      # Check if the issue body is empty. If so, exit the action.
+      # Step 1: Check if the issue description (body) is empty. If it is, exit the job.
       - name: Check if the description of the issue is empty
         if: ${{ !github.event.issue.body }}
         shell: bash
         run: echo "The description of the issue is empty." 1>&2; exit 1;
 
+      # Step 2: Checkout the repository to work with its contents
       - uses: actions/checkout@v3
+
+      # Step 3: Crawl the provided URL in the issue body and generate Markdown files
       - name: Crawl pages and generate Markdown files
         id: fetch-webpage-to-markdown
-        continue-on-error: true
+        continue-on-error: true  # Continue even if this step fails
         uses: freeCodeCamp/article-webpage-to-markdown-action@dev
         with:
-          newsLink: '${{ github.event.issue.Body }}'
-          includeSelector: 'span.author-card-name,section.post-content'
-          ignoreSelector: '.ad-wrapper'
-          skipSameArticleCheck: true
-          skipIssueComment: true
-          markDownFilePath: './articles/_tmp/'
-          githubToken: '${{ github.token }}'
+          newsLink: '${{ github.event.issue.Body }}'  # URL to scrape from the issue body
+          includeSelector: 'span.author-card-name,section.post-content'  # Content to include in the Markdown
+          ignoreSelector: '.ad-wrapper'  # Content to exclude (ads)
+          skipSameArticleCheck: true  # Skip checking for duplicate articles
+          skipIssueComment: true  # Skip posting a comment on the issue
+          markDownFilePath: './articles/_tmp/'  # Temporary path to save the Markdown file
+          githubToken: '${{ github.token }}'  # GitHub token for access
 
-      - name: Articles auto translate
-        uses: freecodecamp/articles-auto-translate-action@main
+      # Step 4: Commit the generated Markdown files
+      - name: Git Auto Commit
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          with_issue_title: '${{ github.event.issue.title }}'
-          with_issue_body: '${{ github.event.issue.Body }}'
-          with_label_name: '${{ github.event.label.name }}'
-          with_github_token: '${{ github.token }}'
-          with_orginal_markdown_file_path: ${{ steps.fetch-webpage-to-markdown.outputs.markdown_file_path }}
-          with_task_fetch_to_save_path: './articles/_raw/'
-          with_task_fetch_to_include_selector: '.author-card-name,.post-content'
-          with_task_fetch_to_ignore_selector: '.ad-wrapper'
-          with_task_translate_openai_api_key: ${{ secrets.OPENAI_API_KEY }}
-          with_task_translate_to_save_path: './articles/{lang}/'
+          commit_message: '${{ github.event.issue.title }}'  # Use issue title as the commit message
+          file_pattern: articles/**/*.md  # Commit all Markdown files in the 'articles' folder
+          commit_user_name: PageToMarkdown Bot  # Commit as 'PageToMarkdown Bot'
+          commit_user_email: PageToMarkdown-bot@freeCodeCamp.org  # Commit email for 'PageToMarkdown Bot'
 
-      # Commit the local changes
+      # Step 5: Extract the language code from the issue title (e.g., '[zh]')
+      - name: Extract language code (e.g., [zh])
+        id: extract-lang
+        run: |
+          ISSUE_TITLE="${{ github.event.issue.title }}"
+          LANG_CODE=$(echo "$ISSUE_TITLE" | sed -E 's/^\[([a-zA-Z]+)\].*/\1/')  # Extract language code in square brackets
+          echo "::set-output name=lang::$LANG_CODE"  # Set the output for the language code
+
+      # Step 6: Checkout and prepare the repository for language-specific content
+      - name: Checkout the repository to auto-translate-branch
+        run: |
+          git config pull.rebase true  # Enable rebase for pulls
+          git pull  # Pull the latest changes
+          cp -f ${{ steps.fetch-webpage-to-markdown.outputs.markdown_file_path }} ./articles/${{ steps.extract-lang.outputs.lang }}/  # Move the generated Markdown file to the language-specific folder
+
+      # Step 7: Commit the moved files to the 'auto-translate' branch
       - name: Git Auto Commit
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: '${{ github.event.issue.title }}'
-          file_pattern: articles/**/*.md
+          file_pattern: articles/**/*.md  # Commit all Markdown files
           commit_user_name: PageToMarkdown Bot
           commit_user_email: PageToMarkdown-bot@freeCodeCamp.org
+          branch: "auto-translate"  # Commit to the 'auto-translate' branch
+
+      # Step 8: Checkout the 'auto-translate' branch to prepare for translation
+      - name: Checkout the repository to auto-translate-branch
+        run: |
+          git checkout -b auto-translate  # Create and checkout to 'auto-translate' branch
+          git fetch origin  # Fetch the latest changes from the remote
+          git reset --hard origin/auto-translate  # Reset to the remote 'auto-translate' branch
+
+      # Step 9: Call the auto-translate action to translate the article
+      - name: Articles auto translate
+        uses: freeCodeCamp/articles-auto-translate-action@main
+        with:
+          with_issue_title: '${{ github.event.issue.title }}'  # Pass the issue title to the translation action
+          with_issue_body: '${{ github.event.issue.Body }}'  # Pass the issue body to the translation action
+          with_label_name: '${{ github.event.label.name }}'  # Pass the label name
+          with_github_token: '${{ github.token }}'  # GitHub token for access
+          with_orginal_markdown_file_path: ${{ steps.fetch-webpage-to-markdown.outputs.markdown_file_path }}  # Path to the original Markdown file
+          with_task_fetch_to_save_path: './articles/_raw/'  # Path to save the raw fetched content
+          with_task_fetch_to_include_selector: '.author-card-name,.post-content'  # Content to include in the translation
+          with_task_fetch_to_ignore_selector: '.ad-wrapper'  # Content to ignore during translation
+          with_task_translate_openai_api_key: ${{ secrets.OPENAI_API_KEY }}  # OpenAI API key for translation
+          with_task_translate_to_save_path: './articles/{lang}/'  # Path to save the translated content, using language code
+
+      # Step 10: Commit the translated files to the 'auto-translate' branch
+      - name: Git Auto Commit
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: '${{ github.event.issue.title }}'
+          file_pattern: articles/**/*.md  # Commit all Markdown files
+          commit_user_name: PageToMarkdown Bot
+          commit_user_email: PageToMarkdown-bot@freeCodeCamp.org
+          branch: "auto-translate"  # Commit to the 'auto-translate' branch
