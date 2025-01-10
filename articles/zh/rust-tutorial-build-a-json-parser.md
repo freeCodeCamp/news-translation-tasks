@@ -12,7 +12,7 @@ proofreader: ""
 
 <!-- more -->
 
-在本教程中，我旨在通过编写一个大量使用这些特性的 JSON 解析器，帮助你理解它们实际上是如何工作的，它们通常用于哪些方式，以及它们的强大之处。
+在本教程中，我旨在通过编写一个大量使用这些特性的 JSON 解析器，帮助你理解它们实际上是如何工作的 —— 它们的多种常见用法，以及它们的强大之处。
 
 ## 免责声明
 
@@ -20,13 +20,13 @@ proofreader: ""
 
 如果你对 JSON 非常熟悉，你会注意到代码中缺少很多东西，最大的缺陷是在遇到无效标记时的错误处理，以及向用户提供反馈或帮助说明 JSON 中的问题。
 
-例如，该程序也未处理字符串文本中的转义字符和序列。大多数情况下，代码假定你有一个有效的 JSON。
+此外，作为例子，该程序也未处理字符串文本中的转义字符和序列。大多数情况下，代码假定你有一个有效的 JSON。
 
 ## 前提条件
 
-虽然本教程适用于任何经验水平的 Rust 程序员，但有对基本迭代器和 Rust 中的模式匹配有一定经验或理解会对你理解本教程有帮助。
+虽然本教程适用于任何经验水平的 Rust 程序员，但对基本迭代器和 Rust 中的模式匹配有一定经验或理解会对你理解本教程有帮助。
 
-同时假设你已经熟悉 Rust 的基础概念，例如 `traits`、`structs`、`enums`、`for` 循环、`impl` 块等。教程会介绍 `iterator` 和 `match`，所以不需要熟悉这些也能从中受益。
+本教程也假设你已经熟悉 Rust 的基础概念，例如 `traits`、`structs`、`enums`、`for` 循环、`impl` 块等。教程会介绍 `iterator` 和 `match`，所以不需要熟悉这些也能从中受益。
 
 ## 目录
 
@@ -37,7 +37,7 @@ proofreader: ""
     1.  [如何在 Rust 的 match 语句中使用迭代器][5]
     2.  [Rust 中的 match 卫语句是什么？][6]
     3.  [Rust 中的绑定是什么？][7]
-3.  [如何构建一个 JSON 解析器 – 第一步：读取器][8]
+3.  [如何构建一个 JSON 解析器 – 第一步：Reader][8]
     1.  [什么是 UTF-8 字节编码？][9]
     2.  [如何读取数据][10]
     3.  [如何为 JsonReader 实现迭代器][11]
@@ -46,7 +46,7 @@ proofreader: ""
     2.  [如何添加有用的转换方法][14]
 5.  [如何构建一个 JSON 解析器 – 第三步：分词][15]
     1.  [如何定义预期的有效 token][16]
-    2.  [如何实现分词器结构][17]
+    2.  [如何实现分词器结构体][17]
     3.  [如何对字符迭代器进行分词][18]
     4.  [如何解析字符串 token][19]
     5.  [如何解析数字 token][20]
@@ -55,15 +55,15 @@ proofreader: ""
     8.  [如何解析分隔符][23]
     9.  [如何解析终止字符][24]
 6.  [如何构建一个 JSON 解析器 – 第四步：将 token 转换为值][25]
-    1.  [如何解析原始数据类型][26]
+    1.  [如何解析基本数据类型][26]
     2.  [如何解析数组][27]
     3.  [如何解析对象][28]
-7.  [如何使用 JSON 解析器][29]
+7.  [如何使用我们的 JSON 解析器][29]
 8.  [总结][30]
 
 <h2 id="heading-what-are-iterators-in-rust">Rust 中的迭代器是什么？</h2>
 
-迭代器不是新概念，也不是 Rust 独有的。它既是一种模式，同时在大多数编程语言中实现为一种对象，用于处理列表（如数组或向量）或集合（如哈希映射），允许你遍历这些数据类型和处理其中的个别条目。
+迭代器不是新概念，也不是 Rust 独有的。它既是一种模式，同时在大多数编程语言中实现为一种用于处理列表（如数组或向量）或集合（如哈希Map）的对象，允许你遍历这些数据类型和处理其中的个别条目。
 
 在 Rust 中，迭代器是一个非常强大的功能。官方的 Rust 书籍描述它为：
 
@@ -71,15 +71,17 @@ proofreader: ""
 > 
 > 在 Rust 中，迭代器是_惰性_的，意味着在你调用使用它的方法来消耗它之前，它们不会产生任何效果。
 
-迭代器是一个对象，它便利依次访问集合（如数组或向量）的元素，而不暴露其实现细节。
+迭代器是一个对象，它帮助我们方便地依次访问集合（如数组或向量）的元素，而不暴露其实现细节。
 
 <h3 id="heading-how-to-implement-iterators-in-rust">如何在 Rust 中实现迭代器</h3>
 
 迭代器在 Rust 中是通过一系列 trait 实现的，其中最基本的是 `Iterator` trait。它在标准库中的所有集合上都有实现，也可以为自定义类型实现。
 
-> 它要求实现一个简单的方法： `next()`。该方法返回一个 `Option<T>`，其中 `T` 是迭代器所针对的元素类型。当 `next()` 被调用时（在大多数情况下，这种调用是隐式的，并且一般使用更高级的方法），迭代器为序列中的下一个元素生成 `Some(value)`，或在迭代完成时生成 `None`。在大多数情况下，值是 `Some` 还是 `None` 同样是隐式的。
+> 它要求实现一个简单的方法： `next()`。该方法返回一个 `Option<T>`，其中 `T` 是迭代器所针对的元素类型。当 `next()` 被调用时（在大多数情况下，这种调用是隐式的，你一般会使用更高级的方法），迭代器为序列中的下一个元素生成 `Some(value)`，或在迭代完成时生成 `None`。在大多数情况下，值是 `Some` 还是 `None` 同样是隐式的。
 
-例如，任何实现了 `Iterator` trait 的东西，都可以直接在 `for` 循环中使用，循环会隐式地处理 `next` 方法的调用以及处理值是 `Some` 还是 `None`。`None` 值会触发循环结束。这对于内置类型如数组、切片、向量和哈希映射同样适用。
+例如，任何实现了 `Iterator` trait 的对象，都可以直接在 `for` 循环中使用，循环会隐式地处理 `next` 方法的调用以及处理值是 `Some` 还是 `None`。`None` 值会触发循环结束。这对于内置类型如数组、切片、向量和哈希map同样适用。
+
+作为示例，让我们为一个简单的自定义类型实现 Iterator trait。你需要在类型中存储迭代器的当前状态。你还可以存储任何需要的附加信息。在这里，我们只需要知道迭代结束时的最大值：
 
 ```rust
 use std::iter::Iterator;
@@ -115,7 +117,7 @@ fn main() {
     let custom = CustomType::new(10);
 
     for item in custom {
-        println!("Item is {item}");
+        println!("当前项：{item}");
     }
 }
 ```
@@ -123,33 +125,33 @@ fn main() {
 ```
 # 输出
 
-Item is 1
-Item is 2
-Item is 3
-Item is 4
-Item is 5
-Item is 6
-Item is 7
-Item is 8
-Item is 9
-Item is 10
+当前项：1
+当前项：2
+当前项：3
+当前项：4
+当前项：5
+当前项：6
+当前项：7
+当前项：8
+当前项：9
+当前项：10
 ```
 
-Rust 的迭代器是懒加载的，这意味着只有在使用时才会进行计算。也就是说，只有在你真正需要获取下一个值并使用时，它才会去计算下一个值是什么。
+Rust 的迭代器是懒加载的，这意味着如果你不使用一个迭代器，它不会做任何计算。也就是说，只有在你真正需要获取下一个值并使用时，它才会去计算下一个值是什么。
 
 这也意味着如果你有一连串的操作，比如 `map` 和 `filter`，每个项目会先经过整个管道，然后才会处理下一个项目。这不同于许多其他支持 `map` 和 `filter` 作为方法的语言，后者会先对所有操作进行整个 `map` 处理，然后再执行 `filter`。
 
-如果仔细考虑一下，迭代器使我们能够以更简单的方式编写并行处理管道，相较于其他实现。
+如果仔细考虑一下，相较于其他实现，迭代器使我们能够以更简单的方式编写并行处理管道。
 
 由于 `Iterator` 只是一个 trait，它允许迭代器通过各种适配器方法进行链式连接和转换成其他迭代器（可以是标准库中的，也可以是自己实现的）。
 
 <h3 id="heading-what-are-peekable-iterators-in-rust">Rust 中的可预览的迭代器是什么？</h3>
 
-很多时候，你需要知道下一个元素是什么，以决定如何操作，而不实际修改迭代器状态以移动到下一个元素。这在解析的过程中特别必要，比如我们在本教程后面将要做的那样。
+很多时候，你需要知道下一个元素是什么，以决定如何操作，而不实际修改迭代器状态以移动到下一个元素。这在解析 token 的过程中特别必要，比如我们在本教程后面将要做的那样。
 
 这就是 `Peekable` 结构体的用武之地。你可以通过调用 `peekable` 方法将任意迭代器转换成可预览的迭代器。
 
-让我们看一下之前的例子，看看可预览如何实际工作：
+让我们看一下之前的例子，看看 Peekable 实际是如何工作的：
 
 ```rust
 use std::iter::Iterator;
@@ -207,45 +209,45 @@ Some(2)
 None
 ```
 
-我还想向你展示如何在没有 for 循环的情况下手动使用迭代器，这就是为什么你会看到所有对 `next` 方法的调用，以及它返回 `Option` 而不是直接返回值。
+我还想向你展示如何在没有 for 循环的情况下手动使用迭代器，这就是为什么你会看到对 `next` 方法的调用，以及它返回 `Option` 而不是直接返回值。
 
 另外注意 `first` 和 `second` 变量都是 `Some(1)`。这是因为我们第一次调用 `peek` 它返回了第一个元素，但没有修改迭代器的状态。
 
 <h2 id="heading-what-is-the-match-statement-in-rust">Rust 中的 match 语句是什么？</h2>
 
-`match` 语句是 Rust 中一种模式匹配的语法，它允许你根据复杂条件以简洁的语法有条件地运行代码。你可以把它看作其他语言中的 `switch` 语句，但功能更强大。
+`match` 语句是 Rust 中一种模式匹配的语法，它允许你以简洁的语法有条件地根据复杂条件运行代码。你可以把它看作其他语言中的 `switch` 语句，但功能更强大。
 
 一个非常简单的 `match` 语句的例子是：
 
-```
+```rust
 let value = true;
 
 match value {
     true => {
-        println!("Value is true")
+        println!("值是 true")
     },
     false => {
-        println!("Value is false")
+        println!("值是 false")
     }
 }
 ```
 
-上面定义的各种条件， `true` 和 `false`，被称为分支。每个分支可以有一个匹配，多个匹配用竖线 `|` 运算符分隔，和范围。它们还可以为每个分支指定 `guards` 和 `binding`。让我们看看这些分别是什么意思：
+上面定义的各种条件，也就是 `true` 和 `false`，被称为分支。每个分支可以有一个匹配，或多个用竖线 `|` 运算符分隔匹配，或范围。它们还可以为每个分支指定 `guards` 和 `binding`。让我们看看这些分别是什么意思：
 
-```
+```rust
 // 每个分支多个条件
 
 let value = "some_string";
 
 match value {
     "some_string1" | "some_string2" | "some_string3" => {
-        println!("Bad match");
+        println!("不好的匹配");
     }
     "some_string" => {
-        println!("Good match");
+        println!("好的匹配");
     }
     _ => {
-        println!("No match");
+        println!("未匹配");
     }
 }
 ```
@@ -260,105 +262,105 @@ match value {
 
 一个 match 语句允许你使用迭代器作为分支。当匹配的值是迭代器中的某个值时，就会产生一个成功的匹配。例如，假设你在匹配一个 `char` 类型是否是一个数字。你可以编写一个包含所有数字字符的简单字符迭代器，并将其用作分支：
 
-```
+```rust
 let value: char = '5';
 
 match value {
     '0'..='9' => {
-        println!("Character is a digit");
+        println!("字符是一个数字");
     }
     _ => {
-        println!("Character is not a digit");
+        println!("字符不是数字");
     }
 }
 ```
 
-上述示例将打印 "Character is a digit"。如果你不熟悉 `..=` 语法，这是一种简写，用于创建一个范围内的迭代器。在上例中，迭代器从 `'0'` 字符开始，到 `'9'` 字符结束，包括之间的所有字符。
+上述示例将打印 "字符是一个数字"。如果你不熟悉 `..=` 语法，这是一种简写，用于创建一个范围内的迭代器。在上例中，迭代器从 `'0'` 字符开始，到 `'9'` 字符结束，包括之间的所有字符。
 
 你也可以使用 `1..5` 来创建一个范围在 1 到 5 之间但不包括 5 的迭代器，使其包含 `1, 2, 3, 4`。
 
 此外，你可以使用一个保存了迭代器的变量作为值，这意味着迭代器不需要在内联中创建：
 
-```
+```rust
 let list = vec!["1, 2", "3, 4"].iter();
 let value = "3, 4";
 
 match value {
     list => {
-        println!("Matched");
+        println!("匹配");
     }
     _ => {
-        println!("No matches");
+        println!("未匹配");
     }
 }
 ```
 
-注意，上述示例调用 `.iter()` 在 vec 上，将迭代器存储在 `list` 变量中而不是向量中。Match 分支不能有方法调用，因此必须在 match 语句之外将值转换为迭代器。
+注意，上述示例在 vec 上调用 `.iter()`，以在 `list` 变量中存储迭代器而不是向量。匹配分支不能有方法调用，因此必须在 match 语句之外将值转换为迭代器。
 
 <h3 id="heading-what-are-match-guards-in-rust">Rust 中的 match 卫语句是什么？</h3>
 
-匹配语句中的守卫是某个分支需要满足的附加条件，以视为成功匹配。例如，如果你想匹配一组数字，还要判断它们是奇数还是偶数，匹配守卫就非常有用。
+match 语句中的卫语句（guard）是使得某个分支被视为成功匹配需要满足的附加条件。例如，如果你想匹配一组数字，还要判断它们是奇数还是偶数，卫语句就非常有用。
 
 这个语法也非常直观，形式是 `<pattern> if <condition> => {}`。
 
-```
+```rust
 let value: u8 = 5;
 
 match value {
     0..=9 if value % 2 == 0 => {
-        println!("Value is even");
+        println!("值是偶数");
     }
     0..=9 if value % 2 == 1 => {
-        println!("Value is odd");
+        println!("值是奇数");
     }
     _ => {
-        println!("Unexpected value");
+        println!("无效的值");
     }
 }
 ```
 
-上述代码将打印 "Value is odd"。
+上述代码将打印 "值是奇数"。
 
 <h3 id="heading-what-is-binding-in-rust">Rust 中的绑定是什么？</h3>
 
-绑定允许你在某个分支中将值存储在可以使用的变量中。它基本上是在特定模式中为某些部分赋值给变量。
+绑定允许你在某个分支中将值存储在可以使用的变量中。它基本上是将匹配值中的某些部分赋值给变量。
 
 #### 模式绑定
 
 一个非常简单的例子是将捕获所有的模式绑定到一个变量，而不是用 `_` 忽略其值。
 
-```
+```rust
 let value: u8 = 5;
 
 match value {
     0..=9 if value % 2 == 0 => {
-        println!("Value is even");
+        println!("值是偶数");
     }
     0..=9 if value % 2 == 1 => {
-        println!("Value is odd");
+        println!("值是奇数");
     }
     other_value => {
-        println!("Unexpected value: {other_value}");
+        println!("无效的值：{other_value}");
     }
 }
 ```
 
-请注意在这个例子中，我们使用变量 `other_value` 绑定了最后一个模式中的值 `value`，如果它没有匹配到前面的任何模式，将会被捕获。然后我们可以在该分支的逻辑中使用这个变量。这里我们只是将其打印到控制台。
+请注意在这个例子中，如果 match 没有匹配到前面的任何模式，将会被最后一个模式捕获，其中，使用变量 `other_value` 绑定了 `value` 的值。然后我们可以在该分支的逻辑中使用这个变量。这里我们只是将其打印出来。
 
 一些其他的绑定例子有：
 
-```
+```rust
 let value: Option<i32> = Some(43);
 
 match value {
-    Some(matched_value) => println!("The value is {matched_value}"),
-    None => println!("There is no value")
+    Some(matched_value) => println!("值是 {matched_value}"),
+    None => println!("值为空")
 }
 ```
 
 在此示例中，我们在 `Some` 模式中绑定了值以存储选项的内部值，并在我们的逻辑中使用它。
 
-```
+```rust
 pub struct Person {
     name: String,
     age: u32,
@@ -371,10 +373,10 @@ let value: Option<Person> = Some(Person {
 
 match value {
     Some(Person { name: person_name, age }) => {
-        println!("{person_name} is {age} years old");
+        println!("{person_name} 的年龄是 {age} 岁");
     },
     None => {
-        println!("The value is empty");
+        println!("值为空");
     }
 }
 ```
@@ -389,44 +391,46 @@ Rust 官方文档描述为：
 
 在我们针对一组值或者针对迭代器进行模式匹配的例子中，我们可以使用这种语法将匹配到的值绑定到一个变量，以便在该分支中使用它：
 
-```
+```rust
 let value: u8 = 5;
 
 match value {
     digit @ 0..=9 => {
-        println!("The matched value is {digit}");
+        println!("匹配到的值是 {digit}");
     }
     _ => {
-        println!("Unexpected value");
+        println!("无效的值");
     }
 }
 ```
 
 这里我们将迭代器中匹配的值绑定到变量 `digit`，然后在分支中使用它来读取实际值。
 
-<h2 id="heading-how-to-build-a-json-parser-stage-1-reader">如何构建一个 JSON 解析器 – 第一步：读取器</h2>
+<h2 id="heading-how-to-build-a-json-parser-stage-1-reader">如何构建一个 JSON 解析器 – 第一步：Reader</h2>
 
-在解析传入的 JSON 数据之前，我们需要能够以有助于解析的方式读取它。为了能够对传入的 JSON 进行标记，我们需要在它们到来时逐个分析字符，并根据它们是表示字面值、分隔符还是无效值，决定如何处理它们以及后续字符。
+在解析传入的 JSON 数据之前，我们需要能够以有助于解析的方式读取它。为了能够对传入的 JSON 进行标记，我们需要对每个字符逐个分析，并根据它们是表示字面值、分隔符还是无效值，决定如何处理它们以及后续字符。
 
 这是迭代器与 Rust 的 match 语法结合使用的一个非常好的案例。
 
-此时，你可能会问为什么我们需要在读取器中保存字符缓冲区，原因是 JSON 是 UTF-8 编码的。
+我们的读取器需要保存两个数据。一个缓冲读取器，用于遍历输入；一个字符缓冲器，用于保存当前正在解析的字符。
+
+此时，你可能会问为什么我们需要在读取器中保存字符缓冲器，原因是 JSON 是 UTF-8 编码的。
 
 <h3 id="heading-what-is-the-utf-8-byte-encoding">什么是 UTF-8 字节编码？</h3>
 
-一个 UTF-8 字符可以是 1 到 4 个字节长。我们需要能够解析所有有效字符，因为 JSON 规范支持这些字符。这意味着 JSON 字符可以是 1 个字节、2 个字节、3 个字节或 4 个字节长。
+一个 UTF-8 字符可以长为 1 到 4 个字节。我们需要能够解析所有有效字符，因为 JSON 规范支持这些字符。这意味着 JSON 字符可以是 1 个字节、2 个字节、3 个字节或 4 个字节长。
 
 对于每次迭代，我们需要一次读取 4 个字节，确定这 4 个字节包含多少个字符（例如，这 4 个字节可以包含 4 个 1 字节的字符），完成对它们的迭代，然后继续读取下一个 4 个字节并重复该过程。为了存储这段中间信息，我们需要字符缓冲区。
 
 也可能我们在当前的 4 个字节中只有部分字符。例如，如果你考虑 2 个 1 字节字符，后跟 1 个 3 字节字符，如 `23€`，第一个 4 个字节将包含 2 个有效字符和下一个有效字符的一部分。你也需要能够处理这种情况，这将涉及重置迭代器。
 
-可以以一种不需要分配的方式处理这种情况，并且出于性能原因实际上这样做更好。但我将留给你作为读者来思考如何在这种情况下实现它，因为这不是本文的重点。
+可以以一种不需要分配内存的方式处理这种情况，并且出于性能原因实际上这样做更好。但我将留给你作为读者来思考如何在这种情况下实现它，因为这不是本文的重点。
 
-我希望现在很清楚为什么迭代器是这里最合适的工具。
+我希望现在你已经清楚了为什么迭代器是这里最合适的工具。
 
 <h3 id="heading-how-to-read-the-data">如何读取数据</h3>
 
-我们将支持两种不同的读取器。一种是直接从缓冲读取器（通常是从文件创建的），另一种是从字节迭代器读取。
+我们将支持两种不同的读取器。一种是直接从缓冲读取器（通常是从文件创建的）读取，另一种是从字节迭代器读取。
 
 这些将相当直接。要从文件读取，你需要在底层文件数据上创建一个缓冲光标：
 
@@ -469,53 +473,48 @@ where
     ///
     /// # 示例
     ///
+    /// ```
+    /// use std::fs::File;
+    /// use std::io::BufReader;
+    /// use json_parser::reader::JsonReader;
     ///
-```
-
-```
-使用 std::fs::File;
-使用 std::io::BufReader;
-使用 json_parser::reader::JsonReader;
-
-让 file = File::create("dummy.json").unwrap();
-让 reader = BufReader::new(file);
-
-让 json_reader = JsonReader::new(reader);
-```
-
-```rust
-pub fn new(reader: BufReader<T>) -> Self {
-    JsonReader {
-        reader,
-        character_buffer: VecDeque::with_capacity(4),
+    /// let file = File::create("dummy.json").unwrap();
+    /// let reader = BufReader::new(file);
+    ///
+    /// let json_reader = JsonReader::new(reader);
+    /// ```
+    pub fn new(reader: BufReader<T>) -> Self {
+        JsonReader {
+            reader,
+            character_buffer: VecDeque::with_capacity(4),
+        }
     }
-}
 
-/// 创建一个新的 [`JsonReader`] 从给定的字节流读取
-///
-/// # 示例
-///
-/// ```rust
-/// use std::io::{BufReader, Cursor};
-/// use json_parser::reader::JsonReader;
-
-/// let input_json_string = r#"{"key1":"value1","key2":"value2"}"#;
-
-/// let json_reader = JsonReader::<Cursor<&'static [u8]>>::from_bytes(input_json_string.as_bytes());
-/// ```
-#[must_use]
-pub fn from_bytes(bytes: &[u8]) -> JsonReader<Cursor<&[u8]>> {
-    JsonReader {
-        reader: BufReader::new(Cursor::new(bytes)),
-        character_buffer: VecDeque::with_capacity(4),
+    /// 创建一个新的 [`JsonReader`] 从给定的字节流读取
+    ///
+    /// # 示例
+    ///
+    /// ```
+    /// use std::io::{BufReader, Cursor};
+    /// use json_parser::reader::JsonReader;
+    ///
+    /// let input_json_string = r#"{"key1":"value1","key2":"value2"}"#;
+    ///
+    /// let json_reader = JsonReader::<Cursor<&'static [u8]>>::from_bytes(input_json_string.as_bytes());
+    /// ```
+    #[must_use]
+    pub fn from_bytes(bytes: &[u8]) -> JsonReader<Cursor<&[u8]>> {
+        JsonReader {
+            reader: BufReader::new(Cursor::new(bytes)),
+            character_buffer: VecDeque::with_capacity(4),
+        }
     }
 }
 ```
-````
 
-### 如何为 `JsonReader` 实现迭代器
+<h3 id="heading-how-to-implement-the-iterator-for-jsonreader">如何为 <code>JsonReader</code> 实现迭代器</h3>
 
-接下来，你需要在这个 `JsonReader` 上实现 `Iterator` 特性，以便于解析。
+接下来，你需要在这个 `JsonReader` 上实现 `Iterator` trait，以便于解析。
 
 首先，如果字符缓冲区不为空，你可以从迭代器中返回缓冲区中的第一个字符：
 
@@ -562,7 +561,7 @@ match from_utf8(&utf8_buffer) {
 }
 ```
 
-以下是 `Iterator` 特性的完整实现：
+以下是 `Iterator` trait 的完整实现：
 
 ```rust
 // src/reader.rs
@@ -611,7 +610,7 @@ where
 
 这就是你需要做的读取输入数据以便进行解析的所有操作。现在，是时候进入处理的下一个阶段了。
 
-## 如何构建一个 JSON 解析器 – 第二阶段：准备中间数据类型
+<h2 id="heading-how-to-build-a-json-parser-stage-2-prepare-intermediate-data-types">如何构建一个 JSON 解析器 – 第二步：准备中间数据类型</h2>
 
 这实际上不算是解析管道中的一个阶段，但它是接下来的步骤的前提条件。我们需要定义可以与 JSON 所支持的所有可能类型相匹配的 Rust 类型。
 
@@ -624,13 +623,13 @@ JSON 支持以下数据类型：
 -   对象
 -   空值
 
-数字可以进一步分为整数或浮点数。尽管你可以使用 `f64` 作为所有 JSON 数字的 Rust 类型，但在实际操作中，如果你尝试使用它，代码中到处都是类型转换，这会使其不可行。
+数字可以进一步分为整数或浮点数。尽管你可以使用 `f64` 作为所有 JSON 数字的 Rust 类型，但在实际操作中，如果你尝试使用它，代码中将到处都是类型转换，这会使其不可行。
 
 所以在本教程中，我们将确实区分这一点并记录下来。
 
-### 值类型
+<h3 id="heading-the-value-type">值类型</h3>
 
-枚举是存储这种状态的理想方式，其中每个变体需要有一些标识符作为元数据（在本例中是 JSON 值的类型），并可附加一些数据。你将附加到这些变体的数据将是 JSON 中该类型的实际值。
+枚举是存储这种状态的理想方式，其中每个变体需要有一些标识符作为元数据（在本例中是 JSON 值的类型），并可附加一些数据。你将把 JSON 中该类型的实际值附加到这些变体的数据中。
 
 ```rust
 // src/value.rs
@@ -656,11 +655,11 @@ pub enum Value {
 
 前几个变体非常简单，你定义了变体，且其持有的数据是相应的 Rust 类型。最后一个变体更简单，表示 `null` 值，不需要存储其他数据。
 
-而 `Array` 和 `Object` 变体则稍微有趣一点，因为它们是递归地存储枚举本身。这很有意义，因为 JSON 中的数组可以有任何 JSON 规范支持的值类型。而 JSON 中的对象总是拥有字符串键以及支持的任意 JSON 值，包括其他对象。
+而 `Array` 和 `Object` 变体则稍微有趣一点，因为它们递归地存储枚举本身。这说得通，因为 JSON 中的数组可以有任何 JSON 规范支持的值类型。而 JSON 中的对象总是拥有字符串键以及支持的任意 JSON 值，包括其他对象。
 
-### 如何添加有用的转换方法
+<h3 id="heading-how-to-add-helpful-conversion-methods">如何添加有用的转换方法</h3>
 
-你还将需要一种方法将枚举类型转换为基本类型，并在基础数据不是你所期望的情况下引发错误。这基本上是样板代码，所以我将在不做进一步解释的情况下将它们组合在一起：
+你还将需要一种方法将枚举类型转换为基本类型，并在基础数据不是你所期望的情况下抛出错误。这基本上是样板代码，所以我将在不做进一步解释的情况下将它们组合在一起：
 
 ```rust
 // src/value.rs
@@ -726,30 +725,33 @@ impl<'a> TryFrom<&'a Value> for &'a Vec<Value> {
         }
     }
 }
-```
 
-```rust
-fn try_from(value: &'a Value) -> Result<Self, ()> {
-    match value {
-        Value::Object(value) => Ok(value),
-        _ => Err(()),
+#[allow(clippy::implicit_hasher)]
+impl<'a> TryFrom<&'a Value> for &'a HashMap<String, Value> {
+    type Error = ();
+
+    fn try_from(value: &'a Value) -> Result<Self, ()> {
+        match value {
+            Value::Object(value) => Ok(value),
+            _ => Err(()),
+        }
     }
 }
 ```
 
-## 如何构建 JSON 解析器 – 阶段 3：标记化
+<h2 id="heading-how-to-build-a-json-parser-stage-3-tokenization">如何构建一个 JSON 解析器 – 第三步：分词</h2>
 
-下一步是将输入数据进行标记化。
+下一步是对输入数据进行分词。
 
-标记化是将大块的输入拆分为更小、更易消化的单元以便单独分析的过程。这也使得你更容易处理这些单元而不是字节流，并且它们有助于将传入数据表示为标准格式，并允许将标记映射到输出值类型。
+分词是将大块的输入拆分为更小、更易处理，并可独立地进行分析的单元。这也使得你更容易处理这些单元而不是字节流，并且它们有助于将传入数据表示为标准格式，并允许将 token 映射到输出值类型。
 
-然后，解析器可以递归处理所有标记，直到没有要处理的内容，一旦完成，给我们解析后的数据。
+解析器将递归处理所有标记，直到没有要处理的内容，一旦完成，给我们解析后的数据。
 
-### 如何定义预期的有效标记
+<h3 id="heading-how-to-define-expected-valid-tokens">如何定义预期的有效 token</h3>
 
-这里与之前看过的值类型会有一些重复，但这是预料之中的，因为任何字面值的标记表示将是其自身。在这种情况下，没有办法将其更小的拆分。
+这里与我们上面介绍的值类型会有一些重复，但这是预料之中的，因为任何字面值的标记表示将是其自身。在这种情况下，没有办法将其更小的拆分。
 
-同样地，Enum（枚举）是这里合适的数据类型，因为我们需要元数据（作为标记类型），并可选择其关联的数据。
+同样地，枚举是这里合适的数据类型，因为我们需要元数据（作为标记类型），并可选择其关联的数据。
 
 表示字面值的标记可以这样定义：
 
@@ -809,9 +811,9 @@ pub enum Token {
 }
 ```
 
-### 如何实现标记化结构体
+<h3 id="heading-how-to-implement-the-tokenizer-struct">如何实现分词器结构体</h3>
 
-你将需要一个 `JsonTokenizer` 结构体来促进这个过程，同时负责保持标记化过程的状态：
+你将需要一个 `JsonTokenizer` 结构体来进行分词，同时负责保持分词过程的状态：
 
 ```rust
 // src/token.rs
@@ -848,15 +850,15 @@ where
 }
 ```
 
-在这种情况下，我们使其对输入来源进行泛化。类型 T 需要实现 `Read` 和 `Seek` 特征，其原因将在稍后解释。
+在这种情况下，我们使其对输入来源进行泛化。类型 T 需要实现 `Read` 和 `Seek` trait，其原因将在稍后解释。
 
-迭代器还需要是 `Peekable` 的，这意味着我们应该能够在不推进迭代器本身的情况下读取迭代器中的下一个项。
+迭代器还需要是 `Peekable` 的，这意味着我们应该能够在不改变迭代器本身的状态下读取迭代器中的下一个项。
 
-### 如何标记化字符迭代器
+<h3 id="heading-how-to-tokenize-an-iterator-of-characters">如何对字符迭代器进行分词</h3>
 
-一旦定义了所有预期的标记，你需要获取字符迭代器并将其转换为标记列表，其中每个条目是上一节中定义的 `Token` 枚举的变体。
+一旦定义了所有预期的 token，你需要获取字符迭代器并将其转换为 token 列表，其中每个条目是上一节中定义的 `Token` 枚举的一种。
 
-我们将通过编写一个检测传入字符的框架函数开始，如果遇到无效标记则调用 panic：
+我们将通过编写一个检测传入字符的框架函数开始，如果遇到无效标记则抛出 panic：
 
 ```rust
 // src/token.rs
@@ -885,21 +887,22 @@ impl<T> JsonTokenizer<T> where
 
 这里有两个值得注意的地方，我们从简单的开始。如果你的匹配块没有遇到任何已知字符（你将很快实现这一点），你需要一个“兜底”条件来匹配任何字符。
 
-在这里，我们将忽略任何空白字符并在遇到时继续到下一次迭代。如果该字符不是空白字符，那么这里你需要调用 panic（或返回错误）。
+在这里，我们将忽略任何空白字符并在遇到时继续到下一次迭代。如果该字符不是空白字符，那么这里你需要抛出 panic（或返回错误）。
 
-```markdown
+接下来值得注意的是 `self.iterator.peek()`。为了便于解析分隔符、字面值等不同类型的标记，迭代器在读出下一个字符时不应该推进。这样才能根据下一个字符有条件地推进迭代器。
+
 你还需要将某些标记集的解析委托给不同的函数，这些函数将有自己的逻辑来推进迭代器。
 
 一个很好的例子是解析 `null` 字面值。如果匹配遇到一个 `n` 字符且不在字符串、对象、数字等中，则需要确保接下来的三个字符分别是 `u`、`l`、`l`，以形成字面值 `null`，然后将迭代器前进四个，以便下一个循环在 `null` 字符之后而不是中间开始解析。
 
-### 如何解析字符串标记
+<h3 id="heading-how-to-parse-string-tokens">如何解析字符串 token</h3>
 
 我们将从解析字符串开始。让我们停顿一下，逐步思考需要发生什么：
 
 - 检查匹配是否遇到 `"` 字符。如果是，将 `Token::Quote` 推入输出标记列表。
-- 将迭代器前进一个，因此下一个步骤从 `"` 字符之后开始。
+- 推进迭代器，因此下一个步骤从 `"` 字符之后开始。
 - 解析所有字符作为字符串的一部分，直到遇到另一个 `"` 字符，它表示字符串值的结束。
-- 将迭代器前进解析为字符串的一部分的字符数，以及一个额外的，以跳过关闭的 `"` 字符。
+- 将迭代器向前推进解析为字符串的字符数，以及额外再推进一次，以跳过表示字符串结尾的 `"` 字符。
 - 将解析值的 `Token::String` 推入输出标记列表。
 - 将 `Token::Quote` 推入输出标记列表。
 
@@ -942,26 +945,22 @@ impl<T> JsonTokenizer<T>
     }
 
     fn parse_string(&mut self) -> String {
-        // 创建新的矢量来保存解析的字符。
+        // 创建新的向量来保存解析的字符。
         let mut string_characters = Vec::<char>::new();
 
-        // 通过引用获取每一个字符，这样它们
-        // 不会从迭代器中移动出去，这将
-        // 要求你将迭代器移动到这个函数中。
+        // 通过引用获取每一个字符，这样它们不会从迭代器中移动出去，
+        // 不这么做将要求你将迭代器移动到这个函数中。
         for character in self.iterator.by_ref() {
-            // 如果碰到关闭的 `"`, 则跳出
-            // 循环，因为字符串已结束。
+            // 如果碰到关闭的 `"`, 则跳出循环，因为字符串已结束。
             if character == '"' {
                 break;
             }
 
-            // 继续压入矢量以构建
-            // 字符串。
+            // 继续压入矢量以构建字符串。
             string_characters.push(character);
         }
 
-        // 从字符迭代器创建字符串并
-        // 返回。
+        // 从字符迭代器创建字符串并返回。
         String::from_iter(string_characters)
     }
 }
@@ -971,9 +970,9 @@ impl<T> JsonTokenizer<T>
 
 这就完成了字符串解析，我们可以继续解析一个更有趣的值类型了。
 
-### 如何解析数字标记
+<h3 id="heading-how-to-parse-number-tokens">如何解析数字 token</h3>
 
-JSON 规范中的数字有很多变化。它们可以为正或为负，可以是整数或小数。它们还可以表示为科学计数法（例如负指数 `3.7e-5` 或正指数 `3.7e5`）。我们需要解析所有这些变化。
+JSON 规范中的数字有很多变化。它们可以为正或为负，可以是整数或小数。它们还可以表示为科学计数法（例如负指数 `3.7e-5` 或正指数 `3.7e5`）。我们需要解析所有这些变体。
 
 一如既往，我们将从简单的部分开始。如果我们遇到任何可能是数字中的有效字符，则需要委托解析到一个 `parse_number` 函数。但是，任何有效数字只能以一个数字或负号开头。数字不能以小数字符或科学计数法字符开头，这使得我们更加轻松。
 
@@ -1021,115 +1020,117 @@ impl<T> JsonTokenizer<T>
     fn parse_number(&mut self) -> Result<Number, ()> {
         // 储存解析的数字字符。
         let mut number_characters = Vec::<char>::new();
-```
 
+        // 存储正在解析的数字是否包含“. ”字符，使其成为小数。
+        let mut is_decimal = false;
 
-```markdown
-// 存储在 'e' 或 'E' 符号之后的字符以表示指数值。
-let mut epsilon_characters = Vec::<char>::new();
+        // 存储在 'e' 或 'E' 符号之后的字符以表示指数值。
+        let mut epsilon_characters = Vec::<char>::new();
 
-// 存储正在解析的数字是否属于 epsilon 字符集合。
-let mut is_epsilon_characters = false;
+        // 存储正在解析的数字是否属于 epsilon 字符集合。
+        let mut is_epsilon_characters = false;
 
-while let Some(character) = self.iterator.peek() {
-    match character {
-        // 匹配表示数字为负的负号
-        '-' => {
-            if is_epsilon_characters {
-                // 如果正在解析 epsilon 字符，将其放入 epsilon 字符集合。
-                epsilon_characters.push('-');
-            } else {
-                // 否则，将其放入正常字符集合。
-                number_characters.push('-');
+        while let Some(character) = self.iterator.peek() {
+            match character {
+                // 匹配表示数字为负的负号
+                '-' => {
+                    if is_epsilon_characters {
+                        // 如果正在解析 epsilon 字符，将其放入 epsilon 字符集合。
+                        epsilon_characters.push('-');
+                    } else {
+                        // 否则，将其放入正常字符集合。
+                        number_characters.push('-');
+                    }
+
+                    // 推进迭代器
+                    let _ = self.iterator.next();
+                }
+                // 匹配正号，可以被视为冗余并忽略，因为正号是默认值。
+                '+' => {
+                    // 推进迭代器
+                    let _ = self.iterator.next();
+                }
+                // 匹配 0 到 9 之间的任意数字，并存储在 `digit` 变量中。
+                digit @ '0'..='9' => {
+                    if is_epsilon_characters {
+                        // 如果正在解析 epsilon 字符，将其放入 epsilon 字符集合。
+                        epsilon_characters.push(*digit);
+                    } else {
+                        // 否则，将其放入正常字符集合。
+                        number_characters.push(*digit);
+                    }
+                    // 推进迭代器
+                    let _ = self.iterator.next();
+                }
+                // 匹配表示小数部分开始的小数点。
+                '.' => {
+                    // 将小数点字符放入数字字符集合。
+                    number_characters.push('.');
+
+                    // 设置当前数字为小数状态。
+                    is_decimal = true;
+
+                    // 推进迭代器
+                    let _ = self.iterator.next();
+                }
+                // 匹配表示数字文本值结束的任意字符。可以是分隔键值对的逗号，
+                // 闭合对象字符，闭合数组字符，或分隔键与值的 `:`。
+                '}' | ',' | ']' | ':' => {
+                    break;
+                }
+                // 匹配 epsilon 字符，表示这个数字是科学计数法。
+                'e' | 'E' => {
+                    // 若已在解析指数数字，则产生错误，因为这意味着有两个 epsilon 字符是无效的。
+                    if is_epsilon_characters {
+                        panic!("解析数字时遇到无效字符：{character}。遇到双重 epsilon 字符");
+                    }
+
+                    // 设置当前数字为科学计数法状态。
+                    is_epsilon_characters = true;
+
+                    // 推进迭代器
+                    let _ = self.iterator.next();
+                }
+                // 若遇到其他字符则产生错误。
+                other => {
+                    if !other.is_ascii_whitespace() {
+                        panic!("解析数字时遇到无效字符：{character}")
+                    } else {
+                        self.iterator.next();
+                    }
+                },
             }
+        }
 
-            // 将迭代器前进 1。
-            let _ = self.iterator.next();
-        }
-        // 匹配正号，可以被视为冗余并忽略，因为正号是默认值。
-        '+' => {
-            // 将迭代器前进 1。
-            let _ = self.iterator.next();
-        }
-        // 匹配 0 到 9 之间的任意数字，并存储在 `digit` 变量中。
-        digit @ '0'..='9' => {
-            if is_epsilon_characters {
-                // 如果正在解析 epsilon 字符，将其放入 epsilon 字符集合。
-                epsilon_characters.push(*digit);
-            } else {
-                // 否则，将其放入正常字符集合。
-                number_characters.push(*digit);
-            }
-            // 将迭代器前进 1。
-            let _ = self.iterator.next();
-        }
-        // 匹配表示小数部分开始的小数点。
-        '.' => {
-            // 将小数点字符放入数字字符集合。
-            number_characters.push('.');
+        if is_epsilon_characters {
+            // 如果数字是指数型，执行计算以将其转换为 Rust 中的浮点数。
 
-            // 设置当前数字为小数状态。
-            is_decimal = true;
+            // 以浮点数解析基数。
+            let base: f64 = String::from_iter(number_characters).parse().unwrap();
 
-            // 将迭代器前进 1。
-            let _ = self.iterator.next();
-        }
-        // 匹配表示数字文本值结束的任意字符。可以是分隔键值对的逗号，
-        // 闭合对象字符，闭合数组字符，或分隔键与值的 `:`。
-        '}' | ',' | ']' | ':' => {
-            break;
-        }
-        // 匹配 epsilon 字符，表示这个数字是科学计数法。
-        'e' | 'E' => {
-            // 若已在解析指数数字，则产生错误，因为这意味着有两个 epsilon 字符
-            // 是无效的。
-            if is_epsilon_characters {
-                panic!("解析数字时遇到意外字符: {character}. 遇到双重 epsilon 字符");
-            }
+            // 以浮点数解析指数。
+            let exponential: f64 = String::from_iter(epsilon_characters).parse().unwrap();
 
-            // 设置当前数字为科学计数法状态。
-            is_epsilon_characters = true;
-
-            // 将迭代器前进 1。
-            let _ = self.iterator.next();
+            // 返回最终计算出的十进制数字。
+            Ok(Number::F64(base * 10_f64.powf(exponential)))
+        } else if is_decimal {
+            // 如果数字是小数，在 Rust 中将其解析为浮点数。
+            Ok(Number::F64(
+                String::from_iter(number_characters).parse::<f64>().unwrap(),
+            ))
+        } else {
+            // 在 Rust 中将数字解析为整数。
+            Ok(Number::I64(
+                String::from_iter(number_characters).parse::<i64>().unwrap(),
+            ))
         }
-        // 若遇到其他字符则产生错误。
-        other => {
-            if !other.is_ascii_whitespace() {
-                panic!("解析数字时遇到意外字符: {character}")
-            } else {
-                self.iterator.next();
-            }
-        },
     }
 }
-
-if is_epsilon_characters {
-    // 如果数字是指数型，执行计算以将其转换为 Rust 中的浮点数。
-
-    // 以浮点数解析基数。
-    let base: f64 = String::from_iter(number_characters).parse().unwrap();
-
-    // 以浮点数解析指数。
-    let exponential: f64 = String::from_iter(epsilon_characters).parse().unwrap();
-
-    // 返回最终计算出的十进制数字。
-    Ok(Number::F64(base * 10_f64.powf(exponential)))
-} else if is_decimal {
-    // 如果数字是小数，在 Rust 中将其解析为浮点数。
-    Ok(Number::F64(
-        String::from_iter(number_characters).parse::<f64>().unwrap(),
-    ))
-} else {
-    // 在 Rust 中将数字解析为整数。
-    Ok(Number::I64(
-        String::from_iter(number_characters).parse::<i64>().unwrap(),
-    ))
-}
 ```
 
-建议您仔细阅读代码和注释以理解此函数。您不应该遇到任何未曾涵盖或读者已知的语法。
-```
+建议你仔细阅读代码和注释以理解此函数。您应该不会遇到任何未曾涵盖或假设读者已知的语法。
+
+<h3 id="heading-how-to-parse-boolean-tokens">如何解析布尔值 token</h3>
 
 解析布尔值是到目前为止我们看到的最简单的一个。我们需要做的就是匹配首个字符为 `t` 或 `f`，然后检查接下来的几个字符以确保它们组成了字面值 `true` 或 `false`。
 
@@ -1149,30 +1150,30 @@ impl<T> JsonTokenizer<T>
 
                 // 匹配 `t` 字符，表示布尔字面量的开始。
                 't' => {
-                    // 将迭代器前进1位。
+                    // 推进迭代器
                     let _ = self.iterator.next();
 
-                    // 断言下一字符是 `r`，同时将迭代器前进1位。
+                    // 断言下一字符是 `r`，同时推进迭代器
                     assert_eq!(Some('r'), self.iterator.next());
-                    // 断言下一字符是 `u`，同时将迭代器前进1位。
+                    // 断言下一字符是 `u`，同时推进迭代器
                     assert_eq!(Some('u'), self.iterator.next());
-                    // 断言下一字符是 `e`，同时将迭代器前进1位。
+                    // 断言下一字符是 `e`，同时推进迭代器
                     assert_eq!(Some('e'), self.iterator.next());
 
                     // 将字面值推入标记列表中。
                     self.tokens.push(Token::Boolean(true));
                 }
                 'f' => {
-                    // 将迭代器前进1位。
+                    // 推进迭代器
                     let _ = self.iterator.next();
 
-                    // 断言下一字符是 `a`，同时将迭代器前进1位。
+                    // 断言下一字符是 `a`，同时推进迭代器
                     assert_eq!(Some('a'), self.iterator.next());
-                    // 断言下一字符是 `l`，同时将迭代器前进1位。
+                    // 断言下一字符是 `l`，同时推进迭代器
                     assert_eq!(Some('l'), self.iterator.next());
-                    // 断言下一字符是 `s`，同时将迭代器前进1位。
+                    // 断言下一字符是 `s`，同时推进迭代器
                     assert_eq!(Some('s'), self.iterator.next());
-                    // 断言下一字符是 `e`，同时将迭代器前进1位。
+                    // 断言下一字符是 `e`，同时推进迭代器
                     assert_eq!(Some('e'), self.iterator.next());
 
                     // 将字面值推入标记列表中。
@@ -1188,7 +1189,7 @@ impl<T> JsonTokenizer<T>
 }
 ```
 
-### 如何解析 Null 字面量
+<h3 id="heading-how-to-parse-null-literal">如何解析 null 字面量</h3>
 
 这与我们在前一步解析布尔值非常相似：
 
@@ -1207,14 +1208,14 @@ impl<T> JsonTokenizer<T>
                 // ...
 
                 'n' => {
-                    // 将迭代器前进1位。
+                    // 推进迭代器
                     let _ = self.iterator.next();
 
-                    // 断言下一字符是 `u`，同时将迭代器前进1位。
+                    // 断言下一字符是 `u`，同时推进迭代器
                     assert_eq!(Some('u'), self.iterator.next());
-                    // 断言下一字符是 `l`，同时将迭代器前进1位。
+                    // 断言下一字符是 `l`，同时推进迭代器
                     assert_eq!(Some('l'), self.iterator.next());
-                    // 断言下一字符是 `l`，同时将迭代器前进1位。
+                    // 断言下一字符是 `l`，同时推进迭代器
                     assert_eq!(Some('l'), self.iterator.next());
 
                     // 将空字面值推入输出标记列表。
@@ -1230,7 +1231,7 @@ impl<T> JsonTokenizer<T>
 }
 ```
 
-### 如何解析分隔符
+<h3 id="heading-how-to-parse-delimiters">如何解析分隔符</h3>
 
 解析分隔符非常简单。你需要做的就是匹配它们，然后将相应的标记推入输出标记列表：
 
@@ -1282,9 +1283,11 @@ impl<T> JsonTokenizer<T>
 }
 ```
 
-### 如何解析终止字符
+<h3 id="heading-how-to-parse-a-terminating-character">如何解析终止字符</h3>
 
 输入有时可能包含 `\0` 作为最后一个字符，以指示输入已结束。在处理文件时，这更常被称为 EOF（文件结尾）。它也被称为“转义序列”或“空字符”。
+
+如果遇到这种情况，我们需要处理它并跳出解析循环：
 
 ```rust
 // src/token.rs
@@ -1318,7 +1321,7 @@ impl<T> JsonTokenizer<T>
 }
 ```
 
-## 如何构建一个 JSON 解析器 – 第四阶段：从标记到值
+<h2 id="heading-how-to-build-a-json-parser-stage-4-from-tokens-to-value">如何构建一个 JSON 解析器 – 第四步：将 token 转换为值</h2>
 
 现在你已经拥有了所有的标记，是时候进入该过程的最后阶段，将标记转换为你可以在 Rust 代码中使用的真实值。
 
@@ -1365,7 +1368,7 @@ impl JsonParser {
 
 话不多说，首先你需要实现这些公共方法调用的 `tokens_to_value` 方法。
 
-### 如何解析基本数据类型
+<h3 id="heading-how-to-parse-primitives">如何解析基本数据类型</h3>
 
 该方法将负责将标记迭代器作为输入，并输出你之前定义的 `Value` 类型。这也很简单，因为对象/数组解析被委托给单独的方法，我们稍后会详细介绍。
 
@@ -1382,8 +1385,8 @@ impl JsonParser {
         // 初始化最终值为 null。
         let mut value = Value::Null;
 
-        // 当迭代器中有标记时循环。
-        // 注意在这种情况下你不需要手动处理迭代器的前进，
+        // 当迭代器中有 token 时循环。
+        // 注意在这种情况下你不需要手动推进迭代器，
         // 这就是为什么你可以直接调用 `iterator.next()`。
         while let Some(token) = iterator.next() {
             match token {
@@ -1415,7 +1418,7 @@ impl JsonParser {
 }
 ```
 
-### 如何解析数组
+<h3 id="heading-how-to-parse-arrays">如何解析数组</h3>
 
 解析数组几乎和我们上面看到的解析逻辑一样简单。因为数组只是其他 JSON 值的集合，所以解析它们并不像对象那样涉及很多逻辑。
 
@@ -1427,7 +1430,7 @@ impl JsonParser {
         // 初始化一个 JSON Value 类型的向量，用于保存当前正在解析的数组值。
         let mut internal_value = Vec::<Value>::new();
 
-        // 迭代所有提供的标记。
+        // 迭代所有提供的 token。
         while let Some(token) = iterator.next() {
             match token {
                 Token::CurlyOpen => {
@@ -1455,11 +1458,11 @@ impl JsonParser {
 }
 ```
 
-### 如何解析对象
+<h3 id="heading-how-to-parse-objects">如何解析对象</h3>
 
-解析对象比前面的值类型要复杂一些，因为对象带有它们自己的语法。但这应该对你没有什么意外，因此我鼓励你阅读以下代码和注释以了解其工作原理。
+解析对象比前面的值类型要复杂一些，因为对象带有它们自己的语法。但这应该没什么能让你感到意外的，因此我鼓励你阅读以下代码和注释以了解其工作原理。
 
-```markdown
+```rust
 impl JsonParser {
     fn process_object(iterator: &mut Peekable<Iter<Token>>) -> HashMap<String, Value> {
         // 表示正在解析的项是键还是值。第一个元素应始终是键，因此初始化为 true。
@@ -1543,17 +1546,17 @@ impl JsonParser {
 
 到此为止，你应该已经有一切可以开始解析有效的 JSON 文件到 Rust 中了。
 
-## 如何使用 JSON 解析器
+<h2 id="heading-how-to-use-the-json-parser">如何使用我们的 JSON 解析器</h2>
 
 让我们在项目中创建一个新的示例来运行我们的 JSON 解析器：
 
-```
+```shell
 mkdir examples; touch examples/json.rs
 ```
 
 你还需要在 `Cargo.toml` 文件中将其注册为一个示例：
 
-```
+```toml
 [package]
 name = "json-parser"
 version = "0.1.0"
@@ -1568,7 +1571,7 @@ name = "json"
 
 现在让我们编写代码来运行这个示例。我们首先将一个示例 JSON 文件复制到项目的根目录中，你可以在[这里][31]找到。
 
-```
+```rust
 // examples/json.rs
 
 use std::fs::File;
@@ -1584,7 +1587,7 @@ fn main() {
 
 使用以下命令运行此代码，你应该会看到与下面相同的输出：
 
-```
+```shell
 cargo run --example json --release
 ```
 
@@ -1671,7 +1674,7 @@ cargo run --example json --release
 )
 ```
 
-## **总结**
+<h2 id="heading-wrapping-up">总结</h2>
 
 我希望您已经看到了一些有趣的方法，可以利用今天所学来优化您项目中的现有 Rust 代码，以及您编写的任何涉及这些的未来代码。
 
@@ -1685,7 +1688,7 @@ cargo run --example json --release
 
 [☕请我喝咖啡][34]。
 
-直到下次，祝编码愉快，并祝您晴空万里！
+下次再见，祝编码愉快，并祝您晴空万里！
 
 [1]: #heading-what-are-iterators-in-rust
 [2]: #heading-how-to-implement-iterators-in-rust
