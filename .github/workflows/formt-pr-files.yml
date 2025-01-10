@@ -8,7 +8,8 @@ on:
 jobs:
   whitespace:
     runs-on: ubuntu-latest
-    
+    permissions:
+      contents: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
