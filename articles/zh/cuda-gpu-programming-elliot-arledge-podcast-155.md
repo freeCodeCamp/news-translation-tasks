@@ -5,11 +5,11 @@ date: 2025-01-12T11:43:44.416Z
 author: Quincy Larson 
 authorURL: https://www.freecodecamp.org/news/author/quincy/ 
 originalURL: https://www.freecodecamp.org/news/cuda-gpu-programming-elliot-arledge-podcast-155/ 
-posteditor: "" 
+posteditor: "miya" 
 proofreader: "" 
 --- 
  
-在本周的播客节目中，我采访了Elliot Arledge。他是一名20岁的计算机科学学生，他创造了多个受欢迎的freeCodeCamp课程，涉及LLM、Mojo编程语言和CUDA的GPU编程。他来自加拿大阿尔伯塔省的埃德蒙顿。 
+在本周的播客节目中，我采访了Elliot Arledge。他是一名20岁的计算机科学学生，他创造了多个受欢迎的freeCodeCamp课程，涉及LLM、Mojo编程语言和CUDA的GPU编程。他来自加拿大阿尔伯塔省的埃德蒙顿。
  
 <!-- more --> 
  
@@ -21,7 +21,7 @@ proofreader: ""
      
 -   他如何阅读学术论文 
      
--   他的计算机科学学位课程与他的自学 
+-   他的计算机科学学位课程与他的自学过程
      
  
 在介绍中，我播放了1988年双截龙II游戏的配乐曲目《Into the Turf》。 
