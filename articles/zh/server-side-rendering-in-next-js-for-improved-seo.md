@@ -5,7 +5,7 @@ date: 2024-11-26T13:14:43.283Z
 author: Joan Ayebola
 authorURL: https://www.freecodecamp.org/news/author/joanayebola/
 originalURL: https://www.freecodecamp.org/news/server-side-rendering-in-next-js-for-improved-seo/
-posteditor: ""
+posteditor: "miya"
 proofreader: ""
 ---
 
