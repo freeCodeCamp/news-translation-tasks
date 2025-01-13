@@ -1,6 +1,6 @@
 ---
-title: Major freeCodeCamp Curriculum Updates Going Live in Time for Christmas
-date: 2024-12-24T05:38:43.683Z
+title: Major freeCodeCamp Curriculum Updates Now Live in 2025
+date: 2025-01-13T10:17:32.261Z
 author: Quincy Larson
 authorURL: https://www.freecodecamp.org/news/author/quincy/
 originalURL: https://www.freecodecamp.org/news/christmas-2025-freecodecamp-curriculum-updates/
