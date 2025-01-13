@@ -4,7 +4,7 @@ date: 2025-01-13T08:22:14.906Z
 author: Alex Pliutau 
 authorURL: https://www.freecodecamp.org/news/author/pltvs/ 
 originalURL: https://www.freecodecamp.org/news/what-is-the-language-server-protocol-easier-code-editing-across-languages/ 
-posteditor: "" 
+posteditor: "miyaliu66" 
 proofreader: "" 
 --- 
  
