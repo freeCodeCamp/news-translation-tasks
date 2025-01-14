@@ -1544,7 +1544,7 @@ impl JsonParser {
 }
 ```
 
-到此为止，你应该已经有一切可以开始解析有效的 JSON 文件到 Rust 中了。
+现在你应该已经掌握了所有内容，可以用它来在 Rust 中解析一个有效的 JSON 文件了。
 
 <h2 id="heading-how-to-use-the-json-parser">如何使用我们的 JSON 解析器</h2>
 
