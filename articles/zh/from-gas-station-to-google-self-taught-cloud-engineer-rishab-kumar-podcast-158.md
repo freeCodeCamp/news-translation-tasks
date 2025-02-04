@@ -4,13 +4,11 @@ date: 2025-02-04T01:54:44.434Z
 author: Quincy Larson 
 authorURL: https://www.freecodecamp.org/news/author/quincy/ 
 originalURL: https://www.freecodecamp.org/news/from-gas-station-to-google-self-taught-cloud-engineer-rishab-kumar-podcast-158/ 
-posteditor: "" 
+posteditor: "miyaliu66" 
 proofreader: "" 
 --- 
  
 在本周的播客节目中，freeCodeCamp 创始人 Quincy Larson 采访了 Rishab Kumar，Twilio 的云工程师和开发者布道师。 
- 
-<!-- more --> 
  
 Rishab 在印度长大，后来为了求学搬到了加拿大。但他无法负担完成学业的费用。他不得不靠送披萨和在加油站工作谋生。不过他努力自学编程和构建云基础设施，最终在谷歌找到了一份工作。 
  
