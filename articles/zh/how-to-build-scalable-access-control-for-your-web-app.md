@@ -1,5 +1,6 @@
+```markdown
 ---
-title: How to Build Scalable Access Control for Your Web App [Full Handbook]
+title: 如何为您的 Web 应用构建可扩展的访问控制 [完整手册]
 date: 2025-02-06T14:39:11.088Z
 author: Samhitha Rama Prasad
 authorURL: https://www.freecodecamp.org/news/author/samhitharamaprasad/
@@ -8,237 +9,222 @@ posteditor: ""
 proofreader: ""
 ---
 
-Access control is crucial for preventing unauthorized access and ensuring that only the right people can access sensitive data in your application. As your app grows in complexity, so does the challenge of enforcing permissions in a clean and efficient way.
+访问控制对于防止未经授权的访问以及确保只有合适的人才能访问您的应用中的敏感数据至关重要。随着您的应用复杂度的增加，以一种清晰和高效的方式实施权限的挑战也在增加。
 
 <!-- more -->
 
-In this handbook, we’ll explore various access control mechanisms and walk through two approaches for building a scalable Attribute-Based Access Control solution in React.
+在本手册中，我们将探讨各种访问控制机制，并研究如何在 React 中构建可扩展的基于属性的访问控制解决方案的两种方法。
 
-First, we'll examine CASL, a popular open-source authorization library. Then, we’ll build a custom solution from scratch to deepen your understanding of how to design a flexible permissions validation system.
+首先，我们将研究 CASL，这是一个流行的开源授权库。然后，我们将从头开始构建一个自定义解决方案，以加深您对如何设计灵活的权限验证系统的理解。
 
-This guide includes detailed code walkthroughs for both approaches, covering key concepts such as state management, custom hooks, and caching/conditional queries using Redux Toolkit.
+本指南包括对两种方法的详细代码演练，涵盖了关键概念，如状态管理、自定义钩子和使用 Redux Toolkit 的缓存/条件查询。
 
-If you plan to implement the code, you should have a basic understanding of how a web app using state management works. But even if you're not coding along, you’ll still gain valuable insights into the design patterns and best practices behind creating a robust permissions validation system.
+如果您计划实现这些代码，您应该对使用状态管理的 Web 应用有基本的了解。但即使您不打算编写代码，您仍然可以获得关于创建强健权限验证系统的设计模式和最佳实践的宝贵见解。
 
-Let’s dive in!
+让我们开始吧！
 
-## Table of Contents
+## 目录
 
--   [What is access control? How is it different from AuthZ, AuthN and permissions?][1]
+-   [什么是访问控制？它与 AuthZ、AuthN 和权限有何不同？][1]
     
--   [Multi-layered Access Control][2]
+-   [多层次访问控制][2]
     
-    -   [Hogwarts in Harmony: A Unified Defense][3]
--   [Access Control Models][4]
+    -   [哈利波特的统一防护][3]
+-   [访问控制模型][4]
     
--   [Why ABAC?][5]
+-   [为什么选择 ABAC？][5]
     
--   [Attribute-Based Access Control In Depth][6]
+-   [深入了解基于属性的访问控制][6]
     
-    -   [Core Components][7]
+    -   [核心组件][7]
         
-    -   [How does ABAC work?][8]
+    -   [ABAC 如何工作？][8]
         
-    -   [Who defines ABAC policies?][9]
+    -   [谁定义 ABAC 策略？][9]
         
-    -   [Where should you enforce it — back-end or front-end?][10]
+    -   [应该在后端还是前端实施？][10]
         
-    -   [Where are policies defined?][11]
+    -   [策略在哪里定义？][11]
         
--   [1: Implementing Permissions with CASL][12]
+-   [1: 使用 CASL 实现权限][12]
     
--   [2: Build Your Custom Permissions Validation Framework][13]
+-   [2: 构建自定义的权限验证框架][13]
     
-    -   [Policy Definition using Policy as Code][14]
+    -   [使用政策作为代码的政策定义][14]
         
-    -   [Workflow Overview][15]
+    -   [工作流程概述][15]
         
-    -   [Policy Validation][16]
+    -   [政策验证][16]
         
-    -   [Policy Enforcement][17]
+    -   [政策执行][17]
         
--   [Let’s Summarize][18]
+-   [总结][18]
     
-    -   [Further Scaling Considerations][19]
--   [Conclusion][20]
-    
-
-## What is Access Control? How is it Different from AuthZ, AuthN, and Permissions?
-
-Let me break down these terms using the example of an airport.
-
-When you arrive at the check-in counter, you present your passport to verify your identity. **Authentication** (Who are you?) is the process of confirming that you are who you say you are.
-
-Once your identity is confirmed, the airline checks if you are authorized to board the flight by verifying your ticket, or if you are authorized to access the lounge by reviewing your membership status, class of travel, or loyalty program tier. **Authorization** (What are you allowed to do?) is about determining what specific resources you are permitted to access.
-
-**Permissions** (What specific actions can you take?) are the granular details of what you're allowed to do within the scope of your authorization. If you’re authorized to board the flight and access the lounge, your permissions might include: sitting at the boarding gate, relaxing in the lounge, shopping in duty-free, or if you’re staff, accessing restricted areas.
-
-**Access control** refers to the measures in place to enforce authorization policies. These are the rules the airport follows to validate boarding passes or lounge access, and to guide you to the correct gate.
-
-## Multi-layered Access Control
-
-To ensure comprehensive protection, access control should be enforced at multiple layers, depending on your application architecture.
-
-To understand this, here’s a little something for my fellow Potter-heads:
-
-### Hogwarts in Harmony: A Unified Defense
-
-At the very edge of Hogwarts, you’ve got your Perimeter—the outer defenses that keep dark forces at bay. Think of these as the high, _enchanted stone walls_ that surround the castle—acting like a firewall, with winged boar statues perched on the parapets, keeping watch. Only those with proper clearance are allowed through the gates, ensuring that no unwanted guests, like dark wizards, can enter.
-
-When students arrive at Hogwarts, they come by _boats or Thestral-pulled carriages_, which are the only trusted means of transport. This is like **Endpoint Detection and Response (EDR)**, ensuring that only the right devices (or carriages) are allowed entry.
-
-If a student tries to use a non-compliant device (like a _cursed broomstick or Apparition_), they won’t be allowed inside. **Mobile Device Management (MDM)** acts like the magical inspection process—only devices that meet Hogwarts' standards can pass through the gate and connect to the school’s systems.
-
-At Hogwarts, _owls_ are the trusted messengers that carry messages between the school and the outside world. These owls, like API keys and JWTs, carry the seal of approval and only deliver messages to the right recipients. Dark creatures like _Dementors_ are forbidden from delivering messages, ensuring that only the right communications make it through.
-
-The _Acceptance Letter from Hogwarts_ is like an **OAuth token**. It proves you belong to the magical world and grants you access to the school without needing to show your face or reveal your blood status.
-
-Inside the castle, access to different areas is controlled by who you are and your role at Hogwarts. For example, **Role-Based Access Control (RBAC)** ensures that only _Gryffindors_ can access their common room, while _Slytherins_ have their own. _Prefects_ get additional privileges, like access to the Prefect's bathroom or other special rooms. These roles define where you can go and what you can do within the castle.
-
-But things get more nuanced with **Attribute-Based Access Control (ABAC)**. For instance, only students enrolled in _Care of Magical Creatures_ have access to the Forbidden Forest, but they’re only allowed in during daylight hours, when it's safer. The forest is too dangerous at night, and only those with the right attributes (like a specific timetable) can enter at the right time.
-
-Within Hogwarts is the _Philosopher’s Stone_, hidden away in a vault guarded by powerful enchantments. This is your Data Layer – the most precious resources, secured by powerful protections. Just like database permissions, the vault is protected by Fluffy, the three-headed dog, a series of enchantments, and traps. Similarly, row-level and column-level security ensure that only Harry Potter can retrieve the Stone because he is the only one worthy (you can only access what’s meant for you).
-
-To summarize,
-
-1.  **Network Layer (Infrastructure-level):** Firewalls and virtual private networks (VPNs) to control incoming and outgoing network traffic.
-    
-2.  **Endpoint Layer (Device-level):** Endpoint Detection and Response (EDR) and Mobile Device Management (MDM) to ensure only compliant device can access your application.
-    
-3.  **API Layer (Service-level):** API keys, JSON Web Tokens (JWTs), and API gateways to authenticate and authorize the caller and enforce policies such as rate limiting, IP whitelisting, and so on.
-    
-4.  **Application Layer:** Where the core business logic for authorization typically resides (which this guide is all about).
-    
-5.  **Data Layer (Database-level):** Database permissions, row/column-level security.
+    -   [进一步的扩展考虑][19]
+-   [结论][20]
     
 
-## Access Control Models
+## 什么是访问控制？它与 AuthZ、AuthN 和权限有何不同？
 
-At the application layer, three primary models of access control are commonly used in software engineering: Role-Based Access Control (RBAC), Attribute-Based Access Control (ABAC), and the more recent Relationship-Based Access Control (ReBAC).
+让我用机场的例子来解释这些术语。
 
-**RBAC** **(Role-Based Access Control)** is a model where access is granted or denied based on the roles assigned to a user.
+当您到达值机柜台时，您会出示护照以验证您的身份。**认证**（你是谁？）是确认您身份的过程。
 
-A role is a collection of permissions or privileges that define what actions a user can perform within a system. Roles simplify access control by assigning users to predefined roles, rather than managing individual permissions for each user.
+一旦确认了您的身份，航空公司会通过核实您的机票，或者通过审查您的会员身份、旅行舱位或忠诚度计划等级，检查您是否有权登机，或有权使用贵宾休息室。**授权**（你被允许做什么？）是确定您可以访问哪些特定资源的过程。
 
-When a user is assigned a role, they automatically inherit all the permissions associated with that role. Each permission also has a scope, which defines the boundaries or contexts within which the role's permissions apply. Scopes are typically used to restrict access to specific resources or data.
+**权限**（你可以执行哪些具体操作？）是您在授权范围内被允许做的具体操作的详细信息。如果您被授权登机和进入贵宾休息室，您的权限可能包括：在登机口就座、在休息室放松、在免税店购物，或者如果您是工作人员，可以访问限制区域。
 
-Let me illustrate this (and all concepts throughout this guide) using a blogging application as an example. This app allows users to create, manage, and publish blog posts in multiple categories. It supports a variety of user roles, each with different levels of access to the content and functionality within the platform.
+**访问控制**是指执行授权策略的措施。这些是机场用来验证登机牌或贵宾休息室访问权限的规则，并引导您前往正确登机口。
 
--   **Admin**: Can view, edit, delete, and manage all blog posts and user roles. (Scope: All posts and users)
-    
--   **Editor**: Can edit and approve posts within their assigned categories (for example, Tech, Lifestyle). (Scope: Assigned categories)
-    
--   **Author**: Can create and edit only their own blog posts. (Scope: Own posts)
-    
--   **Guest User**: Can view public, published blog posts but cannot access private posts. (Scope: Public published posts only)
-    
+## 多层次访问控制
 
-The relationship between users and roles is often many-to-many, and roles may also be hierarchical, allowing for complex permission structures.
+为了确保全面保护，根据您的应用程序架构，应在多个层次上实施访问控制。
 
-![Role-based Access Control diagram](https://cdn.hashnode.com/res/hashnode/image/upload/v1737780482515/e30316f8-58a9-4595-81ba-8eb08b2d5a3d.jpeg)
+为便于理解，以下是对我的同伙 Potter 粉丝的一个小例子：
 
-**ABAC** **(Attribute-Based Access Control)** is a model where access decisions are made based on the attributes of the subject (user), object (resource), and the environment. It dynamically evaluates whether a subject can perform an action on an object based on these attributes and policies that govern them.
+### 哈利波特的统一防护
 
-**ReBAC** **(Relationship-Based Access Control)** is an emerging model that grants access based on the relationships between users and resources. For example, it might allow only the user who created a post to edit it. This model is particularly useful in social networking applications, where access depends on user relationships (such as friends, followers, or content ownership).
+在霍格沃茨的边缘，您有您的周边——防止黑暗势力入侵的外部防御。把这些想象成围绕城堡的高水平 _魔法石墙_——就像一个防火墙，墙头上坐着带翅膀的野猪雕像，守望着远方。只有那些具备正确通行证的人才能通过大门，确保没有像黑巫师这样的不速之客可以进入。
 
-## Why ABAC?
+当学生到达霍格沃茨时，他们乘坐 _船或由夜骑马拉的马车_，这些是唯一受信任的交通工具。这就像 **端点检测和响应（EDR）**，确保只有正确的设备（或马车）被允许进入。
 
-RBAC provides several benefits, including ease of implementation, reduced administrative overhead by enabling quick onboarding of new users, and simplified auditing, as it makes it easy to review which roles have access to sensitive data.
+如果一个学生尝试使用不合规的设备（如 _被诅咒的扫帚或幻影显形_），他们将不被允许进入。**移动设备管理（MDM）** 就像魔法检查过程——只有符合霍格沃茨标准的设备才能通过大门并连接到学校的系统。
 
-But, as the platform grows, you introduce more nuanced requirements for access control. These new requirements lead to the creation of new roles to meet specific access needs:
-
-1.  **Publisher**: Can view, edit, approve, publish, and delete posts across all categories, but cannot manage user roles or settings.
-    
-2.  **Junior Author**: Can create and edit their own posts within assigned categories.
-    
-3.  **Senior Author**: Can create and edit their own posts in any category.
-    
-4.  **User (Subscriber)**: Can view and comment on private posts in addition to public posts.
-    
-5.  **Premium Subscriber**: Has all the permissions of a regular subscriber and access to exclusive posts.
-    
-
-Before long, you may find yourself managing an ever-growing list of roles such as Senior Publisher, Publishing Supervisor, Guest User, Subscriber, Premium Subscriber, Graphic Designer, UX Designer, Photographer, Social Media Manager, US Marketing Specialist, UK Marketing Specialist, Web Developer, Data Analyst, Membership Manager, Ad Manager, Legal Advisor, and Sponsor Manager.
-
-Introducing additional requirements—such as blog category, seniority, and jurisdiction—can quickly lead to role explosion. Just imagine how this would scale in data-intensive enterprise applications like finance or healthcare.
-
-While scopes work well when boundaries are clear and static (for example, department, blog types), they require custom checks for more granular attributes such as seniority, length of service, blog creation time, or publication status. Scopes also struggle to account for attributes that change over time, like the location or timing of access.
-
-Because RBAC relies on roles and fixed scopes to make access decisions, it becomes limited in handling complex and dynamic access needs. That is why, [**OWASP** (Open Worldwide Application Security Project) recommends using **ABAC** or **ReBAC** over RBAC][21], as they are more effective in implementing the principle of least privilege.
-
-## Attribute-Based Access Control In Depth
-
-### Core Components
-
-The core components of ABAC are:
-
-**Attributes**: Attributes are key-value pairs used to define the access context. Examples include:
-
--   **User attributes**: These describe the characteristics of the person requesting access, like role, department, age, clearance level, and so on. 💡 As you can see, role can be one of the attributes based on which access control decision is based. So, ABAC is essentially an extension of RBAC.
-    
--   **Resource attributes**: These describe the characteristics of the resources (such as files, databases, or services) being accessed. For example, owner, category, status, and so on.
-    
--   **Action attributes**: These define what actions are being requested by the user on the resource. For example, `read` access like view/open, `write` access like create/modify/delete, `execute` access like process/run, and so on.
-    
--   **Environment attributes**: These include contextual elements such as `time` or `location` that influence the decision-making process.
-    
-
-**Policies**: Policies are logical rules or statements that define which combinations of attributes allow or deny access. For instance, A publisher can _publish_ approved posts in assigned categories during business hours.
-
-### How does ABAC work?
-
-Let’s take Sam, a publisher for our blog, as an example. Sam is authorized to publish posts that have been approved by the editor, but only within the categories she’s been assigned, such as ‘Tech,’ ‘Lifestyle,’ and ‘Health.’ She’s allowed to publish these posts only during specific hours, say from 9 AM to 6 PM.
-
-Sam’s role as a publisher and her assigned categories were set when she joined the team. The resource here is the Post, which is given a category when it’s created. The action she can perform is to publish, and the environmental condition is that it needs to be during business hours.
-
-Since the access control rule is based on Sam’s attributes—her role as a publisher and the categories she’s assigned to—she can publish posts within those categories. If any of her attributes change, like if she moves to a different department, such as Membership Management, or if her assigned categories change to ‘Fashion’ or ‘Travel,’ her access is automatically revoked.
-
-> _ABAC allows administrators to set access controls without needing to know who specifically will need access. As new members join an organization, there's no need to modify existing rules or object attributes; as long as they have the necessary attributes, they can access the required resources. This ability to automatically accommodate new and unanticipated users without additional adjustments is a key advantage of using ABAC_. ([Source][22])
-
-### Who defines ABAC policies?
-
-1.  **Identity and Access Management administrators**:
-    
-    In many organizations, security administrators or access control administrators define ABAC policies. Their responsibilities include analyzing business needs, risk management, regulatory compliance, and ensuring that users have the right level of access to resources. They translate security requirements into policies based on the different attributes and conditions specific to the organization.
-    
-2.  **Business and resource managers**:
-    
-    In certain cases, business units or department managers may also have input into defining policies. They understand the operational needs and are best positioned to indicate how data should be accessed by their teams.
-    
-    For example, a Membership Manager might define policies governing who can access premium blog posts based on subscription status, user role, or membership level (e.g., Subscriber, Premium Subscriber).
-    
-
-### **Where should you enforce it — back-end or front-end?**
-
-Access control policies should be enforced in **both** the front-end and the back-end. Here's why:
-
-**1.** **Front-end enforcement**
-
--   **Instant feedback**: When you enforce ABAC policies on the front-end, you can immediately show or hide elements (like buttons, links, or menus) based on the user’s attributes. This makes the interface cleaner and helps users understand what they can or can’t do right away.
-    
--   **Smarter UI**: You can prevent showing options to users that they shouldn’t see. For example, hiding features if the user doesn’t have the correct role or permissions. This makes the UI feel more intuitive and responsive.
-    
--   **Reduced server load**: By enforcing certain access restrictions in the front-end, you reduce unnecessary requests to the back-end, improving app performance and reducing load on your servers.
-    
--   **Security layer**: While the front-end isn’t where sensitive data should live, you can still add an extra layer of security by using it to filter out invalid actions or content **before** a request is made to the back-end. For instance, you can hide sensitive UI elements (like admin controls) or disable buttons based on user attributes, making it harder for unauthorized users to even attempt to trigger certain actions.
-    
-
-**2.** **Back-end enforcement**
-
--   **Bypass risk**: The downside of relying only on the front-end is that users can easily **bypass** it. With the right tools, they can manipulate the front-end code or network requests (using browser dev tools or API proxies). This is why back-end enforcement is essential—it ensures that access rules are applied **server-side**, where they can’t be tampered with.
-    
--   **Protecting sensitive data**: The back-end is where your sensitive data is stored and processed. By enforcing ABAC policies on the server, you ensure that unauthorized users can’t access, modify, or even view sensitive information. To avoid data leaks, you should always filter-out sensitive content based on user permissions and send only relevant content to the client.
-    
-
-Now that you know ABAC policies need to be enforced both in the front-end and the back-end, the next question is: **Where do you define these policies?**
-
-As a developer, you might think: "_If I know the policies defined by the security team, I can just translate them into code for both the front-end and back-end._"
-
-For example, if the policy is that only senior authors can approve blogs in specific categories, you might write something like this:
-
-**Front-end example (simplified):**
-
+在霍格沃茨，_猫头鹰_是学校和外部世界之间的可信使者。这些猫头鹰，如 API 密钥和 JWT，携带批准的印章，仅向正确的接受者传递消息。像 _摄魂怪_ 这样的黑暗生物被禁止传递消息，确保只有正确的通信能够通过。
 ```
+
+在城堡内，进入不同区域的权限是由你在霍格沃茨的身份和角色决定的。例如，**基于角色的访问控制（Role-Based Access Control, RBAC）** 确保只有 _格兰芬多_ 学生可以进入他们的公共休息室，而 _斯莱特林_ 则有他们自己的公共休息室。_级长_ 拥有额外的特权，比如可以进入级长浴室或其他特殊房间。这些角色定义了你在城堡内可以去哪里以及可以做什么。
+
+但使用 **基于属性的访问控制（Attribute-Based Access Control, ABAC）** 情况会更加微妙。例如，只有注册了 _神奇动物饲养学_ 的学生才能进入禁林，并且只能在白天的时候进去，因为那时更安全。森林在夜晚太危险，只有拥有正确属性（如特定时间表）的人才能在正确的时间进入。
+
+在霍格沃茨内，有一块被强大魔法保护的密室隐藏着的 _魔法石_。这就是你的数据层——最珍贵的资源，受到强大保护的保障。就像数据库权限一样，这个密室由三头犬路威、一系列魔法和陷阱保护。同样，行级和列级安全措施确保只有哈利·波特能够拿到魔法石，因为他是唯一值得的人（你只能访问你所属的部分）。
+
+总结来说，
+
+1.  **网络层（基础设施级别）：** 使用防火墙和虚拟专用网络（VPN）来控制入站和出站网络流量。
+    
+2.  **终端层（设备级别）：** 终端检测与响应（EDR）和移动设备管理（MDM）保证只有符合要求的设备才能访问你的应用。
+    
+3.  **API 层（服务级别）：** 使用 API 密钥、JSON Web Tokens（JWTs），以及 API 网关来进行调用者的认证和授权，并强制执行诸如速率限制、IP 白名单等策略。
+    
+4.  **应用层：** 授权核心业务逻辑通常所在之地（也是本指南的重点）。
+    
+5.  **数据层（数据库级别）：** 数据库权限，行/列级安全。
+    
+
+## 访问控制模型
+
+在应用层，软件工程中常用的三种主要访问控制模型是：基于角色的访问控制（Role-Based Access Control, RBAC）、基于属性的访问控制（Attribute-Based Access Control, ABAC），以及更新的基于关系的访问控制（Relationship-Based Access Control, ReBAC）。
+
+**RBAC** （基于角色的访问控制）是一种基于分配给用户的角色进行访问授权或拒绝的模型。
+
+角色是一个权限或特权的集合，定义了用户在系统内可以执行的操作。通过为用户分配预定义的角色，而不是为每个用户管理单独的权限，角色简化了访问控制。
+
+当用户被分配一个角色时，他们会自动继承该角色相关的所有权限。每个权限也有一个范围，定义了角色权限适用的边界或上下文。范围通常用于限制对特定资源或数据的访问。
+
+让我通过一个博客应用程序来说明这一点（以及本指南中的所有概念）。这个应用允许用户在多个类别中创建、管理和发布博客文章。它支持多种用户角色，每种角色对于平台内的内容和功能访问有不同级别。
+
+-   **管理员**：可以查看、编辑、删除和管理所有博客文章和用户角色。（范围：所有文章和用户）
+    
+-   **编辑**：可以编辑和批准他们被分配类别中的文章（如科技、生活方式）。（范围：分配的类别）
+    
+-   **作者**：只能创建和编辑自己的博客文章。（范围：自己的文章）
+    
+-   **访客用户**：可以查看公共发布的博客文章，但不能访问私密文章。（范围：仅公共发布的文章）
+    
+
+用户和角色之间的关系往往是多对多的，角色也可以是分层的，允许复杂的权限结构。
+
+![基于角色的访问控制图](https://cdn.hashnode.com/res/hashnode/image/upload/v1737780482515/e30316f8-58a9-4595-81ba-8eb08b2d5a3d.jpeg)
+
+**ABAC** （基于属性的访问控制）是一种基于主体（用户）、客体（资源）和环境属性进行访问决策的模型。它根据这些属性和管理它们的策略动态评估一个主体是否可以对一个客体执行某项操作。
+
+**ReBAC** （基于关系的访问控制）是一种新兴的模型，它基于用户与资源之间的关系授权访问。例如，它可能只允许创建某帖子的用户编辑它。此模型在社交网络应用中尤为有用，因为访问取决于用户关系（如朋友、关注者或内容拥有者）。
+
+## 为什么选择 ABAC？
+
+RBAC 提供了多个好处，包括易于实施，通过快速引导新用户减少管理开销，以及简化审计，因为它使得审查哪些角色有权访问敏感数据变得容易。
+
+但是，随着平台的增长，你会引入更多细微的访问控制需求。这些新需求导致创建新的角色来满足特定的访问需求：
+
+
+在不久的将来，你可能会发现自己需要管理一个不断增长的角色列表，比如高级发布者、发布主管、访客用户、订阅者、高级订阅者、平面设计师、用户体验设计师、摄影师、社交媒体经理、美国市场专家、英国市场专家、Web开发人员、数据分析师、会员经理、广告经理、法律顾问和赞助商经理。
+
+引入额外的需求，比如博客类别、资历和管辖权，很快就会导致角色爆炸。想象一下，这在像金融或医疗保健这样的数据密集型企业应用程序中如何扩展。
+
+虽然当边界清晰且静态（例如部门、博客类型）时，范围很有效，但它们需要对更细化的属性（如资历、服务年限、博客创建时间或发布状态）进行自定义检查。范围也难以考虑随时间变化的属性，如访问的地点或时间。
+
+因为基于角色的访问控制（RBAC）依赖于角色和固定范围来做出访问决策，所以在处理复杂和动态的访问需求时变得有限。这就是为什么，[**OWASP**（开放全球应用程序安全项目）建议使用 **ABAC** 或 **ReBAC** 而不是 RBAC][21]，因为它们在实施最小特权原则方面更有效。
+
+## 深入解读基于属性的访问控制
+
+### 核心组件
+
+ABAC 的核心组件是：
+
+**属性**：属性是用于定义访问上下文的键值对。示例包括：
+
+-   **用户属性**：这些属性描述请求访问的人的特征，如角色、部门、年龄、许可级别等。💡正如你所见，角色可以是基于此进行访问控制决策的属性之一。因此，ABAC 本质上是 RBAC 的扩展。
+    
+-   **资源属性**：这些属性描述被访问资源（如文件、数据库或服务）的特征。例如，所有者、类别、状态等。
+    
+-   **动作属性**：这些定义用户对资源请求的动作。例如，`读取`访问如查看/打开，`写入`访问如创建/修改/删除，`执行`访问如处理/运行等。
+    
+-   **环境属性**：这些包括影响决策过程的上下文元素，如`时间`或`地点`。
+    
+
+**策略**：策略是定义哪些属性组合允许或拒绝访问的逻辑规则或声明。例如，在办公室时间，发布者可以在指定类别中发布已批准的帖子。
+
+### ABAC 如何工作？
+
+让我们以我们博客的发布者 Sam 为例。Sam 被授权发布已被编辑批准的帖子，但只能在她被分配的类别中，如“科技”、“生活方式”和“健康”。她只能在特定时间内发布这些帖子，比如上午9点到下午6点。
+
+Sam 的发布者角色和她的分配类别是在她加入团队时设定的。这里的资源是帖子，它在创建时被赋予一个类别。她可以执行的动作是发布，该行为的环境条件是必须在办公时间内。
+
+因为访问控制规则是基于 Sam 的属性——她的发布者角色和她被分配的类别——所以她可以在这些类别中发布帖子。如果她的任何属性发生变化，比如她转到不同的部门，如会员管理，或者她的分配类别变为“时尚”或“旅游”，她的访问权限将自动撤销。
+
+> _ABAC 允许管理员设置访问控制，而无需知道具体谁需要访问。当新成员加入组织时，无需修改现有规则或对象属性；只要他们拥有必要的属性，就可以访问所需资源。这种在不进行额外调整的情况下，自动适应新用户和难以预料的用户的能力是使用 ABAC 的一大优势_。（来源：\[22\]）
+
+### 谁来定义 ABAC 策略？
+
+1.  **身份和访问管理管理员**：
+    
+    在许多组织中，安全管理员或访问控制管理员定义 ABAC 策略。他们的责任包括分析业务需求、风险管理、合规管理，确保用户拥有正确级别的资源访问权限。他们根据组织特定的不同属性和条件，将安全要求转化为策略。
+    
+2.  **业务和资源经理**：
+    
+    在某些情况下，业务部门或部门经理也可能参与定义策略。他们了解运营需求，并且最能指出数据应如何被其团队访问。
+    
+    例如，会员经理可能会定义控制谁可以根据订阅状态、用户角色或会员级别（如订阅者、高级订阅者）访问高级博客帖子的策略。
+    
+
+### **应在后端还是前端强制执行？**
+
+访问控制策略应在**前端和后端**均进行强制执行。原因如下：
+
+- **即时反馈**：当你在前端执行 ABAC 策略时，可以根据用户属性立即显示或隐藏元素（例如按钮、链接或菜单）。这样可以使界面更简洁，并帮助用户立即理解他们能做或不能做的事情。
+
+- **更智能的用户界面**：你可以防止显示用户不该看到的选项。例如，如果用户没有正确的角色或权限，则隐藏某些功能。这使得用户界面感觉更直观和响应更灵敏。
+
+- **减少服务器负载**：通过在前端执行某些访问限制，可以减少对后端的不必要请求，提升应用性能，并减轻服务器负担。
+
+- **安全层**：虽然前端不是敏感数据应该存储的地方，但你仍然可以通过使用它在请求发送到后端**之前**过滤掉无效的操作或内容来增加一层安全性。例如，你可以根据用户属性隐藏敏感的用户界面元素（如管理控制）或禁用按钮，使未经授权用户更难试图触发某些操作。
+
+**2.** **后端执行**
+
+- **绕过风险**：仅依赖前端的缺点是用户可以轻松**绕过**它。通过使用合适的工具，他们可以操控前端代码或网络请求（使用浏览器开发工具或 API 代理）。这就是后端执行至关重要的原因——它确保访问规则在服务器端得到应用，无法被篡改。
+
+- **保护敏感数据**：后端是敏感数据存储和处理的地方。通过在服务器上执行 ABAC 策略，你可以确保未经授权的用户无法访问、修改甚至查看敏感信息。为了避免数据泄露，你应该始终根据用户权限过滤掉敏感内容，并仅将相关内容发送给客户端。
+
+既然你知道需要在前端和后端同时执行 ABAC 策略，接下来的问题是：**在哪里定义这些策略？**
+
+作为开发人员，你可能会想：“_如果我知道安全团队定义的策略，我就可以将它们翻译成前端和后端的代码。_”
+
+例如，如果策略规定只有高级作者可以批准特定类别的博客，你可能会编写如下代码：
+
+**前端示例（简化版）**：
+
+```markdown
 if (user.role === 'author' && user.seniority === 'senior' && user.categories.includes('Tech')) {
   showApprovalDashboard();
 } else {
@@ -246,9 +232,9 @@ if (user.role === 'author' && user.seniority === 'senior' && user.categories.inc
 }
 ```
 
-**Back-end example (simplified):**
+**后端示例（简化版）**：
 
-```
+```markdown
 if (user.role === 'author' && user.seniority === 'senior' && user.categories.includes('Tech')) {
   return res.send(approvalDashboardData);
 } else {
@@ -256,119 +242,116 @@ if (user.role === 'author' && user.seniority === 'senior' && user.categories.inc
 }
 ```
 
-But how do you ensure policy consistency across both layers of your application without duplicating logic?
+但是，如何在你的应用程序的两个层次间确保策略一致性而不重复逻辑呢？
 
-What happens when you need to introduce additional conditions to this policy, like factoring in other user attributes or combining permissions with feature flags to conditionally enable certain features for specific users?
+如果需要为此策略添加额外的条件，比如考虑其他用户属性或将权限与功能标识结合起来，以条件方式为特定用户启用某些功能，该怎么办？
 
-And, what if your requirement varies for each user like:
+而且，如果你的需求因用户而异呢，比如：
 
--   Display certain UI elements only for users with a premium subscription,
-    
--   Block an API call for a social media manager based on specific attributes,
-    
--   Or hide an entire route for users who are not admins?
-    
+-   仅对具有高级订阅的用户显示某些 UI 元素，
 
-Without a structured approach, your app becomes a tangled mess of if-else statements scattered across the codebase.
+-   基于特定属性阻止社交媒体经理的 API 调用，
 
-Read on to find the answers to these questions!
+-   或对非管理员用户隐藏整个路由？
 
-### Where are policies defined?
+如果没有一个结构化的方法，你的应用程序就会变成一个充满 if-else 语句的复杂代码库。
 
-Before we dive into the implementation details, let me briefly revisit the question from the previous section: Where should you _define_ the policies?
+请继续阅读以找到这些问题的答案！
 
-When there are multiple ways to access a service – whether through a mobile app, web app, or other platforms – the back-end should serve as the source of truth for policy definitions. Defining ABAC policies in the back-end keeps things consistent and secure across all platforms. This means that all clients interact with the same set of rules, reducing the chances of policy discrepancies.
+### 策略在哪里定义？
 
-So, the back-end is where all the policy definitions live, and it makes them available to the front-end when needed. The front-end then enforces these decisions on the user interface. But don't forget, the back-end should always enforce these policies as well.
+在我们深入了解实现细节之前，让我简要回顾一下前一节中的问题：策略应该在哪里定义？
 
-In the upcoming sections, you will learn two approaches to implementing the ABAC access control model.
+当有多种方式访问服务时——无论是通过移动应用程序、Web 应用程序还是其他平台——后端应该作为策略定义的真实性来源。在后端定义 ABAC 策略可以确保所有平台的一致性和安全性。这意味着所有客户端都以相同的规则进行交互，从而减少了策略差异的可能性。
 
-## 1: Implementing Permissions with CASL
+因此，后端是所有策略定义的所在，并在需要时将其提供给前端。前端然后在用户界面上执行这些决策。但不要忘记，后端也应该始终执行这些策略。
 
-[CASL][23] is an open-source, isomorphic JavaScript library that makes managing permissions in your app much easier with its simple, declarative API.
+在接下来的章节中，你将学习两种实现 ABAC 访问控制模型的方法。
 
-What this means is that you can use CASL on both the client-side (front-end) and server-side (back-end). This is especially great for full-stack applications, as it ensures consistency in access control. The same permission logic can be applied across your entire app, no matter where the request is coming from.
+## 1: 使用 CASL 实现权限
 
-With CASL, you get **declarative access control**, which means you define _what_ is allowed, rather than worrying about _how_ to check permissions. This makes your code cleaner, more readable, and easier to maintain. Whether you're hiding UI elements in the front-end or making sure an API call is authorized in the back-end, CASL helps you enforce permissions consistently across your app.
+[CASL][23] 是一个开源的、同构的 JavaScript 库，它通过简单、声明式的 API 使管理应用程序中的权限更加简单。
 
-The best part? You can define permissions using a clear, expressive syntax. This makes it easy to manage even complex permission rules. For example, you can control what a user can (or cannot) do based on their role, the resources they own, and other factors.
+这意味着你可以在客户端（前端）和服务器端（后端）同时使用 CASL。这对全栈应用程序来说尤其棒，因为它能确保访问控制的一致性。无论请求来自何处，相同的权限逻辑都能被应用到整个应用程序中。
 
-And it’s not just for React/React Native – they provide supporting packages for [Angular][24], [Vue][25] and [Aurelia][26] too.
+这部分最棒的是什么？你可以使用清晰、富有表现力的语法来定义权限。这使得管理复杂权限规则变得简单。比如，你可以基于用户的角色、其拥有的资源以及其他因素来控制用户可以（或不可以）做什么。
 
-### Step 1: Install CASL
+而且这不仅仅适用于 React/React Native —— 他们还为 [Angular][24]、[Vue][25] 和 [Aurelia][26] 提供了支持包。
 
-First, install CASL using a package manager. I have used v6 for the code examples.
+### 第一步：安装 CASL
+
+首先，使用包管理器安装 CASL。我在代码示例中使用的是 v6。
 
 ```
 npm install @casl/react @casl/ability
-# or
+# 或
 yarn add @casl/react @casl/ability
-# or
+# 或
 pnpm add @casl/react @casl/ability
 ```
 
-### Step 2: Define the abilities
+### 第二步：定义能力
 
-In CASL, think of "abilities" as a set of rules that define what actions a user can or cannot perform on specific subjects (like "Posts" or "Users"). Let’s use our earlier examples from the blogging application. For simplicity, we’ll consider two types of users: **Admins** and **Authors**.
+在 CASL 中，将“能力”视为一组规则，这些规则定义了用户在特定受众（比如“Posts”或“Users”）上可以或不可以执行的操作。让我们使用博客应用中的一些示例。为简单起见，我们将考虑两种类型的用户：**管理员** 和 **作者**。
 
--   An Admin can manage everything.
+-   管理员可以管理一切。
     
--   An Author can create and edit their own posts within assigned categories, but they cannot delete published posts.
+-   作者可以在指定类别中创建和编辑他们自己的帖子，但不能删除已发布的帖子。
     
 
-Now, create a `defineAbilities.ts` file to define the abilities in a high-level, declarative manner using DSL.
+现在，创建一个 `defineAbilities.ts` 文件，使用 DSL 以高级声明式方式定义能力。
 
-Start by defining the `Actions` that a user can perform (for example, `create`, `read`, `update`, `delete`, `manage`) and the `Subjects` (the entities that actions are performed on, such as `‘User’`, `‘Post‘`, or objects like `User` or `Post`).
+首先定义用户可以执行的 `Actions`（例如，`create`，`read`，`update`，`delete`，`manage`）和 `Subjects`（执行动作的实体，例如 `‘User’`，`‘Post‘`，或诸如 `User` 或 `Post` 之类的对象）。
 
-```
+```typescript
 //defineAbilities.ts
 
 type Actions = 'create' | 'read' | 'update' | 'delete' | 'manage';
-type Subjects = 'User' | 'Post' | 'all' | User | Post
+type Subjects = 'User' | 'Post' | 'all' | User | Post;
 ```
 
-Then, create a type representing the structure of your abilities. It combines the `Actions` and `Subjects` to create a clear and type-safe ability system.
+接下来，创建一个表示您能力结构的类型。它结合了 `Actions` 和 `Subjects`，以创建一个清晰且类型安全的能力系统。
 
-The `PureAbility<[Actions, Subjects]>` means that the ability system will know what actions are allowed on which subjects. The `createAppAbility` function is used to create an ability instance based on your defined actions and subjects. You can use this function to create abilities specific to a user’s role or permissions.
+`PureAbility<[Actions, Subjects]>` 的意思是能力系统将知道哪些动作在哪些主题上是允许的。`createAppAbility` 函数用于基于您定义的动作和主题创建一个能力实例。你可以使用此函数为用户的角色或权限创建特定的能力。
 
-```
+```typescript
 //defineAbilities.ts
 
 import { CreateAbility, PureAbility, AbilityBuilder, createMongoAbility } from '@casl/ability';
-// other imports
+// 其他导入
 
 type Actions = 'create' | 'read' | 'update' | 'delete' | 'manage';
-type Subjects = 'User' | 'Post' | 'all' | Post | User
+type Subjects = 'User' | 'Post' | 'all' | Post | User;
 
-export type AppAbility = PureAbility<[Actions, Subjects]>
-export const createAppAbility = createMongoAbility as CreateAbility<AppAbility>
+export type AppAbility = PureAbility<[Actions, Subjects]>;
+export const createAppAbility = createMongoAbility as CreateAbility<AppAbility>;
 ```
 
-Note that `createMongoAbility` is only used to support simple operators from [MongoDB Query Language][27], like $in, $lte, $eq that are used to specify conditions for your rules. Don't worry – this doesn't mean your app has to use MongoDB, nor do you need to be familiar with the query language. You can also skip these entirely and create custom operators.
+注意，`createMongoAbility` 仅用于支持 [MongoDB 查询语言][27] 的简单操作符，比如 $in、$lte、$eq，它们用于为您的规则指定条件。别担心 —— 这并不意味着您的应用程序必须使用 MongoDB，也不需要熟悉查询语言。您也可以完全跳过这些，创建自定义操作符。
 
-Next, define a function called `defineAbilityFor`, which takes a `user` object as its argument and returns an ability instance. The `user` object is expected to have a `role` property (such as 'admin' or 'author') that determines the user's permissions.
+接下来，定义一个名为 `defineAbilityFor` 的函数，它以 `user` 对象作为参数并返回一个能力实例。`user` 对象应有一个表示用户权限的 `role` 属性（例如 'admin' 或 'author'）。
 
-The `userPermissions` object maps each user to a function that defines their permissions using the `can` and `cannot` methods provided by `AbilityBuilder`. This approach scales better than a switch case as you add more roles.
+`userPermissions` 对象将每个用户映射到一个函数，使用 `AbilityBuilder` 提供的 `can` 和 `cannot` 方法定义其权限。这种方法相比增加更多角色时，比使用 switch 案例扩展性更好。
 
-```
+```typescript
 //defineAbilities.ts
 
 export default function defineAbilityFor(user: User) {
   const { can, cannot, build } = new AbilityBuilder(createAppAbility);
    const userPermissions = {
     admin: () => {
-      // Admin user can manage everything
+      // 管理员可以管理一切
       can('manage', 'all');
     },
     author: () => {
-      // Author can create Posts but cannot delete them
+      // 作者可以创建帖子，但不能删除它们
       can('create', 'Post');
       cannot('delete', 'Post');
     },
-    // Add more roles
+    // 添加更多角色
   };
 
-  // Call the permissions associated with the user, or default to no permissions.
+  // 调用与用户关联的权限，或默认无权限。
   const permissions = userPermissions[user.role] || (() => {});
   permissions(); 
 
@@ -376,61 +359,53 @@ export default function defineAbilityFor(user: User) {
 }
 ```
 
-Note: `manage` and `all` are keywords in CASL where manage means any action and all means any subject.
+注意：`manage` 和 `all` 是 CASL 中的关键词，其中 manage 意味着任何动作，all 意味着任何主题。
 
-To specify conditions that prevent users from updating posts they haven't created, deleting published posts, and to restrict access to certain fields, you can use **conditions** and **fields**. CASL allows you to set specific conditions on permissions via the `subject` property, which represents the object, and the `fields` property, which represents the object’s properties that the user is interacting with.
+要指定条件以防止用户更新他们没有创建的帖子、删除已发布的帖子，以及限制对某些字段的访问，您可以使用 **条件** 和 **字段**。CASL 允许您通过 `subject` 属性（表示对象）和 `fields` 属性（表示用户与之交互的对象属性）在权限上设置特定条件。
 
-Add conditional rules to the above file.
+将条件规则添加到上述文件。
 
-```
-
+```typescript
    author: () => {
-      // Author can create posts in the 'Tech' and 'Lifestyle' categories
+      // 作者可以在 'Tech' 和 'Lifestyle' 类别中创建帖子
       can('create', 'Post', { category: { $in: ['Tech', 'Lifestyle'] } });
 
-      // Author can update the title and description of posts authored by the user
+      // 作者可以更新他们创建的帖子中的标题和描述
       can('update', 'Post', ['title', 'description'], { ownerId: user.id, status: 'draft' });
 
-      // Author cannot delete posts that have a 'Published' status
+      // 作者无法删除具有 'Published' 状态的帖子
       cannot('delete', 'Post', { status: 'published' });
     },
 ```
 
-In CASL, direct rules (like `can`) are combined using `OR` and inverted rules (like `cannot`) and conditions are combined using `AND`. The author:
+在 CASL 中，直接规则（如 `can`）用 `OR` 组合，反转规则（如 `cannot`）和条件用 `AND` 组合。作者：
 
--   can create Posts in their assigned categories `OR`
-    
--   can update title/description of the Posts that they own `AND` are in Draft state
-    
--   `AND` cannot delete published Posts
-    
+记住，对于相同的动作/主题配对，你应该在 `can` 规则之后定义 `cannot` 规则，否则它们将被覆盖。
 
-Remember, for the same action/subject pair, you should define `cannot` rules _after_ `can` rules, else they will be overridden.
+在处理包含嵌套 `details` 字段的 `Post` 对象时（例如，`details.author.name`，`details.metadata.tags`），你可以使用 `*` 和 `**` 通配符根据嵌套级别来控制访问。
 
-When dealing with a `Post` object that has a nested `details` field (for example, `details.author.name`, `details.metadata.tags`), you can use the `*` and `**` wildcards to control access based on the level of nesting.
-
--   The `*` wildcard matches only the **top-level fields** within a given object.
+-   `*` 通配符只匹配给定对象中的**顶级字段**。
     
-    This means it will grant access to fields that are directly inside the `details` object, but not any **nested fields**.
+    这意味着它将授予对直接在 `details` 对象内部的字段的访问权限，但不包括任何**嵌套字段**。
     
--   The `**` wildcard allows access to **all fields**, including deeply nested ones, within the object.
+-   `**` 通配符允许访问对象内的**所有字段**，包括深层嵌套的字段。
     
-    This means it will grant access to every field inside `details`, regardless of how deep the nesting goes.
+    这意味着它将授予 `details` 内每个字段的访问权限，无论嵌套有多深。
     
 
 ```
-// gives access to all nested fields under Post.details, no matter how deep they are
+// 允许访问无论多深层嵌套在 Post.details 下的所有字段
 can('read', 'Post', ['details.**']) 
 
-// give access to only the top level fields (such as details.body, details.author)
+// 仅允许访问顶层字段（例如 details.body, details.author）
 can('read', 'Post', ['details.*'])
 ```
 
-Note that `*` matches all symbols except dot (.)
+注意，`*` 匹配除点 (`.`) 以外的所有符号
 
-The ability instance in `defineAbilities.ts` can be used to enforce permissions across your app. This file can act as a shared library, so both the front-end (for example: React) and back-end (for example: Node.js) can access and use the same permission logic.
+`defineAbilities.ts` 中的能力实例可用于在整个应用中实施权限。这个文件可以作为一个共享库，这样前端（例如：React）和后端（例如：Node.js）都可以访问并使用相同的权限逻辑。
 
-While the `AbilityBuilder` works for permissions defined inside the system, if your application receives externally defined permissions as a JSON object, like:
+虽然 `AbilityBuilder` 适用于在系统内部定义的权限，但如果你的应用接收到以 JSON 对象格式定义的外部权限，如：
 
 ```
 [
@@ -439,7 +414,7 @@ While the `AbilityBuilder` works for permissions defined inside the system, if y
     subject: 'Post'
   },
   {
-    inverted: true, // indicates cannot rules
+    inverted: true, // 表示 cannot 规则
     action: 'delete',
     subject: 'Post',
     conditions: { published: true }
@@ -447,7 +422,7 @@ While the `AbilityBuilder` works for permissions defined inside the system, if y
 ]
 ```
 
-you can pass it directly into the `Ability` constructor as follows:
+你可以直接将其传递到 `Ability` 构造函数中，如下所示：
 
 ```
   const defineAbilityFor = (permissions: (SubjectRawRule<any, any, MongoQuery<AnyObject>>)[]) => {
@@ -457,11 +432,11 @@ you can pass it directly into the `Ability` constructor as follows:
   export default defineAbilityFor;
 ```
 
-Using JSON to define rules also has the added advantage of **reducing your app's bundle size** since you don't need to include heavy dependencies like `AbilityBuilder`!
+使用 JSON 定义规则还有一个额外的优点，就是**减小你的应用的包大小**，因为你不需要包含像 `AbilityBuilder` 这样的重量级依赖！
 
-### **Step 3: Create ability instance for the user**
+### **步骤 3：为用户创建能力实例**
 
-After successful authentication by your Login or Authentication service, you’ll fetch the user data or associated permissions (depending on the approach you choose in step 2) to your app and create an ability instance in your login component (or similar) as follows:
+通过登录或身份验证服务成功认证后，你需要将用户数据或相关权限（取决于步骤 2 中选择的方式）提取到应用中，并在登录组件（或类似组件）中创建一个能力实例，如下所示：
 
 ```
 // login.tsx
@@ -469,14 +444,14 @@ After successful authentication by your Login or Authentication service, you’l
 import defineAbiltyFor from './config/defineAbilities.js'
 
 const LoginComponent = () => {
-    // Get user data from API. Then,
+    // 从 API 获取用户数据。然后，
     const ability = defineAbilityFor(user)
 }
 ```
 
-### **Step 4: Provide ability instance to the entire app**
+### **步骤 4：为整个应用提供能力实例**
 
-[Contexts][28] are used in React to share data across components without having to pass props through the component tree. Add the below code in a `can.ts` file:
+[Contexts][28] 在 React 中用于在组件之间共享数据，而不必通过组件树层层传递属性。将以下代码添加到 `can.ts` 文件中：
 
 ```
 // can.ts
@@ -488,9 +463,9 @@ export const AbilityContext = createContext()
 export const Can = createContextualCan(AbilityContext.Consumer)
 ```
 
-This creates a `Can` component, which you will use in the next step to determine if a user has permissions to perform an action, based on the abilities passed through `AbilityContext`.
+这会创建一个 `Can` 组件，你将在下一步中使用它来确定用户是否有权限执行某个动作，基于通过 `AbilityContext` 传递的能力。
 
-Next, use the above `AbilityContext` to wrap your `App` component and set the `ability` instance created in step 3 as the `value`, so that the abilities are available to all the components in the application.
+接下来，使用上述 `AbilityContext` 包裹你的 `App` 组件，并将步骤 3 中创建的 `ability` 实例作为 `value` 设置，从而使得应用中的所有组件都可以访问这些能力。
 
 ```
 ReactDOM.render(
@@ -501,11 +476,11 @@ ReactDOM.render(
 )
 ```
 
-### **Step 5: Check user permission using abilities**
+### **步骤 5：使用能力检查用户权限**
 
-There are two ways to determine if a user has permission to perform an action: using `ability.can` for programmatic checks and using the `Can` component for conditional rendering.
+有两种方法来确定用户是否有权限执行某个动作：使用 `ability.can` 进行编程检查，以及使用 `Can` 组件进行条件渲染。
 
-Assume this is your post object:
+假设这是你的 post 对象：
 
 ```
 // post.ts
@@ -526,7 +501,7 @@ const post: Post = {
 };
 ```
 
-Both `ability.can` and the `Can` component take action, subject, and an optional field and check these parameters against the defined abilities.
+`ability.can` 和 `Can` 组件都接收动作、主题以及一个可选字段，并根据定义的能力检查这些参数。
 
 ```
 // user-profile.tsx
@@ -534,28 +509,28 @@ Both `ability.can` and the `Can` component take action, subject, and an optional
 import { useAbility } from '@casl/react';
 import { subject } from '@casl/ability';
 import { AbilityContext, Can } from '../config/can';
-// other imports
+// 其他引入
 
 export default const UserProfile = () => {
   const ability = useAbility(AbilityContext);
 
-  const canCreatePost = ability.can('create', 'Post'); //==== Example (1) ====
-  const canDeletePost = ability.can('delete', post); //==== Example (2) ====
+  const canCreatePost = ability.can('create', 'Post'); //==== 示例 (1) ====
+  const canDeletePost = ability.can('delete', post); //==== 示例 (2) ====
 
   return (
     <div>
-      <h1>User Profile</h1>
+      <h1>用户资料</h1>
 
-      {/* ==== Example (3) ==== */}
+      {/* ==== 示例 (3) ==== */}
       <Can I="delete" a="Post">
-        <p>You can delete a Post.</p>
+        <p>你可以删除帖子。</p>
       </Can>
 
-      {/* ==== Example (4) ==== */}
+      {/* ==== 示例 (4) ==== */}
       <Can I="delete" this={subject('Post', post)}>
         {(allowed) =>
-          allowed ? <button disabled={!allowed}>Delete Post</button> 
-          : <p>Cannot delete post.</p>
+          allowed ? <button disabled={!allowed}>删除帖子</button> 
+          : <p>无法删除帖子。</p>
         }
       </Can>
     </div>
@@ -563,67 +538,64 @@ export default const UserProfile = () => {
 }
 ```
 
-See how readable the permission check is?
+现在来看这四个例子。
 
-Now look at the four examples.
+例子 `(1)` 返回 true，因为用户可以创建帖子。
 
-Example `(1)` returns true because user can create posts.
+例子 `(2)` 应该返回 true，因为你可以删除你发布的帖子，**但它返回了** **false**。为什么呢？因为即使 `post` 是 `Post` 的一个实例，CASL 无法检测其主体类型（即 `post` 对象的类型），因为 CASL 使用 `object.constructor.modelName` 或 `object.constructor.name` 进行主体类型检测。
 
-Example `(2)` should return true because you can delete your published posts, **but it returns** **false**. Why? Because even though `post` is an instance of `Post`, CASL cannot detect its subject type (type of `post` object) as CASL uses `object.constructor.modelName` or `object.constructor.name` for subject type detection.
+你有两种方法可以修正这个问题。
 
-You have two ways to fix this.
+- 使用一个 `subject` 辅助函数来指定 `post` 实例的类型，如例子 `(4)` 所示（它返回 true）
 
--   Use a `subject` helper to specify the type of `post` instance as shown in example `(4)` (it returns true)
-    
--   Use a custom subject type detection algorithm to state which property CASL needs to use to discern the type. This can be done using `detectSubjectType` like this:
-    
-    ```
-      // defineAbilities.ts
-    
-      export default function defineAbilityFor(user: User) {
-        const { can, cannot, build } = new AbilityBuilder(createAppAbility);
-        // rules defined as explained above
-    
-        return build({
-          detectSubjectType: object => object.__typename
-        });
-      }
-    
-       // post.ts
-    
-       const post: Post = {
-          ownerId: 'yourUserName',
-          category: 'Lifestyle',
-          title: 'My First Post',
-          description: 'This is the description for the first post.',
-          status: 'published',
-          __typename: 'Post'
-      };
-    ```
-    
+- 使用自定义的主体类型检测算法来说明 CASL 需要使用哪个属性来识别类型。这可以通过 `detectSubjectType` 完成，如下所示：
 
-Now, example `(2)` should return true.
+  ```
+    // defineAbilities.ts
 
-Next, look at example `(3)`. It also returns true because the check is on subject _type_ and not on the subject. Remember, when you check on a
+    export default function defineAbilityFor(user: User) {
+      const { can, cannot, build } = new AbilityBuilder(createAppAbility);
+      // 按上述说明定义的规则
 
-> -   subject, you ask "can I delete THIS post?"
+      return build({
+        detectSubjectType: object => object.__typename
+      });
+    }
+
+     // post.ts
+
+     const post: Post = {
+        ownerId: 'yourUserName',
+        category: 'Lifestyle',
+        title: 'My First Post',
+        description: 'This is the description for the first post.',
+        status: 'published',
+        __typename: 'Post'
+    };
+  ```
+
+现在，例子 `(2)` 应该返回 true。
+
+接下来，来看例子 `(3)`。它也返回 true，因为检查的是主体_类型_而不是主体。记住，当你在检查一个
+
+> -   主体时，你问“我可以删除这个帖子吗？”
 >     
-> -   subject type, you ask "can I delete SOME article?" (that is, at least one post) ([Source][29])
+> -   主体类型时，你问“我可以删除某个文章吗？”（即，至少有一个帖子） ([来源][29])
 >     
 
-While CASL offers a powerful approach to granular access control, it doesn’t directly address our requirement to apply conditions based on user attributes.
+尽管 CASL 提供了一个强大的方法来实现细粒度的访问控制，但它并不能直接解决我们需要根据用户属性应用条件的问题。
 
-Although third-party libraries can provide convenience, their documentation is sometimes unclear, outdated, or inaccurate, and there may be vulnerabilities within the components themselves. For complete control over your security processes, implementing custom authorization logic may be necessary.
+虽然第三方库可以提供便利，但它们的文档有时不清晰、过时或不准确，并且组件本身可能存在漏洞。为了完全控制你的安全流程，实现自定义的授权逻辑可能是必要的。
 
-## 2: Build Your Custom Permissions Validation Framework
+## 2: 构建自定义权限验证框架
 
-To build a custom validation framework, let’s look into how the policies are defined, validated, and enforced and see how all these pieces come together.
+为了构建一个自定义验证框架，让我们来看看策略是如何定义、验证和执行的，并了解所有这些部分是如何结合在一起的。
 
-### **Policy Definition using Policy as Code**
+### **使用代码策略定义策略**
 
-You have already learned that your access control policies should reside in the back-end. For the custom implementation, you will be using **Policy as Code** or PaC. This refers to the practice of defining and managing policies using code or configuration files (like YAML, JSON or DSL) rather than manual processes or documentation. This allows policies to be version-controlled, automatically enforced, and more reliable in dynamic environments. These policies are authored by the security admin and are managed by a Policy Service.
+你已经了解到你的访问控制策略应该驻留在后端。对于自定义实现，你将使用**代码策略**或 PaC。 这指的是使用代码或配置文件（例如 YAML、JSON 或 DSL）而不是手动过程或文档来定义和管理策略的做法。这样可以使策略进行版本控制、自动执行，并在动态环境中更加可靠。这些策略由安全管理员编写，并由策略服务管理。
 
-In YAML, your policy may look like this, where the `policies` list is represented by a sequence (`-`).
+在 YAML 中，你的策略可能如下所示，其中 `policies` 列表示为一个序列（`-`）。
 
 ```
 policies:
@@ -637,16 +609,16 @@ policies:
     action: edit
     effect: allow
     conditions: 'resource.ownerId == user.id'
-  # other policies
+  # 其他策略
 ```
 
-The **policyId** is a unique identifier for the policy. The **resource** specifies the type of resource the policy applies to, such as "Post." The **action** defines what operation is allowed or denied on the resource, like "edit." The **effect** determines whether the action is allowed or denied, with values like "allow" or "deny." The **conditions** represent the logical expression that must be satisfied for the policy to apply, such as checking if the resource's owner ID matches the user's ID.
+**policyId** 是策略的唯一标识符。**resource** 指定策略应用的资源类型，比如 "Post"。**action** 定义在资源上允许或拒绝的操作，比如 "edit"。**effect** 确定操作是允许还是拒绝，其值可以是 "allow" 或 "deny"。**conditions** 表示必须满足以让策略生效的逻辑表达式，例如检查资源的所有者 ID 是否与用户的 ID 相匹配。
 
-As you can see, the conditions in the policies are in a TypeScript-like, human-readable format. This is because they are written using Google's **Common Expression Language (CEL)**.
+正如你所看到的，策略中的条件是使用类似 TypeScript 的、人类可读的格式编写的。这是因为它们是使用 Google 的**通用表达语法（CEL）**编写的。
 
-CEL is an open-source, platform-independent language that is fast and safe for executing user-defined expressions ([unlike `eval()`][30], especially on the server-side). Its performance is enhanced because CEL is compiled once into an abstract syntax tree, which is then used to evaluate against multiple inputs in nanoseconds or microseconds.
+CEL 是一种开源的、平台无关的语言，它执行用户自定义表达式时快速且安全（[不像 `eval()`][30]，尤其是在服务器端时）。由于 CEL 被一次编译成抽象语法树，然后用于评估针对多个输入进行快速验证，其性能得到了提升。
 
-Let’s redefine the structure as follows:
+我们将结构重新定义如下：
 
 ```
 policies:
@@ -689,47 +661,44 @@ policies:
       action: delete
       effect: allow
       conditions: 'resource.authorId == user.id || user.role in ["moderator", "admin"]'
-  # other policies
+  # 其他策略
 ```
 
-Here’s why:
+原因如下：
 
-1.  **Improved Structure**: By grouping policies by resource and action, you make it much easier to navigate. Adding new policies or actions becomes a breeze, without disrupting the overall setup. For example, if you need to add an `archive` action for the `Post` resource, you simply add it under the `Post` object. This modular approach makes maintaining and extending policies much simpler.
-    
-2.  **Efficient Lookup**: When these policies are accessed in your app as JavaScript objects, lookups are efficient and constant in time (O(1)). This is because policies are stored using direct key lookups, where each policy can be accessed instantly by its unique key. This significantly boosts performance compared to searching through a list (which would take O(n) time). As the number of policies grows, your lookup time stays the same, so performance doesn't slow down.
-    
-3.  **Easier Auditing & Version Control**: This structure also makes auditing and version control much smoother. You can easily track changes to policies and manage updates without the risk of accidentally disrupting other policies.
-    
+1. **结构改进**：通过按资源和操作对策略进行分组，你让它更容易导航。添加新策略或操作变得非常简单，不会打乱整体设置。例如，如果你需要为 `Post` 资源添加一个 `archive` 操作，只需在 `Post` 对象下添加它即可。这种模块化方法使维护和扩展策略更加简单。
+
+2. **高效查找**：当这些策略在你的应用中作为 JavaScript 对象访问时，查找既高效又快速（时间复杂度为 O(1)）。这是因为策略是使用直接键查找存储的，每个策略都可以通过其唯一键立即访问。与通过列表搜索不同（这需要 O(n) 时间），这种方式显著提升了性能。当策略数量增加时，你的查找时间保持不变，因此不会影响性能。
+
+3. **更容易的审计和版本控制**：这种结构也使审计和版本控制更加顺畅。你可以轻松跟踪策略的变化，管理更新而不会意外地打乱其他策略。
 
 💡
 
-To understand how string literals work in CEL for the above conditions, check out some examples [here][31].
+要了解 CEL 中字符串字面量在上述条件中的工作方式，请查看 [此处][31]的一些示例。
 
-### Workflow Overview
+### 工作流程概述
 
-When the application starts, you fetch policies from the Policy Service using RTK Queries, which automatically caches them in your RTK cache. Once the user is authenticated, their data—like role and department—will also be stored in the cache.
+当应用程序启动时，你使用 RTK Queries 从策略服务中获取策略，并自动将它们缓存到你的 RTK 缓存中。一旦用户通过认证，他们的数据（例如角色和部门）也将储存到缓存中。
 
-To persist this data for the duration of the session, you'll need to store it in session storage, but be mindful to avoid storing sensitive information. For the purposes of our permission validator, we'll read user data directly from the cache.
+为了在会话期间保留这些数据，你需要将其存储在会话存储中，但请注意避免存储敏感信息。为了权限验证，我们将直接从缓存中读取用户数据。
 
-At points where policy enforcement is needed, such as in components or routes (let’s call these _policy enforcement points_), the application will call our custom permission hook. This hook then validates permissions based on the policies, the user, the resource, and the environment attributes to either grant or deny access to the requested action.
+在需要策略执行的点，比如组件或路由中（称之为_策略执行点_），应用程序将调用自定义权限 Hook。这个 Hook 然后根据策略、用户、资源和环境属性验证权限，以便授予或拒绝请求的操作的访问权限。
 
-![Attribute-based Access Control Workflow](https://cdn.hashnode.com/res/hashnode/image/upload/v1737780571125/1dba1568-ee54-4bea-8d25-5c058fa6da68.jpeg)
+![基于属性的访问控制工作流](https://cdn.hashnode.com/res/hashnode/image/upload/v1737780571125/1dba1568-ee54-4bea-8d25-5c058fa6da68.jpeg)
 
-### Policy Validation
+### 策略验证
 
-#### Step 1: Create a permission validator
+#### 第一步：创建权限验证器
 
-Begin by defining the types for `Action`, `Resource`, and `Policy` in your code:
+首先在你的代码中定义 `Action`、`Resource` 和 `Policy` 的类型：
 
-```
-// validator.type.ts
+```markdown
+导出类型 Action = "view" | "edit" | "create" | "approve" | "publish" | "delete";
+导出类型 Resource = Partial<Post> | Partial<User> | Partial<Comment>;
 
-export type Action = "view" | "edit" | "create" | "approve" | "publish" | "delete";
-export type Resource = Partial<Post> | Partial<User> | Partial<Comment>;
+导出类型 PolicyEffect = "allow" | "deny"
 
-export type PolicyEffect = "allow" | "deny"
-
-export interface Policy {
+导出接口 Policy {
   policyId: string;
   resource: string;
   action: string;
@@ -738,23 +707,23 @@ export interface Policy {
 }
 ```
 
-You might be wondering why you need to use `Partial` here. By using `Partial`, we’re saying that each field on `Post`, `User`, or `Comment` is not required when performing certain actions. This is particularly useful when you validate create actions, where the object may not be fully formed yet – some fields might still be missing. For example, when creating a new `Post`, you might only have a title and content, but not the full list of comments or tags.
+你可能会想为什么这里需要使用 `Partial`。通过使用 `Partial`，我们表示在执行某些操作时，`Post`、`User` 或 `Comment` 上的每个字段不是必需的。这在验证创建操作时特别有用，因为对象可能还没有完全形成——可能仍然缺少一些字段。例如，在创建一个新的 `Post` 时，你可能只有标题和内容，而没有完整的评论或标签列表。
 
-Then, install `cel-js`, a CEL evaluator for JavaScript to be used in your validator.
+然后，安装 `cel-js`，这是一个用于 JavaScript 的 CEL 评估器，用于你的验证器中。
 
 ```
 npm i cel-js
 ```
 
-Create a `validatePermission` function to pull the action rules for the given resource from the provided `policies` object and build a context that includes the `user`, `resource`, and `system` information. Note that you may have to use `__typename` (or similar) for resource type detection, similar to what you did in CASL.
+创建一个 `validatePermission` 函数，从提供的 `policies` 对象中提取给定资源的操作规则，并构建一个包含 `user`、`resource` 和 `system` 信息的上下文。请注意，你可能需要使用 `__typename`（或类似的东西）进行资源类型检测，这与在 CASL 中所做的类似。
 
-Using the `cel-js` library, evaluate the `conditions` specified in the action rules, which will check if the user meets the required criteria for the action. If the conditions are satisfied, the policy "takes effect," meaning the specified action is enforced according to the defined effect – whether allowing or denying the action. If there are no rules defined or an error occurred during evaluation, deny by default.
+使用 `cel-js` 库，评估操作规则中指定的 `conditions`，这将检查用户是否满足执行操作所需的条件。如果条件满足，策略将"生效"，意味着根据定义的效果执行指定的操作——无论是允许还是拒绝操作。如果没有定义规则或在评估期间发生错误，默认拒绝。
 
-```
+```typescript
 // validator.ts
 
 import * as cel from 'cel-js';
-// other imports
+// 其他导入
 
 export const validatePermission = (
   action: Action,  
@@ -783,23 +752,23 @@ export const validatePermission = (
 };
 ```
 
-Any component that needs to validate a user’s permission for an action requires fetching policies from the cache and retrieving the user from the global state, while also managing loading and error states.
+需要验证用户执行某个操作权限的任何组件都需要从缓存中获取策略并从全局状态中检索用户，同时还要管理加载和错误状态。
 
-To avoid this code duplication and encapsulate the logic for the above operations, you can create a custom hook that provides a consistent interface for permission validation across components.
+为了避免代码重复和封装上述操作的逻辑，你可以创建一个自定义钩子，为组件间的一致权限验证提供界面。
 
-#### Step 2: Create a custom hook to encapsulate reusable logic
+#### 第 2 步：创建自定义钩子以封装可重用逻辑
 
-Since the policies were already fetched from the policy management service during app startup, the same RTK Query will now retrieve them directly from the cache. Follow the below reference to create a `usePermission` custom hook.
+由于在应用启动时，策略已从策略管理服务获取，现在通过相同的 RTK Query 将直接从缓存中检索。请参考以下内容创建一个 `usePermission` 自定义钩子。
 
-Notice how the `skip: !userId` condition is used to ensure that the policies are only fetched if a valid `userId` is present, preventing unnecessary network requests.
+注意如何使用 `skip: !userId` 条件确保只有在存在有效 `userId` 的情况下才获取策略，以防止不必要的网络请求。
 
-```
+```typescript
 // usePermission.ts
 
 import { useSelector } from 'react-redux';
 import { useGetPoliciesQuery } from './services/api'; 
 import { validatePermission } from './validator';
-// other imports
+// 其他导入
 
 export const usePermission = (action: Action, resource: Resource, system: System): boolean => {
 
@@ -820,44 +789,43 @@ export const usePermission = (action: Action, resource: Resource, system: System
 };
 ```
 
-#### Step 3: Add contextual action validation
+#### 第 3 步：添加上下文动作验证
 
-More often than not, even if a user has the required permission to perform an action, they still might not be allowed to do so because of contextual business logic. For example:
+通常情况下，即使用户有执行某项操作的权限，他们仍可能因上下文业务逻辑而无法执行。例如：
 
--   **Post approval**: An editor may have permission to approve a post, but if they’re in the middle of editing it and there are unsaved changes, the approve button should be hidden.
-    
--   **Commenting**: The comment button should be disabled if a user hasn’t typed anything, even if they have permission to comment.
-    
--   **Category creation**: A user with permission might still be blocked from creating a category if the name is empty or already exists.
-    
+- **帖子审批**：编辑可能有批准帖子的权限，但如果他在编辑帖子且有未保存的更改，批准按钮应该隐藏。
 
-These rules depend on the current state of the application and need to be handled dynamically. To handle these contextual actions, the validation rules should be defined based on the current state of the application (for example, the post being edited, content being typed, category name availability).
+- **评论**：如果用户没有输入任何内容，评论按钮即使有权限也应该被禁用。
 
-Before delving into how custom hooks can handle these validations, let’s first lay out the rules for these contextual actions:
+- **类别创建**：即使有权限，如果名称为空或已经存在，用户仍可能无法创建类别。
 
-```
+这些规则取决于当前应用程序的状态，需要动态处理。要处理这些上下文动作，验证规则应基于应用程序的当前状态定义（例如正在编辑的帖子、正在输入的内容、类别名称的可用性）。
+
+在深入了解自定义钩子如何处理这些验证之前，我们先列出这些上下文操作的规则：
+
+```typescript
 // contextualRules.ts
 
 import _ from 'lodash';
-// other imports
+// 其他导入
 
 const contextualActionRules = {
   Post: {
     approve: (state: PostState, resource: Resource) => {
-      // Prevent approval if the post is currently being edited
+      // 如果帖子当前正在编辑，阻止批准
       const postId = resource?.id;
       return postId && !state[postId]?.isEditing;
     },
   },
   Comment: {
     create: (state: CommentState, resource: Resource) => {
-      // Prevent creating a comment if the comment content is empty
+      // 如果评论内容为空，阻止创建评论
       return !_.isEmpty(resource?.content);
     },
   },
   Category: {
     create: (state: CategoryState[], resource: Resource) => {
-      // Prevent creating a category if the name is empty or already exists
+      // 如果名称为空或已存在，阻止创建类别
       const categoryName = resource.name?.trim();
       return (
         !_.isEmpty(categoryName) &&
@@ -867,10 +835,9 @@ const contextualActionRules = {
   },
 };
 ```
-
-Now, update the `usePermission` hook to incorporate checks for `contextualActionRules`. If a contextual rule is defined for the specified `resource` and `action`, it will be evaluated alongside the policy-based permission using the current application `state`. If no contextual rule is found, the hook will return the result based solely on the policy-based permission.
-
 ```
+
+```markdown
 // usePermission.ts
 
 export const usePermission = (action: Action, resource: Resource, system: System): boolean => {
@@ -878,7 +845,7 @@ export const usePermission = (action: Action, resource: Resource, system: System
   const state = useSelector((state: RootState) => state);
 
   /**
-    This part of the code is same as above
+    这部分代码与上述代码相同
   **/ 
 
   const hasPermission = validatePermission(action, resource, system, user, policies);
@@ -893,24 +860,24 @@ export const usePermission = (action: Action, resource: Resource, system: System
 };
 ```
 
-There is one thing that most **definitely** needs to be changed in the above code. Take a guess?
+以上代码中有一点绝对需要修改。猜一猜是什么？
 
-**How is** `usePermission` **beneficial for contextual validations based on the app state?** Because the hook is subscribed to the application state! So, when something changes – like typing into a comment box – the hook re-renders. Since the Comment component relies on this hook to control the comment button’s state, any update in the hook also triggers a re-render of the component. This means that as you type, the button becomes visible, and if the content is cleared, the button gets disabled.
+**`usePermission` 如何** **有利于基于应用状态的上下文验证？** 因为该 hook 订阅了应用程序状态！所以，当某些东西改变时——比如在评论框中输入内容——该 hook 就会重新渲染。由于 Comment 组件依赖此 hook 来控制评论按钮的状态，因此 hook 中的任何更新也会触发组件的重新渲染。这意味着，当您输入时，按钮变得可见，如果内容被清除，按钮将被禁用。
 
-But, we don’t want the `usePermission` hook to re-render _every_ time the app state changes. Let’s fix that.
+但是，我们不希望 `usePermission` hook 在每次应用状态改变时都重新渲染。让我们解决这个问题。
 
-Define `resourceToStateMap` outside the `usePermission` hook to avoid redundant re-creation for every call. `useSelector` subscribes only to the relevant slice of state based on the resource type and ID.
+在 `usePermission` hook 之外定义 `resourceToStateMap`，以避免每次调用时的冗余重新创建。`useSelector` 仅根据资源类型和 ID 订阅相关的状态切片。
 
-```
-// Bad practice: Instead of this,
+```javascript
+// 反面示例：不要这样做，
 const state = useSelector((state: RootState) => state);
 
-// Good practice: Do this
+// 正面示例：应该这样做
 const resourceToStateMap: Record<string, (state: RootState, id: string | number) => any> = {
   Post:     (state, id) => state.posts[id],
   Comment:  (state, id) => state.comments[id],
   User:     (state, id) => state.user,
-  // Add more 
+  // 添加更多 
 };
 
 const resourceType = resource?.__typename;
@@ -924,20 +891,20 @@ const stateSlice = useSelector((state: RootState) => {
 });
 ```
 
-This is why it’s important to make selectors as granular as possible.
+这就是为什么将选择器做得尽可能细粒度是很重要的。
 
--   **Avoid over-fetching**: You’re not selecting the entire state anymore, just the piece of it that’s necessary for evaluating the permission and contextual rules. This is much more efficient, especially in large applications.
+-   **避免过度获取**：您不再选择整个状态，仅选择评估权限和上下文规则所需的部分。这在大型应用程序中效率要高得多。
     
--   **Optimized re-renders**: With granular state selection, only the relevant state slice will trigger a re-render, improving the performance of the application, especially when many components are using the `usePermission` hook.
+-   **优化的重新渲染**：通过细粒度的状态选择，只有相关的状态部分会触发重新渲染，从而提高应用程序的性能，特别是在许多组件使用 `usePermission` hook 时。
     
 
-Now that you’ve completed the bulk of the permission validation logic, let’s make it prettier to use.
+现在您已经完成了大部分的权限验证逻辑，让我们让它使用起来更容易。
 
-#### Step 4: Create a wrapper for conditional rendering
+#### 步骤 4：创建一个用于条件渲染的包装器
 
-Create a `Can` component that checks if the user has permission to perform a specific action on a resource using the `usePermission` hook. If permission is granted, it renders the `children` or calls it as a function with the permission status (this will be used to disable buttons). If not, it displays a fallback element.
+创建一个 `Can` 组件，该组件检查用户是否有权使用 `usePermission` hook 在资源上执行特定操作。如果获得权限，则渲染 `children` 或将其作为函数调用并传入权限状态（这将用于禁用按钮）。如果没有，则显示一个回退元素。
 
-```
+```typescript
 // Can.tsx
 
 import { usePermission } from '../hooks/usePermission';
@@ -959,12 +926,12 @@ const Can: React.FC<CanProps> = ({
 }) => {
   const hasPermission = usePermission(I, a, context);
 
-  // If `children` is a function, call it with `hasPermission`
+  // 如果 `children` 是一个函数，使用 `hasPermission` 调用它
   if (typeof children === 'function') {
     return <>{children(hasPermission)}</>;
   }
 
-  // Otherwise, render children or fallback
+  // 否则，渲染 children 或 fallback
   if (hasPermission) {
     return <>{children}</>;
   }
@@ -975,26 +942,26 @@ const Can: React.FC<CanProps> = ({
 export default Can;
 ```
 
-### Policy Enforcement
+### 策略执行
 
-You can use the `usePermission` hook for programmatic checks and the `Can` component for conditional rendering.
+您可以使用 `usePermission` hook 用于编程检查，并使用 `Can` 组件进行条件渲染。
 
-**1\. Using** `Can` **to hide/show components**
+**1. 使用** `Can` **隐藏/显示组件**
 
-```
+```jsx
 <Can
   I="approve"
   a={post}
   context={system}
-  fallback={<p>You do not have access to delete a comment.</p>}
+  fallback={<p>您无权删除评论。</p>}
 >
   <YourComponent />
 </Can>
 ```
 
-**2\. Using** `Can` **to disable components**
+**2. 使用** `Can` **禁用组件**
 
-```
+```jsx
 <Can
   I="delete"
   a={comment}
@@ -1002,15 +969,15 @@ You can use the `usePermission` hook for programmatic checks and the `Can` compo
 >
   {(allowed) => (
      <button onClick={deleteComment} disabled={!allowed}>
-       Delete Comment
+       删除评论
      </button>
    )}
 </Can>
 ```
 
-**3\. Using** `usePermission` **to create protected routes**
+**3. 使用** `usePermission` **创建受保护的路由**
 
-```
+```typescript
 // ProtectedRoute.tsx
 
 import { Navigate, Outlet } from 'react-router-dom'
@@ -1021,65 +988,56 @@ export function ProtectedRoute() {
   return hasPermission ? <Outlet /> : <Navigate to='/login' />
 }
 
-// Route set-up
+// 路由设置
 <Route element={<ProtectedRoute />}>
   <Route path='/' element={<Admin />} />
 </Route>
 ```
 
-**4\. Using** `usePermission` **to skip API calls**
+**4. 使用** `usePermission` **跳过 API 请求**
 
-```
+```typescript
 const hasPermission = usePermission("view", user, context);
 
 const { data: user, isLoading: isUserLoading, isError: isUserError } = useUserQuery({
     skip: !hasPermission,
 });
 ```
+```
 
-That's it! Now, let's wrap up with a quick summary.
+## 让我们总结一下
 
-## Let’s Summarize
+在本手册中，您学会了如何使用 CASL 和自定义解决方案来实现可扩展的访问控制。我们首先深入探讨了不同的访问控制模型，重点关注 ABAC，探索了两种实施基于 ABAC 规则的方法。
 
-In this handbook, you learned how to implement scalable access control using both CASL and a custom solution. We started by diving into different access control models, focusing on ABAC, and explored two ways to enforce ABAC-based rules.
+使用 CASL，您看到了定义用户权限的便捷，无论是使用共享库还是外部权限。我们逐步讲解了如何为各种用户操作设置访问控制，代码清晰且易读。您还学习了如何添加诸如动态条件和字段级访问等高级功能，以实现更细粒度的控制。
 
-With CASL, you saw how easy it is to define user abilities, whether you’re using a shared library or external permissions. We walked through how to set up access control for various user actions, all with clean, readable code. You also learned how to add advanced features like dynamic conditions and field-level access for even more granular control.
+另一方面，您还学习了如何构建一种适合于应用特定需求的自定义权限框架。您结合了基于上下文状态的检查和基于策略的规则，创建了一个灵活且可扩展的访问控制系统。在此过程中，您探索了如“代码即策略”、CEL（通用表达语言）、自定义钩子、缓存、以及使用 RTK 查询的条件获取等概念。您还看到了如何在组件、受保护路由等上实施访问控制。
 
-On the other hand, you also learned how to build a custom permission framework tailored to your app’s specific needs. You combined contextual state-based checks with policy-based rules, creating a flexible and scalable access control system. Along the way, you explored concepts like Policy as Code, CEL (Common Expression Language), custom hooks, caching, and conditional fetching using RTK queries. You also saw how to enforce access control on components, protected routes, and more.
+这两种方法共享一些关键的好处：
 
-Both approaches share some key benefits:
+- **动态且可扩展**：添加新操作或实体只需更新一个文件——无需重写代码。
+- **关注点分离**：将验证逻辑与 UI 组件分离，使代码更易于维护。
+- **可读性强**：您可以使用简单的、对话式的语言定义权限，例如“_我能读这篇文章吗？_”或“_我能创建评论吗？_”
+- **可重用组件**：可以在应用中重复使用包装组件和钩子，减少重复。
+- **状态响应性**：与 React 状态无缝工作，确保您的访问控制规则动态反映在 UI 上。
 
--   **Dynamic and scalable**: Adding new actions or entities is as simple as updating a single file – no code rewrites required.
-    
--   **Separation of concerns**: Keeps validation logic separate from UI components, which makes your code easier to maintain.
-    
--   **Readable**: You can define permissions using simple, conversational language like "_Can I read this post?_" or "_Can I create a comment?_"
-    
--   **Reusable components**: You can reuse wrapper components and hooks across your app to reduce duplication.
-    
--   **State reactivity**: Works seamlessly with React state, ensuring that your access control rules are reflected dynamically in your UI.
-    
+### **进一步的扩展考虑**
 
-### **Further Scaling Considerations**
+如果您的策略负载繁重或验证逻辑计算成本高，请考虑以下优化：
 
-If your policy payload is cumbersome or validation logic is computationally expensive, consider the following optimizations:
+- **记忆输出**：使用 `useMemo` 缓存高昂计算结果，但要注意过度使用 `useMemo` 也可能有成本。
+- **模块化策略**：根据领域将策略分解成独立文件。启动时仅获取必要的策略，按需懒加载非必要策略。
+- **将验证后台化**：将策略验证逻辑移动到后端，并考虑服务器端渲染。但请记住，一些动态检查仍需在前端进行。
 
--   **Memoize the output**: Use `useMemo` to cache the result of expensive computations, but be mindful that `useMemo` itself can be costly if overused.
-    
--   **Modularize policies**: Break down your policies into separate files based on their domain. Fetch only the essential policies at startup and lazy load non-essential ones on demand.
-    
--   **Offload validation to the backend**: Move policy validation logic to the backend and consider server-side rendering. But, keep in mind that some dynamic checks still need to occur on the frontend.
-    
+别忘了在后端同样实施访问控制，并确保在将敏感数据发送给客户端之前对其进行过滤！
 
-Don’t forget to implement access control on the back-end too and make sure to filter-out sensitive data before sending it to the client!
+## 结论
 
-## Conclusion
+无论您选择 CASL 的简便及强大，还是实施自定义解决方案以获得更大的灵活性，您现在都拥有了将访问控制集成到 React 应用中的工具和知识，从而确保用户只能访问他们授权的部分。
 
-Whether you choose CASL for its simplicity and power or implement your own custom solution for more flexibility, you now have the tools and knowledge to integrate access control into your React applications, ensuring your users can only access what they’re authorized to.
+如果您喜欢这篇文章（即便您没喜欢；）），请在 [LinkedIn][32] 上给我留言反馈。
 
-If you enjoyed reading this (or even if you didn’t ;)), drop me a message on [LinkedIn][32] with your feedback.
-
-Happy coding, and may your app's permissions be as scalable as your user base!
+编程愉快，愿您的应用权限如您的用户群一样可扩展!
 
 [1]: #heading-what-is-access-control-how-is-it-different-from-authz-authn-and-permissions
 [2]: #heading-multi-layered-access-control
@@ -1113,3 +1071,4 @@ Happy coding, and may your app's permissions be as scalable as your user base!
 [30]: https://owasp.org/www-community/attacks/Direct_Dynamic_Code_Evaluation_Eval%20Injection
 [31]: https://stackblitz.com/edit/github-b9k23yjf-kbho9jtj?file=demo.ts
 [32]: https://www.linkedin.com/in/samhitharamaprasad/
+
