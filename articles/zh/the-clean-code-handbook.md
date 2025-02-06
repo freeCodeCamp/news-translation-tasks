@@ -1,7 +1,7 @@
 ---
 title: "The Clean Code Handbook: How to Write Better Code for Agile Software
   Development"
-date: 2025-02-06T14:19:33.888Z
+date: 2025-02-06T14:45:28.945Z
 author: Programming with Shahan
 authorURL: https://www.freecodecamp.org/news/author/codewithshahan/
 originalURL: https://www.freecodecamp.org/news/the-clean-code-handbook/
