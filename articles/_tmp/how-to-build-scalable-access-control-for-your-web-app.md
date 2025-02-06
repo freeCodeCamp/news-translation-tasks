@@ -1,6 +1,6 @@
 ---
 title: How to Build Scalable Access Control for Your Web App [Full Handbook]
-date: 2025-02-06T14:07:36.706Z
+date: 2025-02-06T14:39:11.088Z
 author: Samhitha Rama Prasad
 authorURL: https://www.freecodecamp.org/news/author/samhitharamaprasad/
 originalURL: https://www.freecodecamp.org/news/how-to-build-scalable-access-control-for-your-web-app/
