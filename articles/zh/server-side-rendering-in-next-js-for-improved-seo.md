@@ -1,11 +1,10 @@
-```markdown
 ---
 title: 如何在 Next.js 应用中使用服务端渲染提升 SEO
 date: 2024-11-26T13:14:43.283Z
 author: Joan Ayebola
 authorURL: https://www.freecodecamp.org/news/author/joanayebola/
 originalURL: https://www.freecodecamp.org/news/server-side-rendering-in-next-js-for-improved-seo/
-posteditor: ""
+posteditor: "wendy chen"
 proofreader: ""
 ---
 
@@ -148,7 +147,6 @@ Next.js 提供了一种无缝的方式来启用 SSR 和静态站点生成（SSG�
 -   **静态站点生成（SSG）**：页面在构建时生成。
 
 Next.js 根据你在页面组件中实现的函数（`getStaticProps` 和 `getServerSideProps`）来确定使用哪种渲染方式。
-```
 
 Next.js 使用 `pages/` 目录来定义路由。在这个目录中的每个文件都对应你应用中的一个路由。
 
@@ -158,7 +156,7 @@ Next.js 使用 `pages/` 目录来定义路由。在这个目录中的每个文�
 
 以下是一个页面组件的基础示例：
 
-```
+```javascript
 // pages/index.js
 import React from 'react';
 
@@ -180,7 +178,7 @@ export default Home;
 
 示例：
 
-```
+```javascript
 // pages/index.js
 import React from 'react';
 
@@ -217,7 +215,7 @@ export default Home;
 
 示例：
 
-```
+```javascript
 // pages/index.js
 import React from 'react';
 
@@ -260,7 +258,7 @@ export default Home;
 
 示例 – 使用 SSR 进行博客文章页面：
 
-```
+```javascript
 // pages/blog/[id].js
 import React from 'react';
 import { useRouter } from 'next/router';
@@ -309,7 +307,7 @@ export default BlogPost
 
 示例 – SSR 的 cache-control header：
 
-```
+```javascript
 export async function getServerSideProps({ res }) {
   res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59');
 
@@ -332,7 +330,7 @@ export async function getServerSideProps({ res }) {
 
 示例 – 向页面添加元标签：
 
-```
+```javascript
 import Head from 'next/head';
 
 const Page = ({ data }) => (
@@ -361,7 +359,7 @@ const Page = ({ data }) => (
 
 示例 – 使用SSG为静态页面：
 
-```
+```javascript
 export async function getStaticProps() {
   const res = await fetch('https://api.example.com/static-data');
   const data = await res.json();
