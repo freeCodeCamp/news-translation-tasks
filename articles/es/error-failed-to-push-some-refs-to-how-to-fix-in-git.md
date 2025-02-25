@@ -4,7 +4,7 @@ date: 2024-08-27T14:25:06.870Z
 author: Ihechikara Abba
 authorURL: https://www.freecodecamp.org/news/author/Ihechikara/
 originalURL: https://www.freecodecamp.org/news/error-failed-to-push-some-refs-to-how-to-fix-in-git/
-posteditor: ""
+posteditor: "herwingx"
 proofreader: ""
 ---
 
