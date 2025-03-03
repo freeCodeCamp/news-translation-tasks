@@ -27,7 +27,7 @@ SSR 提供了显著的 SEO 优势，使其非常适合使用 Next.js 这样流�
 
 ## 什么是服务端渲染？
 
-服务端渲染（SSR）是一种网页开发技术，网页服务器在将完整的 HTML 内容发送到用户的浏览器之前生成该内容。
+服务端渲染（SSR）是一种网页开发技术，在网页服务器发送请求到用户的浏览器之前，就生成完整的 HTML 网页内容。
 
 这与客户端渲染（CSR）不同，客户端渲染是在浏览器下载基本 HTML 结构后再使用 JavaScript 获取和显示内容。
 
@@ -37,7 +37,7 @@ SSR 提供了显著的 SEO 优势，使其非常适合使用 Next.js 这样流�
 
 ### 第一步：安装 Next.js
 
-首先，你需要安装 Next.js。你可以使用 `create-next-app` 来设置一个具有默认配置的新项目。在终端运行如下命令：
+首先，你需要安装 Next.js。你可以使用 `create-next-app` 来设置一个具有默认配置的新的 Next.js 项目。在终端运行如下命令：
 
 ```
 npx create-next-app my-next-app
@@ -139,7 +139,7 @@ npm run dev
 
 打开浏览器并访问 `http://localhost:3000`。你应该看到页面上显示了从 API 获取的信息。
 
-## Next.js 如何实现服务端渲染
+### Next.js 如何实现服务端渲染
 
 Next.js 提供了一种无缝的方式来启用 SSR 和静态站点生成（SSG）。默认情况下，它会预渲染每个页面。根据用例的不同，你可以在 SSR 和 SSG 之间进行选择：
 
@@ -148,7 +148,9 @@ Next.js 提供了一种无缝的方式来启用 SSR 和静态站点生成（SSG�
 
 Next.js 根据你在页面组件中实现的函数（`getStaticProps` 和 `getServerSideProps`）来确定使用哪种渲染方式。
 
-Next.js 使用 `pages/` 目录来定义路由。在这个目录中的每个文件都对应你应用中的一个路由。
+### Next.js 页面组件
+
+Next.js 使用 `pages/` 目录来定义路由。在这个目录中的每一个文件都对应你应用中的一个路由。
 
 -   `pages/index.js` → `/`
 -   `pages/about.js` → `/about`
@@ -254,7 +256,7 @@ export default Home;
 
 然而，SSR 会在将内容发送到用户的浏览器之前在服务器上渲染，确保 HTML 是完整的，搜索引擎可以轻松抓取和索引。
 
-**对重要页面使用 SSR：** 确保关键页面如着陆页、博客文章和产品页面在服务器上渲染，以便更好地进行索引。
+**对重要页面使用 SSR：** 确保关键页面如登陆页、博客文章和产品页面在服务器上渲染，以便更好地进行索引。
 
 示例 – 使用 SSR 进行博客文章页面：
 
@@ -305,7 +307,7 @@ export default BlogPost
 
 **优化服务器响应时间：** 确保你的服务器优化以实现快速响应。使用缓存策略以减轻服务器负载。
 
-示例 – SSR 的 cache-control header：
+示例 – SSR 的 cache-control 头部：
 
 ```javascript
 export async function getServerSideProps({ res }) {
@@ -327,6 +329,8 @@ export async function getServerSideProps({ res }) {
 ### 3\. 改善社交媒体分享
 
 在社交媒体上分享链接时，像 Facebook 和 Twitter 这样的平台会抓取 URL 内容以生成预览。SSR 确保必要的元数据在初始 HTML 中可用，从而生成更好的预览并提高点击率。
+
+**使用 `next/head` 管理元标签:** 使用 `next/head` 组件为社交媒体和SEO添加元标签。
 
 示例 – 向页面添加元标签：
 
@@ -355,7 +359,7 @@ const Page = ({ data }) => (
 
 更快、更响应的网站提升了整体用户体验，导致更长的访问时长和更低的跳出率。这两个因素都积极影响您的SEO排名。
 
-**使用静态生成（SSG）预渲染较不动态的内容页面：** 对不经常变化的页面使用SSG，以减少服务器负载并提高性能。
+**使用静态生成（SSG）预渲染较少动态的内容页面：** 对不经常变化的页面使用SSG，以减少服务器负载并提高性能。
 
 示例 – 使用SSG为静态页面：
 
