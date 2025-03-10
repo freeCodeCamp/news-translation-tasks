@@ -17,7 +17,7 @@ proofreader: ""
 
 无论您是刚入门的初学者，或者是富有经验的数据科学家，这本手册都是熟悉掌握聚类技术的宝贵资源。您也能够 [在此下载这本手册][1]。
 
-倘若您同样喜欢通过聆听来学习此知识，这里还有个 15 分钟的播客，在其中我们更详细地讨论了聚类的作用。在这一期里，我们探索了聚类的基本理念，从而帮助您更深入地了解这些技术如何在实际数据中加以应用。
+倘若您同样喜欢通过听来学习，这里还有个 15 分钟的播客，在其中我们更详细地讨论了聚类。在这一期里，我们探索了聚类的基本理念，从而帮助您更深入地了解如何将这些技术应用于现实世界的数据。
 
 <iframe width="100%" height="152" src="https://open.spotify.com/embed/episode/2O3KSW25GbqCJXl6LfUmyw" title="Spotify embed" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen="" loading="lazy"></iframe>
 
