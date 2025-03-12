@@ -5,21 +5,21 @@ date: 2025-03-07T04:51:19.827Z
 author: oghenekparobo Stephen
 authorURL: https://www.freecodecamp.org/news/author/Xtephen/
 originalURL: https://www.freecodecamp.org/news/learn-typescript-with-react-handbook/
-posteditor: ""
-proofreader: ""
+posteditor: "Tsukistar"
+proofreader: "月落星河Tsukistar"
 ---
 
-这本手册将教你 TypeScript 的基础知识，包括它是什么、它为何有用，以及它提供的关键功能。
+这本手册将教你 TypeScript 的基础知识，包括它是什么、它为什么非常有用，以及它提供的关键功能。
 
 <!-- more -->
 
-TypeScript 是由 Anders Hejlsberg 创建的，他是微软的著名软件工程师，同时也因为他在 C# 和 Delphi 上的工作而出名。TypeScript 的设计目的是通过添加静态类型来增强 JavaScript，使构建和维护大规模应用程序变得更容易。
+TypeScript 是由微软的著名软件工程师 Anders Hejlsberg 创建的，他同时也因为在 C# 和 Delphi 上的贡献而广为人知。TypeScript 的设计目的是通过添加静态类型来增强 JavaScript，使构建和维护大规模应用程序变得更容易。
 
-我们将从使用 Vite 将 TypeScript 与 React 项目整合开始。然后你会学习到诸如类型注释、类型推断、如何处理对象和数组等关键概念。
+我们将通过“使用 Vite 将 TypeScript 整合进 React 项目”这件事开始。然后你会学习到诸如类型注释、类型推论、如何处理对象和数组等关键概念。
 
-之后，我们将探讨高级主题，如联合类型和 any 类型、只读属性、具有特定参数和返回类型的函数、用于灵活和可重用代码的泛型，以及类型别名和接口的不同角色。
+之后，我们将探讨一些高级的主题，例如联合类型和 any 类型、只读属性、具有特定参数和返回类型的函数、用于灵活和可重用代码的泛型，以及类型别名和接口的不同角色。
 
-我将通过手册中的详细示例和解释，帮助你全面理解 TypeScript 的功能如何改善 JavaScript 开发。
+我将通过这本手册提供一些详细的示例和解释，帮助你全面理解 TypeScript 的特性是如何改善 JavaScript 开发的。
 
 ### 前提条件
 
@@ -31,15 +31,15 @@ TypeScript 是由 Anders Hejlsberg 创建的，他是微软的著名软件工程
     
 2.  [项目设置][2]
     
-3.  [类型注释和类型推断][3]
+3.  [类型注释和类型推论][3]
     
     -   [常用类型注释][4]
         
-    -   [类型推断][5]
+    -   [类型推论][5]
         
 4.  [联合类型和 Any 类型][6]
     
-    -   [在 TypeScript 中使用 any 时须小心][7]
+    -   [在 TypeScript 中使用 any 时要小心][7]
         
     -   [在 TypeScript 中使用 unknown 作为 any 的更安全替代方案][8]
         
@@ -47,7 +47,7 @@ TypeScript 是由 Anders Hejlsberg 创建的，他是微软的著名软件工程
     
     -   [可变性问题][10]
         
-    -   [对象属性上的 Readonly][11]
+    -   [对象上的只读属性声明][11]
         
     -   [只读数组][12]
         
@@ -68,6 +68,7 @@ TypeScript 是由 Anders Hejlsberg 创建的，他是微软的著名软件工程
 9.  [TypeScript 中的类型别名][20]
     
     -   [在 TypeScript 中的交叉类型是什么？][21]
+
 10.  [TypeScript 中的接口][22]
     
 11.  [元组和枚举][23]
@@ -76,7 +77,7 @@ TypeScript 是由 Anders Hejlsberg 创建的，他是微软的著名软件工程
     
 13.  [TypeScript 中的泛型][25]
     
-14.  [结论][26]
+14.  [写在最后][26]
     
 
 ## 什么是 TypeScript？
