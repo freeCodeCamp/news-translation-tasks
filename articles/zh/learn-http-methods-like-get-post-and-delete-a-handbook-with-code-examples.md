@@ -4,8 +4,8 @@ date: 2025-02-07T13:51:40.664Z
 author: Joan Ayebola
 authorURL: https://www.freecodecamp.org/news/author/joanayebola/
 originalURL: https://www.freecodecamp.org/news/learn-http-methods-like-get-post-and-delete-a-handbook-with-code-examples/
-posteditor: ""
-proofreader: ""
+posteditor: "Tsukistar"
+proofreader: "月落星河Tsukistar"
 ---
 
 When you interact with websites or apps, a lot happens behind the scenes. A key part of this process is how your browser or app talks to a server. HTTPS methods define what action needs to happen – it could be fetching data, sending information, or making changes to existing content.
