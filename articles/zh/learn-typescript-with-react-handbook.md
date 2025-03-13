@@ -5,7 +5,7 @@ date: 2025-03-07T04:51:19.827Z
 author: oghenekparobo Stephen
 authorURL: https://www.freecodecamp.org/news/author/Xtephen/
 originalURL: https://www.freecodecamp.org/news/learn-typescript-with-react-handbook/
-posteditor: "Tsukistar"
+posteditor: "月落星河Tsukistar"
 proofreader: "月落星河Tsukistar"
 ---
 
@@ -82,26 +82,26 @@ TypeScript 是由微软的著名软件工程师 Anders Hejlsberg 创建的，他
 
 ## 什么是 TypeScript？
 
-在深入了解 TypeScript 是什么之前，理解它为什么被创建是很重要的。JavaScript 是一种**松散类型的语言**，这意味着变量是在运行时定义和决定其类型的。这种灵活性会导致意想不到的行为，尤其是在较大的项目中。
+在深入了解 TypeScript 是什么之前，理解它为什么被创造出来是很重要的。JavaScript 是一种**弱类型的语言**，这意味着变量是在运行时被定义，变量的类型是在运行时被决定的。这种灵活性会导致意想不到的行为，尤其是在较大的项目中。
 
-例如，你可能会意外地将错误类型的值分配给一个变量，导致只有在代码执行时才会发现错误。
+例如，你可能会意外地将一个错误类型的值分配给一个变量，这会引发一些你只有在执行代码时才会发现的错误。
 
 下面是一个展示此问题的 JavaScript 的示例：
 
 ```javascript
 let userName = "Alice";
-userName = 42; // 在赋值时没有错误，但这可能会在以后破坏代码。
+userName = 42; // 在赋值时没有错误，但这可能会破坏之后的代码。
 
 function greetUser(name) {
-  console.log("Hello, " + name.toUpperCase()); // 如果 `name` 不是字符串，会在运行时出错。
+  console.log("Hello, " + name.toUpperCase()); // 如果 `name` 不是字符串，会在运行时报错。
 }
 
-greetUser(userName); // 引发错误，因为 `userName` 是数字而不是字符串。
+greetUser(userName); // 抛出异常，因为 `userName` 是数字而不是字符串，没有toUpperCase方法。
 ```
 
-这种错误很难调试，因为它只在运行时出现，使得大型项目更难维护且更容易出错。
+这类错误对于调试来说是一个巨大的挑战，因为它只在运行时出现。这样的错误使得大型项目更难维护且更容易出现 bug 。
 
-这就是 TypeScript 大显身手的地方。TypeScript 是一种通过添加**静态类型**构建在 JavaScript 之上的编程语言。静态类型意味着你可以显式指定变量、函数参数、返回值等的类型。与在运行时确定类型的**动态类型**不同，静态类型允许 TypeScript 在开发过程中提前捕获与类型相关的错误，提高代码质量并减少错误。
+这就是 TypeScript 大显身手的地方。TypeScript 是一种通过添加**静态类型**构建在 JavaScript 之上的编程语言。静态类型意味着你可以显式指定变量、函数参数、返回值等的类型。与在运行时确定类型的**动态类型**不同，静态类型允许 TypeScript 在开发过程中提前捕获与类型相关的错误，提高代码质量并减少 bug 。
 
 例如，下面是用 TypeScript 编写的同一代码：
 
@@ -120,7 +120,7 @@ greetUser(userName); // 完美运行，因为 `userName` 类型正确。
 
 我们将使用 [Vite][27] 来设置我们的 TypeScript 项目。Vite 是一个旨在为 Web 项目提供更快速和更精简开发体验的现代构建工具。
 
-要开始，运行以下命令创建一个支持 TypeScript 的新 Vite 项目：
+第一步，运行以下命令创建一个支持 TypeScript 的新 Vite 项目：
 
 ```shell
 npm create vite@latest
@@ -137,17 +137,17 @@ npm create vite@latest
 
 ![在 create vite@latest 模板中的 TypeScript 变体选择](https://cdn.hashnode.com/res/hashnode/image/upload/v1736770059262/d605726e-8d4f-4e73-8fb7-3854ce0b4e72.png)
 
-完成这些步骤后，系统会提示您导航到项目目录并运行 `npm install`。您可以选择任何代码编辑器。在本例中，我将使用 VS Code。
+完成这些步骤后，系统会提示您切换到项目目录并运行 `npm install`。您可以选择任何代码编辑器。在本例中，我将使用 VS Code。
 
 ![e3f81f8b-19b7-4fb6-a439-2f24e3f55df5](https://cdn.hashnode.com/res/hashnode/image/upload/v1736771043869/e3f81f8b-19b7-4fb6-a439-2f24e3f55df5.png)
 
 ![在 vscode 中查看项目概况并运行 npm install 以安装项目依赖](https://cdn.hashnode.com/res/hashnode/image/upload/v1736771426441/4c524149-4557-40bf-b50a-79400c6c3c91.png)
 
-运行 `npm install` 后，运行 `npm run dev` 以在本地服务器上启动项目。一旦启动并运行，我们就可以准备开始学习 TypeScript 概念。
+运行 `npm install` 后，运行 `npm run dev` 以在本地服务器上启动项目。一旦该项目启动并运行，我们就可以准备开始学习 TypeScript 概念。
 
 ![运行项目中的 npm run dev 后的登录页面](https://cdn.hashnode.com/res/hashnode/image/upload/v1736772238962/36f9523c-d316-43e3-ae05-e1ebfa9398f1.png)
 
-首先，让我们创建第一个 TypeScript 文件，`test.ts`（您可以选择使用 `.ts` 或 `.tsx`）。在项目的 `src` 文件夹内创建 `test.ts` 文件，并添加以下代码以记录测试消息：
+首先，让我们创建第一个 TypeScript 文件，`test.ts`（您可以选择使用 `.ts` 或 `.tsx`）。在项目的 `src` 文件夹内创建 `test.ts` 文件，并添加以下代码将测试消息在控制台中打印为日志：
 
 `test.ts`
 
@@ -181,9 +181,9 @@ createRoot(document.getElementById("root")!).render(
 
 ![在 console.log 中的结果](https://cdn.hashnode.com/res/hashnode/image/upload/v1736774231199/9a270631-0639-40e0-84de-513143b4478d.png)
 
-现在，让我们开始学习 TypeScript 的真正商业。
+现在，让我们正式开始学习 TypeScript 。
 
-## 类型注解和类型推断
+## 类型注解和类型推论
 
 ### 什么是类型注解？
 
@@ -197,7 +197,7 @@ TypeScript 中的类型注解使您能够显式地指定变量的类型。这确
 let name: string = 'Stephen';
 ```
 
-在此示例中，我们声明了一个变量 `name` 并指定其类型必须是 `string`。现在 TypeScript 将确保只能将字符串值分配给 `name`。
+在这个例子中，我们声明了一个变量 `name` 并指定它的类型必须是 `string`。TypeScript 现在将确保只能将字符串值分配给 `name`。
 
 **📄 注意：**所有代码片段都在一个名为 `test.ts` 的文件中用于演示目的。您可以根据需要重命名文件或将片段复制到您的 TypeScript 项目中。我在本文中没有遵循一致的文件命名。
 
@@ -298,11 +298,11 @@ console.log(numberArray[0] * 2);  // 输出: 2
 
 欢迎你试验这些例子，并观察 TypeScript 如何提供强大的类型安全性和实时捕获错误。探索得越多，你就越能理解如何利用 TypeScript 的类型系统编写更整洁、更可靠的代码。
 
-### 什么是类型推断？
+### 什么是类型推论？
 
-TypeScript 中的类型推断是一种强大的功能，它允许 TypeScript 编译器根据赋给变量的值自动确定变量的类型。TypeScript 被设计得足够智能，以在许多情况下推断类型，从而减少显式类型注释的需求。这增强了代码的简洁性，同时保持了类型安全性的优点。
+TypeScript 中的类型推论是一种强大的功能，它允许 TypeScript 编译器根据赋给变量的值自动确定变量的类型。TypeScript 被设计得足够智能，以在许多情况下推断类型，从而减少显式类型注释的需求。这增强了代码的简洁性，同时保持了类型安全性的优点。
 
-通过类型推断，TypeScript 可以通过分析赋给变量的值来预测变量的类型，确保即使不手动指定类型，也能获得类型检查的所有优势。
+通过类型推论，TypeScript 可以通过分析赋给变量的值来预测变量的类型，确保即使不手动指定类型，也能获得类型检查的所有优势。
 
 ##### **示例 1**：推断的字符串类型
 
@@ -339,7 +339,7 @@ console.log(numbers.length);  // 输出: 3
 
 #### **不正确的示例:**
 
-##### **示例 4**：类型不匹配赋值
+##### **示例 4**：类型不匹配的赋值
 
 `test.ts`
 
@@ -350,7 +350,7 @@ count = "Not a number";  // 错误: 类型 'string' 不能赋值给类型 'numbe
 
 尽管 TypeScript 推断 `count` 是一个数字，但尝试将一个 `string` 赋给它会导致一个错误。TypeScript 抓住了这是一个类型不匹配，因为 `count` 最初被推断为 `number`。
 
-##### **示例 5:** 推断的混合类型数组
+##### **示例 5:** 推断为混合类型数组
 
 `test.ts`
 
@@ -463,9 +463,9 @@ console.log(mixedArray[2]);  // 输出: true
 
 TypeScript 中的 `any` 类型是一个强大而又冒险的特性。虽然这种灵活性有时会很有用，但它往往会导致 TypeScript 无法在编译时捕获的意外行为或错误。
 
-让我们通过一个例子来理解潜在的陷阱。
+让我们通过一个例子来理解这种潜在的陷阱。
 
-这里是一个展示风险的函数：
+这是一个展示滥用any类型带来风险的函数：
 
 ```
 function combineValues(value: any) {
@@ -481,11 +481,11 @@ const anotherResult = result;
 anotherResult.someUndefinedMethod(); // 没有编译时错误！
 ```
 
-这里发生了什么？
+运行这段代码的时候发生了什么？
 
 首先，我们没有使用 `any` 时的类型检查。参数 `value` 是 `any` 类型，这意味着它可以持有任何值：字符串、数字、对象等等。TypeScript 会跳过对 `value` 的类型检查。
 
-其次，返回值假设为 `any`。由于 `value` 是 `any`，因此返回类型也被推断为 `any`。
+其次，返回值假设为 `any`。由于 `value` 是 `any`，因此返回类型也被推论为 `any`。
 
 第三，调用未定义方法时没有错误。函数调用后，`anotherResult` 也被视为 `any`。TypeScript 允许在 `any` 类型的变量上调用任何方法（甚至是不存在的方法）而不报错。在这种情况下，`someUndefinedMethod` 并不存在，但 TypeScript 不会发出警告。
 
@@ -512,8 +512,6 @@ function combineValues(value: number): number {
 }
 ```
 
-
-```markdown
 1.  **参数类型**: 该函数现在明确要求 `value` 参数为 `number` 类型。
     
 2.  **返回类型**: 返回类型被声明为 `number`，确保只返回数字。
@@ -521,11 +519,11 @@ function combineValues(value: number): number {
 
 这确保了如果您尝试传递无效类型或调用不存在的方法，TypeScript 将会抛出错误。
 
-#### **主要收获**
+#### **要点**
 
 -   `any` 类型禁用了 TypeScript 的类型检查，使您的代码容易出现运行时错误。
     
--   尽可能避免使用 `any`。相反，使用明确的类型或更严格的替代品，如（如果无法事先确定类型）使用 `unknown`。
+-   尽可能避免使用 `any`。相反，使用明确的类型或更严格的替代品，比如（如果无法事先确定类型时）使用 `unknown`。
     
 -   明确的类型通过利用 TypeScript 的编译时检查，增强了代码的清晰度、可维护性和可靠性。
     
@@ -554,7 +552,7 @@ console.log(processValue(true)); // 这个值是未知类型
 
 使用 `unknown` 而不是 `any` 有几个好处：
 
-1.  **类型安全处理**: 不像 `any`，`unknown` 迫使您在使用其值之前进行类型检查。这防止了在意外类型上执行无效操作所引发的运行时错误。
+1.  **类型安全处理**: 与 `any` 不同，`unknown` 迫使您在使用变量的值之前进行类型检查。这防止了在意外类型上执行无效操作所引发的运行时错误。
     
 2.  **显式类型缩小**: TypeScript 要求您先通过类型守卫（`typeof`、`instanceof` 等）将 `unknown` 缩小到特定类型（如 `string`、`number`）后，才能访问其属性或方法。
     
@@ -1809,7 +1807,7 @@ console.log(getProperty(user, "age"));  // 输出: 30
 
 ## 结论
 
-在本手册中，您深入了解了如何在 React 中使用 TypeScript 的基础知识。我们讨论了诸如类型注解、类型推断以及对象和数组管理等重要概念，展示了 TypeScript 如何提高代码的稳定性和可维护性。
+在本手册中，您深入了解了如何在 React 中使用 TypeScript 的基础知识。我们讨论了诸如类型注解、类型推论以及对象和数组管理等重要概念，展示了 TypeScript 如何提高代码的稳定性和可维护性。
 
 我们还涵盖了一些高级主题，如联合类型和 any 类型、只读属性的使用，以及泛型、类型别名和接口的应用。希望这些示例能帮助您理解 TypeScript 如何增强您的 JavaScript 开发，使 TS 成为构建健壮的大型应用程序的宝贵工具。
 
