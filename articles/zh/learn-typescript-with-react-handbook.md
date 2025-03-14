@@ -622,7 +622,8 @@ carOne.brand = "2026";
 > 类型 'string' 无法分配给类型 'number'。
 
 每次编写完整的对象类型可能会显得重复，尤其是对于拥有许多属性或在多个地方使用相同结构的对象。但不用担心——我会很快介绍**类型别名**，这将使定义和重用对象类型更简单。之后您将了解到如何使用类型别名简化对象类型并使您的代码更简洁。接下来，我们将探索如何在 React 中应用这些概念。
-```
+
+现在，我们要专注于理解基础知识以及TypeScript如何强制执行这种处理对象的模式。这就像是掀开引擎盖，窥探TypeScript幕后是如何运作的。
 
 ### **对象与数组**
 
@@ -743,7 +744,7 @@ let vegetables: readonly { readonly name: string; readonly price?: number }[] = 
 
 // 尝试修改数据
 vegetables[0].name = 'Cucumber'; // 错误：不能分配给 'name'，因为它是一个只读属性。
-vegetables.pop(); // 错误：属性 'pop' 在类型 'readonly { readonly name: string; readonly price?: number; }[]' 上不存在。
+vegetables.pop(); // 错误：方法 'pop' 在类型 'readonly { readonly name: string; readonly price?: number; }[]' 上不存在。
 
 console.log(vegetables);
 ```
@@ -758,6 +759,8 @@ console.log(vegetables);
     
 
 通过使用 `readonly`，你可以创建更安全、更可预测的代码，减少由于无意更改导致的错误。
+
+## **函数参数与函数返回值**
 
 在 TypeScript 中，函数允许您显式定义**参数**和**返回类型**。这确保函数按预期运行并避免运行时错误。让我们通过一个简单的例子来详细说明。
 
@@ -775,7 +778,6 @@ const FP = arithmeticOp(2); // 结果是 18。
     
 2. 返回类型没有被显式声明，但 TypeScript **推断**它为 `number`，因为函数返回的是 `price * 9`，这是一个数值运算。
     
-
 TypeScript 足够聪明，可以根据返回语句推断函数的返回类型。在这种情况下，它正确地推断 `arithmeticOp` 返回一个 `number`。
 
 ### **显式返回类型**
@@ -791,7 +793,6 @@ const FP = arithmeticOp(2); // 结果仍然是 18。
 1. 函数通过语法 `functionName(parameters): returnType` 显式声明返回类型为 `number`。
     
 2. 这不会改变结果，但使函数声明更加清晰。
-    
 
 那么为什么要使用显式返回类型呢？首先，这提高了代码的可读性，并确保未来的更改不会意外改变返回类型。其次，它为其他开发人员提供了文档。
 
@@ -810,7 +811,7 @@ const FP = arithmeticOp(2);
 
 在上面的代码中，返回类型被显式声明为 `number`。但函数尝试在某些情况下返回一个 `string`（`'discount'`）。这导致 TypeScript 抛出错误：
 
-> Type 'string' is not assignable to type 'number'.
+> 类型 'string' 不能赋值给类型 'number'.
 
 这是因为 TypeScript 强制执行声明的返回类型。如果您声明一个函数返回 `number`，它**必须始终**返回一个 `number`，无论函数内的逻辑如何。
 
@@ -846,7 +847,7 @@ const FP = arithmeticOp(2);
 
 ### 示例 1：理解缺少参数的问题
 
-考虑以下函数：
+思考下面这个函数：
 
 ```
 function calculateFinalScore(baseScore: number, deductions: number): number {
@@ -860,7 +861,7 @@ let scoreWithoutDeductions = calculateFinalScore(50); // 错误
 对 `calculateFinalScore` 的第一次调用完全正常。但第二次调用会抛出 TypeScript 错误：
 
 ```
-⚠ Error (TS2554) | Expected 2 arguments, but got 1.
+⚠ Error (TS2554) | 预期有2个参数，但只传入了1个。
 Tutorial.ts(7, 47): 参数 'deductions' 没有提供。
 ```
 
@@ -883,14 +884,14 @@ let scoreWithoutDeductions = calculateFinalScore(50);  // 50
 
 - `deductions` 参数默认值为 `0`，如果没有显式提供。
     
-- 两次调用现在都可以正常工作且没有错误。
+- 两次调用现在都可以正常执行且没有错误。
     
 
 ### 为什么这种解决方案有效
 
 通过将 `deductions` 定义为默认参数，TypeScript 确保函数在调用时拥有执行所需的所有参数，即使某些参数在调用中被省略。这种方法增加了函数的灵活性，同时保持了类型安全。
 
-当一个值是函数正常工作所必需的，但在省略时可以安全地有回退值时，请使用默认参数。这种方法提高了代码清晰度并减少了运行时错误的可能性。
+当一个参数值是函数正常工作所必需的，请使用默认参数，这能确保它在被忽略时可以安全地有回退值。这种方法提高了代码清晰度并减少了运行时错误的可能性。
 
 TypeScript中的剩余参数可以让你在不知道将会收到多少个参数的情况下处理多个参数。你可以传递任意多的参数，TypeScript将处理它们。对于输入数量不固定的情况，它们非常完美。
 
