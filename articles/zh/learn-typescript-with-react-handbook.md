@@ -234,7 +234,7 @@ console.log(name.toUpperCase());  // 输出: JOHN
 
 `test.ts`
 
-```
+```typescript
 let numbers: number[] = [1, 2, 3];  // 类型显式设置为数字数组
 numbers.push(4);  // 可以的，因为 4 是一个数字
 
@@ -250,7 +250,7 @@ console.log(numbers.length);  // 输出: 4
 
 `test.ts`
 
-```
+```typescript
 let name: string = 'Stephen';
 name = 2;  // 错误: 类型 '2' 不能赋值给类型 'string'
 ```
@@ -261,7 +261,7 @@ name = 2;  // 错误: 类型 '2' 不能赋值给类型 'string'
 
 `test.ts`
 
-```
+```typescript
 let numbers: number[] = [1, 2, 3];
 numbers = 'Hello';  // 错误: 类型 'string' 不能赋值给类型 'number[]'
 ```
@@ -276,7 +276,7 @@ numbers = 'Hello';  // 错误: 类型 'string' 不能赋值给类型 'number[]'
 
 `test.ts`
 
-```
+```typescript
 let booleanArray: Array<boolean> = [true, false, true];
 
 // 访问数组方法
@@ -289,7 +289,7 @@ console.log(booleanArray.length);  // 输出: 3
 
 `test.ts`
 
-```
+```typescript
 let numberArray: Array<number> = [1, 2, 3];
 
 // 访问数组方法
@@ -308,7 +308,7 @@ TypeScript 中的类型推论是一种强大的功能，它允许 TypeScript 编
 
 `test.ts`
 
-```
+```typescript
 let message = "Hello, TypeScript!";  // TypeScript 推断 'message' 的类型为字符串
 console.log(message.toUpperCase());  // 输出: HELLO, TYPESCRIPT!
 ```
@@ -319,7 +319,7 @@ console.log(message.toUpperCase());  // 输出: HELLO, TYPESCRIPT!
 
 `test.ts`
 
-```
+```typescript
 let count = 42;  // TypeScript 推断 'count' 的类型为数字
 console.log(count + 8);  // 输出: 50
 ```
@@ -343,7 +343,7 @@ console.log(numbers.length);  // 输出: 3
 
 `test.ts`
 
-```
+```typescript
 let count = 42;  // TypeScript 推断 'count' 的类型为数字
 count = "Not a number";  // 错误: 类型 'string' 不能赋值给类型 'number'
 ```
@@ -354,7 +354,7 @@ count = "Not a number";  // 错误: 类型 'string' 不能赋值给类型 'numbe
 
 `test.ts`
 
-```
+```typescript
 let mixedArray = [1, "apple", true];  // TypeScript 推断 'mixedArray' 为 (string | number | boolean)[]
 console.log(mixedArray[0].toFixed(2));  // 错误: 属性 'toFixed' 不存在于类型 'string | boolean' 上。
 ```
@@ -363,7 +363,7 @@ console.log(mixedArray[0].toFixed(2));  // 错误: 属性 'toFixed' 不存在于
 
 `test.ts`
 
-```
+```typescript
 let price = 99.99;  // TypeScript 推断 'price' 为一个数字
 price = "Free";  // 错误: 不能将类型 'string' 分配给类型 'number'
 ```
@@ -382,7 +382,7 @@ price = "Free";  // 错误: 不能将类型 'string' 分配给类型 'number'
 
 `test.ts`
 
-```
+```typescript
 let value: string | number;
 
 value = "Hello";  // ✅ 正确
@@ -400,7 +400,7 @@ value = true;  // ❌ 错误: 不能将类型 'boolean' 分配给类型 'string 
 
 `test.ts`
 
-```
+```typescript
 function printId(id: string | number): void {
   console.log(`Your ID is: ${id}`);
 }
@@ -418,7 +418,7 @@ printId(true);       // ❌ 错误: 不能将类型 'boolean' 分配给类型 's
 
 `test.ts`
 
-```
+```typescript
 type ID = string | number;
 
 function getUser(id: ID): void {
@@ -440,7 +440,7 @@ getUser(true);       // ❌ 错误: 不能将类型 'boolean' 分配给类型 's
 
 `test.ts`
 
-```
+```typescript
 let mixedArray: any[] = [1, "apple", true];
 
 console.log(mixedArray[0]);  // 输出: 1
@@ -467,7 +467,7 @@ TypeScript 中的 `any` 类型是一个强大而又冒险的特性。虽然这�
 
 这是一个展示滥用any类型带来风险的函数：
 
-```
+```typescript
 function combineValues(value: any) {
   let anotherValue: number = 10;
 
@@ -504,7 +504,7 @@ anotherResult.someUndefinedMethod(); // 没有编译时错误！
 
 这是一个具有正确类型注释的改进版本：
 
-```
+```typescript
 function combineValues(value: number): number {
   let anotherValue: number = 10;
 
@@ -562,7 +562,6 @@ console.log(processValue(true)); // 这个值是未知类型
 ### **主要区别:** `any` vs. `unknown`
 
 | **特性** | `any` | `unknown` |
-| --- | --- | --- |
 | 类型检查 | 无类型检查 | 使用前需类型检查 |
 | 灵活性 | 可直接使用 | 必须先缩小类型 |
 | 常见用例 | 快速修复（不推荐） | 安全处理不确定类型 |
@@ -631,7 +630,7 @@ carOne.brand = "2026";
 
 想象你在经营一家杂货店，并想要记录你的蔬菜库存。可以这样开始：
 
-```
+```typescript
 let tomato = { name: 'Tomato', price: 2 };
 let potato = { name: 'Potato', price: 1 };
 let carrot = { name: 'Carrot' };
@@ -645,7 +644,7 @@ let vegetables: { name: string; price: number }[] = [tomato, potato, carrot];
 
 如果 `price` 并不总是已知或需要（例如，也许胡萝卜的价格正在谈判中），可以使 `price` 属性为可选。可以通过在属性名后添加一个 `?` 来实现这一点：
 
-```
+```typescript
 let vegetables: { name: string; price?: number }[] = [tomato, potato, carrot];
 ```
 
@@ -670,7 +669,7 @@ let vegetables: { name: string; price?: number }[] = [tomato, potato, carrot];
 
 假设我们有这样的设置：
 
-```
+```typescript
 let tomato = { name: 'Tomato', price: 2 };
 let potato = { name: 'Potato', price: 1 };
 let carrot = { name: 'Carrot' };
@@ -680,7 +679,7 @@ let vegetables: { name: string; price?: number }[] = [tomato, potato, carrot];
 
 如果有人不小心尝试更改 `tomato` 对象的 `name` 或从 `vegetables` 数组中删除 `carrot` 对象，TypeScript 不会报错：
 
-```
+```typescript
 vegetables[0].name = 'Cucumber'; // 没有错误，但这可能是无意的！
 vegetables.pop(); // 移除最后一个蔬菜，没有警告。
 ```
@@ -691,7 +690,7 @@ vegetables.pop(); // 移除最后一个蔬菜，没有警告。
 
 要使每个蔬菜的属性不可变，可以这样做：
 
-```
+```typescript
 let vegetables: { readonly name: string; readonly price?: number }[] = [
   { name: 'Tomato', price: 2 },
   { name: 'Potato', price: 1 },
@@ -701,7 +700,7 @@ let vegetables: { readonly name: string; readonly price?: number }[] = [
 
 现在，如果你尝试更改任何蔬菜的 `name` 或 `price`，TypeScript 会抛出错误：
 
-```
+```typescript
 vegetables[0].name = 'Cucumber'; // 错误：不能分配给 'name'，因为它是一个只读属性。
 ```
 
@@ -709,7 +708,7 @@ vegetables[0].name = 'Cucumber'; // 错误：不能分配给 'name'，因为它�
 
 你还可以通过将整个 `vegetables` 数组声明为 `readonly` 来使其不可变：
 
-```
+```typescript
 let vegetables: readonly { name: string; price?: number }[] = [
   { name: 'Tomato', price: 2 },
   { name: 'Potato', price: 1 },
@@ -719,7 +718,7 @@ let vegetables: readonly { name: string; price?: number }[] = [
 
 这会阻止修改数组本身的操作，例如 `push`、`pop` 或 `splice`：
 
-```
+```typescript
 vegetables.push({ name: 'Onion', price: 3 }); // 错误：属性 'push' 在类型 'readonly { name: string; price?: number; }[]' 上不存在。
 vegetables.pop(); // 错误：属性 'pop' 在类型 'readonly { name: string; price?: number; }[]' 上不存在。
 ```
@@ -735,7 +734,7 @@ vegetables.pop(); // 错误：属性 'pop' 在类型 'readonly { name: string; p
 
 这是一个带有 `readonly` 的更新示例：
 
-```
+```typescript
 let vegetables: readonly { readonly name: string; readonly price?: number }[] = [
   { name: 'Tomato', price: 2 },
   { name: 'Potato', price: 1 },
@@ -766,7 +765,7 @@ console.log(vegetables);
 
 ### **推断的返回类型**
 
-```
+```typescript
 function arithmeticOp(price: number) {
   return price * 9;
 }
@@ -782,7 +781,7 @@ TypeScript 足够聪明，可以根据返回语句推断函数的返回类型。
 
 ### **显式返回类型**
 
-```
+```typescript
 function arithmeticOp(price: number): number {
   return price * 9;
 }
@@ -798,7 +797,7 @@ const FP = arithmeticOp(2); // 结果仍然是 18。
 
 ### **返回类型不匹配**
 
-```
+```typescript
 function arithmeticOp(price: number): number {
   if (hasDiscount) {
     return 'discount'; // 这里出错了！
@@ -817,7 +816,7 @@ const FP = arithmeticOp(2);
 
 如果您希望函数返回多种类型（例如，`number` 或 `string`），请使用**联合类型**：
 
-```
+```typescript
 function arithmeticOp(price: number): number | string {
   if (hasDiscount) {
     return 'discount'; // 现在有效！
@@ -849,7 +848,7 @@ const FP = arithmeticOp(2);
 
 思考下面这个函数：
 
-```
+```typescript
 function calculateFinalScore(baseScore: number, deductions: number): number {
   return baseScore - deductions;
 }
@@ -860,7 +859,7 @@ let scoreWithoutDeductions = calculateFinalScore(50); // 错误
 
 对 `calculateFinalScore` 的第一次调用完全正常。但第二次调用会抛出 TypeScript 错误：
 
-```
+```typescript
 ⚠ Error (TS2554) | 预期有2个参数，但只传入了1个。
 Tutorial.ts(7, 47): 参数 'deductions' 没有提供。
 ```
@@ -871,7 +870,7 @@ Tutorial.ts(7, 47): 参数 'deductions' 没有提供。
 
 为了解决这个问题，我们可以为 `deductions` 参数定义一个默认值。默认参数在没有传递参数时提供回退值。
 
-```
+```typescript
 function calculateFinalScore(baseScore: number, deductions: number = 0): number {
   return baseScore - deductions;
 }
@@ -899,7 +898,7 @@ TypeScript中的剩余参数可以让你在不知道将会收到多少个参数�
 
 假设你想将多个单词组合成一个句子：
 
-```
+```typescript
 function joinWords(...words: string[]): string {
   return words.join(" ");
 }
@@ -917,7 +916,7 @@ console.log(sentence); // "TypeScript makes coding fun"
 
 现在，假设你想累加多个数字：
 
-```
+```typescript
 function sumNumbers(...numbers: number[]): number {
   return numbers.reduce((total, num) => total + num, 0);
 }
@@ -933,7 +932,7 @@ console.log(total); // 60
 
 我们也可以使用剩余参数将多个数组合并为一个：
 
-```
+```typescript
 function mergeArrays(...arrays: number[][]): number[] {
   return arrays.flat();
 }
@@ -949,7 +948,7 @@ console.log(combined); // [1, 2, 3, 4, 5, 6]
 
 剩余参数必须始终放在参数列表的最后。例如：
 
-```
+```typescript
 function example(a: string, ...others: number[]): void {
   console.log(a, others);
 }
@@ -965,7 +964,7 @@ function example(a: string, ...others: number[]): void {
 
 这是一个接受具有`id`属性的对象并返回一个新对象的函数：
 
-```
+```typescript
 function createEmployee({ id }: { id: number }): { id: number; isActive: boolean } {
   return { id, isActive: id % 2 === 0 };
 }
@@ -984,17 +983,17 @@ console.log(secondEmployee); // { id: 2, isActive: true }
 -   返回一个具有两个属性的对象：`id` 和 `isActive`。
     
 
-`isActive` 属性通过检查 `id` 是否为偶数来确定（`id % 2 === 0`）。
+`isActive` 属性的值是通过检查 `id` 是否为偶数来确定的（`id % 2 === 0`）。
 
-**解构** 用于参数中：
+参数中使用了 **解构** 的语法（参见 [解构](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Destructuring)）：
 
--   `{ id }` 直接从输入对象中提取 `id` 属性。
+-   返回值中的 `id` 属性直接提取自输入对象 `{ id }` 中的 `id` 属性。
 
 ### 接受更复杂的对象
 
 现在，让我们看看接受具有多属性对象的函数：
 
-```
+```typescript
 function createStudent(student: { id: number; name: string }): void {
   console.log(`Welcome to the course, ${student.name}!`);
 }
@@ -1009,7 +1008,6 @@ createStudent(newStudent); // "Welcome to the course, John!"
     
 -   使用 `name` 属性记录欢迎信息。
     
-
 `newStudent` 对象与函数期望的结构匹配，因此可以直接传递。
 
 ### 为什么使用对象作为参数？
@@ -1024,7 +1022,7 @@ createStudent(newStudent); // "Welcome to the course, John!"
 
 这是一个接受具有 `id` 和 `name` 对象的函数，但没有额外属性：
 
-```
+```typescript
 function createStudent(student: { id: number; name: string }): void {
   console.log(`Welcome, ${student.name}!`);
 }
@@ -1040,7 +1038,7 @@ TypeScript 会报错，因为 `age` 属性不属于预期的对象结构。
 
 要避免此错误，只需删除任何额外的属性：
 
-```
+```typescript
 const validStudent = { id: 1, name: "John" };
 createStudent(validStudent); // 没有问题
 ```
@@ -1051,7 +1049,10 @@ createStudent(validStudent); // 没有问题
 
 如果你确实需要传递一个带有额外属性的对象，可以使用**类型断言** 告诉 TypeScript 忽略多余的属性：
 
-
+```typescript
+const studentWithExtras = { id: 1, name: "John", age: 20 };
+createStudent(studentWithExtras as { id: number; name: string }); // Bypasses the error
+```
 
 虽然这样做可以工作，但最好是匹配预期的结构，而不是使用类型断言。
 
@@ -1061,19 +1062,18 @@ createStudent(validStudent); // 没有问题
     
 - 如果需要额外的属性，请修复对象或（谨慎）使用类型断言。
     
-
-多余的属性检查可以帮助保持代码安全，并确保只有正确的数据传递到函数中。
+针对作为函数参数的对象属性中多余属性的检查可以帮助保持代码安全，并确保只有正确的数据传递到函数中。
 
 ## TypeScript 中的类型别名
 
-TypeScript 中的**类型别名**本质上是现有类型的**缩写**或**替代名称**。它允许您为在代码中可能会复杂或反复使用的类型定义一个更简单或更易读的名称。
+TypeScript 中的**类型别名**本质上是现有类型的**缩写**或**替代名称**。它允许您为在代码中可能会使用的复杂类型或反复使用的类型定义一个更简单或更易读的名称。
 
-这不会创建新类型，而是为现有类型提供一个新的标识符。使用类型别名时，代码的功能不会改变——它只是使代码更具可读性和可重用性。
+使用类型别名不会创建新类型，而是为现有类型提供一个新的标识符。使用类型别名时，代码的原有功能逻辑不会改变——它只是使代码更具可读性和可重用性。
 
 下面是使用类型别名前的示例：
 
-```
-// 没有使用类型别名
+```typescript
+// 没有使用类型别名 （提出质疑，原文的这里在没有定义UserInfo类型前是否可以直接引用UserInfo，在我看来这里会报错，正确的写法可能是user: { name: string, age: number, address: string }）
 function getUserInfo(user: UserInfo) {
   console.log(`User Info: 
     Name: ${user.name}, 
@@ -1088,7 +1088,7 @@ getUserInfo(user);
 
 现在，让我们对函数参数使用类型别名，使代码更具可读性：
 
-```
+```typescript
 // 使用类型别名
 type UserInfo = { name: string, age: number, address: string };
 
@@ -1110,8 +1110,7 @@ getUserInfo(user);
     
 - 定义类型别名（`UserInfo`）后，我们在函数参数中使用它，使函数签名更简单，更具可读性。
     
-
-这**不会改变代码的功能**。它只是通过使用别名，使处理代码变得更容易。别名作为复杂类型的可重用引用，如果 `UserInfo` 的结构发生变化，我们只需在一个地方更新它，从而使代码更易维护。
+使用类型别名**不会改变代码的功能**。它只是通过使用别名，使处理代码变得更容易。别名作为复杂类型的可重用引用，如果 `UserInfo` 的结构发生变化，我们只需在一个地方更新它，从而使代码更易维护。
 
 ### 如何使用类型别名
 
@@ -1119,16 +1118,17 @@ getUserInfo(user);
 
 您可以使用 `type` 关键字定义类型别名，后跟一个名称和类型结构。
 
-```
+```typescript
 type TypeName = TypeStructure;
 ```
 
 例如，让我们为一个用户对象创建一个类型别名：
 
-```
+```typescript
 type User = {
   name: string;
   age: number;
+}
 ```
 
 这意味着 `User` 是一个期待具有两个属性的对象的类型：
@@ -1144,7 +1144,7 @@ type User = {
 
 #### 使用类型别名：
 
-```
+```typescript
 type User = {
   name: string;
   age: number;
@@ -1162,7 +1162,7 @@ console.log(getUserDetails(user)); // "Alice (30 years old)"
 
 如果您试图分配一个不匹配此结构的对象，TypeScript 会捕获错误，如下所示：
 
-```
+```typescript
 // 这将导致 TypeScript 错误：
 const invalidUser: User = { name: "Alice" }; // 缺少 'age' 属性
 ```
@@ -1177,7 +1177,7 @@ const invalidUser: User = { name: "Alice" }; // 缺少 'age' 属性
 
 要定义一个交叉类型，您可以使用 `&` 运算符来组合两个或更多的类型。
 
-```
+```typescript
 type TypeA & TypeB;
 ```
 
@@ -1185,7 +1185,7 @@ type TypeA & TypeB;
 
 假设您想为 `User` 类型扩展包含用户的地址。您可以使用**交叉类型**组合 `User` 和 `Address`，而不是修改原始 `User` 类型。
 
-```
+```typescript
 type Address = {
   city: string;
   country: string;
@@ -1196,18 +1196,21 @@ type UserWithAddress = User & Address; // User 和 Address 的交叉
 
 现在，`UserWithAddress` 将需要同时具备 `User` 和 `Address` 的属性。
 
-#### 使用函数的示例
+#### 在函数中使用交叉类型的示例
 
 以下是如何在函数中使用此方法：
 
-```
+```typescript
 type User = {
   name: string;
   age: number;
 };
-```
 
-```markdown
+type Address = {
+  city: string;
+  country: string;
+};
+
 type UserWithAddress = User & Address;
 
 function getUserDetails(user: UserWithAddress): string {
@@ -1227,12 +1230,12 @@ console.log(getUserDetails(user));
 
 在此示例中：
 
--   `UserWithAddress` 是一个交集类型，这意味着 `user` 对象必须同时拥有 `User` 和 `Address` 的属性。
+-   `UserWithAddress` 是一个交叉类型，这意味着 `user` 对象必须同时拥有 `User` 和 `Address` 的属性。
     
 -   TypeScript 会检查对象中是否存在 `name` 和 `age`（来自 `User`），以及 `city` 和 `country`（来自 `Address`）。
     
 
-如果遗漏了这些任一属性，TypeScript 将显示错误。
+如果遗漏了这些属性中的任意一个，TypeScript 将显示错误。
 
 ```
 // 这会导致 TypeScript 错误：
@@ -1243,31 +1246,30 @@ const incompleteUser: UserWithAddress = {
 }; // 缺少 'country'
 ```
 
-### 为什么使用**交集类型**？
+### 为什么使用**交叉类型**？
 
-交集类型在多个场景下非常有用。首先，它们允许你在不修改原有类型的情况下扩展其功能，从而让代码更具模块化和灵活性。当需要将多个不同的结构合并为一个时，例如将 `User` 与 `Address` 或 `OrderDetails` 合并，也是非常有用的。而使用交集类型时，你可以轻松地看到对象必须具有的所有必需属性。
+交叉类型在多个场景下非常有用。首先，它们允许你在不修改原有类型的情况下扩展其功能，从而让代码更具模块化和灵活性。当需要将多个不同的结构合并为一个时，例如将 `User` 与 `Address` 或 `OrderDetails` 合并，使用交叉类型也是非常有用的。而使用交叉类型时，你可以轻松地看到对象必须具有的所有必需属性。
 
-### 类型别名 vs 交集类型：
+### 类型别名 vs 交叉类型：
 
-| 特性 | 类型别名 | 交集类型 |
-| --- | --- | --- |
+| 特性 | 类型别名 | 交叉类型 |
 | **定义** | 定义单一类型。 | 将多个类型合并为一个类型。 |
 | **使用场景** | 为对象或原始数据创造可重用类型。 | 合并多个类型，并要求所有属性存在。 |
 | **合并类型** | 不用于合并类型。 | 用于合并多种类型。 |
 | **示例** | `type User = { name: string, age: number };` | `type UserWithAddress = User & Address;` |
 
-### 何时使用各自类型
+### 何时使用类型别名或交叉类型
 
 -   当需要为对象、函数或其他数据结构定义**单一类型**时，使用类型别名。它们有助于提升代码的清晰度、重用性和类型安全。
     
--   当需要将多个类型**合并为一个**时，使用交集类型。在对象需要同时满足多种合同时理想，比如合并不同的类型或扩展现有类型的功能。
+-   当需要将多个类型**合并为一个**时，使用交叉类型。在对象需要同时满足多种合同时理想，比如合并不同的类型或扩展现有类型的功能。
     
 
 通过在 TypeScript 中运用类型别名和交集类型，你的代码将变得更易于理解、更安全且更易于维护。这些功能为你的数据提供了结构，帮助尽早捕获错误。
 
 ## TypeScript 中的接口
 
-在 TypeScript 中，**接口**是一种定义对象结构的方法，描述其属性及其类型。接口用于在代码中强制执行类型检查，确保对象遵循特定的结构。类似于类型别名，接口使你的代码更具可读性、可重用性和可维护性。
+在 TypeScript 中，**接口**是一种定义对象结构、描述其属性及其类型的方法。接口用于在代码中强制执行类型检查，确保对象遵循特定的结构。类似于类型别名，接口使你的代码更具可读性、可重用性和可维护性。
 
 ### 什么是接口？
 
@@ -1275,7 +1277,7 @@ const incompleteUser: UserWithAddress = {
 
 这是一个基本示例：
 
-```
+```typescript
 interface User {
   name: string;
   age: number;
@@ -1317,7 +1319,7 @@ console.log(getUserInfo(user)); // 输出: Alice (30 years old) lives at 123 Mai
 
 使用类型别名的示例：
 
-```
+```typescript
 type User = {
   name: string;
   age: number;
@@ -1348,7 +1350,7 @@ const user: User = {
 
 **扩展接口：**
 
-```
+```typescript
 interface Address {
   city: string;
   country: string;
@@ -1367,7 +1369,7 @@ const user: User = {
 };
 ```
 
-```
+```typescript
 type Address = {
   city: string;
   country: string;
@@ -1394,7 +1396,7 @@ const user: User = {
 
 接口可以使用 `?` 符号定义属性为可选：
 
-```
+```typescript
 interface User {
   name: string;
   age?: number; // 可选
@@ -1408,7 +1410,7 @@ const user2: User = { name: "Bob", age: 25 };
 
 使用 `readonly` 修饰符使属性不可变：
 
-```
+```typescript
 interface User {
   readonly id: number;
   name: string;
@@ -1422,7 +1424,7 @@ const user: User = { id: 1, name: "Alice" };
 
 接口可以定义函数签名：
 
-```
+```typescript
 interface Add {
   (a: number, b: number): number;
 }
@@ -1435,7 +1437,7 @@ console.log(add(5, 3)); // 输出: 8
 
 接口可以定义动态属性名：
 
-```
+```typescript
 interface StringDictionary {
   [key: string]: string;
 }
@@ -1450,7 +1452,7 @@ const dictionary: StringDictionary = {
 
 一个接口可以扩展多个接口：
 
-```
+```typescript
 interface A {
   propA: string;
 }
@@ -1472,15 +1474,15 @@ const obj: C = {
 
 ### 接口与类型别名的使用时机
 
-- 使用 **接口** 当你需要定义对象形状，尤其是当你计划扩展它们时。如果你需要声明合并，也使用接口，因为类型别名不支持它。
+- 当你需要定义对象形状，尤其是当你计划扩展它们时，使用 **接口** 。如果你需要声明合并，也使用接口，因为类型别名不支持它。
 
-- 使用 **类型别名** 用于更复杂的类型，例如联合或交叉。
+- **类型别名** 常用于更复杂的类型，例如联合或交叉。
 
 ## 元组和枚举
 
 在 TypeScript 中， **元组** 是一种特殊类型的数组，它具有固定数量的元素，其中每个元素可以有不同的类型。元组确保值的顺序和类型保持一致。
 
-```
+```typescript
 // 一个包含字符串和数字的元组
 let user: [string, number] = ["Alice", 25];
 
@@ -1492,7 +1494,7 @@ console.log(user[1]); // 输出: 25
 
 #### **包含可选元素的元组:**
 
-```
+```typescript
 let person: [string, number, boolean?] = ["Bob", 30];
 
 console.log(person); // 输出: ["Bob", 30]
@@ -1502,7 +1504,7 @@ console.log(person); // 输出: ["Bob", 30]
 
 #### **只读属性的元组:**
 
-```
+```typescript
 const coordinates: readonly [number, number] = [10, 20];
 
 // coordinates[0] = 50; // 错误: 不能分配给 '0' 因为它是一个只读元组
@@ -1516,7 +1518,7 @@ const coordinates: readonly [number, number] = [10, 20];
 
 #### **数值枚举（默认）:**
 
-```
+```typescript
 enum Status {
   Pending,   // 0
   InProgress, // 1
@@ -1531,7 +1533,7 @@ console.log(Status.Completed); // 输出: 2
 
 #### **自定义枚举数值:**
 
-```
+```typescript
 enum OrderStatus {
   Pending = 1,
   Shipped = 5,
@@ -1545,7 +1547,7 @@ console.log(OrderStatus.Shipped); // 输出: 5
 
 #### **字符串枚举:**
 
-```
+```typescript
 enum Direction {
   Up = "UP",
   Down = "DOWN",
@@ -1560,7 +1562,7 @@ console.log(Direction.Up); // 输出: "UP"
 
 #### **在函数中使用枚举:**
 
-```
+```typescript
 function getStatusText(status: Status): string {
   switch (status) {
     case Status.Pending:
@@ -1581,13 +1583,13 @@ console.log(getStatusText(Status.InProgress)); // 输出: "Order is in progress.
 
 元组定义了具有不同数据类型的固定长度数组，而枚举为更好的可读性提供命名常量，使代码更具结构性和类型安全。
 
-## **TypeScript 中的类型断言、类型未知和类型从未**
+## **TypeScript 中的类型断言、unknown类型和never类型**
 
 ### **类型断言**
 
 类型断言告诉 TypeScript 将某个值视为特定类型。它不会改变值，但帮助编译器理解类型。
 
-```
+```typescript
 let value: unknown = "Hello, TypeScript!";
 
 // 使用类型断言将 'value' 视为字符串
@@ -1600,17 +1602,18 @@ console.log(strLength); // 输出: 18
 
 这里还有另一种编写类型断言的方式：
 
-```
+```typescript
 let num = <number>(10);
 console.log(num); // 输出: 10
 ```
 
 `<number>` 语法也执行类型断言。
 
-### **未知类型**
-```
+### **unknown类型**
 
-```markdown
+现在让我们简单回顾一下 `unknown` 类型。记住，它是一个比 `any` 更安全的选择，并且可以保存任何值——但是TypeScript在使用它之前需要进行类型检查。
+
+```typescript
 let data: unknown;
 
 data = "Hello";
@@ -1625,7 +1628,7 @@ if (typeof data === "string") {
 
 由于 `data` 是 `unknown` 类型，TypeScript 不允许在不先检查其类型的情况下直接操作。
 
-### **Never 类型**
+### **never 类型**
 
 `never` 类型表示永远不会发生的值。它通常用于永不返回或总是抛出错误的函数。
 
@@ -1663,7 +1666,6 @@ function checkStatus(status: Status): void {
 下面是这些不同方法的快速比较：
 
 | **功能** | **描述** |
-| --- | --- |
 | **类型断言** | 告诉 TypeScript 将某个值视为特定类型。 |
 | **Unknown 类型** | 允许存储任何值，但在使用前需要进行类型检查。 |
 | **Never 类型** | 表示永远不会发生的值，用于函未返回的数。 |
@@ -1706,7 +1708,7 @@ console.log(reverseArray<string>(["A", "B", "C"])); // 输出: ["C", "B", "A"]
 
 ### **接口中的泛型**
 
-泛型可以用于接口中以定义灵活的对象结构。
+泛型可以在接口中用来定义灵活的对象结构。
 
 ```typescript
 interface StorageBox<T> {
@@ -1804,9 +1806,8 @@ let user = { name: "Alice", age: 30 };
 console.log(getProperty(user, "name")); // 输出: "Alice"
 console.log(getProperty(user, "age"));  // 输出: 30
 ```
-```
 
-## 结论
+## 结语
 
 在本手册中，您深入了解了如何在 React 中使用 TypeScript 的基础知识。我们讨论了诸如类型注解、类型推论以及对象和数组管理等重要概念，展示了 TypeScript 如何提高代码的稳定性和可维护性。
 
