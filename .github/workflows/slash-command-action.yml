@@ -27,22 +27,22 @@ jobs:
         run: |
           # For ease of use, accept both /postedit and /post-edit.
           if [[ "$COMMENT" == /postedit* || "$COMMENT" == /post-edit* ]]; then
-            echo "::set-output name=command::postedit"
-            echo "::set-output name=target_status::in Postediting"
-            echo "::set-output name=valid_command::true"
+            echo "command=postedit" >> $GITHUB_OUTPUT
+            echo "target_status=in Postediting" >> $GITHUB_OUTPUT
+            echo "valid_command=true" >> $GITHUB_OUTPUT
           # We can remove this elif condition for /translate when we move to /postedit command completely.
           # Keeping this for now to make the old command work during the transition period.
           elif [[ "$COMMENT" == /translate* ]]; then
-            echo "::set-output name=command::translate"
-            echo "::set-output name=target_status::in Translation"
-            echo "::set-output name=valid_command::true"
+            echo "command=translate" >> $GITHUB_OUTPUT
+            echo "target_status=in Translation" >> $GITHUB_OUTPUT
+            echo "valid_command=true" >> $GITHUB_OUTPUT
           elif [[ "$COMMENT" == /review* ]]; then
-            echo "::set-output name=command::review"
-            echo "::set-output name=target_status::in Review"
-            echo "::set-output name=valid_command::true"
+            echo "command=review" >> $GITHUB_OUTPUT
+            echo "target_status=in Review" >> $GITHUB_OUTPUT
+            echo "valid_command=true" >> $GITHUB_OUTPUT
           else
             echo "::warning::Invalid command. The comment must start with /postedit or /review."
-            echo "::set-output name=valid_command::false"
+            echo "valid_command=false" >> $GITHUB_OUTPUT
           fi
       - name: Get project card
         id: get_card
