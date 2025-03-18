@@ -1,5 +1,5 @@
 ---
-title: How to Remove Underline from a Link in CSS – HTML Style Guide
+title: リンクから下線を削除する方法 – CSS を使用した HTML スタイルガイド
 date: 2025-03-18T06:36:58.541Z
 author: Kolade Chris
 authorURL: https://www.freecodecamp.org/news/author/koladechris/
@@ -8,31 +8,31 @@ posteditor: ""
 proofreader: ""
 ---
 
-If you're a web developer, you've probably wanted to get rid of the default underline that appears when you add a link to a page.
+ウェブ開発者であれば、ページにリンクを追加するとデフォルトで表示される下線を消したいと考えたことがあるでしょう。
 
 <!-- more -->
 
-Fortunately, just like other elements on a web page, you can style the anchor tags responsible for displaying a link.
+幸いなことに、ウェブページ上の他の要素と同様に、リンクを表示するためのアンカータグもスタイルを適用することができます。
 
-In this article, I will show you how to remove the underline from a link with CSS. I will also show you the four states links can be in, and how to remove the underline for each one.
+この記事では、リンクから下線を削除するための CSS の使い方について解説します。また、リンクの持つ 4 つの状態と、それぞれの状態で下線を削除する方法についても説明します。
 
-## How to Remove Underline from a Link in CSS
+## リンクから下線を削除する方法
 
-By default, this is how the link tag appears in the browser: ![ss1-4](https://www.freecodecamp.org/news/content/images/2022/06/ss1-4.png)
+デフォルトでは、このようにリンクタグがブラウザに表示されます: ![ss1-4](https://www.freecodecamp.org/news/content/images/2022/06/ss1-4.png)
 
-Firstly, it is important to know that the link tag (anchor tag) can be in 4 different states called pseudo-classes:
+まず初めに、リンクタグ（アンカータグ）が持つ 4 つの異なる状態（擬似クラス）について知っておくことが重要です。
 
--   `a:link`: the regular state of the link when it is not active, visited, or hovered on
--   `a:visited`: when the link has been clicked by the user, that is, visited
--   `a:hover`: when the user is hovering on the link
--   `a:active`: when the user is clicking on the link
+-   `a:link`: リンクがアクティブ、訪問済み、もしくはホバーされていない通常の状態
+-   `a:visited`: ユーザーによってクリックされた、つまり訪問済みの状態
+-   `a:hover`: ユーザーがリンク上にカーソルを置いている状態
+-   `a:active`: ユーザーがリンクをクリックしている状態
 
-**N.B.:** The states (pseudo-classes) must appear in the order listed above due to the cascading nature of CSS.
+**注意:** 擬似クラスは、CSS のカスケーディングの性質上、上記の順序で記述する必要があります。
 
-To finally **remove the default underline** of the link, you can target all the pseudo-classes and assign them a `text-decoration` property of `none`.
+リンクの**デフォルトの下線を削除**するためには、すべての擬似クラスをターゲットにして、それらに `text-decoration` プロパティとして `none` を割り当てることができます。
 
 ```
-<p>This is a <a href="#">link</a></p>
+<p>これは<a href="#">リンク</a>です</p>
 ```
 
 ```
@@ -55,7 +55,7 @@ a:active {
 
 ![ss2-4](https://www.freecodecamp.org/news/content/images/2022/06/ss2-4.png)
 
-You can also remove the default underline all in one with the anchor element selector:
+また、アンカー要素セレクターを使用して、デフォルトの下線を一括で削除することもできます。
 
 ```
  a {
@@ -65,14 +65,15 @@ You can also remove the default underline all in one with the anchor element sel
 
 ![ss3-5](https://www.freecodecamp.org/news/content/images/2022/06/ss3-5.png)
 
-You can play with the 4 pseudo-classes of the link tag with this pen:
+リンクタグの 4 つの擬似クラスをこのペンで試すことができます:
 
 <iframe width="100%" height="350" src="https://codepen.io/koladechris/embed/bGLPzXr" style="aspect-ratio: 16 / 9; width: 100%; height: auto;" title="CodePen embed" scrolling="no" allowtransparency="true" allowfullscreen="true" loading="lazy"></iframe>
 
-## Conclusion
+## まとめ
 
-I hope this article helps you learn how to remove the default underline from links in CSS.
+この記事が、CSS を使用してリンクからデフォルトの下線を削除する方法を学ぶのに役立つことを願っています。
 
-If you find the article helpful, don’t hesitate to share it with your friends and family.
+この記事が役に立ったと思ったら、友人や家族とシェアすることをお勧めします。
 
-Thanks for reading.
+お読みいただき、ありがとうございます。
+
