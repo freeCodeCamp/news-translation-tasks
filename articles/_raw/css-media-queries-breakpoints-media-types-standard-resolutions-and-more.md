@@ -1,23 +1,24 @@
 ---
 title: Media Query CSS Tutorial – Standard Resolutions, CSS Breakpoints, and
   Target Phone Sizes
-date: 2024-08-20T12:08:31.647Z
-author: Cem Eygi
-authorURL: https://www.freecodecamp.org/news/author/cemeygi/
+date: 2025-03-18T05:33:15.540Z
+authorURL: ""
 originalURL: https://www.freecodecamp.org/news/css-media-queries-breakpoints-media-types-standard-resolutions-and-more/
 posteditor: ""
 proofreader: ""
 ---
 
-In the past, building a website was much simpler. Today a website’s layout should adapt itself not only to computers, but also tablets, mobile devices, and even TVs.
+By Cem Eygi
 
 <!-- more -->
+
+In the past, building a website was much simpler. Today a website’s layout should adapt itself not only to computers, but also tablets, mobile devices, and even TVs.
 
 Making a website with an adaptable layout is called Responsive Web Design. And CSS Media Queries are one of the most important parts of Responsive Design. In this article, we are going to take a closer look at Media Queries and how to use them in CSS.
 
 If you prefer, you can watch the video version below:
 
-<iframe width="480" height="270" src="https://www.youtube.com/embed/P_vkS4UJNDk?feature=oembed" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="" name="fitvid0"></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/P_vkS4UJNDk" style="aspect-ratio: 16 / 9; width: 100%; height: auto;" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="" loading="lazy"></iframe>
 
 ## What is a Media Query?
 
@@ -25,7 +26,7 @@ A Media query is a CSS3 feature that makes a webpage adapt its layout to differe
 
 ### Syntax
 
-```CSS
+```
 @media media type and (condition: breakpoint) {
   // CSS rules
 }
@@ -39,7 +40,7 @@ The syntax may seem complicated at the beginning, so let’s explain each part o
 
 We start defining media queries with @media rule and later include CSS rules inside the curly braces. The @ media rule is also used to specify target media types.
 
-```css
+```
 @media () {
   // CSS rules
 }
@@ -49,7 +50,7 @@ We start defining media queries with @media rule and later include CSS rules ins
 
 Inside the parenthesis, we set a condition. For example, I want to apply a larger font size for mobile devices. To do that, we need to set a maximum width which checks the width of a device:
 
-```css
+```
 .text {
   font-size: 14px;
 }
@@ -76,7 +77,7 @@ If we don’t apply a media type, the @ media rule selects all types of devices 
 
 For example, when I want to select only screens, I will set the screen keyword right after the @ media rule. I also must concatenate the rules with the “and” keyword:
 
-```css
+```
 @media screen and (max-width: 480px) {
   .text {
     font-size: 16px;
@@ -88,7 +89,7 @@ For example, when I want to select only screens, I will set the screen keyword r
 
 Breakpoints are maybe the most common term you will hear and use. A breakpoint is a key to determine when to change the layout and adapt the new rules inside the media queries. Let’s go back to our example at the beginning:
 
-```css
+```
 @media (max-width: 480px) {
   .text {
     font-size: 16px;
