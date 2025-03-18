@@ -117,13 +117,13 @@ GET 主要用于获取信息，以下是一些常见的应用场景：
     GET /delete/user/123
 ```
 
-5.  **慎用敏感数据**：由于 GET 请求是 URL 的一部分，它们可能被记录或者保存在浏览器的历史记录中。避免在 GET 请求中发送敏感信息，如密码、信用卡详细信息或隐私数据。处理此类信息时应始终使用 POST 方法，以确保信息保持隐藏。
+5.  **谨慎处理敏感数据**：由于 GET 请求是 URL 的一部分，它们可能被记录或者保存在浏览器的历史记录中。避免在 GET 请求中发送敏感信息，如密码、信用卡详细信息或隐私数据。处理此类信息时应始终使用 POST 方法，以确保信息保持隐藏。
 
 ## POST 方法
 
-POST 方法用于向服务器发送数据。与仅用于获取数据的 GET 方法不同，POST 使你可以提交服务器可以处理或存储的信息。POST 通常用于用户输入数据的表单，如用户名、密码或联系信息。
+POST 方法用于向服务器发送数据。与仅用于获取数据的 GET 方法不同，POST 方法可以用来提交服务器可以处理或存储的信息。POST 方法通常用于用户输入数据的表单，如用户名、密码或联系信息。
 
-当发出 POST 请求时，数据是在请求体中发送的，而不是在 URL 中。这样 POST 就成为发送更大或更敏感的信息（如密码）的理想选择，因为数据是隐藏的，不会出现在浏览器的地址栏中。
+当发出 POST 请求时，数据是在请求体中发送的，而不是在 URL 中。这样 POST 方法就成了发送更大或更敏感的信息（如密码）的理想选择，因为数据是隐藏的，不会出现在浏览器的地址栏中。
 
 例如，当你注册一个网站或在博客上提交评论时，使用 POST 方法将你的信息发送到服务器，后者处理并将其存储在数据库中。
 
@@ -131,7 +131,7 @@ POST 方法用于向服务器发送数据。与仅用于获取数据的 GET 方�
 
 以下是使用 Fetch API 将表单数据发送到服务器的 POST 请求示例：
 
-```
+```javascript
 const formData = {
   username: 'john_doe',
   password: 'mypassword123'
@@ -191,7 +191,7 @@ POST 是在需要向服务器发送数据时的理想选择，通常用于处理
     
     -   示例：
 
-```
+```html
     <form action="https://example.com/register" method="POST">
       <input type="text" name="username" />
       <input type="password" name="password" />
@@ -205,7 +205,7 @@ POST 是在需要向服务器发送数据时的理想选择，通常用于处理
     
     -   使用表单上传文件的示例：
 
-```
+```html
     <form action="https://example.com/upload" method="POST" enctype="multipart/form-data">
       <input type="file" name="file" />
       <button type="submit">Upload File</button>
@@ -216,7 +216,7 @@ POST 是在需要向服务器发送数据时的理想选择，通常用于处理
     
     -   发送产品数据的示例：
 
-```
+```javascript
     const product = {
       name: 'New Sneakers',
       price: 59.99,
@@ -239,7 +239,7 @@ POST 是在需要向服务器发送数据时的理想选择，通常用于处理
 
 下面是一个使用 Fetch API 更新用户数据的 PUT 请求示例：
 
-```
+```javascript
 const updatedProfile = {
   username: 'john_doe_updated',
   email: 'john_updated@example.com',
@@ -268,7 +268,7 @@ PUT 主要用于当你希望使用特定的完整数据更新或替换资源时�
     
     -   示例：
 
-```
+```javascript
     const updatedPost = {
       title: 'New Title for My Blog',
       content: 'Updated blog content here...',
@@ -288,7 +288,7 @@ PUT 主要用于当你希望使用特定的完整数据更新或替换资源时�
     
     -   如果产品不存在，创建产品的示例：
 
-```
+```javascript
     const newProduct = {
       id: 101,
       name: 'New Sneakers',
@@ -309,7 +309,7 @@ PUT 主要用于当你希望使用特定的完整数据更新或替换资源时�
     
     -   更新任务的示例：
 
-```
+```javascript
     const updatedTask = {
       title: 'Updated Task Title',
       completed: true
