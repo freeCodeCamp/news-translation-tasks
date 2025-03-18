@@ -60,7 +60,7 @@ In this guide, we will explain the steps using [github.dev web-based editor](htt
 1. In the issue, you can find a comment like this:
 ![Issue comment containing links to relevant files](images/gh-issue-link.png)
 
-Click the link **click to open github.dev**. It will open the machine-translated file in the github.dev editor. It looks just like VS Code.
+Click the link **click to open github.dev**. It will open the machine-translated file in the github.dev editor. It looks just like VS Code. You will notice that the GitHub Actions workflow changes the branch to `auto-translate`, like this: `https://github.dev/freeCodeCamp/news-translation-tasks/blob/auto-translate/articles/zh/learn-typescript-with-react-handbook.md`.
 
 2. In the "posteditor" field at the beginning of the file, write your Ghost username.
 ![Update posteditor field](images/ghdev-name.png)
@@ -111,7 +111,7 @@ By committing and pushing, you can save your changes on GitHub.
 3. It will open the page to create a new pull request.
 
 Check the following points:
-- The base repository (on the left) should be `freeCodeCamp/news-translation-tasks` and the branch should be `main`
+- The base repository (on the left) should be `freeCodeCamp/news-translation-tasks` and click the default branch `auto-translate` to select `main`
 - The head repository (on the right) should be `[your username]/news-translation-tasks` and the branch should be `[your branch name]`
 - The pull request title should be the translated title of the article
 - Follow the checklist and put an x in each of the checkboxes
