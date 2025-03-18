@@ -1,54 +1,56 @@
 ---
-title: メディアクエリ CSS チュートリアル – 標準解像度、CSS ブレークポイント、ターゲットとする携帯サイズ
-date: 2024-08-20T12:08:31.647Z
-author: Cem Eygi
-authorURL: https://www.freecodecamp.org/news/author/cemeygi/
+title: Media Query CSS Tutorial – Standard Resolutions, CSS Breakpoints, and
+  Target Phone Sizes
+date: 2025-03-18T05:33:15.540Z
+authorURL: ""
 originalURL: https://www.freecodecamp.org/news/css-media-queries-breakpoints-media-types-standard-resolutions-and-more/
 posteditor: ""
 proofreader: ""
 ---
 
-以前はウェブサイトの構築はもっとシンプルでした。しかし、現在ではウェブサイトのレイアウトはパソコンだけでなく、タブレットや携帯電話、それにテレビにさえも適応する必要があります。
+By Cem Eygi
 
 <!-- more -->
 
-適応型レイアウトを持つウェブサイトを作ることを「レスポンシブウェブデザイン」と呼びます。そして、CSS メディアクエリはレスポンシブデザインの中でも非常に重要な要素の一つです。本記事では、メディアクエリにフォーカスし、その使い方について詳しく見ていきます。
+In the past, building a website was much simpler. Today a website’s layout should adapt itself not only to computers, but also tablets, mobile devices, and even TVs.
 
-もし良ければ、以下の動画バージョンもご覧ください：
+Making a website with an adaptable layout is called Responsive Web Design. And CSS Media Queries are one of the most important parts of Responsive Design. In this article, we are going to take a closer look at Media Queries and how to use them in CSS.
 
-<iframe width="480" height="270" src="https://www.youtube.com/embed/P_vkS4UJNDk?feature=oembed" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="" name="fitvid0"></iframe>
+If you prefer, you can watch the video version below:
 
-## メディアクエリとは？
+<iframe width="560" height="315" src="https://www.youtube.com/embed/P_vkS4UJNDk" style="aspect-ratio: 16 / 9; width: 100%; height: auto;" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="" loading="lazy"></iframe>
 
-メディアクエリは、ウェブページが異なる画面サイズやメディアタイプに応じてレイアウトを適応させるための CSS3 機能です。
+## What is a Media Query?
 
-### シンタックス
+A Media query is a CSS3 feature that makes a webpage adapt its layout to different screen sizes and media types.
 
-```CSS
+### Syntax
+
+```
 @media media type and (condition: breakpoint) {
   // CSS rules
 }
 ```
 
-様々な条件下で異なるメディアタイプをターゲットにすることができます。条件やメディアタイプが一致すれば、メディアクエリ内のルールが適用され、そうでなければ適用されません。
+We can target different media types under a variety of conditions. If the condition and/or media types meet, then the rules inside the media query will be applied, otherwise, they won’t.
 
-このシンタックスは最初は複雑に見えるかもしれませんので、一つ一つ詳しく説明します。
+The syntax may seem complicated at the beginning, so let’s explain each part one by one in detail…
 
-### @media ルール
+### @ Media Rule
 
-@media ルールを使ってメディアクエリを定義し、カッコ内に CSS ルールを記述します。@media ルールはターゲットとするメディアタイプを指定するためにも使用されます。
+We start defining media queries with @media rule and later include CSS rules inside the curly braces. The @ media rule is also used to specify target media types.
 
-```css
+```
 @media () {
   // CSS rules
 }
 ```
 
-### カッコ内
+### Parenthesis
 
-カッコ内で条件を設定します。例えば、モバイルデバイスには大きめのフォントサイズを適用したい場合、デバイスの幅をチェックするための最大幅を設定します。
+Inside the parenthesis, we set a condition. For example, I want to apply a larger font size for mobile devices. To do that, we need to set a maximum width which checks the width of a device:
 
-```css
+```
 .text {
   font-size: 14px;
 }
@@ -60,22 +62,22 @@ proofreader: ""
 }
 ```
 
-通常のテキストサイズは 14px ですが、メディアクエリを適用した場合、デバイスの最大幅が 480px 以下であればフォントサイズが 16px に変更されます。
+Normally, the text size will be 14px. However since we applied a media query, it will change to 16px when a device has a maximum width of 480px or less.
 
-**重要: 常にメディアクエリは CSS ファイルの最後に配置しましょう。**
+**Important: Always put your media queries at the end of your CSS file.**
 
-### メディアタイプ
+### Media Types
 
-メディアタイプを指定しなければ、@media ルールはデフォルトで全てのデバイスを対象とします。メディアタイプは @media ルールのすぐ後に続きます。デバイスは多種多様ですが、基本的には以下の 4 つのカテゴリーに分けることができます。
+If we don’t apply a media type, the @ media rule selects all types of devices by default. Otherwise, Media types come right after the @ media rule. There are many kinds of devices but we can group them into 4 categories:
 
--   all — 全てのメディアタイプに適用
--   print — プリンター向け
--   screen — コンピュータースクリーン、タブレット、スマートフォン向け
--   speech — ページを読み上げるスクリーンリーダー向け
+-   all — for all media types
+-   print — for printers
+-   screen — for computer screens, tablets and, smart-phones
+-   speech — for screen readers that “read” the page out loud
 
-例えば、画面のみを対象にしたい場合、@media ルールの直後に screen キーワードを設定し、「and」キーワードでルールを連結する必要があります。
+For example, when I want to select only screens, I will set the screen keyword right after the @ media rule. I also must concatenate the rules with the “and” keyword:
 
-```css
+```
 @media screen and (max-width: 480px) {
   .text {
     font-size: 16px;
@@ -83,11 +85,11 @@ proofreader: ""
 }
 ```
 
-### ブレークポイント
+### Breakpoints
 
-ブレークポイントは、おそらく最もよく耳にし、使用する用語でしょう。ブレークポイントは、レイアウトを変更し、メディアクエリ内の新しいルールを適用するタイミングを決定するためのキーです。始めの例に戻ってみましょう。
+Breakpoints are maybe the most common term you will hear and use. A breakpoint is a key to determine when to change the layout and adapt the new rules inside the media queries. Let’s go back to our example at the beginning:
 
-```css
+```
 @media (max-width: 480px) {
   .text {
     font-size: 16px;
@@ -95,31 +97,30 @@ proofreader: ""
 }
 ```
 
-ここでは、ブレークポイントは 480px です。このメディアクエリは、デバイスの幅が 480px 以下の場合、新しいクラスを設定または上書きするタイミングを知っています。基本的に、デバイスの幅が 480px 未満であれば、text クラスが適用され、それ以外の場合は適用されません。
+Here, the breakpoint is 480px. Now the media query knows when to set or overwrite the new class. Basically, if the width of a device is smaller than 480px, the text class will be applied, otherwise, it won’t.
 
-#### よく使われるブレークポイント: 標準解像度はあるのか？
+#### Common Breakpoints: Is there a Standard Resolution?
 
-「どのブレークポイントを使用すべきか」という質問は非常によくあるものです。市場には多くのデバイスがあるため、それぞれに固定したブレークポイントを定義することはできませんし、そうするべきでもありません。
+One of the most commonly asked questions is “Which breakpoint should I use?”. There are a ton of devices on the market so we can’t and we shouldn’t define fixed breakpoints for each of them.
 
-そのため、デバイスに関する標準解像度は存在しませんが、日常のプログラミングでよく使用されるブレークポイントはいくつかあります。もし CSS フレームワーク（Bootstrap や Bulma など）を使用している場合、そこに定義されているブレークポイントを使用することもできます。
+That’s why we can’t say that there is a standard resolution for devices, but there are some commonly used breakpoints in daily programming. If you’re using a CSS framework (like Bootstrap, Bulma, etc.) you can also use their breakpoints.
 
-以下はデバイスの幅に関する一般的なブレークポイントです。
+Now let’s see some common breakpoints for widths of devices:
 
--   320px — 480px: モバイルデバイス
--   481px — 768px: iPads、タブレット
--   769px — 1024px: 小さい画面、ノートパソコン
--   1025px — 1200px: デスクトップ、大きい画面
--   1201px 以上 —  超大きな画面、テレビ
+-   320px — 480px: Mobile devices
+-   481px — 768px: iPads, Tablets
+-   769px — 1024px: Small screens, laptops
+-   1025px — 1200px: Desktops, large screens
+-   1201px and more —  Extra large screens, TV
 
-上記のように、これらのブレークポイントは異なることがあり、厳密に定義された標準はありませんが、一般的によく使用されているものです。
+As I said above, these breakpoints can differ and there is no standard exactly defined, but these are some commonly used ones.
 
-## まとめ
+## Wrapping up
 
-今日のウェブデザインおよび開発の分野では、レスポンシブデザインは必須です。メディアクエリはレスポンシブレイアウトを構築する上で非常に重要な要素の一つであり、本記事がメディアクエリの理解に役立つことを願っています。
+Responsive Design is a must in today’s web design and development field. Media queries are one of the most important parts of building responsive layouts, and I hope you find my post helpful for understanding how media queries work.
 
-**ウェブ開発についてもっと学びたい方は、ぜひ私のチャンネルを [登録][1] してください。**
+**If you want to learn more about web development, feel free to [subscribe to my channel.][1]**
 
-読んでいただきありがとうございます！
+Thank you for reading!
 
 [1]: https://www.youtube.com/channel/UC1EgYPCvKCXFn8HlpoJwY3Q?view_as=subscriber
-
