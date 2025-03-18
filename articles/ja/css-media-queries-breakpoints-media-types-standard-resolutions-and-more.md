@@ -4,7 +4,7 @@ date: 2025-03-18T05:33:15.540Z
 authorURL: ""
 originalURL: https://www.freecodecamp.org/news/css-media-queries-breakpoints-media-types-standard-resolutions-and-more/
 posteditor: ""
-proofreader: "test"
+proofreader: ""
 ---
 
 著者: Cem Eygi
