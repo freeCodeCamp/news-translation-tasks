@@ -517,7 +517,7 @@ DATABASE_URL=mongodb://username:password@server SECRET_KEY=mysecurekey
 
 巩固后端知识的最佳方法是参与实际项目。一些想法包括：
 
--   **Note-Taking App：** 允许用户通过身份验证创建、编辑和删除笔记。
+-   **笔记应用程序：** 允许用户通过身份验证创建、编辑和删除笔记。
 
 -   **E-Commerce Website：** 管理产品列表、购物车和结账流程。
 
