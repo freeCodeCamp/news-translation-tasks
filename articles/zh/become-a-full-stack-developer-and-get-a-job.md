@@ -519,7 +519,7 @@ DATABASE_URL=mongodb://username:password@server SECRET_KEY=mysecurekey
 
 -   **笔记应用程序：** 允许用户通过身份验证创建、编辑和删除笔记。
 
--   **E-Commerce Website：** 管理产品列表、购物车和结账流程。
+-   **电子商务网站：** 管理产品列表、购物车和结账流程。
 
 -   **社交媒体平台：** 实现用户个人资料、帖子、评论和实时消息等功能。
 
