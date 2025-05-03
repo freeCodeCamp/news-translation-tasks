@@ -508,7 +508,7 @@ DATABASE_URL=mongodb://username:password@server SECRET_KEY=mysecurekey
 
 -   **E-Commerce Website：** 管理产品列表、购物车和结账流程。
 
--   **Social Media Platform：** 实现用户个人资料、帖子、评论和实时消息等功能。
+-   **社交媒体平台：** 实现用户个人资料、帖子、评论和实时消息等功能。
 
 
 构建这些项目将有助于整合你所学的所有知识，并为实际应用做好准备。
