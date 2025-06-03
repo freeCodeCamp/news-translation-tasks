@@ -5,17 +5,17 @@ date: 2025-02-07T13:51:40.664Z
 author: Joan Ayebola
 authorURL: https://www.freecodecamp.org/news/author/joanayebola/
 originalURL: https://www.freecodecamp.org/news/learn-http-methods-like-get-post-and-delete-a-handbook-with-code-examples/
-posteditor: ""
-proofreader: ""
+posteditor: "月落星河Tsukistar"
+proofreader: "月落星河Tsukistar"
 ---
 
-当你与网站或应用互动时，幕后的过程非常复杂。其核心之一就是浏览器或应用如何与服务器通信。HTTPS 方法定义了需要执行的操作——它可能是获取数据、发送信息或更改现有内容。
+当你与网站或应用进行交互时，潜藏在那些交互后面的过程非常复杂。这些过程的核心之一就是浏览器或应用是如何与服务器通信的。HTTP 方法定义了需要执行的操作——它可能是获取数据、发送信息或更改现有内容。
 
 <!-- more -->
 
 每种方法都有特定的用途，以保持网络通信的清晰、安全和有序。
 
-在本文中，我们将分解最常见的 HTTPS 方法，并解释它们如何运行以实现顺畅的在线互动。
+在本文中，我们将分解最常见的 HTTP 方法，并解释它们如何运行以实现顺畅的在线互动。
 
 ### 目录
 
@@ -45,7 +45,7 @@ GET 方法是最常见的 HTTP 方法之一，用于从服务器请求数据。�
 
 当你访问网页时，浏览器发送一个 GET 请求给服务器，要求页面的内容。然后服务器响应数据（如 HTML、图像或其他文件），浏览器进行显示。
 
-关于 GET 的一个重要点是它不会对数据进行任何更改。它只是“读取”或检索信息。例如，当你浏览社交媒体或在线搜索产品时，应用或网站使用 GET 来显示数据而不更改它。
+关于 GET 的一个重点是它不会对数据进行任何更改。它只是“读取”或检索信息。例如，当你浏览社交媒体或在线搜索产品时，应用或网站使用 GET 来显示数据而不更改它。
 
 另一个关键点是 GET 请求将参数发送在 URL 中。这意味着任何请求的数据在浏览器的地址栏中都是可见的。例如，如果你在网店搜索产品，搜索词会包含在 URL 中。
 
@@ -106,8 +106,8 @@ GET 主要用于获取信息，以下是一些常见的应用场景：
     
     -   设置缓存头的示例：
 ```
-
-这份翻译保留了原文的 markdown 排版布局，同时翻译为中文。
+    Cache-Control: max-age=3600
+```
 
 4.  **避免使用 GET 请求来执行更改数据的操作**：由于 GET 是一种“安全”的方法，它仅应用于不会修改数据的操作。如果你想创建、更新或删除数据，应使用像 POST、PUT 或 DELETE 这样的方法。例如，如果你不小心使用 GET 来删除资源，可能会有人通过点击链接或刷新页面来删除它，这样做是不安全的。
     
@@ -117,13 +117,13 @@ GET 主要用于获取信息，以下是一些常见的应用场景：
     GET /delete/user/123
 ```
 
-5.  **慎用敏感数据**：由于 GET 请求是 URL 的一部分，它们可能被记录或者保存在浏览器的历史记录中。避免在 GET 请求中发送敏感信息，如密码、信用卡详细信息或隐私数据。处理此类信息时应始终使用 POST 方法，以确保信息保持隐藏。
+5.  **谨慎处理敏感数据**：由于 GET 请求是 URL 的一部分，它们可能被记录或者保存在浏览器的历史记录中。避免在 GET 请求中发送敏感信息，如密码、信用卡详细信息或隐私数据。处理此类信息时应始终使用 POST 方法，以确保信息保持隐藏。
 
 ## POST 方法
 
-POST 方法用于向服务器发送数据。与仅用于获取数据的 GET 方法不同，POST 使你可以提交服务器可以处理或存储的信息。POST 通常用于用户输入数据的表单，如用户名、密码或联系信息。
+POST 方法用于向服务器发送数据。与仅用于获取数据的 GET 方法不同，POST 方法可以用来提交服务器可以处理或存储的信息。POST 方法通常用于用户输入数据的表单，如用户名、密码或联系信息。
 
-当发出 POST 请求时，数据是在请求体中发送的，而不是在 URL 中。这样 POST 就成为发送更大或更敏感的信息（如密码）的理想选择，因为数据是隐藏的，不会出现在浏览器的地址栏中。
+当发出 POST 请求时，数据是在请求体中发送的，而不是在 URL 中。这样 POST 方法就成了发送更大或更敏感的信息（如密码）的理想选择，因为数据是隐藏的，不会出现在浏览器的地址栏中。
 
 例如，当你注册一个网站或在博客上提交评论时，使用 POST 方法将你的信息发送到服务器，后者处理并将其存储在数据库中。
 
@@ -131,7 +131,7 @@ POST 方法用于向服务器发送数据。与仅用于获取数据的 GET 方�
 
 以下是使用 Fetch API 将表单数据发送到服务器的 POST 请求示例：
 
-```
+```javascript
 const formData = {
   username: 'john_doe',
   password: 'mypassword123'
@@ -191,7 +191,7 @@ POST 是在需要向服务器发送数据时的理想选择，通常用于处理
     
     -   示例：
 
-```
+```html
     <form action="https://example.com/register" method="POST">
       <input type="text" name="username" />
       <input type="password" name="password" />
@@ -205,7 +205,7 @@ POST 是在需要向服务器发送数据时的理想选择，通常用于处理
     
     -   使用表单上传文件的示例：
 
-```
+```html
     <form action="https://example.com/upload" method="POST" enctype="multipart/form-data">
       <input type="file" name="file" />
       <button type="submit">Upload File</button>
@@ -216,7 +216,7 @@ POST 是在需要向服务器发送数据时的理想选择，通常用于处理
     
     -   发送产品数据的示例：
 
-```
+```javascript
     const product = {
       name: 'New Sneakers',
       price: 59.99,
@@ -239,7 +239,7 @@ POST 是在需要向服务器发送数据时的理想选择，通常用于处理
 
 下面是一个使用 Fetch API 更新用户数据的 PUT 请求示例：
 
-```
+```javascript
 const updatedProfile = {
   username: 'john_doe_updated',
   email: 'john_updated@example.com',
@@ -268,7 +268,7 @@ PUT 主要用于当你希望使用特定的完整数据更新或替换资源时�
     
     -   示例：
 
-```
+```javascript
     const updatedPost = {
       title: 'New Title for My Blog',
       content: 'Updated blog content here...',
@@ -288,7 +288,7 @@ PUT 主要用于当你希望使用特定的完整数据更新或替换资源时�
     
     -   如果产品不存在，创建产品的示例：
 
-```
+```javascript
     const newProduct = {
       id: 101,
       name: 'New Sneakers',
@@ -309,7 +309,7 @@ PUT 主要用于当你希望使用特定的完整数据更新或替换资源时�
     
     -   更新任务的示例：
 
-```
+```javascript
     const updatedTask = {
       title: 'Updated Task Title',
       completed: true
@@ -375,7 +375,7 @@ PATCH 旨在对资源进行有针对性的更改。其工作原理如下：
 
 以下是一个使用 PATCH 方法更新特定字段的基本示例，例如更改用户的邮箱地址：
 
-```
+```javascript
 const updatedEmail = {
   email: 'new_email@example.com'
 };
@@ -402,7 +402,7 @@ fetch('https://example.com/users/123', {
     
     -   示例：更新用户的电话号码。
 
-```
+```javascript
     const updatedPhone = { phoneNumber: '123-456-7890' };
 
     fetch('https://example.com/users/123', {
@@ -419,7 +419,7 @@ fetch('https://example.com/users/123', {
     
     -   示例：更新大型订单的状态而不修改整个订单详情。
 
-```
+```javascript
     const updatedStatus = { status: 'shipped' };
 
     fetch('https://example.com/orders/987', {
@@ -433,7 +433,7 @@ fetch('https://example.com/users/123', {
     
     -   示例：更新订单的送货地址。
 
-```
+```javascript
     const updatedAddress = {
       shippingAddress: '123 New Street, New City, Country'
     };
@@ -447,7 +447,14 @@ fetch('https://example.com/users/123', {
 
 ### PUT 和 PATCH 的关键区别
 
-以下是 PATCH 和 PUT 的快速对比，以明确何时使用哪种方法：
+以下是 PATCH 和 PUT 的快速对比，这些对比项可以明确每种方法什么时候使用更合适：
+
+| **特性** | PUT | PATCH |
+| **用途** | 替换整个资源 | 部分更新资源 |
+| **数据处理** | 要求发送整个资源 | 只发送需要更新的字段 |
+| **效率** | 对于大型资源效率较低 | 对于小型的特定更新，效率更高 |
+| **幂等性** | 幂等性（重复后结果相同） | 不一定等效（取决于请求） |
+| **数据丢失风险** | 如果数据丢失，可以覆盖字段 | 除非指定，否则不会覆盖现有字段 |
 
 **PATCH** 方法在您希望进行部分更新、避免覆盖其他数据并提高请求效率时特别有用。
 
@@ -465,7 +472,7 @@ DELETE 方法用于从服务器中移除资源。当发出 DELETE 请求时，�
 
 如果您想删除特定的一篇博客文章，可以向其 URL 发送 DELETE 请求：
 
-```
+```javascript
 fetch('https://example.com/posts/123', {
   method: 'DELETE'
 })
@@ -489,7 +496,7 @@ DELETE 请求可能带来显著影响，因此需要谨慎使用以避免意外�
 
 #### 确认步骤示例：
 
-```
+```javascript
 if (confirm("Are you sure you want to delete this post?")) {
   fetch('https://example.com/posts/123', {
     method: 'DELETE'
@@ -499,7 +506,7 @@ if (confirm("Are you sure you want to delete this post?")) {
 }
 ```
 
--   **可逆性（软删除）**：对于重要数据，通常实现**软删除**是有用的，它不会完全移除数据，而是在数据库中标记为已删除。这使得在需要时数据可以恢复。例如，许多电子邮件系统会将已删除的邮件保留在“垃圾箱”文件夹中，直到它们被永久删除。
+-   **可逆性（软删除）**：对于重要数据，通常使用**软删除**是比较好的，它不会完全移除数据，而是在数据库中标记为已删除。这使得在需要时数据可以恢复。例如，许多电子邮件系统会将已删除的邮件保留在“垃圾箱”文件夹中，直到它们被永久删除。
 
 ### 处理 DELETE 请求的最佳实践
 
@@ -538,7 +545,7 @@ if (confirm("Are you sure you want to delete this post?")) {
 
 如果 DELETE 请求成功且资源已移除，服务器可能会返回一个 `204 No Content` 状态：
 
-```
+```http
 HTTP/1.1 204 No Content
 ```
 
@@ -591,7 +598,7 @@ OPTIONS 不会对资源本身执行任何操作。相反，它提供有关客户
 
 例如，如果你正在使用 API 并想查看它是否在特定端点支持 DELETE 方法，可以发送 OPTIONS 请求以获取该信息，而不影响资源。
 
-### 检索支持的方法
+### 检索目标资源支持HTTP请求的方法
 
 1.  **发送 OPTIONS 请求**: 客户端向服务器发送 OPTIONS 请求，通常针对特定 URL。该请求用作关于允许对该端点上的资源执行什么操作的查询。
     
@@ -599,14 +606,14 @@ OPTIONS 不会对资源本身执行任何操作。相反，它提供有关客户
     
 3.  **测试方法**: 如果不确定服务器是否支持特定方法（如 PATCH 或 DELETE），可以先发送 OPTIONS 请求进行检查。这可以避免尝试服务器不支持的方法，从而避免错误。
 
-```
+```http
 OPTIONS /api/resource HTTP/1.1
 Host: example.com
 ```
 
 服务器响应：
 
-```
+```http
 HTTP/1.1 200 OK
 Allow: GET, POST, DELETE
 ```
@@ -625,7 +632,7 @@ OPTIONS 方法最常见的用途之一是在处理**跨域资源共享（CORS）
     
     示例响应：
     
-    ```
+    ```http
     HTTP/1.1 204 No Content
     Access-Control-Allow-Origin: https://domainA.com
     Access-Control-Allow-Methods: GET, POST
@@ -680,8 +687,8 @@ TRACE 方法用于调试网络应用程序和测试请求如何通过网络。�
     -   **错误跟踪**：如果请求未按预期运行，TRACE 可以帮助追踪传输过程中出现问题的地方。
         
 4.  **有效调试**：TRACE 在调试网络应用程序或 API 特别有帮助。如果你的应用程序因路由、代理或服务器配置引发错误，TRACE 让你看到未修改的请求，从而更容易定位问题。
-```
 
+### TRACE的安全问题
 
 虽然 TRACE 在调试中很有用，但通常被视为安全风险，并且由于多个原因在大多数服务器上经常被禁用：
 
@@ -715,14 +722,14 @@ CONNECT 本身并不处理任何实际数据。它的作用是建立一个安全
 
 -   **CONNECT 请求**：
     
-    ```
+    ```http
       CONNECT example.com:443 HTTP/1.1
       Host: example.com
     ```
     
 -   **代理响应**（若隧道成功建立）：
     
-    ```
+    ```http
       HTTP/1.1 200 Connection Established
     ```
     
@@ -768,7 +775,7 @@ GET 适合检索数据，POST 和 PUT 帮助创建和更新，PATCH 处理部分
 
 使用适当的 HTTP 方法确保您的应用程序高效、安全地运行，为用户提供流畅的体验。
 
-如果您有任何问题或建议，请随时在 [LinkedIn][17] 上联系。如果您喜欢这篇内容，请考虑 [buy me a coffee][18] 来支持创作更多对开发者友好的内容。
+如果您有任何问题或建议，请随时在 [LinkedIn][17] 上联系。如果您喜欢这篇内容，请考虑 [buy me a coffee][18] 来支持我创作更多对开发者友好的内容。
 
 [1]: #heading-get-method
 [2]: #heading-post-method
