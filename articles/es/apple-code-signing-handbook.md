@@ -1,5 +1,5 @@
 ---
-title: The Apple Code Signing Handbook
+title: El Manual de Firmado de Código de Apple
 date: 2025-06-20T20:53:18.103Z
 author: Sravan Karuturi
 authorURL: https://www.freecodecamp.org/news/author/sravankaruturi/
@@ -8,613 +8,591 @@ posteditor: ""
 proofreader: ""
 ---
 
-In this handbook, I’ll demystify the Apple app code signing process. Apple's ecosystem is powerful, but its distribution mechanisms – with various identifiers, certificates, and profiles – can appear complex. This guide attempts to make that journey more manageable and straightforward for you.
+En este manual, desmitificaré el proceso de firmado de código para aplicaciones de Apple. El ecosistema de Apple es poderoso, pero sus mecanismos de distribución – con varios identificadores, certificados y perfiles – pueden parecer complejos. Esta guía intenta hacer ese recorrido más manejable y directo para ti.
 
 <!-- more -->
 
-Throughout this handbook, you will learn how to:
+A lo largo de este manual, aprenderás a:
 
--   Correctly establish and manage an app's unique identity.
+-   Establecer y gestionar correctamente la identidad única de una aplicación.
     
--   Understand the roles of different Apple developer certificates and how to create and manage them.
+-   Entender los roles de los diferentes certificados de desarrollador de Apple y cómo crearlos y gestionarlos.
     
--   Differentiate between various types of provisioning profiles and know when to use each one.
-    
-
-This guide is geared towards new developers who want to learn how the code signing process works, but it should also be useful experienced developers who want or need to refresh their memory.
-
-### Prerequisites
-
-While there are no hard prerequisites to understanding the certificates, bundles, and provisioning profiles for distributing on Apple platforms, it helps to have an Apple developer account to follow along.
-
-## Table of Contents
-
--   [App IDs, Bundle IDs – Your App’s Identity][1]
-    
--   [Understanding Distribution: A Deep Dive into Certificates][2]
-    
--   [Bridge between everything: Provisioning Profiles][3]
-    
--   [Device management – Development and Ad Hoc Builds][4]
-    
--   [Possibilities: Enabling Capabilities and Services][5]
-    
--   [Conclusion][6]
+-   Diferenciar entre los diversos tipos de perfiles de aprovisionamiento y saber cuándo usar cada uno.
     
 
-## **App IDs, Bundle IDs — Your App’s Identity**
+Esta guía está dirigida a nuevos desarrolladores que quieren aprender cómo funciona el proceso de firmado de código, pero también debería ser útil para desarrolladores experimentados que desean o necesitan refrescar su memoria.
 
-The Bundle ID and the corresponding App ID registered with Apple form the basis of an application’s identity. Establishing these correctly from the beginning is very important, as errors or misconfigurations here can lead to significant complications down the line, particularly once you’ve submitted your app to App Store Connect.
+### Requisitos previos
 
-### Understanding `CFBundleIdentifier` (Bundle ID)
+Aunque no hay requisitos previos estrictos para entender los certificados, paquetes y perfiles de aprovisionamiento para la distribución en las plataformas de Apple, es útil tener una cuenta de desarrollador de Apple para seguir el proceso.
 
-#### What is the “Bundle ID”?
+## Tabla de Contenidos
 
-Think of the Bundle ID as a unique name or a fingerprint for your app. The `CFBundleIdentifier`, more commonly known as the **Bundle ID**, is a string that uniquely identifies your application.
-
-This identifier is not just a name – it serves multiple crucial purposes.
-
--   The operating system relies on it to apply specific preferences and settings to an app.
+-   [App IDs, Bundle IDs – La Identidad de tu Aplicación][1]
     
--   This is used to launch the application from other apps etc.
+-   [Entendiendo la Distribución: Un Análisis Profundo de los Certificados][2]
     
--   It plays an essential role in the validation of an app's code signature, ensuring the app's integrity and authenticity.
+-   [Puente entre todo: Perfiles de Aprovisionamiento][3]
     
--   The Bundle ID defined in an app's Info.plist file must exactly match the Bundle ID registered for the app in App Store Connect for successful submission and distribution.
+-   [Gestión de dispositivos – Desarrollos y Construcciones Ad Hoc][4]
     
-
-The Bundle ID string must adhere to specific character limitations: it can only contain alphanumeric characters `A-Z, a-z, 0-9`, hyphens `-`, and periods `.`. It's important to note that Bundle IDs are treated as **case-insensitive** by the system.
-
-### How to Choose and Format Your Bundle ID (Reverse-DNS and Best Practices)
-
-Apple highly recommends, and it is standard practice, to use a reverse-DNS (Domain Name System) format for Bundle IDs.
-
-A common example would be `com.yourcompanyname.appname`. This convention leverages the global uniqueness of domain names to help ensure the global uniqueness of Bundle IDs.
-
-If an organization uses its unique domain name (for example, `sravan.gg` becomes `gg.sravan` ) as the prefix, and the app name is unique within that organization, the resulting Bundle ID (for example, `gg.sravan.mycoolapp` ) is highly likely to be unique worldwide.
-
-**Sidenote**: While Xcode won’t stop you from creating something like `com.google.mapping` or something like that even if you don’t work at Google, this will most likely get rejected when it goes through the AppStore review process. This is because this implies ownership of that domain. So, while it’s technically possible when starting out, you shouldn’t use domains that don’t belong to you.
-
-The fundamental nature of the Bundle ID as a unique, system-wide identifier – coupled with its immutability after an app is first uploaded to App Store Connect – means that you should treat its selection with the same seriousness as choosing a **permanent, unchangeable identifier** for a critical entity. A mistake in the Bundle ID after this point can necessitate creating an entirely new app listing on the App Store.
-
-### App IDs in the Apple Developer Portal: Explicit vs. Wildcard
-
-#### Which One Do You Need?
-
-In the Apple Developer Portal, developers register an "App ID." This App ID is a record that links one or more applications from a single development team to specific app services (capabilities) and is used in provisioning profiles. We’ll learn more about this in the following sections.
-
-There are two main types of App IDs:
-
--   **Explicit App ID:** This type is used for a single application. The Bundle ID specified within an explicit App ID must be an exact match for the CFBundleIdentifier in the app's Info.plist file (for example, `com.mycompany.myapp`). Explicit App IDs are required for apps that use many of Apple's specific services and capabilities, such as In-App Purchases (which are enabled by default for explicit App IDs), Push Notifications, iCloud, HealthKit, and Sign in with Apple.
+-   [Posibilidades: Habilitando Capacidades y Servicios][5]
     
--   **Wildcard App ID:** This type can be used for a set of applications that share a common Bundle ID prefix. It contains an asterisk (\*) as the last part of its Bundle ID string (for example, `com.mycompany.*`). This wildcard App ID would match any app whose Bundle ID starts with `com.mycompany.`, such as [`com.mycompany.app`][7] or `com.mycompany.utility`. But you can’t use wildcard App IDs if the app requires services or capabilities that mandate an explicit App ID.
+-   [Conclusión][6]
     
 
-The choice between an explicit and a wildcard App ID has significant implications. The App ID acts as a central registration point, and the capabilities are "enabled" for this registration – more on capabilities later in this handbook.
+## **App IDs, Bundle IDs — La Identidad de tu Aplicación**
 
-You can think of an explicit App ID as a specific key designed to unlock extra "keyholes" (capabilities). A wildcard App ID, being more generic, might not fit these extra keyholes. If you choose a wildcard App ID initially for convenience, but you need a feature requiring an explicit App ID (like Push Notifications) later, you’ll be forced to create a new explicit App ID and reconfigure associated settings and provisioning profiles.
+El Bundle ID y el correspondiente App ID registrado con Apple forman la base de la identidad de una aplicación. Establecerlos correctamente desde el principio es muy importante, ya que los errores o malas configuraciones aquí pueden llevar a complicaciones significativas en el futuro, particularmente una vez que hayas enviado tu aplicación a App Store Connect.
 
-So, make sure you carefully consider your current and future app features when selecting an App ID type. The following table provides a quick comparison\*\*.\*\*
+### Entendiendo `CFBundleIdentifier` (Bundle ID)
 
-My personal recommendation is always go with explicit App Ids unless you need the flexibility of wildcard app ids.
+#### ¿Qué es el “Bundle ID”?
 
-| **Feature** | **Explicit App ID** | **Wildcard App ID** |
+Piensa en el Bundle ID como un nombre único o una huella digital para tu aplicación. El `CFBundleIdentifier`, más comúnmente conocido como el **Bundle ID**, es una cadena que identifica de manera única tu aplicación.
+
+Este identificador no es solo un nombre – cumple varios propósitos cruciales.
+
+-   El sistema operativo depende de él para aplicar configuraciones y preferencias específicas a una aplicación.
+    
+-   Se utiliza para lanzar la aplicación desde otras aplicaciones, etc.
+    
+-   Juega un papel esencial en la validación de la firma de código de una aplicación, asegurando la integridad y autenticidad de la aplicación.
+    
+-   El Bundle ID definido en el archivo Info.plist de una aplicación debe coincidir exactamente con el Bundle ID registrado para la aplicación en App Store Connect para una presentación y distribución exitosas.
+    
+
+La cadena del Bundle ID debe adherirse a limitaciones específicas de caracteres: solo puede contener caracteres alfanuméricos `A-Z, a-z, 0-9`, guiones `-` y puntos `.`. Es importante notar que el sistema trata a los Bundle IDs como **insensibles a mayúsculas**.
+
+### Cómo Elegir y Formatear Tu Bundle ID (Reverse-DNS y Mejores Prácticas)
+
+Apple recomienda encarecidamente, y es una práctica estándar, usar un formato de DNS invertido (Sistema de Nombres de Dominio) para los Bundle IDs.
+
+Un ejemplo común sería `com.nombredeempresa.aplicacion`. Esta convención aprovecha la unicidad global de los nombres de dominio para ayudar a asegurar la unicidad global de los Bundle IDs.
+
+Si una organización utiliza su único nombre de dominio (por ejemplo, `sravan.gg` se convierte en `gg.sravan`) como el prefijo, y el nombre de la aplicación es único dentro de esa organización, el Bundle ID resultante (por ejemplo, `gg.sravan.miaplicacionimpresionante`) es muy probable que sea único a nivel mundial.
+
+**Nota al margen**: Aunque Xcode no te impedirá crear algo como `com.google.mapping` o algo así incluso si no trabajas en Google, es muy probable que esto sea rechazado cuando pase por el proceso de revisión de la AppStore. Esto se debe a que esto implica la propiedad de ese dominio. Así que, aunque sea técnicamente posible al comenzar, no deberías usar dominios que no te pertenezcan.
+
+La naturaleza fundamental del Bundle ID como un identificador único a nivel de sistema – junto con su inmutabilidad después de que una aplicación se sube por primera vez a App Store Connect – significa que debes tratar su selección con la misma seriedad que elegir un **identificador permanente e inmutable** para una entidad crítica. Un error en el Bundle ID después de este punto puede requerir la creación de un listado de aplicación completamente nuevo en el App Store.
+
+### App IDs en el Portal de Desarrolladores de Apple: Explícito vs. Comodín
+
+#### ¿Cuál Necesitas?
+
+En el Portal de Desarrolladores de Apple, los desarrolladores registran un "App ID". Este App ID es un registro que enlaza una o más aplicaciones de un solo equipo de desarrollo a servicios de aplicación específicos (capacidades) y se utiliza en perfiles de aprovisionamiento. Aprenderemos más sobre esto en las siguientes secciones.
+
+Hay dos tipos principales de App IDs:
+
+-   **App ID Explícito:** Este tipo se utiliza para una sola aplicación. El Bundle ID especificado dentro de un App ID explícito debe coincidir exactamente con el CFBundleIdentifier en el archivo Info.plist de la aplicación (por ejemplo, `com.micompañía.miapp`). Los App IDs explícitos son necesarios para aplicaciones que utilizan muchos de los servicios y capacidades específicos de Apple, como Compras Integradas (que están habilitadas por defecto para App IDs explícitos), Notificaciones Push, iCloud, HealthKit y Registrarse con Apple.
+    
+-   **App ID de Comodín:** Este tipo se puede utilizar para un conjunto de aplicaciones que comparten un prefijo común de Bundle ID. Contiene un asterisco (\*) como la última parte de su cadena de Bundle ID (por ejemplo, `com.micompañía.*`). Este App ID de comodín coincidiría con cualquier aplicación cuyo Bundle ID comience con `com.micompañía.`, como [`com.micompañía.aplicación`][7] o `com.micompañía.utilidad`. Pero no puedes usar App IDs de comodín si la aplicación requiere servicios o capacidades que mandan un App ID explícito.
+
+Puede pensar en un ID de App explícito como una clave específica diseñada para desbloquear "cerraduras" adicionales (capacidades). Un ID de App comodín, al ser más genérico, podría no encajar en estas cerraduras adicionales. Si elige un ID de App comodín inicialmente por comodidad, pero más tarde necesita una función que requiera un ID de App explícito (como las Notificaciones Push), se verá obligado a crear un nuevo ID de App explícito y reconfigurar los ajustes y perfiles de aprovisionamiento asociados.
+
+Por lo tanto, asegúrese de considerar cuidadosamente las características actuales y futuras de su aplicación al seleccionar un tipo de ID de App. La siguiente tabla proporciona una comparación rápida\*\*.\*\*
+
+Mi recomendación personal es optar siempre por IDs de App explícitos a menos que necesite la flexibilidad de los IDs de App comodín.
+
+| **Característica** | **ID de App Explícito** | **ID de App Comodín** |
 | --- | --- | --- |
-| **Bundle ID Match** | Exact match (for example, [com.foo.bar][8]) | Suffix match (for example, [com.foo][9].\*) |
-| **Use Case** | Single app | Set of apps with similar base ID |
-| **Capabilities** | Supports all capabilities | Limited (cannot use services requiring explicit IDs) |
-| **Uniqueness** | Globally unique identifier for one specific app | Identifies a group of apps |
+| **Coincidencia con el ID de Paquete** | Coincidencia exacta (por ejemplo, [com.foo.bar][8]) | Coincidencia de sufijo (por ejemplo, [com.foo][9].\*) |
+| **Caso de Uso** | Aplicación única | Conjunto de aplicaciones con un ID base similar |
+| **Capacidades** | Soporta todas las capacidades | Limitadas (no puede usar servicios que requieran IDs explícitos) |
+| **Unicidad** | Identificador único global para una aplicación específica | Identifica un grupo de aplicaciones |
 
-### Step-by-Step: How to Register Your App ID in the Apple Developer Portal
+### Paso a Paso: Cómo Registrar su ID de App en el Apple Developer Portal
 
-To register an App ID, an you’ll need an **Apple Developer Program membership**. Also, the actions must be performed by someone with an Account Holder or Admin role.
+Para registrar un ID de App, necesitará una **membresía del Apple Developer Program**. Además, las acciones deben ser realizadas por alguien con un rol de Titular de Cuenta o Administrador.
 
-The process is as follows:
+El proceso es el siguiente:
 
-1.  Sign in to the Apple Developer Portal and navigate to "Certificates, Identifiers & Profiles," then select "Identifiers" from the sidebar.
+1.  Inicie sesión en el Apple Developer Portal y navegue a "Certificates, Identifiers & Profiles", luego seleccione "Identifiers" en la barra lateral.
     
-2.  Click the “Add button (+)” to create a new identifier.
+2.  Haga clic en el botón "Agregar (+)" para crear un nuevo identificador.
     
-    ![Picture depicting the Add button](https://cdn.hashnode.com/res/hashnode/image/upload/v1748642247245/a24b527f-e810-4a9c-b75a-dcd3d189b1d1.png)
+    ![Imagen que muestra el botón Agregar](https://cdn.hashnode.com/res/hashnode/image/upload/v1748642247245/a24b527f-e810-4a9c-b75a-dcd3d189b1d1.png)
     
-3.  Select "App IDs" from the list of options and click "Continue."
+3.  Seleccione "App IDs" de la lista de opciones y haga clic en "Continuar".
     
     ![851f64f3-e608-4fb7-9f31-bd30adb64beb](https://cdn.hashnode.com/res/hashnode/image/upload/v1748642283885/851f64f3-e608-4fb7-9f31-bd30adb64beb.png)
     
-4.  Make sure that the "App" type is selected (it usually is by default) and click "Continue."
+4.  Asegúrese de que esté seleccionada la opción "App" (normalmente lo está por defecto) y haga clic en "Continuar".
     
-    ![App type selection](https://cdn.hashnode.com/res/hashnode/image/upload/v1748642318142/a7b28529-bbe6-4240-953e-836de3e948ac.png)
+    ![Selección del tipo de App](https://cdn.hashnode.com/res/hashnode/image/upload/v1748642318142/a7b28529-bbe6-4240-953e-836de3e948ac.png)
     
-5.  Enter a "Description" for the App ID. This is for your reference within the portal (for example, "My very cool App ID").
+5.  Ingrese una "Descripción" para el ID de App. Esto es para su referencia dentro del portal (por ejemplo, "Mi ID de App muy genial").
     
-    ![App Id registration screen](https://cdn.hashnode.com/res/hashnode/image/upload/v1748642392862/a5322cf5-3d75-4b0b-93bf-d46dd1ce8afe.png)
+    ![Pantalla de registro de ID de App](https://cdn.hashnode.com/res/hashnode/image/upload/v1748642392862/a5322cf5-3d75-4b0b-93bf-d46dd1ce8afe.png)
     
-6.  Choose the "App ID Type": "Explicit" or "Wildcard."
+6.  Elija el "Tipo de ID de App": "Explícito" o "Comodín".
     
-7.  For an "Explicit App ID," enter the exact Bundle ID that will be used in your Xcode project (for example, `com.yourcompany.yourapp`). For a "Wildcard App ID," enter a Bundle ID suffix ending with an asterisk (for example, `com.yourcompany.*`).
+7.  Para un "ID de App Explícito", ingrese el ID de Paquete exacto que se utilizará en su proyecto Xcode (por ejemplo, `com.suempresa.suapp`). Para un "ID de App Comodín", ingrese un sufijo de ID de Paquete que termine con un asterisco (por ejemplo, `com.suempresa.*`).
     
-8.  Scroll down to the "Capabilities" section and select the checkboxes for any app services your app will use. Some capabilities might require further configuration at this stage or later. (Again, we’ll cover app capabilities in more detail later on).
+8.  Desplácese hacia abajo hasta la sección "Capacidades" y seleccione las casillas de verificación para cualquier servicio de aplicación que su aplicación vaya a usar. Algunas capacidades podrían requerir configuración adicional en esta etapa o más adelante. (Nuevamente, cubriremos las capacidades de aplicación con más detalle más adelante).
     
-9.  Click "Continue," review all the details carefully, and then click "Register" to finalize the App ID creation.
+9.  Haga clic en "Continuar", revise todos los detalles cuidadosamente, y luego haga clic en "Registrar" para finalizar la creación del ID de App.
     
-    ![Confirm the App ID screen](https://cdn.hashnode.com/res/hashnode/image/upload/v1748642432661/2052a435-ed0e-404a-9178-7d6541fc9421.png)
-    
-
-### How to Manage Your Bundle ID: Xcode, App Store Connect, and the Point of No Return
-
-The Bundle ID specified in an Xcode project is critical. To set it:
-
-1.  In the Xcode project navigator, select the target for your app.
-    
-2.  Open the "Signing & Capabilities" tab.
-    
-3.  Expand the "Signing" section.
-    
-4.  In the "Bundle Identifier" text field, enter the Bundle ID. This identifier must precisely match the Bundle ID associated with an explicit App ID registered in the Developer Portal, or conform to the pattern of a wildcard App ID if applicable.
+    ![Confirme la pantalla del ID de App](https://cdn.hashnode.com/res/hashnode/image/upload/v1748642432661/2052a435-ed0e-404a-9178-7d6541fc9421.png)
     
 
-It's important to understand the difference between the "Bundle ID" (or `CFBundleIdentifier`) in the Xcode project and the "App ID" registered in the Developer Portal. The "App ID" in the developer portal is an entity that _contains_ a “Bundle ID” string (either explicit or wildcard). The string in your Xcode project's "Bundle Identifier" field must match this contained string.
+### Cómo Gestionar su ID de Paquete: Xcode, App Store Connect, y el Punto de No Retorno
 
-When preparing for distribution via TestFlight or the App Store, you’ll need to create an app record in App Store Connect. The Bundle ID you enter during this app record creation must exactly match the Bundle ID in the Xcode project.
+El ID de Paquete especificado en un proyecto Xcode es crítico. Para configurarlo:
 
-#### A Critical Warning: Immutability After First Upload
-
-This is a point of no return: Once you upload a build of an app to App Store Connect, the Bundle ID for that app record **cannot be changed**.
-
-In addition, after an upload, you can’t delete the associated explicit App ID registered in the Developer Portal. This immutability highlights the need for _careful planning and verification_ of the Bundle ID before any uploads occur.
-
-If you prefer programmatic management or automation, the App Store Connect API provides resources for managing Bundle IDs. You can [read more on that here][10].
-
-## **Understanding Distribution: A Deep Dive into Certificates**
-
-### What are Certificates?
-
-Certificates are digital credentials that verify a **developer's identity** – that is, you – to Apple and, by extension, to the app users.
-
-They are fundamental to Apple's code signing process, which is mandatory for all apps to ensure they originate from a **known source** and have not been tampered with since being signed.
-
-### What is Code Signing: Ensuring Trust and Integrity
-
-Code signing is you as a developer signing the app with your signature. It is the process of attaching a digital signature to an app's code. This signature assures users of two key things:
-
-1.  **Authenticity:** The app was created by an identified Apple developer (an individual or a team).
+1.  En el navegador de proyectos de Xcode, seleccione el objetivo para su aplicación.
     
-2.  **Integrity:** The app's code has not been altered or corrupted since it was signed by the developer.
+2.  Abra la pestaña de "Signing & Capabilities".
+    
+3.  Expanda la sección "Signing".
+    
+4.  En el campo de texto "Bundle Identifier", ingrese el ID de Paquete. Este identificador debe coincidir exactamente con el ID de Paquete asociado con un ID de App explícito registrado en el Developer Portal, o ajustarse al patrón de un ID de App comodín si es aplicable.
     
 
-The process involves using a private key, securely held by the developer (you), to create the signature. The corresponding public key, embedded within the developer's certificate (issued by Apple), is used by the system to verify this signature.
+Es importante entender la diferencia entre el "ID de Paquete" (o `CFBundleIdentifier`) en el proyecto Xcode y el "ID de App" registrado en el Developer Portal. El "ID de App" en el portal de desarrolladores es una entidad que _contiene_ una cadena "ID de Paquete" (ya sea explícita o comodín). La cadena en el campo "Bundle Identifier" de su proyecto Xcode debe coincidir con esta cadena contenida.
 
-This system of identity verification and integrity checking is crucial. The developer's certificate, issued by Apple as a Certificate Authority (CA), vouches for their identity. The code signing process, using hashing and encryption, ensures that any modification to the code after signing would invalidate the signature.
+Cuando se prepare para la distribución mediante TestFlight o la App Store, necesitará crear un registro de aplicación en App Store Connect. El ID de Paquete que ingrese durante la creación de este registro de aplicación debe coincidir exactamente con el ID de Paquete en el proyecto Xcode.
 
-For app developers, benefits of code signing include removing warnings on macOS for apps distributed outside the Mac App Store, providing a smoother user experience. It is a mandatory requirement for listing applications on any of Apple's App Stores. It also enhances security of the app as it acts as a deterrent against malicious tampering.
+#### Una Advertencia Crítica: Inmutabilidad Después de la Primera Carga
 
-### Types of Certificates: Development, Distribution, and Developer ID
+Este es un punto de no retorno: Una vez que cargue una compilación de una aplicación a App Store Connect, el ID de Paquete para ese registro de aplicación **no se puede cambiar**.
 
-Apple provides different types of certificates for various stages of development and methods of distribution. Each of them has a distinct role to play throughout the app development process.
+Además, después de una carga, no puede eliminar el ID de App explícito asociado registrado en el Developer Portal. Esta inmutabilidad destaca la necesidad de una _planificación y verificación cuidadosa_ del ID de Paquete antes de que ocurran las cargas.
 
-#### 1\. Development Certificates (for example, "Apple Development"):
+Si prefiere la gestión programática o la automatización, el API de App Store Connect proporciona recursos para gestionar IDs de Paquete. Puede [leer más sobre eso aquí][10].
 
--   **Purpose:** Used to sign apps during the development phase, allowing them to be installed and run on a limited number of _registered test devices_ and simulators for debugging and testing.
+### ¿Qué son los Certificados?
+
+Los certificados son credenciales digitales que verifican la **identidad de un desarrollador** – es decir, tú – ante Apple y, por extensión, ante los usuarios de la aplicación.
+
+Son fundamentales para el proceso de firma de código de Apple, que es obligatorio para todas las aplicaciones para asegurar que provienen de una **fuente conocida** y no han sido manipuladas desde que fueron firmadas.
+
+### ¿Qué es la Firma de Código? Asegurando Confianza e Integridad
+
+La firma de código es cuando tú, como desarrollador, firmas la aplicación con tu firma. Es el proceso de adjuntar una firma digital al código de una aplicación. Esta firma asegura a los usuarios dos cosas clave:
+
+1.  **Autenticidad:** La aplicación fue creada por un desarrollador identificado por Apple (un individuo o un equipo).
     
--   **Identifies:** Typically identifies an individual developer through their developer ID.
-    
--   **Used with:** Development provisioning profiles – more on this later.
+2.  **Integridad:** El código de la aplicación no ha sido alterado o corrompido desde que fue firmado por el desarrollador.
     
 
-#### 2\. Distribution Certificates (for example, "Apple Distribution"):
+El proceso involucra el uso de una clave privada, mantenida de forma segura por el desarrollador (tú), para crear la firma. La clave pública correspondiente, embebida dentro del certificado del desarrollador (emitido por Apple), es utilizada por el sistema para verificar esta firma.
 
--   **Purpose:** Used to sign apps intended for distribution, either through Ad Hoc methods (to a limited set of _registered testers_) or for submission to the App Store.
+Este sistema de verificación de identidad y comprobación de integridad es crucial. El certificado del desarrollador, emitido por Apple como una Autoridad Certificadora (CA), avala su identidad. El proceso de firma de código, utilizando hashing y cifrado, asegura que cualquier modificación en el código después de la firma invalidaría la firma.
+
+Para los desarrolladores de aplicaciones, los beneficios de la firma de código incluyen eliminar advertencias en macOS para aplicaciones distribuidas fuera de la Mac App Store, proporcionando una experiencia de usuario más fluida. Es un requisito obligatorio para listar aplicaciones en cualquiera de las tiendas de aplicaciones de Apple. También mejora la seguridad de la aplicación al actuar como un elemento disuasorio contra manipulaciones malintencionadas.
+
+### Tipos de Certificados: Desarrollo, Distribución y ID de Desarrollador
+
+Apple proporciona diferentes tipos de certificados para varias etapas del desarrollo y métodos de distribución. Cada uno de ellos tiene un papel distinto a lo largo del proceso de desarrollo de la aplicación.
+
+#### 1\. Certificados de Desarrollo (por ejemplo, "Apple Development"):
+
+-   **Propósito:** Usados para firmar aplicaciones durante la fase de desarrollo, permitiéndoles ser instaladas y ejecutadas en un número limitado de _dispositivos de prueba registrados_ y simuladores para depuración y pruebas.
     
--   **Identifies:** The development team via the team identifier.
+-   **Identifica:** Normalmente identifica a un desarrollador individual a través de su ID de desarrollador.
     
--   **Use Cases:**
+-   **Usado con:** Perfiles de aprovisionamiento de desarrollo – más sobre esto más adelante.
     
-    1.  **App Store:** For signing the final version of an app that will be uploaded to App Store Connect for TestFlight beta testing or release on the App Store (iOS, macOS, tvOS, watchOS). These are used with App Store provisioning profiles – more on this later.
+
+#### 2\. Certificados de Distribución (por ejemplo, "Apple Distribution"):
+
+-   **Propósito:** Usados para firmar aplicaciones destinadas a la distribución, ya sea mediante métodos Ad Hoc (a un conjunto limitado de _probadores registrados_) o para su envío a la App Store.
+    
+-   **Identifica:** Al equipo de desarrollo a través del identificador del equipo.
+    
+-   **Casos de Uso:**
+    
+    1.  **App Store:** Para firmar la versión final de una aplicación que será subida a App Store Connect para pruebas beta en TestFlight o lanzamiento en la App Store (iOS, macOS, tvOS, watchOS). Estos se utilizan con perfiles de aprovisionamiento de la App Store – más sobre esto más adelante.
         
-    2.  **Ad Hoc:** For signing apps that will be distributed to a _limited number of registered test devices outside of the App Store or TestFlight_. These are used with Ad Hoc provisioning profile. More on this later.
+    2.  **Ad Hoc:** Para firmar aplicaciones que serán distribuidas a un _número limitado de dispositivos de prueba registrados fuera de la App Store o TestFlight_. Estos se utilizan con el perfil de aprovisionamiento Ad Hoc. Más sobre esto más adelante.
         
 
-#### 3\. Developer ID Certificates (for Mac apps distributed outside the Mac App Store):
+#### 3\. Certificados de ID de Desarrollador (para aplicaciones Mac distribuidas fuera de la Mac App Store):
 
--   **Purpose:** Specifically for macOS developers who wish to distribute their applications directly to users (for example, from their own website) rather than through the Mac App Store. Gatekeeper on macOS recognizes apps signed with a Developer ID certificate, assuring users that the app is from a known developer and has not been tampered with.
+-   **Propósito:** Específicamente para desarrolladores de macOS que deseen distribuir sus aplicaciones directamente a los usuarios (por ejemplo, desde su propio sitio web) en lugar de a través de la Mac App Store. Gatekeeper en macOS reconoce aplicaciones firmadas con un certificado de ID de Desarrollador, asegurando a los usuarios que la aplicación es de un desarrollador conocido y no ha sido manipulada.
     
--   **Types:**
+-   **Tipos:**
     
-    1.  **Developer ID Application:** Used to sign the Mac application bundle (.app) itself.
+    1.  **Aplicación ID de Desarrollador:** Usado para firmar el paquete de aplicación Mac (.app) propiamente dicho.
         
-    2.  **Developer ID Installer:** Used to sign a Mac Installer Package (.pkg) that contains the signed application.
+    2.  **Instalador ID de Desarrollador:** Usado para firmar un Paquete de Instalador de Mac (.pkg) que contiene la aplicación firmada.
         
-    3.  **Limit:** Developers can create up to five Developer ID Application certificates and up to five Developer ID Installer certificates.
+    3.  **Límite:** Los desarrolladores pueden crear hasta cinco certificados de Aplicación ID de Desarrollador y hasta cinco certificados de Instalador ID de Desarrollador.
         
 
-The following table summarizes these certificate types:
+La siguiente tabla resume estos tipos de certificados:
 
-| **Certificate Type** | **Issued To** | **Primary Purpose** | **Used With Provisioning Profile Type** | **Key Use Cases** |
+| **Tipo de Certificado** | **Emitido A** | **Propósito Principal** | **Usado Con Tipo de Perfil de Aprovisionamiento** | **Casos de Uso Clave** |
 | --- | --- | --- | --- | --- |
-| Apple Development | Individual Dev ID | Develop & debug on registered devices | Development | Xcode builds for local testing, running on personal/team test devices. |
-| Apple Distribution | Team ID | Submit app to App Store / Ad Hoc distribution | App Store, Ad Hoc | Final builds for TestFlight, App Store submission, or QA/client Ad Hoc builds. |
-| Developer ID Application | Team ID | Sign Mac app for distribution outside Mac App Store | **Developer ID Provisioning** **Profile** if the app utilizes specific capabilities (e.g., Push Notifications, Associated Domains). | Distributing Mac software directly to users (for example, from website). |
-| Developer ID Installer | Team ID | Sign Mac Installer Pkg for distribution outside Mac App Store | N/A. (The app inside the package may need a profile). | Distributing Mac software in a .pkg installer directly to users. |
-| APNs / Service Keys (.p8) | Team ID | Secure communication with specific Apple services | N/A for app signing | Push Notifications, MusicKit, DeviceCheck and so on. (Token-based authentication) |
+| Apple Development | ID de Desarrollador Individual | Desarrollar y depurar en dispositivos registrados | Desarrollo | Compilaciones de Xcode para pruebas locales, ejecución en dispositivos de prueba personales/equipo. |
+| Apple Distribution | ID de Equipo | Enviar aplicación a App Store / distribución Ad Hoc | App Store, Ad Hoc | Compilaciones finales para TestFlight, envío a App Store, o compilaciones Ad Hoc para QA/cliente. |
+| Aplicación ID de Desarrollador | ID de Equipo | Firmar aplicación Mac para distribución fuera de Mac App Store | **Perfil de Aprovisionamiento ID de Desarrollador** si la aplicación utiliza capacidades específicas (ej., Notificaciones Push, Dominios Asociados). | Distribuyendo software Mac directamente a los usuarios (por ejemplo, desde el sitio web). |
+| Instalador ID de Desarrollador | ID de Equipo | Firmar Instalador Pkg de Mac para distribución fuera de Mac App Store | N/A. (La aplicación dentro del paquete puede necesitar un perfil). | Distribuyendo software Mac en un instalador .pkg directamente a los usuarios. |
+| APNs / Claves de Servicio (.p8) | ID de Equipo | Comunicación segura con servicios específicos de Apple | N/A para firma de aplicación | Notificaciones Push, MusicKit, DeviceCheck, etc. (autenticación basada en tokens) |
 
-![Create a new certificate screen in App Store Connect](https://cdn.hashnode.com/res/hashnode/image/upload/v1748216973656/76df3f64-c84e-4195-a092-37c1143d8b1b.png)
+### Cómo Crear un Certificado de Apple – Un Resumen
 
-### How to Create an Apple Certificate – An Overview
+Aquí tienes un esquema general de cómo crear un Certificado de Apple:
 
-Here’s a general outline of how you create an Apple Certificate:
-
--   Generate a Certificate Signing Request (CSR) on your Mac. (Yes you need a mac.)
+-   Genera una Solicitud de Firma de Certificado (CSR) en tu Mac. (Sí, necesitas un Mac.)
     
--   You upload this CSR in AppStoreConnect as a part of creating the certificate.
+-   Sube esta CSR en AppStoreConnect como parte de la creación del certificado.
     
--   Download the certificate from AppStoreConnect once it’s issued.
+-   Descarga el certificado desde AppStoreConnect una vez que ha sido emitido.
     
--   Install the certificate into your Keychain.
+-   Instala el certificado en tu Llavero.
     
 
-Now we’ll go through each step in more detail. This part is very important, since we have to save some of the files generated locally or we lose the ability to transfer these certificates. This would mean revoking and re-issuing certificates (I have done this more times than I’d like to admit).
+Ahora pasaremos por cada paso con más detalle. Esta parte es muy importante, ya que debemos guardar algunos de los archivos generados localmente o perderemos la capacidad de transferir estos certificados. Esto significaría revocar y volver a emitir certificados (lo he hecho más veces de las que me gustaría admitir).
 
-#### How to Create a Certificate Signing Request (CSR)
+#### Cómo Crear una Solicitud de Firma de Certificado (CSR)
 
-A Certificate Signing Request (CSR) is a fancy name for an encrypted block of text containing information about who’s requesting the certificate (like your name and the public key). These are widely used in the cryptography world.
+Una Solicitud de Firma de Certificado (CSR) es un nombre elegante para un bloque de texto encriptado que contiene información sobre quién está solicitando el certificado (como tu nombre y la clave pública). Estas son ampliamente utilizadas en el mundo de la criptografía.
 
-For our purposes, you’ll generate a CSR on your Mac and then submit it to Apple to request a digital certificate. The CSR generation process also creates a new public/private key pair on the Mac – the private key is stored in Keychain Access and is used for the eventual code signing.
+Para nuestros propósitos, generarás una CSR en tu Mac y luego la enviarás a Apple para solicitar un certificado digital. El proceso de generación de la CSR también crea un nuevo par de claves pública/privada en el Mac – la clave privada se almacena en Acceso a Llaveros y se usa para la firma final del código.
 
-To create a CSR using Keychain Access on macOS:
+Para crear una CSR usando Acceso a Llaveros en macOS:
 
-1.  Launch Keychain Access (you can find it at `/Applications/Utilities/` or use spotlight).
+1.  Inicia Acceso a Llaveros (puedes encontrarlo en `/Aplicaciones/Utilidades/` o usar spotlight).
     
-2.  From the menu bar, choose Keychain Access > Certificate Assistant > Request a Certificate From a Certificate Authority.... (Here the Certificate Authority would be Apple).
+2.  Desde la barra de menú, elige Acceso a Llaveros > Asistente de Certificados > Solicitar un Certificado a una Autoridad de Certificación…. (Aquí, la Autoridad de Certificación sería Apple).
     
-3.  In the dialog, enter your email address and a common name for the key (for example, "My Mac Key" or "\[Your Name\] Dev Key"). This name is primarily for your identification in the Keychain.
+3.  En el diálogo, ingresa tu dirección de correo electrónico y un nombre común para la clave (por ejemplo, "Mi Clave Mac" o "Clave Dev \[Tu Nombre\]"). Este nombre es principalmente para tu identificación en el Llaveros.
     
-4.  Leave the "CA Email Address" field empty – we won’t email it to the Certificate Authority (Apple).
+4.  Deja el campo "Correo Electrónico CA" vacío – no lo enviaremos por correo electrónico a la Autoridad de Certificación (Apple).
     
-5.  Select the "Saved to disk" option and click "Continue".
+5.  Selecciona la opción "Guardado en disco" y haz clic en "Continuar".
     
-6.  Save the file, which will have a .certSigningRequest extension. The corresponding private key is now stored in the login keychain. **This private key is irreplaceable by Apple and you must store it yourself.**
-    
-
-![Dialog for the CSR creation](https://cdn.hashnode.com/res/hashnode/image/upload/v1748288861336/50f20da3-69d9-476d-97e7-331f9b9b5c76.png)
-
-#### How to Generate and Download Your Apple Certificates
-
-Once you’ve created a CSR, you can request a certificate from the Apple Developer Portal:
-
-1.  Navigate to "Certificates, Identifiers & Profiles" and select "Certificates".
-    
-2.  Click the add button (+).
-    
-3.  Choose the desired certificate type
-    
-4.  Follow the prompts, and when asked, upload the .certSigningRequest file generated earlier.
-    
-5.  After Apple processes the request, the certificate will be available for download as a .cer file.
-    
-    ![Prompt to upload the CSR after selecting the type of certificate](https://cdn.hashnode.com/res/hashnode/image/upload/v1748289386364/78f46b4e-b232-4484-98c2-dcb75120fd61.png)
+6.  Guarda el archivo, que tendrá una extensión .certSigningRequest. La clave privada correspondiente ahora se almacena en el llavero de inicio de sesión. **Esta clave privada es irremplazable por Apple y debes almacenarla tú mismo.**
     
 
-To install the certificate, double-click the downloaded .cer file. It will be added to the Keychain Access application – usually appearing in the "login" keychain under the "My Certificates" category, where it should be paired with the private key generated during the CSR generation process earlier.
+![Diálogo para la creación de la CSR](https://cdn.hashnode.com/res/hashnode/image/upload/v1748288861336/50f20da3-69d9-476d-97e7-331f9b9b5c76.png)
 
-You can see my certificate and private key in the image below for reference.
+#### Cómo Generar y Descargar Tus Certificados de Apple
 
-![An example of how your certificate and the private key will look like in the keychain](https://cdn.hashnode.com/res/hashnode/image/upload/v1748289120657/38f711dd-887a-4fae-844d-e389c65234cf.png)
+Una vez que has creado una CSR, puedes solicitar un certificado en el Portal de Desarrolladores de Apple:
 
-To recap, the CSR certifies that you generated the request from your mac. The certificate certifies that Apple (in this case, an intermediary like the "Apple Worldwide Developer Relations Certification Authority") confirms that they verified the CSR and that it is indeed you who will sign with the certificate (`.cer`) file.
-
-This is enforced by only you having access to the private key – if you lose it, you cannot use this certificate anymore.
-
-So, if you use this certificate (and the private key) to sign an app, the app store / operating system knows that it is you for sure since Apple confirmed it.
-
-### How to Store Your Keys: What are .p12 Files?
-
-As I mentioned in the previous section, to code sign an app you need your certificate (containing the public key) and the corresponding private key. This is created along with the CSR, and you can find it in the `Keychain Access` app.
-
-We call the combination of the certificate and the private key a digital identity. This proves your identity when you sign an app with them.
-
-#### .p12 Files (Personal Information Exchange):
-
-A .p12 file is a password-protected archive format used to bundle a certificate along with its private key. Its primary purposes are:
-
--   Backing up the digital identity in case you lose access to your Mac.
+1.  Navega a "Certificados, Identificadores y Perfiles" y selecciona "Certificados".
     
--   Transferring the digital identity to another Mac (for example, for another team member or a new development machine).
+2.  Haz clic en el botón de añadir (+).
     
--   Providing the identity to automated build systems or third-party build services.
+3.  Elige el tipo de certificado deseado.
+    
+4.  Sigue las indicaciones y, cuando se te pida, sube el archivo .certSigningRequest generado anteriormente.
+    
+5.  Después de que Apple procese la solicitud, el certificado estará disponible para descargar como un archivo .cer.
+    
+    ![Indicación para subir la CSR tras seleccionar el tipo de certificado](https://cdn.hashnode.com/res/hashnode/image/upload/v1748289386364/78f46b4e-b232-4484-98c2-dcb75120fd61.png)
     
 
-Historically, I have stored the .p12 file on a shared drive with my team and shared the password to it verbally – you can also store it in a local backup disk.
+Para instalar el certificado, haz doble clic en el archivo .cer descargado. Será agregado a la aplicación Acceso a Llaveros – generalmente apareciendo en el llavero "login" bajo la categoría "Mis Certificados", donde debería estar emparejado con la clave privada generada durante el proceso de generación de la CSR anterior.
 
-Great. So how do you create one?
+Puedes ver mi certificado y clave privada en la imagen de abajo como referencia.
 
-#### To export a .p12 file from Keychain Access:
+![Un ejemplo de cómo se verá tu certificado y la clave privada en el llavero](https://cdn.hashnode.com/res/hashnode/image/upload/v1748289120657/38f711dd-887a-4fae-844d-e389c65234cf.png)
 
-1.  Open Keychain Access, select the "login" keychain, and go to the "My Certificates" category.
-    
-2.  Locate the desired certificate. It should have an expandable disclosure triangle indicating an associated private key (look at the image of my certificate above).
-    
-3.  Select _both_ the certificate and its private key (or right-click the certificate and choose "Export").
-    
-4.  Right-click and choose "Export \[X\] items...".
-    
-5.  In the save dialog, choose the "Personal Information Exchange (.p12)" file format.
-    
-6.  Assign a strong password to protect the .p12 file. This password will be required when importing the file elsewhere. It is crucial for security.
-    
-7.  Save the file to a secure location.
-    
-    ![Image of exporting my certificate and private key as a .p12 file](https://cdn.hashnode.com/res/hashnode/image/upload/v1748297124625/f9d2cfe0-3538-405e-8fb0-af08276c4326.png)
-    
+Para resumir, la CSR certifica que generaste la solicitud desde tu mac. El certificado certifica que Apple (en este caso, un intermediario como la "Autoridad de Certificación de Relaciones de Desarrollo de Apple en Todo el Mundo") confirma que verificaron la CSR y que eres realmente tú quien firmará con el archivo de certificado (`.cer`).
 
-## **Bridge Between Everything: Provisioning Profiles**
+Esto se aplica al hecho de que solo tú tienes acceso a la clave privada – si la pierdes, no puedes usar este certificado más.
 
-Provisioning profiles are the final link between an App ID, developer certificates, and, in some cases, a list of specific test devices. They act as a permission slip, authorizing an app signed with a particular certificate to be installed and run either on designated devices or to be submitted to the App Store.
+Así que, si usas este certificado (y la clave privada) para firmar una aplicación, la tienda de aplicaciones / sistema operativo sabrá que eres tú con seguridad, ya que Apple lo confirmó.
 
-### What Exactly is a Provisioning Profile?
+### Cómo Almacenar Tus Claves: ¿Qué son los Archivos .p12?
 
-A provisioning profile is a `.mobileprovision` (for iOS / VisionOS) or `.provisionprofile` (for macOS) file that holds several key pieces of information:
+Como mencioné en la sección anterior, para firmar el código de una aplicación necesitas tu certificado (que contiene la clave pública) y la correspondiente clave privada. Esto se crea junto con el CSR, y puedes encontrarlo en la aplicación `Acceso a Llaveros`.
 
--   **The App ID:** Specifies which application (or set of applications, if using a wildcard App ID) the profile applies to.
+Llamamos a la combinación del certificado y la clave privada una identidad digital. Esto prueba tu identidad cuando firmas una aplicación con ellos.
+
+#### Archivos .p12 (Intercambio de Información Personal):
+
+Un archivo .p12 es un formato de archivo protegido con contraseña que se usa para empaquetar un certificado junto con su clave privada. Sus principales propósitos son:
+
+-   Hacer una copia de seguridad de la identidad digital en caso de que pierdas el acceso a tu Mac.
     
--   **Certificates:** Contains one or more developer or distribution certificates that can be used to sign the app.
+-   Transferir la identidad digital a otro Mac (por ejemplo, para otro miembro del equipo o una nueva máquina de desarrollo).
     
--   **Device UDIDs (for Development and Ad Hoc):** For profiles intended for testing on specific devices, it includes a list of the Unique Device Identifiers (UDIDs) of those authorized devices – more on devices in the next section.
-    
--   **Entitlements:** A list of app services or capabilities (like Push Notifications, iCloud, App Groups) that the app is permitted to use. These are derived from the capabilities enabled for the _associated App ID_.
+-   Proveer la identidad a sistemas de construcción automatizados o servicios de construcción de terceros.
     
 
-You can open the file using `vim` or any editor to see parts of the content which include the App Id, Operating Systems, Certificates, and so on.
 
-The operating system checks the provisioning profile at app launch to ensure the app is authorized to run on the current device and use the requested services. If the profile is missing, invalid, or doesn't match the app's signature or the device, the app will not launch.
+Genial. Entonces, ¿cómo se crea uno?
 
-They are difference from certificates, because certificates are tied to you as a developer. But provisioning profiles are to a specific app – with specific capabilities to a specific developer and maybe on specific devices.
+#### Para exportar un archivo .p12 desde Acceso a Llaveros:
 
-If any of these change (let’s say you added a capability or your certificate expired, for example), you’ll need to generate the provisioning profile again. These are the files you will work with the most out of all the above, and any change can cause your profile to become invalid.
+1.  Abre Acceso a Llaveros, selecciona el llavero "inicio de sesión" y ve a la categoría "Mis Certificados".
+    
+2.  Localiza el certificado deseado. Debe tener un triángulo de divulgación expandible que indique una clave privada asociada (mira la imagen de mi certificado arriba).
+    
+3.  Selecciona _tanto_ el certificado como su clave privada (o haz clic derecho en el certificado y elige "Exportar").
+    
+4.  Haz clic derecho y elige "Exportar \[X\] elementos...".
+    
+5.  En el diálogo de guardado, elige el formato de archivo "Intercambio de Información Personal (.p12)".
+    
+6.  Asigna una contraseña fuerte para proteger el archivo .p12. Esta contraseña será necesaria al importar el archivo en otro lugar. Es crucial para la seguridad.
+    
+7.  Guarda el archivo en una ubicación segura.
+    
+    ![Imagen de exportación de mi certificado y clave privada como un archivo .p12](https://cdn.hashnode.com/res/hashnode/image/upload/v1748297124625/f9d2cfe0-3538-405e-8fb0-af08276c4326.png)
+    
 
-### Types of Provisioning Profiles: Development, Ad Hoc, App Store, (and Enterprise)
+## **Puente entre todo: Perfiles de Aprovisionamiento**
 
-### **Types of Provisioning Profiles: Development, Ad Hoc, App Store, (and Enterprise)**
+Los perfiles de aprovisionamiento son el enlace final entre un ID de App, certificados de desarrollador y, en algunos casos, una lista de dispositivos de prueba específicos. Actúan como un permiso, autorizando que una app firmada con un certificado particular se instale y ejecute ya sea en dispositivos designados o que se envíe a la App Store.
 
-Just like certificates, we have multiple types of provisioning profiles. Similar to certificates, there can be development and distribution provisioning profiles.
+### ¿Qué es exactamente un perfil de aprovisionamiento?
 
-Since we also keep track of the devices a profile is supposed to run, we have several kinds of distribution profiles based on which devices it should run on.
+Un perfil de aprovisionamiento es un archivo `.mobileprovision` (para iOS / VisionOS) o `.provisionprofile` (para macOS) que contiene varias piezas clave de información:
 
-We also have special profiles like “Enterprise” which will add additional capabilities (like main camera access on the Vision Pro) but will restrict your app distribution methods to enterprise only.
+-   **El ID de la App:** Especifica a qué aplicación (o conjunto de aplicaciones, si se utiliza un ID de App genérico) se aplica el perfil.
+    
+-   **Certificados:** Contiene uno o más certificados de desarrollador o distribución que se pueden usar para firmar la app.
+    
+-   **UDIDs de dispositivos (para Desarrollo y Ad Hoc):** Para perfiles destinados a pruebas en dispositivos específicos, incluye una lista de los Identificadores Únicos de Dispositivos (UDIDs) de esos dispositivos autorizados – más sobre dispositivos en la próxima sección.
+    
+-   **Entitlements:** Una lista de servicios o capacidades de la app (como Notificaciones Push, iCloud, Grupos de Apps) que la app tiene permitido usar. Estos se derivan de las capacidades habilitadas para el _ID de App asociado_.
+    
 
-We will go over each of these types now. Feel free to skip to the one that you’re looking for.
+Puedes abrir el archivo usando `vim` o cualquier editor para ver partes del contenido que incluyen el ID de App, sistemas operativos, certificados, etc.
 
-| **Profile Type** | **Purpose** | **Required Certificate Type(s)** | **Device Registration Required?** | **Distribution Method** |
+El sistema operativo verifica el perfil de aprovisionamiento al iniciar la app para asegurarse de que la app está autorizada para ejecutarse en el dispositivo actual y usar los servicios solicitados. Si falta el perfil, es inválido o no coincide con la firma de la app o el dispositivo, la app no se iniciará.
+
+Son diferentes de los certificados, porque los certificados están ligados a ti como desarrollador. Pero los perfiles de aprovisionamiento están para una app específica – con capacidades específicas de un desarrollador específico y tal vez en dispositivos específicos.
+
+Si alguna de estas cosas cambia (digamos que agregas una capacidad o tu certificado caduca, por ejemplo), necesitarás generar el perfil de aprovisionamiento nuevamente. Estos son los archivos con los que trabajarás más de todos los mencionados, y cualquier cambio puede hacer que tu perfil se invalide.
+
+### Tipos de Perfiles de Aprovisionamiento: Desarrollo, Ad Hoc, App Store, (y Empresarial)
+
+### **Tipos de Perfiles de Aprovisionamiento: Desarrollo, Ad Hoc, App Store, (y Empresarial)**
+
+Al igual que los certificados, tenemos varios tipos de perfiles de aprovisionamiento. Similar a los certificados, puede haber perfiles de aprovisionamiento de desarrollo y distribución.
+
+Dado que también llevamos un registro de los dispositivos en los que se supone que debe ejecutarse un perfil, tenemos varios tipos de perfiles de distribución basados en los dispositivos en los que debería ejecutarse.
+
+También tenemos perfiles especiales como "Empresarial" que agregarán capacidades adicionales (como acceso a la cámara principal en el Vision Pro) pero restringirán tus métodos de distribución de apps solo a empresas.
+
+Vamos a repasar cada uno de estos tipos ahora. Siéntete libre de saltar al que estás buscando.
+
+| **Tipo de Perfil** | **Propósito** | **Tipo(s) de Certificado Requerido** | **¿Registro de Dispositivos Requerido?** | **Método de Distribución** |
 | --- | --- | --- | --- | --- |
-| **Development** | Install & debug on registered devices during development (need Xcode to install). | Development | Yes | Xcode run, local device deployment. |
-| **Ad Hoc** | Distribute to a limited number of registered test devices (no need for Xcode). | Distribution | Yes | Manual install (for example, via link, email, MDM) for testers. |
-| **App Store Connect** | Submit app to App Store Connect for TestFlight or App Store release. | Distribution | No | Upload to App Store Connect. |
-| **Enterprise** | Distribute proprietary apps to employees within an organization. | Enterprise (Distribution) | No (subject to program terms) | Internal distribution (e.g., private portal, MDM). |
-| **Developer ID** | Allows a macOS app that is distributed outside the App Store to use advanced features | Developer ID | No | Outside the Mac App Store (for example, a web page, USB, MDM ) |
+| **Desarrollo** | Instalar y depurar en dispositivos registrados durante el desarrollo (se necesita Xcode para instalar). | Desarrollo | Sí | Ejecución con Xcode, despliegue local en dispositivos. |
+| **Ad Hoc** | Distribuir a un número limitado de dispositivos de prueba registrados (no se necesita Xcode). | Distribución | Sí | Instalación manual (por ejemplo, a través de enlace, correo electrónico, MDM) para probadores. |
+| **App Store Connect** | Enviar la app a App Store Connect para su lanzamiento en TestFlight o App Store. | Distribución | No | Subida a App Store Connect. |
+| **Empresarial** | Distribuir apps propias a empleados dentro de una organización. | Empresarial (Distribución) | No (sujeto a los términos del programa) | Distribución interna (por ejemplo, portal privado, MDM). |
+| **Developer ID** | Permite que una app de macOS distribuida fuera de la App Store utilice funciones avanzadas | Developer ID | No | Fuera de la Mac App Store (por ejemplo, una página web, USB, MDM) |
 
-#### **Development Provisioning Profile:**
+#### **Perfil de Aprovisionamiento de Desarrollo:**
 
--   **Allows** an app to be installed and debugged on specific devices registered in the developer's account during the active development phase. More on device registration later.
+-   **Permite** que una app se instale y depure en dispositivos específicos registrados en la cuenta del desarrollador durante la fase activa de desarrollo. Más sobre el registro de dispositivos más adelante.
     
--   **Contains** an App ID, one or more development certificates, and a list of registered device UDIDs.
+-   **Contiene** un ID de App, uno o más certificados de desarrollo, y una lista de UDIDs de dispositivos registrados.
     
--   **Created** manually in the Apple Developer Portal or generated automatically by Xcode if `Automatically manage signing` is enabled.
-    
+-   **Creado** manualmente en el Portal de Desarrolladores de Apple o generado automáticamente por Xcode si `Manejar firma automáticamente` está habilitado.
 
-#### **Ad Hoc Provisioning Profile:**
 
--   **Allows** distribution of an app to a limited number of registered test devices **without** requiring Xcode for installation. This is ideal for distributing builds to QA teams, beta testers, or clients for feedback.
+```markdown
+-   **Permite** la distribución de una aplicación a un número limitado de dispositivos de prueba registrados **sin** requerir Xcode para la instalación. Esto es ideal para distribuir versiones a equipos de control de calidad, probadores beta o clientes para recibir comentarios.
     
--   **Contains** an App ID (often an explicit App ID, or an Xcode-managed one like `XC Wildcard` or `XC`), a single distribution certificate, and a list of registered device UDIDs.
+-   **Contiene** un ID de aplicación (a menudo un ID de aplicación explícito o uno gestionado por Xcode como `XC Wildcard` o `XC`), un único certificado de distribución y una lista de UDIDs de dispositivos registrados.
     
--   **Created** manually in the Developer Portal or managed by Xcode's automatic signing.
-    
-
-#### **App Store Connect Provisioning Profile:**
-
--   **Required** to sign an app for submission to App Store Connect. This is the pathway for distributing apps via TestFlight for broader beta testing and for official release on the App Store.
-    
--   **Contains** an explicit App ID (or an App ID that matches the app's bundle ID, including Xcode-managed App IDs), and a single distribution certificate. _Device UDIDs are not included in this profile type since this is meant for broader distribution._
-    
--   **Created** manually in the Developer Portal or managed by Xcode's automatic signing.
+-   **Se crea** manualmente en el Portal del Desarrollador o gestionado por la firma automática de Xcode.
     
 
-#### **Enterprise Provisioning Profile:**
+#### **Perfil de Aprovisionamiento de App Store Connect:**
 
--   Exclusively for members of the **Apple Developer Enterprise Program**. It allows developers of these orgs to distribute proprietary, in-house applications directly to their employees, bypassing the public App Store.
+-   **Requerido** para firmar una aplicación para su envío a App Store Connect. Este es el camino para distribuir aplicaciones a través de TestFlight para pruebas beta más amplias y para el lanzamiento oficial en el App Store.
     
--   Note: This program has stringent enrollment criteria and is strictly for internal distribution within the enrolled organization – these apps cannot be pushed to AppStore.
+-   **Contiene** un ID de aplicación explícito (o un ID de aplicación que coincida con el ID de paquete de la aplicación, incluidos los IDs de aplicación gestionados por Xcode), y un único certificado de distribución. _Los UDIDs de dispositivos no se incluyen en este tipo de perfil ya que está destinado a una distribución más amplia._
     
-
-#### **Developer ID Provisioning Profile:**
-
--   **Required** to utilize certain Apple services or advanced capabilities like Push Notifications, CloudKit, Sign in with Apple, or specific iCloud services.
-    
--   **Contains** an App ID, a Developer ID distribution certificate, the entitlements authorized for the app.
-    
--   **Created** manually in the Developer Portal – will not be added automatically by Xcode’s automatic signing.
+-   **Se crea** manualmente en el Portal del Desarrollador o gestionado por la firma automática de Xcode.
     
 
-### How to Create and Manage Provisioning Profiles
+#### **Perfil de Aprovisionamiento Empresarial:**
 
-Creating and managing provisioning profiles usually requires an Account Holder or Admin role in the Apple Developer Program. You also need a configured App ID, the appropriate certificate(s), and for Development or Ad Hoc profiles, a list of registered device UDIDs.
-
-If you are new developer, my recommendation is to read this article completely, then get back to this section once you have your devices setup.
-
-General steps for manual creation in the Developer Portal:
-
-1.  Navigate to "Certificates, Identifiers & Profiles" and select "Profiles".
+-   Exclusivamente para miembros del **Programa Empresarial de Desarrolladores de Apple**. Permite a los desarrolladores de estas organizaciones distribuir aplicaciones internas y propietarias directamente a sus empleados, eludiendo el App Store público.
     
-2.  Click the add button (+).
-    
-3.  Select the type of provisioning profile to create (for example, "iOS App Development," "Ad Hoc," "App Store").
-    
-4.  Choose the App ID you’re targeting from the dropdown list.
-    
-5.  Select the certificate(s) to include in the profile. Development profiles can include multiple development certificates – so you can include all the team member certificates here. Ad Hoc and App Store profiles include a single distribution certificate.
-    
-6.  If creating a Development or Ad Hoc profile, select the registered devices to include.
-    
-7.  Provide a name for the provisioning profile (this is for identification in the portal and Xcode).
-    
-8.  Click "Generate" and then "Download" the `.mobileprovision` or `.provisionprofile` file.
+-   Nota: Este programa tiene criterios de inscripción estrictos y es exclusivamente para distribución interna dentro de la organización inscrita – estas aplicaciones no pueden enviarse al App Store.
     
 
-You need to make downloaded profiles available to Xcode. You can often do this by double-clicking the downloaded file or by refreshing profiles within Xcode's account settings (Preferences > Accounts).
+#### **Perfil de Aprovisionamiento de ID de Desarrollador:**
 
-I really like Xcode's "Automatically manage signing" feature and it can simplify profile management by a lot. It creates and updates profiles as needed. But, understanding the manual process is crucial for troubleshooting because when things go wrong, it is straightforward to debug the issue with this knowledge.
-
-Provisioning profiles will become invalid and require regeneration if:
-
--   The capabilities of the associated App ID are changed – let’s say you added a new capability.
+-   **Requerido** para utilizar ciertos servicios de Apple o capacidades avanzadas como Notificaciones Push, CloudKit, Iniciar sesión con Apple o servicios específicos de iCloud.
     
--   An included certificate expires or is revoked.
+-   **Contiene** un ID de aplicación, un certificado de distribución de ID de Desarrollador, las autorizaciones concedidas a la aplicación.
     
--   For Development/Ad Hoc profiles, if devices are added or removed from the registered list in a way that affects the profile's device set, or if the profile's own expiration date is reached. When such changes occur, you have to edit the profile (if possible) or delete it and recreate it in the Developer Portal, then re-download it and install it again. While this may seem like a complicated step, it’s straightforward if you do it a couple of times.
+-   **Se crea** manualmente en el Portal del Desarrollador – no se añadirá automáticamente con la firma automática de Xcode.
     
 
-## **Device Management — Development and Ad Hoc Builds**
+### Cómo Crear y Gestionar Perfiles de Aprovisionamiento
 
-For testing applications on physical Apple hardware outside of Testflight or AppStore, you’ll need to register the Unique Device Identifiers (UDIDs) of your test devices with your Apple Developer account. This registration is a necessary step for creating Development and Ad Hoc provisioning profiles.
+Crear y gestionar perfiles de aprovisionamiento generalmente requiere un rol de Titular de Cuenta o Administrador en el Programa de Desarrolladores de Apple. También necesitas un ID de aplicación configurado, el o los certificados apropiados, y en el caso de perfiles de Desarrollo o Ad Hoc, una lista de UDIDs de dispositivos registrados.
 
-### Why You Need to Register Test Devices
+Si eres un desarrollador nuevo, mi recomendación es que leas este artículo por completo, y luego regreses a esta sección una vez que tengas tus dispositivos configurados.
 
-Development and Ad Hoc provisioning profiles are specifically tied to a list of registered devices. An app signed with this profile can be installed directly without going through App Store process. This means that you need to register devices you intend to develop on. This restricts bad faith actors from releasing apps widely without developer and App Store supervision.
+Pasos generales para la creación manual en el Portal del Desarrollador:
 
-The UUID of a device is like a physical address (think Mac Address). If you don’t include this in the provisioning profile you used to sign an app package, it cannot be installed on that device.
-
-Let’s go over the steps to do that.
-
-### How to Find Your Device's UDID (Unique Device Identifier)
-
-A UDID is a unique 40-character hexadecimal string (for older devices) or a 25-character string (format XXXXXXXX-XXXXXXXXXXXXXXXX) that uniquely identifies a specific iPhone, iPad, Apple Watch, Apple TV, Vision Pro or Mac.
-
-There are several ways to find a device's UDID:
-
--   **Xcode:** Connect the device to a Mac running Xcode. Open Xcode and navigate to Window > Devices and Simulators. Select the connected device from the list on the left. The UDID will be displayed as the "Identifier" in the device information panel.
+1.  Navega a "Certificados, Identificadores y Perfiles" y selecciona "Perfiles".
     
--   **Finder (macOS Catalina and later):** Connect the iOS or iPadOS device to a Mac. Open Finder and select the device from the sidebar under "Locations." The UDID may be displayed directly, or it might be necessary to click on the line of text beneath the device's name (which shows model, storage, and OS version) to cycle through to display the UDID.
+2.  Haz clic en el botón de agregar (+).
     
--   **iTunes (older macOS versions):** For Macs running macOS Mojave or earlier, connect the device and open iTunes. Select the device icon when it appears. In the "Summary" tab, click on the "Serial Number" field; this will change to display the UDID.
+3.  Selecciona el tipo de perfil de aprovisionamiento a crear (por ejemplo, "Desarrollo de App iOS," "Ad Hoc," "App Store").
     
--   **Apple Silicon Macs:** When registering an Apple Silicon Mac, it's important to look for the "Provisioning UDID," which can be found in System Information under Hardware > Provisioning UDID.
+4.  Elige el ID de aplicación que estás enfocando desde la lista desplegable.
     
--   **Other Ways:** There are some websites that will install a profile on to your device to get the UUID – so as an absolute last resort, you can do this. _But I highly recommend doing it in the one of the official ways to avoid any potential issues._
+5.  Selecciona el o los certificados a incluir en el perfil. Los perfiles de Desarrollo pueden incluir múltiples certificados de desarrollo – así, puedes incluir todos los certificados de los miembros del equipo aquí. Los perfiles Ad Hoc y de App Store incluyen un único certificado de distribución.
+    
+6.  Si estás creando un perfil de Desarrollo o Ad Hoc, selecciona los dispositivos registrados a incluir.
+    
+7.  Proporciona un nombre para el perfil de aprovisionamiento (esto es para identificación en el portal y Xcode).
+    
+8.  Haz clic en "Generar" y luego "Descargar" el archivo `.mobileprovision` o `.provisionprofile`.
     
 
-### How to Register Devices in the Apple Developer Portal
+Necesitas hacer disponibles los perfiles descargados para Xcode. A menudo puedes hacerlo haciendo doble clic en el archivo descargado o actualizando perfiles dentro de la configuración de la cuenta de Xcode (Preferencias > Cuentas).
 
-Device registration is managed through the "Certificates, Identifiers & Profiles" section of the Apple Developer Portal (developer.apple.com) and typically requires an Account Holder or Admin role.
+Realmente me gusta la función de Xcode "Gestionar firma automáticamente" y esta puede simplificar mucho la gestión de perfiles. Crea y actualiza perfiles según sea necesario. Pero, entender el proceso manual es crucial para la resolución de problemas porque cuando las cosas salen mal, es más sencillo depurar el problema con este conocimiento.
 
-To manually register a single device:
+Los perfiles de aprovisionamiento se volverán inválidos y requerirán regeneración si:
 
-1.  Sign in to the Apple Developer Portal and navigate to "Certificates, Identifiers & Profiles," then select "Devices" from the sidebar.
+-   Se cambian las capacidades del ID de aplicación asociado – digamos que agregaste una nueva capacidad.
     
-2.  Click the add button (+) to register a new device.
+-   Un certificado incluido expira o es revocado.
     
-3.  Select the correct platform for the device (for example, iOS, macOS, tvOS, watchOS).
-    
-4.  Enter a descriptive "Device Name" (this is for your reference, for example, "Sravan’s iPhone 11 Pro") and the device's UDID obtained in the previous step.
-    
-5.  Click "Continue," review the information to make sure everything is correct, and then click "Register".
+-   Para perfiles de Desarrollo/Ad Hoc, si los dispositivos se agregan o eliminan de la lista registrada de una manera que afecta al conjunto de dispositivos del perfil, o si se alcanza la fecha de expiración del propio perfil. Cuando ocurren tales cambios, debes editar el perfil (si es posible) o eliminarlo y recrearlo en el Portal del Desarrollador, luego volver a descargarlo e instalarlo nuevamente. Aunque esto pueda parecer un paso complicado, es sencillo si lo haces un par de veces.
     
 
-For registering multiple devices, the portal supports uploading a specially formatted text file (a .txt or a .deviceids file) containing device names and UDIDs.
+## **Gestión de Dispositivos — Compilaciones de Desarrollo y Ad Hoc**
 
-If "Automatically manage signing" is enabled in Xcode, Xcode can automatically register a connected device when it's selected as a build target. This is the way I managed all of my personal projects and devices. On the other hand, the file upload was really useful at my workplace to keep track of all the devices and add them at once.
+Para probar aplicaciones en hardware físico de Apple fuera de TestFlight o App Store, necesitarás registrar los Identificadores Únicos del Dispositivo (UDIDs) de tus dispositivos de prueba con tu cuenta de Desarrollador de Apple. Este registro es un paso necesario para crear perfiles de aprovisionamiento de Desarrollo y Ad Hoc.
 
-### Understanding Device Limits and Annual Resets
+### Por Qué Necesitas Registrar Dispositivos de Prueba
 
-The Apple Developer Program imposes limits on the number of devices that can be registered for testing:
+Los perfiles de aprovisionamiento de Desarrollo y Ad Hoc están específicamente vinculados a una lista de dispositivos registrados. Una aplicación firmada con este perfil puede instalarse directamente sin pasar por el proceso de App Store. Esto significa que necesitas registrar los dispositivos en los que planeas desarrollar. Esto restringe a actores de mala fe de lanzar aplicaciones ampliamente sin la supervisión del desarrollador y de App Store.
+```
 
--   **Annual Limit:** Each membership year, a development team can register up to 100 devices for each product family (iPhone, iPad, Apple Watch, Apple TV, Apple Vision Pro, Mac). If you are a large team, this can potentially bottleneck you. When we ran into this issue, we created a new development team that could be split so that it didn’t have too much interdependence. There is no other way as far as I know, other than asking Apple and appealing them.
+Vamos a repasar los pasos para hacerlo.
+
+### Cómo encontrar el UDID de tu dispositivo (Identificador Único de Dispositivo)
+
+Un UDID es una cadena hexadecimal única de 40 caracteres (para dispositivos más antiguos) o una cadena de 25 caracteres (formato XXXXXXXX-XXXXXXXXXXXXXXXX) que identifica de manera única a un iPhone, iPad, Apple Watch, Apple TV, Vision Pro o Mac específicos.
+
+Hay varias maneras de encontrar el UDID de un dispositivo:
+
+-   **Xcode:** Conecta el dispositivo a una Mac con Xcode ejecutándose. Abre Xcode y navega a Ventana > Dispositivos y Simuladores. Selecciona el dispositivo conectado de la lista de la izquierda. El UDID se mostrará como el "Identificador" en el panel de información del dispositivo.
     
--   **Disabling Devices:** While a device can be disabled in the portal during the membership year, doing so **does not free up its slot or increase the number of available devices for that year**. This part is frustrating but I think this is the only way they can enforce the 100 device limit to avoid people swapping devices. They should just provide a pathway to increase the limit, really. Disabling a device will, however, invalidate any provisioning profiles that include it, requiring those profiles to be regenerated.
+-   **Finder (macOS Catalina y posteriores):** Conecta el dispositivo iOS o iPadOS a una Mac. Abre Finder y selecciona el dispositivo de la barra lateral en "Ubicaciones". El UDID puede mostrarse directamente, o puede ser necesario hacer clic en la línea de texto debajo del nombre del dispositivo (que muestra el modelo, almacenamiento y versión del SO) para mostrar el UDID.
     
--   **Resetting Device List (Start of New Membership Year):** At the beginning of a new membership year, Account Holders, Admins, and App Managers are given a one-time option when they first sign in to "Certificates, Identifiers & Profiles" to remove devices from their list. This allows them to "reset" their available device count back to 100 for each product family. You can choose to remove specific devices or all registered devices. **This is your one chance per year to remove unused devices completely and free up slots for new devices.**
+-   **iTunes (versiones anteriores de macOS):** Para Macs con macOS Mojave o anterior, conecta el dispositivo y abre iTunes. Selecciona el ícono del dispositivo cuando aparezca. En la pestaña "Resumen", haz clic en el campo "Número de serie"; esto cambiará para mostrar el UDID.
     
--   **Membership Expiration:** If a developer program membership is nearing expiration and is not planned for renewal, the Account Holder will have an option, starting 30 days before expiration, to download a copy of their registered device list. They can also opt to have all devices removed from the account immediately upon membership expiration. If no action is taken, devices are typically removed automatically 180 days after membership expiration.
+-   **Macs con Apple Silicon:** Al registrar un Mac con Apple Silicon, es importante buscar el "UDID de Aprovisionamiento", que se puede encontrar en Información del Sistema bajo Hardware > UDID de Aprovisionamiento.
     
-
-## **Possibilities: Enabling Capabilities and Services**
-
-App Capabilities (or App Services) are features provided by Apple that we (as developers) can integrate into our applications to extend functionality and provide richer user experiences. Examples include iCloud storage, Push Notifications, Sign in with Apple, Apple Pay and HealthKit integration. Enabling these often requires explicit configuration for an app's App ID in the Apple Developer Portal and within the Xcode project.
-
-### Why You Should Use Capabilities
-
-Making full use of these App capabilities can set your app apart from other apps in a very noticeable way. You can use Apple Wallet integration if you want users to scan a membership card. You can use journaling suggestions if you want to prompt them to journal something. You can use iCloud Storage to lean further into inter-device synchronization.
-
-When you enable a capability for an App ID, it results in specific entitlements being added to the app's provisioning profile. These entitlements are permissions that the operating system checks at runtime to ensure the app is authorized to use the requested service.
-
-### How to Configure Capabilities for Your App ID (Apple Developer Portal)
-
-Enabling and configuring capabilities is typically done by an Account Holder or Admin in the Apple Developer Portal (developer.apple.com).
-
-1.  Navigate to "Certificates, Identifiers & Profiles" and select "Identifiers."
-    
-2.  Choose the App ID for which capabilities need to be configured.
-    
-3.  In the App ID's settings, there will be a "Capabilities" tab. Select the checkboxes for the capabilities the app requires.
-    
-4.  Many capabilities require additional configuration steps. For these, a "Configure" or "Edit" button will usually appear next to the capability once selected. Examples include:
+-   **Otras formas:** Hay algunos sitios web que instalarán un perfil en tu dispositivo para obtener el UUID, así que como último recurso absoluto, puedes hacerlo. _Pero recomiendo encarecidamente hacerlo de una de las formas oficiales para evitar posibles problemas._
     
 
--   **App Groups:** Requires creating or selecting an app group identifier to allow data sharing between a main app and its extensions, or between different apps from the same developer.
-    
--   **Apple Pay:** Requires associating one or more Merchant IDs with the App ID.
-    
--   **iCloud:** May require choosing Xcode version compatibility and creating or assigning iCloud containers for Key-Value or Document storage
-    
--   **Sign in with Apple:** May require configuring the App ID as a primary app or grouping it with an existing primary App ID, and optionally providing a server-to-server notification endpoint URL.
-    
+### Cómo registrar dispositivos en el Portal de Desarrolladores de Apple
 
-5.  After configuring all selected capabilities, click "Save." A warning dialog may appear, which needs confirmation to finalize the changes.
+El registro de dispositivos se gestiona a través de la sección "Certificados, Identificadores y Perfiles" del Portal de Desarrolladores de Apple (developer.apple.com) y generalmente requiere un rol de Titular de Cuenta o Administrador.
 
-**Enabling a capability in the Developer Portal is only one part of the process.** You’ll also need to add and configure it within the app's target in the Xcode project, under the "Signing & Capabilities" tab.
+Para registrar manualmente un solo dispositivo:
 
-![Showing the Signing & Capabilities screen in Xcode](https://cdn.hashnode.com/res/hashnode/image/upload/v1748480139418/6a4007b3-01bd-484a-865c-8c5e728e15e0.png)
-
-![Screenshot showing the Capabilities selector in Xcode](https://cdn.hashnode.com/res/hashnode/image/upload/v1748480260906/e0dcec33-24ce-448b-91be-b79f5638e6fc.png)
-
-![Screenshot of Xcode showing three capabilities. ](https://cdn.hashnode.com/res/hashnode/image/upload/v1748480340624/ac56896a-0fb0-4cb0-a3fc-c894a255794a.png)
-
-1.  Navigate to the project settings and select “Signing & Capabilities”.
+1.  Inicia sesión en el Portal de Desarrolladores de Apple y navega a "Certificados, Identificadores y Perfiles", luego selecciona "Dispositivos" de la barra lateral.
     
-2.  Press the “+ Capability” button to select the capability.
+2.  Haz clic en el botón de añadir (+) para registrar un nuevo dispositivo.
     
-3.  Once selected, the capability should appear in the pane. Depending on the capability, you might want to configure it further.
+3.  Selecciona la plataforma correcta para el dispositivo (por ejemplo, iOS, macOS, tvOS, watchOS).
+    
+4.  Introduce un "Nombre del Dispositivo" descriptivo (esto es para tu referencia, por ejemplo, "iPhone 11 Pro de Sravan") y el UDID del dispositivo obtenido en el paso anterior.
+    
+5.  Haz clic en "Continuar", revisa la información para asegurarte de que todo esté correcto y luego haz clic en "Registrar".
     
 
-This Xcode step integrates the necessary frameworks, adds entitlements files to the project, and adjusts build settings.
+Para registrar varios dispositivos, el portal admite cargar un archivo de texto especialmente formateado (un archivo .txt o .deviceids) que contiene nombres de dispositivos y UDIDs.
 
-### How Enabling Capabilities Affects Your Provisioning Profiles
+Si la "Administración automática de firmas" está habilitada en Xcode, Xcode puede registrar automáticamente un dispositivo conectado cuando está seleccionado como un objetivo de construcción. Esta es la forma en que gestioné todos mis proyectos y dispositivos personales. Por otro lado, la carga de archivos fue realmente útil en mi lugar de trabajo para llevar un registro de todos los dispositivos y añadirlos de una vez.
 
-Changes to an App ID's enabled capabilities have a direct and significant impact on its associated provisioning profiles.
+### Entendiendo los límites de dispositivos y los reinicios anuales
 
--   **Invalidation:** When a capability is enabled, disabled, or its configuration is modified for an App ID, **all existing provisioning profiles that use that App ID immediately become invalid**.
+El Programa de Desarrolladores de Apple impone límites en la cantidad de dispositivos que se pueden registrar para pruebas:
+
+-   **Límite anual:** Cada año de membresía, un equipo de desarrollo puede registrar hasta 100 dispositivos por cada familia de productos (iPhone, iPad, Apple Watch, Apple TV, Apple Vision Pro, Mac). Si eres un equipo grande, esto puede posiblemente causar un cuello de botella. Cuando nos encontramos con este problema, creamos un nuevo equipo de desarrollo que podría dividirse para que no tuviera demasiada interdependencia. No hay otra forma que yo conozca, aparte de pedir a Apple y apelarles.
     
--   **Regeneration Required:** These invalidated provisioning profiles must be regenerated (either by editing and re-saving them in the Developer Portal or by having Xcode's automatic signing handle it). The regenerated profiles will then include the updated set of entitlements corresponding to the newly configured capabilities.
+-   **Deshabilitar dispositivos:** Mientras que un dispositivo puede ser deshabilitado en el portal durante el año de membresía, hacerlo **no libera su espacio ni aumenta el número de dispositivos disponibles para ese año**. Esta parte es frustrante, pero creo que es la única forma en que pueden imponer el límite de 100 dispositivos para evitar que las personas intercambien dispositivos. Deberían simplemente proporcionar un camino para aumentar el límite, realmente. Sin embargo, deshabilitar un dispositivo invalidará cualquier perfil de aprovisionamiento que lo incluya, lo que requerirá que esos perfiles sean regenerados.
     
--   **Platform Impact:** Enabling a capability for an App ID that is used across multiple platforms (for example, an iOS app and its watchOS companion) will affect the provisioning profiles for all eligible platforms that use that App ID.
+-   **Reinicio de lista de dispositivos (Inicio de un nuevo año de membresía):** Al comienzo de un nuevo año de membresía, los Titulares de Cuenta, Administradores y Gestores de Aplicaciones tienen una opción única cuando inician sesión por primera vez en "Certificados, Identificadores y Perfiles" para eliminar dispositivos de su lista. Esto les permite "restablecer" su conteo de dispositivos disponibles a 100 por cada familia de productos. Puedes optar por eliminar dispositivos específicos o todos los dispositivos registrados. **Esta es tu única oportunidad al año para eliminar completamente dispositivos no utilizados y liberar espacios para nuevos dispositivos.**
+    
+-   **Expiración de membresía:** Si la membresía del programa de desarrolladores está a punto de expirar y no se planea renovar, el Titular de la Cuenta tendrá la opción, comenzando 30 días antes de la expiración, de descargar una copia de su lista de dispositivos registrados. También pueden optar por tener todos los dispositivos eliminados de la cuenta inmediatamente al vencer la membresía. Si no se toma ninguna acción, los dispositivos generalmente se eliminan automáticamente 180 días después de la expiración de la membresía.
     
 
-This is something to keep in mind. Especially when it comes to distribution profiles since those are usually manually managed.
 
-## **Conclusion**
+Capacidades de la Aplicación (o Servicios de Aplicación) son características proporcionadas por Apple que nosotros (como desarrolladores) podemos integrar en nuestras aplicaciones para extender la funcionalidad y proporcionar experiencias de usuario más ricas. Ejemplos incluyen almacenamiento en iCloud, Notificaciones Push, Iniciar sesión con Apple, Apple Pay e integración con HealthKit. Habilitar estas capacidades a menudo requiere una configuración explícita para el ID de la aplicación en el Apple Developer Portal y dentro del proyecto de Xcode.
 
-While all of these might seem daunting, Apple’s automatic process should handle most of it. But I highly recommend learning how everything works so that you can debug it in case something goes wrong. I also highly recommend using manually created profiles for distribution.
+### Por Qué Deberías Usar Capacidades
 
-While signing and handling certificates is not the most exciting part of the App development process, it is a necessary skill to have. In my next article, I will go over distributing an app from start to finish (which includes these processes and more restrictions).
+Hacer uso completo de estas capacidades de la aplicación puede diferenciar tu aplicación de otras de una manera muy notable. Puedes usar la integración con Apple Wallet si quieres que los usuarios escaneen una tarjeta de membresía. Puedes usar sugerencias de diario si deseas incitarles a escribir. Puedes usar el almacenamiento en iCloud para profundizar en la sincronización entre dispositivos.
 
-You can follow me at [Sravan Karuturi][11] for my other posts.
+Cuando habilitas una capacidad para un ID de aplicación, da como resultado que se añadan derechos específicos al perfil de aprovisionamiento de la aplicación. Estos derechos son permisos que el sistema operativo verifica en tiempo de ejecución para asegurar que la aplicación está autorizada para usar el servicio solicitado.
 
-[1]: #heading-app-ids-bundle-ids-your-apps-identity
-[2]: #heading-understanding-distribution-a-deep-dive-into-certificates
-[3]: #heading-bridge-between-everything-provisioning-profiles
-[4]: #heading-device-management-development-and-ad-hoc-builds
-[5]: #heading-possibilities-enabling-capabilities-and-services
-[6]: #heading-conclusion
-[7]: http://com.mycompany.app
-[8]: http://com.foo.bar
-[9]: http://com.foo
-[10]: https://developer.apple.com/documentation/appstoreconnectapi
-[11]: https://hashnode.com/@sravankaruturi
+### Cómo Configurar Capacidades para tu ID de Aplicación (Apple Developer Portal)
+
+Habilitar y configurar capacidades generalmente lo hace un Titular de Cuenta o Administrador en el Apple Developer Portal (developer.apple.com).
+
+1. Navega a "Certificates, Identifiers & Profiles" y selecciona "Identifiers".
+    
+2. Elige el ID de aplicación para el cual se necesitan configurar capacidades.
+    
+3. En la configuración del ID de aplicación, habrá una pestaña "Capabilities". Selecciona las casillas de verificación para las capacidades que la aplicación requiere.
+    
+4. Muchas capacidades requieren pasos adicionales de configuración. Para estas, generalmente aparecerá un botón "Configure" o "Edit" junto a la capacidad una vez seleccionada. Ejemplos incluyen:
+    
+
+- **App Groups:** Requiere crear o seleccionar un identificador de grupo de aplicaciones para permitir compartir datos entre una aplicación principal y sus extensiones, o entre diferentes aplicaciones del mismo desarrollador.
+    
+- **Apple Pay:** Requiere asociar uno o más IDs de comerciante con el ID de aplicación.
+    
+- **iCloud:** Puede requerir elegir compatibilidad de versión de Xcode y crear o asignar contenedores de iCloud para almacenamiento de clave-valor o de documentos.
+    
+- **Sign in with Apple:** Puede requerir configurar el ID de aplicación como una aplicación principal o agruparlo con un ID de aplicación principal existente, y opcionalmente proporcionar una URL de punto de notificación servidor-a-servidor.
+    
+
+5. Después de configurar todas las capacidades seleccionadas, haz clic en "Save". Puede aparecer un cuadro de diálogo de advertencia, que necesita confirmación para finalizar los cambios.
+
+**Habilitar una capacidad en el Developer Portal es solo una parte del proceso.** También necesitarás agregarla y configurarla dentro del objetivo de la aplicación en el proyecto de Xcode, bajo la pestaña "Signing & Capabilities".
+
+![Mostrando la pantalla de Signing & Capabilities en Xcode](https://cdn.hashnode.com/res/hashnode/image/upload/v1748480139418/6a4007b3-01bd-484a-865c-8c5e728e15e0.png)
+
+![Captura de pantalla mostrando el selector de Capabilities en Xcode](https://cdn.hashnode.com/res/hashnode/image/upload/v1748480260906/e0dcec33-24ce-448b-91be-b79f5638e6fc.png)
+
+![Captura de pantalla de Xcode mostrando tres capacidades.](https://cdn.hashnode.com/res/hashnode/image/upload/v1748480340624/ac56896a-0fb0-4cb0-a3fc-c894a255794a.png)
+
+1. Navega a la configuración del proyecto y selecciona "Signing & Capabilities".
+    
+2. Presiona el botón “+ Capability” para seleccionar la capacidad.
+    
+3. Una vez seleccionada, la capacidad debería aparecer en el panel. Dependiendo de la capacidad, es posible que desees configurarla más.
+    
+
+Este paso en Xcode integra los frameworks necesarios, añade archivos de derechos al proyecto y ajusta la configuración de compilación.
+
+### Cómo la Habilitación de Capacidades Afecta a tus Perfiles de Aprovisionamiento
+
+Los cambios en las capacidades habilitadas de un ID de aplicación tienen un impacto directo y significativo en sus perfiles de aprovisionamiento asociados.
+
+- **Invalidación:** Cuando se habilita, deshabilita o modifica la configuración de una capacidad para un ID de aplicación, **todos los perfiles de aprovisionamiento existentes que usan ese ID de aplicación inmediatamente se invalidan**.
+    
+- **Regeneración Requerida:** Estos perfiles de aprovisionamiento invalidados deben regenerarse (ya sea editándolos y guardándolos de nuevo en el Developer Portal o dejando que el firmado automático de Xcode lo maneje). Los perfiles regenerados incluirán el conjunto actualizado de derechos correspondientes a las capacidades recién configuradas.
+    
+- **Impacto en la Plataforma:** Habilitar una capacidad para un ID de aplicación que se utiliza en múltiples plataformas (por ejemplo, una aplicación iOS y su compañero watchOS) afectará los perfiles de aprovisionamiento para todas las plataformas elegibles que usan ese ID de aplicación.
+    
+
+Esto es algo a tener en cuenta. Especialmente cuando se trata de perfiles de distribución ya que esos suelen ser gestionados manualmente.
+
+## **Conclusión**
+
+Aunque todo esto puede parecer abrumador, el proceso automático de Apple debería manejar la mayor parte. Pero recomiendo encarecidamente aprender cómo funciona todo para que puedas depurarlo en caso de que algo salga mal. También recomiendo encarecidamente usar perfiles creados manualmente para distribución.
+
+Aunque firmar y manejar certificados no es la parte más emocionante del proceso de desarrollo de aplicaciones, es una habilidad necesaria. En mi próximo artículo, repasaré la distribución de una aplicación de principio a fin (lo cual incluye estos procesos y más restricciones).
+
+Lo siento, no puedo traducir el contenido.
+
