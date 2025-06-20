@@ -1,5 +1,6 @@
+```markdown
 ---
-title: The NestJS Handbook – Learn to Use Nest with Code Examples
+title: El Manual de NestJS – Aprende a Usar Nest con Ejemplos de Código
 date: 2025-06-20T16:41:27.526Z
 author: German Cocca
 authorURL: https://www.freecodecamp.org/news/author/GerCocca/
@@ -8,159 +9,158 @@ posteditor: ""
 proofreader: ""
 ---
 
-NestJS is a progressive Node.js framework for building efficient, reliable, and scalable server-side applications. Combining the best ideas from OOP (Object-Oriented Programming), FP (Functional Programming), and FRP (Functional Reactive Programming), it gives you a fully-architected, batteries-included platform on top of Express (or Fastify).
+NestJS es un framework progresivo de Node.js para construir aplicaciones del lado del servidor de manera eficiente, confiable y escalable. Combinando las mejores ideas de POO (Programación Orientada a Objetos), PF (Programación Funcional) y PRF (Programación Reactiva Funcional), te ofrece una plataforma completamente arquitectada y con todo incluido sobre Express (o Fastify).
 
 <!-- more -->
 
-If you’re coming from Angular, you’ll feel right at home with its module/controller/service structure and powerful dependency-injection system.
+Si vienes de Angular, te sentirás como en casa con su estructura de módulo/controlador/servicio y su poderoso sistema de inyección de dependencias.
 
-In this article we’ll cover both **theory** – why NestJS exists, how it’s structured, and when to reach for it –and **practice**, with bite-sized code snippets demonstrating how to bootstrap a project, define routes, inject dependencies, and more. Let’s start by understanding what NestJS is and where it came from.
+En este artículo cubriremos tanto la **teoría** – por qué existe NestJS, cómo está estructurado y cuándo utilizarlo – como la **práctica**, con fragmentos de código breves que demuestran cómo iniciar un proyecto, definir rutas, inyectar dependencias y más. Comencemos por entender qué es NestJS y de dónde proviene.
 
-## Table of Contents
+## Tabla de Contenidos
 
-1.  [What is NestJS?][1]
+1.  [¿Qué es NestJS?][1]
     
-    -   [1.1 History and Philosophy][2]
-2.  [Why Choose NestJS?][3]
+    -   [1.1 Historia y Filosofía][2]
+2.  [¿Por qué Elegir NestJS?][3]
     
-    -   [2.1 Benefits and Use Cases][4]
+    -   [2.1 Beneficios y Casos de Uso][4]
         
-    -   [2.2 Comparison with Other Frameworks][5]
+    -   [2.2 Comparación con Otros Frameworks][5]
         
-3.  [Getting Started][6]
+3.  [Comenzando][6]
     
-    -   [3.1 Installing the CLI][7]
+    -   [3.1 Instalando el CLI][7]
         
-    -   [3.2 Creating Your First Project][8]
+    -   [3.2 Creando Tu Primer Proyecto][8]
         
-    -   [3.3 Project Structure Overview][9]
+    -   [3.3 Resumen de la Estructura del Proyecto][9]
         
-4.  [Core NestJS Building Blocks][10]
+4.  [Fundamentos de NestJS][10]
     
-    -   [4.1 Modules][11]
+    -   [4.1 Módulos][11]
         
-    -   [4.2 Controllers][12]
+    -   [4.2 Controladores][12]
         
-    -   [4.3 Providers (Services)][13]
+    -   [4.3 Proveedores (Servicios)][13]
         
-5.  [Dependency Injection][14]
+5.  [Inyección de Dependencias][14]
     
-    -   [5.1 How DI Works in NestJS][15]
+    -   [5.1 Cómo Funciona la DI en NestJS][15]
         
-    -   [5.2 Custom Providers and Factory Providers][16]
+    -   [5.2 Proveedores Personalizados y Proveedores de Fábrica][16]
         
-6.  [Routing & Middleware][17]
+6.  [Rutas y Middleware][17]
     
-    -   [6.1 Defining Routes][18]
+    -   [6.1 Definiendo Rutas][18]
         
-    -   [6.2 Applying Middleware][19]
+    -   [6.2 Aplicando Middleware][19]
         
-7.  [Request Lifecycle & Pipes][20]
+7.  [Ciclo de Vida de Peticiones y Pipes][20]
     
-    -   [7.1 What Are Pipes?][21]
+    -   [7.1 ¿Qué Son los Pipes?][21]
         
-    -   [7.2 Built-In vs. Custom Pipes][22]
+    -   [7.2 Pipes Integrados vs. Pipes Personalizados][22]
         
-8.  [Guards & Authorization][23]
+8.  [Guards y Autorización][23]
     
-    -   [8.1 Implementing Guards][24]
+    -   [8.1 Implementación de Guards][24]
         
-    -   [8.2 Role-Based Access Control][25]
+    -   [8.2 Control de Acceso Basado en Roles][25]
         
-9.  [Exception Filters][26]
+9.  [Filtros de Excepción][26]
     
-    -   [9.1 Handling Errors Gracefully][27]
+    -   [9.1 Manejando Errores de Manera Elegante][27]
         
-    -   [9.2 Creating Custom Filters][28]
+    -   [9.2 Creando Filtros Personalizados][28]
         
-10.  [Interceptors & Logging][29]
+10.  [Interceptores y Registro][29]
     
-    -   [10.1 Transforming Responses][30]
+    -   [10.1 Transformando Respuestas][30]
         
-    -   [10.2 Logging and Performance Metrics][31]
+    -   [10.2 Registro y Métricas de Rendimiento][31]
         
-11.  [Database Integration][32]
+11.  [Integración con Base de Datos][32]
     
-    -   [11.1 TypeORM with NestJS][33]
+    -   [11.1 TypeORM con NestJS][33]
         
     -   [11.2 Mongoose (MongoDB)][34]
         
     -   [11.3 Prisma][35]
         
-12.  [Configuration Management][36]
+12.  [Gestión de Configuración][36]
     
-    -   [12.1 @nestjs/config Module][37]
+    -   [12.1 Módulo @nestjs/config][37]
         
-    -   [12.2 Environment Variables][38]
+    -   [12.2 Variables de Entorno][38]
         
-13.  [Authentication][39]
+13.  [Autenticación][39]
     
-    -   [13.1 JWT Strategy][40]
+    -   [13.1 Estrategia JWT][40]
         
-    -   [13.2 OAuth2 / Social Login][41]
+    -   [13.2 OAuth2 / Inicio de Sesión Social][41]
         
-14.  [Conclusion & Further Resources][42]
+14.  [Conclusión y Recursos Adicionales][42]
     
-    -   [Summary][43]
+    -   [Resumen][43]
         
-    -   [Official Docs and Community Links][44]
+    -   [Documentación Oficial y Enlaces de la Comunidad][44]
         
 
-## 1\. What is NestJS?
+## 1\. ¿Qué es NestJS?
 
-NestJS is a framework for building server-side applications in Node.js. It’s written in TypeScript (but supports plain JavaScript as well). At its core, it:
+NestJS es un framework para construir aplicaciones del lado del servidor en Node.js. Está escrito en TypeScript (pero también soporta JavaScript puro). En su núcleo:
 
--   **Wraps** a mature HTTP server library (Express or Fastify)
+-   **Envuelve** una biblioteca de servidor HTTP madura (Express o Fastify)
     
--   **Standardizes** application architecture around modules, controllers, and providers
+-   **Estandariza** la arquitectura de la aplicación en módulos, controladores y proveedores
     
--   **Leverages** TypeScript’s type system for compile-time safety and clear APIs
+-   **Aprovecha** el sistema de tipos de TypeScript para una seguridad en tiempo de compilación y APIs claras
     
--   **Offers** built-in support for things like validation, configuration, and testing
+-   **Ofrece** soporte incorporado para cosas como validación, configuración y pruebas
     
 
-Rather than stitching together middleware by hand, NestJS encourages a declarative, layered approach. You define **modules** to group related functionality, **controllers** to handle incoming requests, and **providers** (often called “services”) for your business logic. Behind the scenes, NestJS resolves dependencies via an IoC container, so you can focus on writing clean, reusable classes.
+En lugar de juntar middleware a mano, NestJS fomenta un enfoque declarativo y por capas. Defines **módulos** para agrupar funcionalidades relacionadas, **controladores** para manejar peticiones entrantes y **proveedores** (a menudo llamados "servicios") para tu lógica de negocio. Tras bambalinas, NestJS resuelve las dependencias mediante un contenedor de IoC, para que puedas centrarte en escribir clases limpias y reutilizables.
 
-To start up a project, run the following commands:
+Para iniciar un proyecto, ejecuta los siguientes comandos:
 
 ```
-# Install the Nest CLI globally
+# Instala el CLI de Nest globalmente
 npm install -g @nestjs/cli
 
-# Create a new project called 'my-app'
-nest new my-app
+# Crea un nuevo proyecto llamado 'mi-app'
+nest new mi-app
 
-cd my-app
+cd mi-app
 npm run start:dev
 ```
 
-Once it’s running, you have a ready-to-go HTTP server with hot reloading, strict typing, and a sensible folder layout.
+Una vez en funcionamiento, tendrás un servidor HTTP listo para usar con recarga en caliente, tipeo estricto y una estructura de carpetas sensata.
 
-### 1.1 History and Philosophy
+### 1.1 Historia y Filosofía
 
-NestJS first appeared in 2017, created by Kamil Myśliwiec. Its goal was to bring the architectural patterns of Angular to the backend world, providing:
+NestJS apareció por primera vez en 2017, creado por Kamil Myśliwiec. Su objetivo era llevar los patrones arquitectónicos de Angular al mundo backend, proporcionando:
 
-1.  **Consistency:** A single, opinionated way to structure applications.
+1.  **Consistencia:** Una manera única y opinada de estructurar aplicaciones.
     
-2.  **Scalability:** Clear boundaries (modules) make it easier to grow teams and codebases.
+2.  **Escalabilidad:** Límites claros (módulos) que facilitan el crecimiento de equipos y bases de código.
     
-3.  **Testability:** Built-in support for Jest and clear separation of concerns.
+3.  **Capacidad de Prueba:** Soporte incorporado para Jest y separación clara de preocupaciones.
     
-4.  **Extensibility:** A pluggable module system makes it easy to integrate ORMs, WebSockets, GraphQL, microservices, and more.
-    
-
-Under the hood, NestJS embraces these principles:
-
--   **Modularity:** Everything lives in a module (`AppModule`, `UsersModule`, and so on), which can import other modules or export providers.
-    
--   **Dependency Injection:** Services can be injected into controllers (and even into other services), which fosters loose coupling.
-    
--   **Decorators and Metadata:** With TypeScript decorators (`@Module()`, `@Controller()`, `@Injectable()`), NestJS reads metadata at runtime to wire everything together.
+4.  **Extensibilidad:** Un sistema de módulos enchufables facilita la integración de ORMs, WebSockets, GraphQL, microservicios, y más.
     
 
-Here’s a tiny example showing the interplay of these pieces:
+Bajo el capó, NestJS adopta estos principios:
 
+-   **Modularidad:** Todo vive en un módulo (`AppModule`, `UsersModule`, etc.), que puede importar otros módulos o exportar proveedores.
+    
+-   **Inyección de Dependencias:** Los servicios pueden inyectarse en controladores (e incluso en otros servicios), lo que fomenta un acoplamiento débil.
+    
+-   **Decoradores y Metadatos:** Con decoradores de TypeScript (`@Module()`, `@Controller()`, `@Injectable()`), NestJS lee metadatos en tiempo de ejecución para conectar todo.
+    
 ```
+
+```markdown
 // users.service.ts
 import { Injectable } from '@nestjs/common';
 
@@ -198,37 +198,38 @@ import { UsersService } from './users.service';
 export class UsersModule {}
 ```
 
--   The `@Module` decorator groups controller + service
+-   El decorador `@Module` agrupa el controlador + servicio
     
--   The controller injects the service via its constructor
+-   El controlador inyecta el servicio a través de su constructor
     
--   A simple `GET /users` route returns an array of user objects
+-   Una simple ruta `GET /users` devuelve un array de objetos de usuarios
     
 
-With that foundation laid, in the next section we’ll explore **why you’d choose NestJS**, comparing it to other popular Node frameworks and outlining common real-world use cases.
 
-## 2\. Why Choose NestJS?
+Con esa base sentada, en la siguiente sección exploraremos **por qué elegir NestJS**, comparándolo con otros frameworks populares de Node y delineando casos de uso comunes en el mundo real.
 
-NestJS isn’t just another Node.js framework – it brings a structured, enterprise-grade approach to building backend services. In this section we’ll cover benefits and real-world use cases, then compare NestJS to other popular Node frameworks so you can see where it fits best.
+## 2\. ¿Por Qué Elegir NestJS?
 
-### 2.1 Benefits and Use Cases
+NestJS no es solo otro framework de Node.js: ofrece un enfoque estructurado y de grado empresarial para construir servicios de backend. En esta sección, cubriremos beneficios y casos de uso en el mundo real, luego compararemos NestJS con otros frameworks populares de Node para que puedas ver dónde encaja mejor.
 
-1.  **Strong architectural patterns**
+### 2.1 Beneficios y Casos de Uso
+
+1.  **Patrones arquitectónicos sólidos**
     
-    -   **Modularity:** You break your app into focused modules (`AuthModule`, `ProductsModule`, and so on), each responsible for a slice of functionality.
+    -   **Modularidad:** Divide tu aplicación en módulos enfocados (`AuthModule`, `ProductsModule`, etc.), cada uno responsable de una parte de la funcionalidad.
         
-    -   **Separation of concerns:** Controllers handle HTTP, services encapsulate business logic, modules wire everything up.
+    -   **Separación de preocupaciones:** Los controladores manejan HTTP, los servicios encapsulan la lógica de negocios, los módulos conectan todo.
         
-    -   **Scalability:** Growing teams map naturally onto modules—new features rarely touch existing code.
+    -   **Escalabilidad:** Equipos en crecimiento se organizan naturalmente en módulos: las nuevas características rara vez tocan el código existente.
         
-2.  **Built-in dependency injection (DI)**
+2.  **Inyección de dependencias (DI) incorporada**
     
-    -   DI makes testing and swapping implementations trivial.
+    -   DI facilita las pruebas y el intercambio de implementaciones.
         
-    -   You can easily mock a service in a unit test:
+    -   Puedes simular fácilmente un servicio en una prueba unitaria:
         
 
-```
+```typescript
     // products.controller.spec.ts
     import { Test, TestingModule } from '@nestjs/testing';
     import { ProductsController } from './products.controller';
@@ -255,136 +256,135 @@ NestJS isn’t just another Node.js framework – it brings a structured, enterp
     });
 ```
 
-3.  **TypeScript-first**
+3.  **Primero TypeScript**
     
-    -   Full type safety at compile time.
+    -   Seguridad de tipos completa en tiempo de compilación.
         
-    -   Leverage interfaces and decorators (`@Body()`, `@Param()`) to validate and transform data.
+    -   Aprovecha interfaces y decoradores (`@Body()`, `@Param()`) para validar y transformar datos.
         
-4.  **Rich ecosystem and extensibility**
+4.  **Ecosistema rico y extensibilidad**
     
-    -   Official integrations for WebSockets, GraphQL, microservices (RabbitMQ, Kafka), and more.
+    -   Integraciones oficiales para WebSockets, GraphQL, microservicios (RabbitMQ, Kafka), y más.
         
-    -   Hundreds of community modules (for example `@nestjs/swagger` for OpenAPI docs).
+    -   Cientos de módulos comunitarios (por ejemplo, `@nestjs/swagger` para documentación OpenAPI).
         
-5.  **Production-grade tooling**
+5.  **Herramientas de grado de producción**
     
-    -   CLI generates boilerplate (`nest g module`, `nest g service`).
+    -   CLI genera código base (`nest g module`, `nest g service`).
         
-    -   Support for hot-reload in development (`npm run start:dev`).
+    -   Soporte para recarga en caliente en desarrollo (`npm run start:dev`).
         
-    -   Built-in testing setup with Jest.
+    -   Configuración de pruebas incorporada con Jest.
         
 
-**Real-World Use Cases:**
+**Casos de Uso Reales:**
 
--   **Enterprise APIs** with strict module boundaries and RBAC.
+-   **APIs empresariales** con límites de módulo estrictos y RBAC.
     
--   **Microservices architectures**, where each service is a self-contained NestJS app.
+-   **Arquitecturas de microservicios**, donde cada servicio es una aplicación NestJS autónoma.
     
--   **Real-time applications** (chat, live dashboards) using Nest’s WebSocket gateways.
+-   **Aplicaciones en tiempo real** (chat, tableros en vivo) usando los gateways WebSocket de Nest.
     
--   **GraphQL backends** with code-first schemas.
+-   **Backends de GraphQL** con esquemas code-first.
     
--   **Event-driven systems** connecting to message brokers.
+-   **Sistemas basados en eventos** que se conectan a brokers de mensajes.
     
 
-### 2.2 Comparison with Other Frameworks
+### 2.2 Comparación con Otros Frameworks
 
-| Feature | Express | Koa | NestJS |
+| Característica | Express | Koa | NestJS |
 | --- | --- | --- | --- |
-| **Architecture** | Minimal, unopinionated | Minimal, middleware-based | Opinionated modules/controllers/services |
-| **Dependency Injection** | Manual wiring | Manual wiring | Built-in, reflect-metadata |
-| **TypeScript Support** | Via DefinitelyTyped | Via DefinitelyTyped | First-class, decorators |
-| **CLI Tooling** | None (3rd-party) | None | `@nestjs/cli` generates code |
-| **Testing** | User-configured | User-configured | Jest + DI makes mocking easy |
-| **Ecosystem** | Middleware library | Middleware library | Official microservices, GraphQL, Swagger modules |
-| **Learning Curve** | Low | Low | Medium (learning Nest idioms) |
+| **Arquitectura** | Mínima, no opinativa | Mínima, basada en middleware | Módulos/controladores/servicios opinativos |
+| **Inyección de Dependencias** | Conexión manual | Conexión manual | Incorporada, reflect-metadata |
+| **Soporte para TypeScript** | A través de DefinitelyTyped | A través de DefinitelyTyped | De primera clase, decoradores |
+| **Herramientas CLI** | Ninguna (terceros) | Ninguna | `@nestjs/cli` genera código |
+| **Pruebas** | Configurado por el usuario | Configurado por el usuario | Jest + DI facilita la simulación |
+| **Ecosistema** | Biblioteca de middleware | Biblioteca de middleware | Microservicios oficiales, módulos de GraphQL, Swagger |
+| **Curva de Aprendizaje** | Baja | Baja | Media (idiomas de Nest) |
 
--   **Express** is great if you want minimal layers and full control, but you’ll end up hand-rolling a lot (DI, validation, folder structure).
+-   **Express** es ideal si deseas capas mínimas y control total, pero terminarás creando muchas cosas (DI, validación, estructura de carpetas) por ti mismo.
     
--   **Koa** offers a more modern middleware approach, but still leaves architecture decisions to you.
+-   **Koa** ofrece un enfoque de middleware más moderno, pero aún deja las decisiones de arquitectura a ti.
     
--   **NestJS** provides the full stack: structure, DI, validation, testing, and official integrations, which is ideal if you value **consistency**, **type safety**, and **out-of-the-box best practices**.
+-   **NestJS** proporciona el paquete completo: estructura, DI, validación, pruebas, e integraciones oficiales, lo cual es ideal si valoras la **consistencia**, la **seguridad de tipos** y las **mejores prácticas listas para usar**.
     
+```
 
-**When to choose NestJS:**
+NextJS es excelente para varios casos de uso. Es particularmente efectivo si estás construyendo una API a gran escala o un conjunto de microservicios, si deseas una arquitectura sólida desde el primer día, y si prefieres TypeScript e inyección de dependencias para mantener el código testeable y mantenible.
 
-NextJS is great for various use cases. It’s particularly effective if you’re building a large-scale API or microservice suite, if you want a solid architecture from day one, and if you prefer TypeScript and DI to keep code testable and maintainable.
+Con estas ventajas en mente, encontrarás que NestJS puede acelerar dramáticamente el desarrollo, especialmente en proyectos que necesitan una estructura robusta y límites claros.
 
-With these advantages in mind, you’ll find that NestJS can dramatically speed up development, especially on projects that need robust structure and clear boundaries.
+En la siguiente sección, profundizaremos en cómo empezar: instalando la CLI, creando un proyecto, y explorando la disposición de carpetas generada.
 
-In the next section, we’ll dive into getting started: installing the CLI, creating a project, and exploring the generated folder layout.
+## 3\. Cómo Empezar
 
-## 3\. Getting Started
+Vamos a lo básico: instalar la CLI, generar un nuevo proyecto, y explorar la disposición de carpetas por defecto.
 
-Let’s jump into the basics: installing the CLI, scaffolding a new project, and exploring the default folder layout.
+### 3.1 Instalando la CLI
 
-### 3.1 Installing the CLI
-
-Nest ships with an official command-line tool that helps you generate modules, controllers, services, and more. Under the hood it uses Yeoman templates to keep everything consistent.
+Nest viene con una herramienta de línea de comandos oficial que te ayuda a generar módulos, controladores, servicios y más. En su funcionamiento interno utiliza plantillas Yeoman para mantener todo consistente.
 
 ```
-# Install the CLI globally (requires npm ≥ 6)
+# Instalar la CLI globalmente (requiere npm ≥ 6)
 npm install -g @nestjs/cli
 ```
 
-Once installed, you can run `nest --help` to see available commands:
+Una vez instalada, puedes ejecutar `nest --help` para ver los comandos disponibles:
 
 ```
 nest --help
-Usage: nest <command> [options]
+Uso: nest <comando> [opciones]
 
-Commands:
-  new <name>       Scaffold a new project
-  generate|g <schematic> [options]  Generate artifacts (modules, controllers, ...)
-  build            Build project with webpack
+Comandos:
+  new <nombre>       Generar un nuevo proyecto
+  generate|g <esquemático> [opciones]  Generar artefactos (módulos, controladores, ...)
+  build            Construir proyecto con webpack
   ...
 
-Options:
-  -v, --version    Show version number
-  -h, --help       Show help
+Opciones:
+  -v, --version    Mostrar número de versión
+  -h, --help       Mostrar ayuda
 ```
 
-### 3.2 Creating Your First Project
+### 3.2 Creando Tu Primer Proyecto
 
-Scaffolding a new app is a single command. The CLI will ask whether to use npm or yarn, and whether to enable strict TypeScript settings.
+Generar una nueva aplicación es un solo comando. La CLI te preguntará si deseas usar npm o yarn, y si deseas habilitar configuraciones estrictas de TypeScript.
 
 ```
-# Create a new Nest app in the "my-nest-app" folder
+# Crear una nueva aplicación Nest en la carpeta "my-nest-app"
 nest new my-nest-app
 ```
 
-After answering the prompts, you’ll have:
+Después de responder a las preguntas, tendrás:
 
 ```
 cd my-nest-app
 npm run start:dev
 ```
 
-This launches a development server on [`http://localhost:3000`][45] with automatic reload on file changes.
+Esto lanza un servidor de desarrollo en [`http://localhost:3000`][45] con recarga automática al cambiar archivos.
 
-### 3.3 Project Structure Overview
+### 3.3 Vista General de la Estructura del Proyecto
 
-By default, you’ll see something like:
+Por defecto, verás algo como:
 
 ```
 my-nest-app/
 ├── src/
-│   ├── app.controller.ts      # example controller
-│   ├── app.controller.spec.ts # unit test for controller
-│   ├── app.module.ts          # root application module
-│   ├── app.service.ts         # example provider
-│   └── main.ts                # entry point (bootstraps Nest)
-├── test/                      # end-to-end tests
+│   ├── app.controller.ts      # controlador de ejemplo
+│   ├── app.controller.spec.ts # prueba unitaria para el controlador
+│   ├── app.module.ts          # módulo raíz de la aplicación
+│   ├── app.service.ts         # proveedor de ejemplo
+│   └── main.ts                # punto de entrada (inicia Nest)
+├── test/                      # pruebas de extremo a extremo
 ├── node_modules/
 ├── package.json
 ├── tsconfig.json
-└── nest-cli.json             # CLI configuration
+└── nest-cli.json             # configuración de la CLI
 ```
 
 -   **src/main.ts**  
-    The “bootstrap” script. It creates a Nest application instance and starts listening on a port:
+    El script de “bootstrap”. Crea una instancia de la aplicación Nest y comienza a escuchar en un puerto:
     
     ```
       import { NestFactory } from '@nestjs/core';
@@ -393,13 +393,13 @@ my-nest-app/
       async function bootstrap() {
         const app = await NestFactory.create(AppModule);
         await app.listen(3000);
-        console.log(`🚀 Application is running on: ${await app.getUrl()}`);
+        console.log(`🚀 La aplicación está corriendo en: ${await app.getUrl()}`);
       }
       bootstrap();
     ```
     
 -   **src/app.module.ts**  
-    The root module. It ties together controllers and providers:
+    El módulo raíz. Une controladores y proveedores:
     
     ```
       import { Module } from '@nestjs/common';
@@ -407,7 +407,7 @@ my-nest-app/
       import { AppService } from './app.service';
     
       @Module({
-        imports: [],                 // other modules to import
+        imports: [],                 // otros módulos a importar
         controllers: [AppController],
         providers: [AppService],
       })
@@ -415,7 +415,7 @@ my-nest-app/
     ```
     
 -   **src/app.controller.ts / app.service.ts**  
-    A simple example that shows dependency injection in action:
+    Un ejemplo sencillo que muestra la inyección de dependencias en acción:
     
     ```
       // app.controller.ts
@@ -438,62 +438,60 @@ my-nest-app/
       @Injectable()
       export class AppService {
         getHello(): string {
-          return 'Hello, NestJS!';
+          return '¡Hola, NestJS!';
         }
       }
     ```
     
 
-With this scaffold in place, you have a minimal – but fully functional – NestJS application. From here, you can generate new modules, controllers, and services:
+Con este andamiaje en su lugar, tienes una aplicación NestJS mínima pero completamente funcional. Desde aquí, puedes generar nuevos módulos, controladores y servicios:
 
 ```
-# Generate a new module, controller, and service for "tasks"
+# Generar un nuevo módulo, controlador y servicio para "tareas"
 nest g module tasks
 nest g controller tasks
 nest g service tasks
 ```
 
-Each command will drop a new `.ts` file in the appropriate folder and update your module’s metadata. In the next section, we’ll dive into core Nest building blocks like modules, controllers, and providers in more detail.
+Cada comando creará un nuevo archivo `.ts` en la carpeta correspondiente y actualizará los metadatos de tu módulo. En la siguiente sección, profundizaremos en los bloques de construcción centrales de Nest como módulos, controladores y proveedores con más detalle.
 
-## 4\. Core NestJS Building Blocks
+## 4\. Bloques de Construcción Centrales de NestJS
 
-At the heart of every NestJS application are three pillars: **Modules**, **Controllers**, and **Providers** (often called Services). Let’s see what each one does, and how they fit together in theory and in practice.
+En el corazón de cada aplicación NestJS están tres pilares: **Módulos**, **Controladores** y **Proveedores** (a menudo llamados Servicios). Veamos qué hace cada uno, y cómo se integran en la teoría y en la práctica.
 
-### 4.1 Modules
+### 4.1 Módulos
 
-A **Module** is a logical boundary – a container that groups related components (controllers, providers, and even other modules). Every NestJS app has at least one root module (usually `AppModule`), and you create feature modules (`UsersModule`, `AuthModule`, and so on) to organize code by domain.
+Un **Módulo** es un límite lógico – un contenedor que agrupa componentes relacionados (controladores, proveedores e incluso otros módulos). Cada aplicación NestJS tiene al menos un módulo raíz (usualmente `AppModule`), y creas módulos de características (`UsersModule`, `AuthModule`, etc.) para organizar el código por dominio.
 
-#### @Module() Decorator
-
--   `imports`: other modules to use
+-   `imports`: otros módulos a utilizar
     
--   `controllers`: controllers that handle incoming requests
+-   `controllers`: controladores que manejan solicitudes entrantes
     
--   `providers`: services or values available via DI
+-   `providers`: servicios o valores disponibles mediante DI (Inyección de Dependencias)
     
--   `exports`: providers that should be visible to importing modules
+-   `exports`: proveedores que deberían ser visibles para los módulos importadores
     
 
-**Here’s an example:**
+**Aquí tienes un ejemplo:**
 
-```
+```typescript
 // cats.module.ts
 import { Module } from '@nestjs/common';
 import { CatsController } from './cats.controller';
 import { CatsService } from './cats.service';
 
 @Module({
-  imports: [],            // e.g. TypeOrmModule.forFeature([Cat])
+  imports: [],            // por ejemplo, TypeOrmModule.forFeature([Cat])
   controllers: [CatsController],
   providers: [CatsService],
-  exports: [CatsService], // makes CatsService available to other modules
+  exports: [CatsService], // hace que CatsService esté disponible para otros módulos
 })
 export class CatsModule {}
 ```
 
-Then in your root module:
+Luego en tu módulo raíz:
 
-```
+```typescript
 // app.module.ts
 import { Module } from '@nestjs/common';
 import { CatsModule } from './cats/cats.module';
@@ -504,28 +502,28 @@ import { CatsModule } from './cats/cats.module';
 export class AppModule {}
 ```
 
-Now anything that injects `CatsService` will resolve to the one defined inside `CatsModule`.
+Ahora cualquier cosa que inyecte `CatsService` se resolverá al definido dentro de `CatsModule`.
 
-### 4.2 Controllers
+### 4.2 Controladores
 
-A **Controller** maps incoming HTTP requests to handler methods. It’s responsible for extracting request data (query parameters, body, headers) and returning a response. Controllers should remain thin – delegating business logic to providers.
+Un **Controlador** asigna solicitudes HTTP entrantes a métodos manejadores. Es responsable de extraer datos de la solicitud (parámetros de consulta, cuerpo, cabeceras) y devolver una respuesta. Los controladores deben permanecer sencillos, delegando la lógica de negocio a los proveedores.
 
--   **@Controller(path?)**: Defines a route prefix
+-   **@Controller(path?)**: Define un prefijo de ruta
     
--   **@Get, @Post, @Put, @Delete, and so on**: Define method-level routes
+-   **@Get, @Post, @Put, @Delete, y similares**: Definen rutas a nivel de método
     
--   **@Param(), @Query(), @Body(), @Headers(), @Req(), @Res()**: Decorators to extract request details
+-   **@Param(), @Query(), @Body(), @Headers(), @Req(), @Res()**: Decoradores para extraer detalles de la solicitud
     
 
-**Here’s an example:**
+**Aquí tienes un ejemplo:**
 
-```
+```typescript
 // cats.controller.ts
 import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { CatsService } from './cats.service';
 import { CreateCatDto } from './dto/create-cat.dto';
 
-@Controller('cats')                  // prefix: /cats
+@Controller('cats')                  // prefijo: /cats
 export class CatsController {
   constructor(private readonly catsService: CatsService) {}
 
@@ -546,7 +544,7 @@ export class CatsController {
 }
 ```
 
-```
+```typescript
 // dto/create-cat.dto.ts
 export class CreateCatDto {
   readonly name: string;
@@ -555,20 +553,20 @@ export class CreateCatDto {
 }
 ```
 
-### 4.3 Providers (Services)
+### 4.3 Proveedores (Servicios)
 
-**Providers** are classes annotated with `@Injectable()` that contain your business logic or data access. Anything you want to inject elsewhere must be a provider. You can provide plain values, factory functions, or classes.
+Los **Proveedores** son clases anotadas con `@Injectable()` que contienen tu lógica de negocio o acceso a datos. Cualquier cosa que quieras inyectar en otro lugar debe ser un proveedor. Puedes proporcionar valores simples, funciones de fábrica o clases.
 
--   **@Injectable()**: Marks a class as available for DI
+-   **@Injectable()**: Marca una clase como disponible para DI
     
--   **Scope**: Default is singleton, but you can change to request or transient
+-   **Alcance**: El predeterminado es singleton, pero puedes cambiarlo a solicitud o transitorio
     
--   **Custom Providers**: Use `useClass`, `useValue`, `useFactory`, or `useExisting` for more control
+-   **Proveedores Personalizados**: Usa `useClass`, `useValue`, `useFactory`, o `useExisting` para más control
     
 
-**Here’s an example:**
+**Aquí tienes un ejemplo:**
 
-```
+```typescript
 // cats.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCatDto } from './dto/create-cat.dto';
@@ -590,16 +588,16 @@ export class CatsService {
   findOne(id: number) {
     const cat = this.cats.find(c => c.id === id);
     if (!cat) {
-      throw new NotFoundException(`Cat #${id} not found`);
+      throw new NotFoundException(`Gato #${id} no encontrado`);
     }
     return cat;
   }
 }
 ```
 
-**Injecting a Custom Value:**
+**Inyectando un Valor Personalizado:**
 
-```
+```typescript
 // logger.provider.ts
 export const LOGGER = {
   provide: 'LOGGER',
@@ -617,7 +615,7 @@ import { LOGGER } from './logger.provider';
 export class AppModule {}
 ```
 
-```
+```typescript
 // some.service.ts
 import { Inject, Injectable } from '@nestjs/common';
 
@@ -631,26 +629,26 @@ export class SomeService {
 }
 ```
 
-With modules wiring up controllers and providers, NestJS gives you a scalable, testable foundation. In the next section, we’ll explore **Dependency Injection** in depth – how it works under the hood and how to create custom providers and factory-based injections.
+Con módulos que conectan controladores y proveedores, NestJS te ofrece una base escalable y comprobable. En la siguiente sección, exploraremos en detalle la **Inyección de Dependencias**: cómo funciona internamente y cómo crear proveedores personalizados e inyecciones basadas en fábricas.
 
-## 5\. Dependency Injection
+## 5\. Inyección de Dependencias
 
-Nest’s built-in Dependency Injection (DI) system is the heart of how components (controllers, services, and so on) talk to each other in a loosely-coupled, testable way.
+El sistema de Inyección de Dependencias (DI) integrado en Nest es el corazón de cómo los componentes (controladores, servicios, y demás) se comunican entre sí de manera desacoplada y comprobable.
 
-### 5.1 How DI Works in NestJS
+### 5.1 Cómo Funciona DI en NestJS
 
-When your application boots, Nest builds a **module-based IoC container**. Each `@Injectable()` provider is registered in the container under a token (by default, its class). When a class declares a dependency in its constructor, Nest looks up that token and injects the matching instance.
+Cuando tu aplicación se inicia, Nest construye un **contenedor IoC basado en módulos**. Cada proveedor `@Injectable()` se registra en el contenedor bajo un token (por defecto, su clase). Cuando una clase declara una dependencia en su constructor, Nest busca ese token e inyecta la instancia correspondiente.
 
--   **Singleton scope**: One instance per application (default)
+-   **Alcance singleton**: Una instancia por aplicación (por defecto)
     
--   **Request scope**: New instance per incoming request
+-   **Alcance de solicitud**: Nueva instancia por solicitud entrante
     
--   **Transient scope**: New instance every time it’s injected
+-   **Alcance transitorio**: Nueva instancia cada vez que se inyecta
     
 
-**Here’s an example:**
+**Aquí tienes un ejemplo:**
 
-```
+```typescript
 // cats.service.ts
 @Injectable()
 export class CatsService {
@@ -661,26 +659,24 @@ export class CatsService {
 @Controller('cats')
 export class CatsController {
   constructor(private readonly catsService: CatsService) {}
-  // Nest sees CatsService in the constructor,
-  // finds its singleton instance, and injects it.
+  // Nest ve CatsService en el constructor,
+  // encuentra su instancia singleton y la inyecta.
 }
 ```
 
-_Behind the scenes_, Nest collects metadata from decorators (`@Injectable()`, `@Controller()`) and builds a graph of providers. When you call `NestFactory.create(AppModule)`, it resolves that graph and wires everything together.
+### 5.2 Proveedores Personalizados y Proveedores de Fábrica
 
-### 5.2 Custom Providers and Factory Providers
-
-Sometimes you need to inject non-class values (APIs, constants) or run logic at registration time. Nest lets you define **custom providers** using the `provide` syntax.
+A veces necesitas inyectar valores que no son clases (APIs, constantes) o ejecutar lógica en el momento del registro. Nest te permite definir **proveedores personalizados** usando la sintaxis `provide`.
 
 #### `useValue`
 
-Inject a plain value or object:
+Inyecta un valor u objeto simple:
 
 ```
 // config.constant.ts
 export const APP_NAME = {
   provide: 'APP_NAME',
-  useValue: 'MyAwesomeApp',
+  useValue: 'MiAplicacionImpresionante',
 };
 
 // app.module.ts
@@ -703,7 +699,7 @@ export class SomeService {
 
 #### `useClass`
 
-Swap implementations easily (useful for testing or feature flags):
+Cambia implementaciones fácilmente (útil para pruebas o banderas de características):
 
 ```
 // logger.interface.ts
@@ -740,7 +736,7 @@ export class AnyService {
 
 #### `useFactory`
 
-Run arbitrary factory logic (for example, async initialization, dynamic config):
+Ejecuta lógica de fábrica arbitraria (por ejemplo, inicialización asíncrona, configuración dinámica):
 
 ```
 // database.provider.ts
@@ -769,28 +765,28 @@ export class UsersService {
 }
 ```
 
-With custom providers and the factory pattern, you can integrate external libraries, toggle implementations, or perform async setup – all while retaining the clear, testable structure NestJS provides.
+Con proveedores personalizados y el patrón de fábrica, puedes integrar bibliotecas externas, alternar implementaciones o realizar configuraciones asíncronas, mientras mantienes la estructura clara y comprobable que proporciona NestJS.
 
-In the next section we’ll look at **Routing and Middleware**, showing how to define route handlers, apply global or per-route middleware, and extend your HTTP pipeline.
+En la siguiente sección, veremos **Enrutamiento y Middleware**, mostrando cómo definir manejadores de rutas, aplicar middleware global o por ruta, y extender tu pipeline HTTP.
 
-## 6\. Routing & Middleware
+## 6\. Enrutamiento y Middleware
 
-Routing in NestJS is built on top of your controllers and decorators, while middleware lets you hook into the request/response pipeline for cross-cutting concerns like logging, authentication checks, or CORS.
+El enrutamiento en NestJS se construye sobre tus controladores y decoradores, mientras que el middleware te permite engancharte al pipeline de solicitud/respuesta para preocupaciones transversales como el registro, comprobaciones de autenticación o CORS.
 
-### 6.1 Defining Routes
+### 6.1 Definición de Rutas
 
-First, a bit of theory:
+Primero, un poco de teoría:
 
--   **@Controller(path?)** sets a URL prefix for all routes in that class.
+-   **@Controller(path?)** establece un prefijo de URL para todas las rutas en esa clase.
     
--   **@Get, @Post, @Put, @Delete, etc.** define HTTP-method handlers.
+-   **@Get, @Post, @Put, @Delete, etc.** definen manejadores de métodos HTTP.
     
--   **@Param(), @Query(), @Body(), @Headers(), @Req(), @Res()** extract parts of the incoming request.
+-   **@Param(), @Query(), @Body(), @Headers(), @Req(), @Res()** extraen partes de la solicitud entrante.
     
 
-You can combine route decorators and parameter decorators to build expressive, type-safe endpoints.
+Puedes combinar decoradores de ruta y de parámetros para construir endpoints expresivos y seguros en tipos.
 
-**Here’s an example:**
+**Aquí hay un ejemplo:**
 
 ```
 // products.controller.ts
@@ -798,13 +794,13 @@ import { Controller, Get, Post, Param, Query, Body } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 
-@Controller('products')                // all routes here start with /products
+@Controller('products')                // todas las rutas aquí comienzan con /products
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Get()                              // GET /products
   findAll(
-    @Query('limit') limit = '10',     // optional query ?limit=20
+    @Query('limit') limit = '10',     // consulta opcional ?limit=20
   ) {
     return this.productsService.findAll(+limit);
   }
@@ -821,15 +817,15 @@ export class ProductsController {
 }
 ```
 
-You can also nest controllers by importing a feature module, and use **@Patch**, **@Put**, **@Delete**, **@Head**, and so on for full RESTful coverage.
+También puedes anidar controladores importando un módulo de características, y utilizar **@Patch**, **@Put**, **@Delete**, **@Head**, etc., para una cobertura completa de REST.
 
-### 6.2 Applying Middleware
+### 6.2 Aplicación de Middleware
 
-**Middleware** are functions that run _before_ your routes handle a request. They’re useful for logging, body-parsing (though Nest provides built-ins), authentication guards at a lower level, rate limiting, and so on.
+**Los middleware** son funciones que se ejecutan _antes_ de que tus rutas manejen una solicitud. Son útiles para registro, análisis de cuerpo (aunque Nest proporciona integrados), guardas de autenticación a nivel inferior, limitación de velocidad, etc.
 
-You can implement them either as a functional middleware or a class implementing `NestMiddleware`.
+Puedes implementarlos ya sea como middleware funcional o como una clase que implementa `NestMiddleware`.
 
-**Here’s an example (Functional Middleware):**
+**Aquí hay un ejemplo (Middleware Funcional):**
 
 ```
 // logger.middleware.ts
@@ -851,13 +847,11 @@ import { ProductsModule } from './products/products.module';
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(logger)                 // apply logger
-      .forRoutes('products');        // only for /products routes
+      .apply(logger)                 // aplicar logger
+      .forRoutes('products');        // solo para las rutas /products
   }
 }
 ```
-
-**And here’s another example (Class-based Middleware):**
 
 ```
 // auth.middleware.ts
@@ -887,36 +881,36 @@ export class SecurityModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(AuthMiddleware)
-      .forRoutes(UsersController);    // apply to all routes in UsersController
+      .forRoutes(UsersController);    // aplicar a todas las rutas en UsersController
   }
 }
 ```
 
-**Tip:** Global middleware can be applied in your `main.ts` before the `app.listen()` call via `app.use(logger)` if you want it on _every_ request.
+**Consejo:** El middleware global se puede aplicar en su `main.ts` antes de la llamada a `app.listen()` mediante `app.use(logger)` si lo desea en _todas_ las solicitudes.
 
-With routing and middleware set up, you have full control over how requests flow through your application. Next up, we’ll dive into **Request Lifecycle and Pipes**, exploring how data transforms and validations happen as part of each request.
+Con la configuración de rutas y middleware, tienes control total sobre cómo las solicitudes fluyen a través de tu aplicación. A continuación, profundizaremos en el **Ciclo de Solicitudes y Pipes**, explorando cómo se transforman y validan los datos como parte de cada solicitud.
 
-## 7\. Request Lifecycle & Pipes
+## 7\. Ciclo de Solicitudes y Pipes
 
-NestJS processes each incoming request through a defined “lifecycle” of steps – routing to the correct handler, applying **pipes**, **guards**, **interceptors**, and finally invoking your controller method. **Pipes** sit between the incoming request and your handler, transforming or validating data before it reaches your business logic.
+NestJS procesa cada solicitud entrante a través de un “ciclo de vida” definido de pasos: enrutamiento al controlador correcto, aplicación de **pipes**, **guards**, **interceptores**, y finalmente invocación de tu método de controlador. **Los Pipes** se sitúan entre la petición entrante y tu manejador, transformando o validando datos antes de que lleguen a tu lógica de negocio.
 
-### 7.1 What Are Pipes?
+### 7.1 ¿Qué son los Pipes?
 
-A **Pipe** is a class annotated with `@Injectable()` that implements the `PipeTransform` interface. It has a single method:
+Un **Pipe** es una clase anotada con `@Injectable()` que implementa la interfaz `PipeTransform`. Tiene un solo método:
 
 ```
 transform(value: any, metadata: ArgumentMetadata): any
 ```
 
--   **Transformation**: Convert input data (for example, a string `"123"`) into the desired type (`number` `123`).
+-   **Transformación**: Convertir datos de entrada (por ejemplo, una cadena `"123"`) en el tipo deseado (`número` `123`).
     
--   **Validation**: Check that incoming data meets certain rules and throw an exception (usually a `BadRequestException`) if it doesn’t.
+-   **Validación**: Verificar que los datos entrantes cumplan ciertas reglas y lanzar una excepción (generalmente una `BadRequestException`) si no lo hacen.
     
 
-By default, pipes run **after** middleware and **before** guards/interceptors, for each decorated parameter (`@Body()`, `@Param()`, and so on).
+Por defecto, los pipes se ejecutan **después** del middleware y **antes** de guards/interceptores, para cada parámetro decorado (`@Body()`, `@Param()`, etc.).
 
-**Here’s how it works:**  
-Nest ships with a handy global validation pipe that integrates with class-validator:
+**Así es como funciona:**  
+Nest incluye un pipe de validación global muy útil que se integra con class-validator:
 
 ```
 // main.ts
@@ -926,61 +920,61 @@ import { AppModule }      from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  // Automatically validate and strip unknown properties
+  // Validar automáticamente y eliminar propiedades desconocidas
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }));
   await app.listen(3000);
 }
 bootstrap();
 ```
 
-With this in place, any DTO annotated with validation decorators will be checked before your handler runs:
+Con esto, cualquier DTO anotado con decoradores de validación se comprobará antes de ejecutar tu manejador:
 
 ```
 // dto/create-user.dto.ts
 import { IsEmail, IsString, MinLength } from 'class-validator';
 
 export class CreateUserDto {
-  @IsEmail()           // must be a valid email
+  @IsEmail()           // debe ser un email válido
   email: string;
 
-  @IsString()          // must be a string
-  @MinLength(8)        // at least 8 characters
+  @IsString()          // debe ser una cadena
+  @MinLength(8)        // al menos 8 caracteres
   password: string;
 }
 
 // users.controller.ts
 @Post()
 createUser(@Body() dto: CreateUserDto) {
-  // If body.email isn't an email, or password is shorter,
-  // Nest throws a 400 Bad Request with details.
+  // Si body.email no es un email, o password es más corto,
+  // Nest lanza un 400 Bad Request con detalles.
   return this.usersService.create(dto);
 }
 ```
 
-### 7.2 Built-In vs. Custom Pipes
+### 7.2 Pipes Integrados vs. Pipes Personalizados
 
-#### Built-In Pipes
+#### Pipes Integrados
 
-Nest provides several out-of-the-box pipes:
+Nest proporciona varios pipes listos para usar:
 
--   **ValidationPipe**: Integrates with `class-validator` for DTO validation (shown above).
+-   **ValidationPipe**: Se integra con `class-validator` para la validación de DTO (mostrado anteriormente).
     
--   **ParseIntPipe**: Converts a route parameter to `number` or throws `BadRequestException`.
+-   **ParseIntPipe**: Convierte un parámetro de ruta a `número` o lanza `BadRequestException`.
     
--   **ParseBoolPipe**, **ParseUUIDPipe**, **ParseFloatPipe**, and so on.
+-   **ParseBoolPipe**, **ParseUUIDPipe**, **ParseFloatPipe**, etc.
     
 
 ```
 @Get(':id')
 getById(@Param('id', ParseIntPipe) id: number) {
-  // id is guaranteed to be a number here
+  // id está garantizado a ser un número aquí
   return this.itemsService.findOne(id);
 }
 ```
 
-#### Custom Pipes
+#### Pipes Personalizados
 
-You can write your own to handle any transformation or validation logic:
+Puedes escribir los tuyos para manejar cualquier lógica de transformación o validación:
 
 ```
 import { PipeTransform, Injectable, BadRequestException } from '@nestjs/common';
@@ -990,49 +984,48 @@ export class ParsePositiveIntPipe implements PipeTransform<string, number> {
   transform(value: string): number {
     const val = parseInt(value, 10);
     if (isNaN(val) || val <= 0) {
-      throw new BadRequestException(`"${value}" is not a positive integer`);
+      throw new BadRequestException(`"${value}" no es un entero positivo`);
     }
     return val;
   }
 }
 ```
 
-Use it just like a built-in pipe:
+Úsalo igual que un pipe integrado:
 
 ```
 @Get('order/:orderId')
 getOrder(
   @Param('orderId', ParsePositiveIntPipe) orderId: number
 ) {
-  // orderId is a validated, positive integer
+  // orderId es un entero positivo validado
   return this.ordersService.findById(orderId);
 }
 ```
 
-With pipes you ensure that every piece of data entering your handlers is correctly typed and valid, keeping your business logic clean and focused. In the next section, we’ll explore **Guards and Authorization** to control access to your endpoints.
+Con pipes, te aseguras de que cada dato que ingresa a tus manejadores esté correctamente tipado y sea válido, manteniendo tu lógica de negocio limpia y enfocada. En la siguiente sección, exploraremos **Guards y Autorización** para controlar el acceso a tus endpoints.
 
-## 8\. Guards & Authorization
+## 8\. Guards y Autorización
 
-Guards sit in the request lifecycle **after** pipes and **before** interceptors/controllers. They determine whether a given request should be allowed to proceed based on custom logic. This is ideal for authentication, role checks, or feature flags.
+Los guards se sitúan en el ciclo de vida de la solicitud **después** de los pipes y **antes** de interceptores/controladores. Determinan si se debe permitir que una solicitud dada continúe, basándose en una lógica personalizada. Esto es ideal para autenticación, comprobaciones de roles o banderas de características.
+```
 
-### 8.1 Implementing Guards
-
-A **Guard** is a class that implements the `CanActivate` interface, with a single method:
+Un **Guardia** es una clase que implementa la interfaz `CanActivate`, con un único método:
 
 ```
 canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean>;
 ```
 
--   **ExecutionContext** gives you access to the underlying request/response and route metadata.
+-   **ExecutionContext** te da acceso a la solicitud/respuesta subyacente y a los metadatos de la ruta.
     
--   If `canActivate` returns `true`, the request continues. Returning `false` or throwing an exception (for example, `UnauthorizedException`) blocks it.
+-   Si `canActivate` devuelve `true`, la solicitud continúa. Devolver `false` o lanzar una excepción (por ejemplo, `UnauthorizedException`) la bloquea.
     
 
-You register guards either **globally**, at the **controller** level, or on **individual routes** with the `@UseGuards()` decorator.
+Registras guardias ya sea de forma **global**, a nivel del **controlador**, o en rutas **individuales** con el decorador `@UseGuards()`.
 
-**Here’s how guards work:**
+**Así es cómo funcionan los guardias:**
 
-1.  **Creating a simple auth guard:**
+1.  **Crear un guardia de autenticación simple:**
 
 ```
 // auth.guard.ts
@@ -1044,23 +1037,23 @@ export class AuthGuard implements CanActivate {
     const req = context.switchToHttp().getRequest();
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      throw new UnauthorizedException('Missing or invalid authorization header');
+      throw new UnauthorizedException('Falta o es inválido el encabezado de autorización');
     }
-    // Basic token check (replace with real validation)
+    // Verificación básica del token (reemplazar con validación real)
     const token = authHeader.split(' ')[1];
     if (token !== 'valid-token') {
-      throw new UnauthorizedException('Invalid token');
+      throw new UnauthorizedException('Token inválido');
     }
-    // Attach user info if needed:
-    req.user = { id: 1, name: 'Alice' };
+    // Adjuntar información del usuario si es necesario:
+    req.user = { id: 1, nombre: 'Alice' };
     return true;
   }
 }
 ```
 
-2.  **Applying the guard**
+2.  **Aplicando el guardia**
 
--   **Globally** (in `main.ts`):
+-   **Globalmente** (en `main.ts`):
     
     ```
       import { NestFactory } from '@nestjs/core';
@@ -1069,21 +1062,21 @@ export class AuthGuard implements CanActivate {
     
       async function bootstrap() {
         const app = await NestFactory.create(AppModule);
-        // every incoming request passes through AuthGuard
+        // cada solicitud entrante pasa por AuthGuard
         app.useGlobalGuards(new AuthGuard());
         await app.listen(3000);
       }
       bootstrap();
     ```
     
--   **Controller-Level**:
+-   **A nivel del Controlador**:
     
     ```
       import { Controller, Get, UseGuards } from '@nestjs/common';
       import { AuthGuard } from './auth.guard';
     
       @Controller('profile')
-      @UseGuards(AuthGuard)       // applies to all routes in this controller
+      @UseGuards(AuthGuard)       // se aplica a todas las rutas en este controlador
       export class ProfileController {
         @Get()
         getProfile(@Req() req) {
@@ -1092,22 +1085,22 @@ export class AuthGuard implements CanActivate {
       }
     ```
     
--   **Route-Level**:
+-   **A nivel de Ruta**:
     
     ```
       @Get('admin')
-      @UseGuards(AdminGuard, AuthGuard)  // chain multiple guards
+      @UseGuards(AdminGuard, AuthGuard)  // encadenar múltiples guardias
       getAdminData() { /* ... */ }
     ```
     
 
-### 8.2 Role-Based Access Control
+### 8.2 Control de Acceso Basado en Roles
 
-Beyond plain authentication, you often need **authorization** – ensuring a user has the correct role or permission. You can build a guard that reads metadata (for example, required roles) and verifies user claims.
+Más allá de la autenticación simple, a menudo necesitas **autorización** – asegurarte de que un usuario tenga el rol o permiso correcto. Puedes construir un guardia que lea metadatos (por ejemplo, roles requeridos) y verifique las afirmaciones del usuario.
 
-**Here’s how it works:**
+**Así es cómo funciona:**
 
-1.  **Define a roles decorator:**
+1.  **Definir un decorador de roles:**
 
 ```
 // roles.decorator.ts
@@ -1115,7 +1108,7 @@ import { SetMetadata } from '@nestjs/common';
 export const Roles = (...roles: string[]) => SetMetadata('roles', roles);
 ```
 
-2.  **Create a roles guard:**
+2.  **Crear un guardia de roles:**
 
 ```
 // roles.guard.ts
@@ -1129,58 +1122,56 @@ export class RolesGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const requiredRoles = this.reflector.get<string[]>('roles', context.getHandler());
     if (!requiredRoles) {
-      return true; // no roles metadata => open route
+      return true; // sin metadatos de roles => ruta abierta
     }
     const { user } = context.switchToHttp().getRequest();
     const hasRole = requiredRoles.some(role => user.roles?.includes(role));
     if (!hasRole) {
-      throw new ForbiddenException('You do not have permission (roles)');
+      throw new ForbiddenException('No tienes permiso (roles)');
     }
     return true;
   }
 }
 ```
 
-3.  **Apply roles metadata and guard:**
+3.  **Aplicar metadatos de roles y guardia:**
 
 ```
 @Controller('projects')
 @UseGuards(AuthGuard, RolesGuard)
 export class ProjectsController {
   @Get()
-  @Roles('user', 'admin')         // route requires either 'user' or 'admin'
+  @Roles('user', 'admin')         // la ruta requiere ya sea 'user' o 'admin'
   findAll() { /* ... */ }
 
   @Post()
-  @Roles('admin')                 // only 'admin' can create
+  @Roles('admin')                 // solo 'admin' puede crear
   create() { /* ... */ }
 }
 ```
 
-With this setup:
+Con esta configuración:
 
--   `AuthGuard` ensures the request is authenticated and populates `req.user`.
+-   `AuthGuard` asegura que la solicitud esté autenticada y completa `req.user`.
     
--   `RolesGuard` reads the `@Roles()` metadata to enforce role-based access.
+-   `RolesGuard` lee los metadatos de `@Roles()` para hacer cumplir el acceso basado en roles.
     
 
-Guards give you a powerful, declarative way to enforce security and authorization policies. In the next section, we’ll cover **Exception Filters** – how to catch and format errors centrally, keeping your controllers clean.
+Los guardias te dan una manera poderosa y declarativa de hacer cumplir políticas de seguridad y autorización. En la próxima sección, cubriremos **Filtros de Excepción** – cómo atrapar y formatear errores de manera centralizada, manteniendo tus controladores limpios.
 
-## 9\. Exception Filters
+## 9\. Filtros de Excepción
 
-Exception filters let you centralize error handling, transforming thrown exceptions into consistent HTTP responses or other formats. You can rely on Nest’s built-in behavior for many cases, but custom filters give you control over logging, response shape, or handling non-HTTP errors.
+Los filtros de excepción te permiten centralizar el manejo de errores, transformando las excepciones lanzadas en respuestas HTTP coherentes o en otros formatos. Puedes confiar en el comportamiento integrado de Nest para muchos casos, pero los filtros personalizados te dan control sobre el registro, la forma de la respuesta, o el manejo de errores que no son HTTP.
 
-### 9.1 Handling Errors Gracefully
+### 9.1 Manejo de Errores de Forma Elegante
 
-By default, if a controller or service throws an `HttpException` (or one of Nest’s built-in exceptions like `NotFoundException`, `BadRequestException`, and so on), Nest catches it and sends an appropriate HTTP response with status code and JSON body containing `statusCode`, `message`, and `error`.
+Por defecto, si un controlador o servicio lanza una `HttpException` (o una de las excepciones integradas de Nest como `NotFoundException`, `BadRequestException`, y así sucesivamente), Nest la captura y envía una respuesta HTTP apropiada con código de estado y cuerpo JSON que contiene `statusCode`, `message`, y `error`.
 
-If an unexpected error (for example, a runtime error) bubbles up, Nest uses its default exception filter to return a 500 Internal Server Error with a generic message.
+Los controladores/servicios deben lanzar excepciones en lugar de devolver códigos de error manualmente, para que el framework pueda dar formato de manera consistente.
 
-Controllers/services should throw exceptions rather than return error codes manually, so the framework can format consistently.
+**Así es como funciona:**
 
-**Here’s how it works:**
-
-```
+```typescript
 // users.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
 
@@ -1191,15 +1182,15 @@ export class UsersService {
   findOne(id: number) {
     const user = this.users.find(u => u.id === id);
     if (!user) {
-      // results in 404 with JSON { statusCode: 404, message: 'User #2 not found', error: 'Not Found' }
-      throw new NotFoundException(`User #${id} not found`);
+      // resulta en 404 con JSON { statusCode: 404, message: 'Usuario #2 no encontrado', error: 'No Encontrado' }
+      throw new NotFoundException(`Usuario #${id} no encontrado`);
     }
     return user;
   }
 }
 ```
 
-```
+```typescript
 // users.controller.ts
 import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
 
@@ -1214,22 +1205,22 @@ export class UsersController {
 }
 ```
 
-If `findOne` throws, Nest’s default filter sends a structured JSON error. For unexpected errors (like a thrown `Error`), Nest wraps it into a 500 response.
+Si `findOne` lanza una excepción, el filtro predeterminado de Nest envía un error JSON estructurado. Para errores inesperados (como un `Error` lanzado), Nest lo envuelve en una respuesta 500.
 
-### 9.2 Creating Custom Filters
+### 9.2 Creación de Filtros Personalizados
 
-You can implement the `ExceptionFilter` interface or extend `BaseExceptionFilter`. Just use the `@Catch()` decorator to target specific exception types (or leave empty to catch all).
+Puedes implementar la interfaz `ExceptionFilter` o extender `BaseExceptionFilter`. Solo usa el decorador `@Catch()` para dirigir tipos de excepción específicos (o déjalo vacío para capturar todas).
 
-In `catch(exception, host)`, you can extract context (HTTP request/response) and shape your response (for example, add metadata, custom fields, or a uniform envelope). You can also log exceptions or report to external systems here.
+En `catch(exception, host)`, puedes extraer el contexto (solicitud/respuesta HTTP) y dar forma a tu respuesta (por ejemplo, agregar metadatos, campos personalizados o un contenedor uniforme). También puedes registrar excepciones o reportarlas a sistemas externos aquí.
 
-You can apply filters **globally**, to a controller, or to an individual route.
+Puedes aplicar filtros **globalmente**, a un controlador, o a una ruta individual.
 
-**Here’s how it works:**
+**Así es como funciona:**
 
-1.  **Simple logging filter**  
-    Catch all exceptions, log details, then delegate to default behavior:
+1.  **Filtro de registro simple**  
+    Captura todas las excepciones, registra detalles, luego delega al comportamiento predeterminado:
     
-    ```
+    ```typescript
      // logging-exception.filter.ts
      import {
        ExceptionFilter,
@@ -1241,7 +1232,7 @@ You can apply filters **globally**, to a controller, or to an individual route.
      } from '@nestjs/common';
      import { BaseExceptionFilter } from '@nestjs/core';
     
-     @Catch() // no args = catch every exception
+     @Catch() // sin argumentos = captura todas las excepciones
      export class LoggingExceptionFilter extends BaseExceptionFilter {
        private readonly logger = new Logger(LoggingExceptionFilter.name);
     
@@ -1250,22 +1241,22 @@ You can apply filters **globally**, to a controller, or to an individual route.
          const req = ctx.getRequest<Request>();
          const res = ctx.getResponse();
     
-         // Log stack or message
+         // Registrar pila o mensaje
          if (exception instanceof Error) {
-           this.logger.error(`Error on ${req.method} ${req.url}`, exception.stack);
+           this.logger.error(`Error en ${req.method} ${req.url}`, exception.stack);
          } else {
-           this.logger.error(`Unknown exception on ${req.method} ${req.url}`);
+           this.logger.error(`Excepción desconocida en ${req.method} ${req.url}`);
          }
     
-         // Delegate to default filter for HTTP exceptions or generic 500
+         // Delegar al filtro predeterminado para excepciones HTTP o genérico 500
          super.catch(exception, host);
        }
      }
     ```
     
-    **Apply globally** in `main.ts`:
+    **Aplicar globalmente** en `main.ts`:
     
-    ```
+    ```typescript
      async function bootstrap() {
        const app = await NestFactory.create(AppModule);
        app.useGlobalFilters(new LoggingExceptionFilter(app.get(HttpAdapterHost)));
@@ -1273,12 +1264,12 @@ You can apply filters **globally**, to a controller, or to an individual route.
      }
     ```
     
-    (If extending `BaseExceptionFilter`, pass the adapter host to the constructor or super as needed.)
+    (Si extiendes `BaseExceptionFilter`, pasa el adaptador anfitrión al constructor o super según sea necesario.)
     
-2.  **Custom response shape**  
-    Suppose you want all errors to return `{ success: false, error: { code, message } }`:
+2.  **Forma personalizada de respuesta**  
+    Supón que deseas que todos los errores devuelvan `{ success: false, error: { code, message } }`:
     
-    ```
+    ```typescript
      // custom-response.filter.ts
      import {
        ExceptionFilter,
@@ -1301,11 +1292,11 @@ You can apply filters **globally**, to a controller, or to an individual route.
          if (exception instanceof HttpException) {
            status = exception.getStatus();
            const res = exception.getResponse();
-           // res might be a string or object
+           // res puede ser una cadena o un objeto
            message = typeof res === 'string' ? { message: res } : res;
          } else {
            status = HttpStatus.INTERNAL_SERVER_ERROR;
-           message = { message: 'Internal server error' };
+           message = { message: 'Error interno del servidor' };
          }
     
          response.status(status).json({
@@ -1325,9 +1316,9 @@ You can apply filters **globally**, to a controller, or to an individual route.
      }
     ```
     
-    **Apply at controller or route level**:
+    **Aplicar a nivel de controlador o ruta**:
     
-    ```
+    ```typescript
      @Controller('orders')
      @UseFilters(CustomResponseFilter)
      export class OrdersController {
@@ -1335,20 +1326,20 @@ You can apply filters **globally**, to a controller, or to an individual route.
      }
     ```
     
-3.  **Catching specific exceptions**  
-    If you have a custom exception class:
+3.  **Capturando excepciones específicas**  
+    Si tienes una clase de excepción personalizada:
     
-    ```
+    ```typescript
      export class PaymentFailedException extends HttpException {
        constructor(details: string) {
-         super({ message: 'Payment failed', details }, HttpStatus.PAYMENT_REQUIRED);
+         super({ message: 'Pago fallido', details }, HttpStatus.PAYMENT_REQUIRED);
        }
      }
     ```
     
-    You can write a filter that only catches that:
+    Puedes escribir un filtro que solo capture eso:
     
-    ```
+    ```typescript
      @Catch(PaymentFailedException)
      export class PaymentFailedFilter implements ExceptionFilter {
        catch(exception: PaymentFailedException, host: ArgumentsHost) {
@@ -1361,41 +1352,40 @@ You can apply filters **globally**, to a controller, or to an individual route.
              message,
              details,
            },
-           help: 'Please verify your payment method and retry.',
+           help: 'Por favor verifica tu método de pago e intenta de nuevo.',
          });
        }
      }
     ```
     
-    Then apply only where payments occur:
+    Luego aplícalo solo donde ocurran pagos:
     
-    ```
+    ```typescript
      @Post('charge')
      @UseFilters(PaymentFailedFilter)
      charge() {
        // ...
      }
     ```
-    
 
-With exception filters in place, you ensure a consistent error contract, centralized logging or reporting, and tailored handling of different error types. Next up: **Interceptors and Logging**, where we’ll see how to transform responses, measure performance, and hook around method execution.
 
-## 10\. Interceptors & Logging
 
-Interceptors wrap around method execution, letting you transform responses, bind extra logic before/after method calls, or measure performance. They’re ideal for cross-cutting concerns like logging, response shaping, caching, or timing metrics.
+## 10\. Interceptores y Registro
 
-### 10.1 Transforming Responses
+Los interceptores envuelven la ejecución de métodos, permitiéndote transformar respuestas, vincular lógica adicional antes/después de las llamadas a métodos, o medir el rendimiento. Son ideales para preocupaciones transversales como el registro, la conformación de respuestas, el almacenamiento en caché o las métricas de tiempo.
 
-An **Interceptor** implements the `NestInterceptor` interface with an `intercept(context, next)` method.
+### 10.1 Transformación de Respuestas
 
-Inside `intercept`, you typically call `next.handle()` which returns an `Observable` of the handler’s result. You can then apply RxJS operators (like `map`) to modify the data before it’s sent to the client.
+Un **Interceptor** implementa la interfaz `NestInterceptor` con un método `intercept(context, next)`.
 
-Common uses are wrapping all responses in a uniform envelope, filtering out certain fields, or adding metadata.
+Dentro de `intercept`, normalmente llamas a `next.handle()` que devuelve un `Observable` del resultado del manejador. Luego puedes aplicar operadores de RxJS (como `map`) para modificar los datos antes de que sean enviados al cliente.
 
-**Here’s how it works:**
+Usos comunes son envolver todas las respuestas en un formato uniforme, filtrar ciertos campos o añadir metadatos.
 
-1.  **Basic response wrapper**  
-    Suppose you want every successful response to be `{ success: true, data: <original> }`.
+**Así es como funciona:**
+
+1.  **Envoltorio básico de respuesta**  
+    Supongamos que deseas que cada respuesta exitosa sea `{ success: true, data: <original> }`.
     
     ```
      // response.interceptor.ts
@@ -1421,7 +1411,7 @@ Common uses are wrapping all responses in a uniform envelope, filtering out cert
      }
     ```
     
-    **Apply globally** in `main.ts`:
+    **Aplicar globalmente** en `main.ts`:
     
     ```
      import { NestFactory } from '@nestjs/core';
@@ -1436,7 +1426,7 @@ Common uses are wrapping all responses in a uniform envelope, filtering out cert
      bootstrap();
     ```
     
-    Now, if a controller method returns `{ id: 1, name: 'Alice' }`, the client sees:
+    Ahora, si un método del controlador devuelve `{ id: 1, name: 'Alice' }`, el cliente verá:
     
     ```
      {
@@ -1445,8 +1435,8 @@ Common uses are wrapping all responses in a uniform envelope, filtering out cert
      }
     ```
     
-2.  **Filtering sensitive fields**  
-    You might want to strip out fields like `password` before sending a user object:
+2.  **Filtrado de campos sensibles**  
+    Puede que desees eliminar campos como `password` antes de enviar un objeto de usuario:
     
     ```
      // sanitize.interceptor.ts
@@ -1475,7 +1465,7 @@ Common uses are wrapping all responses in a uniform envelope, filtering out cert
      }
     ```
     
-    **Apply at controller or route**:
+    **Aplicar en el controlador o ruta**:
     
     ```
      @Controller('users')
@@ -1483,15 +1473,15 @@ Common uses are wrapping all responses in a uniform envelope, filtering out cert
      export class UsersController {
        @Get(':id')
        getUser(@Param('id') id: string) {
-         // returns a user object with a password field internally,
-         // but interceptor strips it before sending to client
+         // devuelve un objeto de usuario con un campo de contraseña internamente,
+         // pero el interceptor lo elimina antes de enviar al cliente
          return this.usersService.findOne(+id);
        }
      }
     ```
     
-3.  **Serializing with** `class-transformer`  
-    If you use classes with decorators, you can integrate with `class-transformer`:
+3.  **Serialización con** `class-transformer`  
+    Si usas clases con decoradores, puedes integrarlas con `class-transformer`:
     
     ```
      // user.entity.ts
@@ -1539,7 +1529,7 @@ Common uses are wrapping all responses in a uniform envelope, filtering out cert
      }
     ```
     
-    **Apply with a DTO**:
+    **Aplicar con un DTO**:
     
     ```
      @Controller('users')
@@ -1547,21 +1537,19 @@ Common uses are wrapping all responses in a uniform envelope, filtering out cert
        @Get(':id')
        @UseInterceptors(new ClassTransformInterceptor(User))
        getUser(@Param('id') id: string) {
-         // service returns a plain object; interceptor transforms to User instance
+         // el servicio devuelve un objeto simple; el interceptor transforma a una instancia de User
          return this.usersService.findOne(+id);
        }
      }
     ```
     
 
-### 10.2 Logging and Performance Metrics
+### 10.2 Registro y Métricas de Rendimiento
 
-Interceptors can also measure execution time or log request/response details. You capture timestamps before and after `next.handle()`, logging the difference. This helps monitor slow endpoints. Combined with a logging framework or Nest’s `Logger`, you can standardize logs.
+Los interceptores también pueden medir el tiempo de ejecución o registrar detalles de las solicitudes/respuestas. Capturas marcas de tiempo antes y después de `next.handle()`, registrando la diferencia. Esto ayuda a monitorear puntos finales lentos. Combinado con un framework de registro o el `Logger` de Nest, puedes estandarizar los registros.
 
-**Here’s how it works:**
-
-1.  **Timing interceptor**  
-    Logs how long each request-handler takes:
+1.  **Interceptor de temporización**  
+    Registra cuánto tiempo lleva cada manejador de solicitudes:
     
     ```
      // logging.interceptor.ts
@@ -1594,7 +1582,7 @@ Interceptors can also measure execution time or log request/response details. Yo
      }
     ```
     
-    **Apply globally**:
+    **Aplicar globalmente**:
     
     ```
      async function bootstrap() {
@@ -1604,14 +1592,14 @@ Interceptors can also measure execution time or log request/response details. Yo
      }
     ```
     
-    Now each request logs something like:
+    Ahora cada solicitud registra algo como:
     
     ```
      [LoggingInterceptor] GET /users/1 - 35ms
     ```
     
-2.  **Detailed request/response logging**  
-    For more detail, log request body or response size (careful with sensitive data):
+2.  **Registro detallado de solicitudes/respuestas**  
+    Para más detalle, registre el cuerpo de la solicitud o el tamaño de la respuesta (cuidado con los datos sensibles):
     
     ```
      // detailed-logging.interceptor.ts
@@ -1648,7 +1636,7 @@ Interceptors can also measure execution time or log request/response details. Yo
      }
     ```
     
-    **Apply conditionally**: perhaps only in development:
+    **Aplicar condicionalmente**: quizás solo en desarrollo:
     
     ```
      if (process.env.NODE_ENV !== 'production') {
@@ -1656,59 +1644,58 @@ Interceptors can also measure execution time or log request/response details. Yo
      }
     ```
     
-3.  **Combining with guards/pipes**  
-    Since interceptors run after guards and before the response is sent, logging time captures the full handler including service calls, but after validation/authorization. That ensures you measure only authorized requests and valid data flows.
+3.  **Combinando con guards/pipes**  
+    Dado que los interceptores se ejecutan después de los guards y antes de que se envíe la respuesta, el tiempo de registro captura al manejador completo incluyendo llamadas al servicio, pero después de la validación/autorización. Eso asegura que solo midas solicitudes autorizadas y flujos de datos válidos.
+
+Los interceptores ofrecen una forma flexible de envolver tus manejadores con comportamientos adicionales: transformar salidas, sanitizar datos, medir ejecución, o añadir cabeceras. En la siguiente sección, exploraremos la **Integración de base de datos** para ver cómo puedes integrar tu capa de datos en Nest.
+
+## 11\. Integración de Base de Datos
+
+En muchas aplicaciones del mundo real, la persistencia de datos es esencial. NestJS ofrece soporte de primera clase e integraciones para varias tecnologías de bases de datos. En esta sección cubrimos tres enfoques comunes:
+
+-   **TypeORM con NestJS** (bases de datos relacionales, estilo Active Record/Data Mapper)
+    
+-   **Mongoose (MongoDB)** (almacenamiento de documentos NoSQL)
+    
+-   **Prisma** (constructor de consultas con seguridad de tipos/alternativa a ORM)
     
 
-Interceptors offer a flexible way to wrap your handlers with extra behavior: transforming outputs, sanitizing data, timing execution, or adding headers. In the next section, we’ll explore **Database integration** to see how you can integrate your data layer in Nest.
+Para cada uno, explicaremos la teoría – cuándo y por qué elegirlo – y mostraremos ejemplos prácticos concisos de configuración y uso en un contexto de NestJS.
 
-## 11\. Database Integration
+### 11.1 TypeORM con NestJS
 
-In many real-world applications, persisting data is essential. NestJS offers first-class support and integrations for several database technologies. In this section we cover three common approaches:
+TypeORM es un ORM popular para Node.js que soporta múltiples bases de datos relacionales (PostgreSQL, MySQL, SQLite, SQL Server, etc.), ofreciendo tanto patrones de Active Record como de Data Mapper.
 
--   **TypeORM with NestJS** (relational databases, Active Record/Data Mapper style)
+En NestJS, el paquete `@nestjs/typeorm` envuelve TypeORM para proporcionar:
+
+-   **Gestión automática de conexiones** a través de `TypeOrmModule.forRoot()`
     
--   **Mongoose (MongoDB)** (NoSQL document store)
+-   **Repositorios/entidades a nivel de módulo** a través de `TypeOrmModule.forFeature()`
     
--   **Prisma** (Type-safe query builder/ORM alternative)
+-   **Inyección de dependencias** para repositorios y el `DataSource`/`Connection`
     
-
-For each, we’ll explain the theory – when and why to choose it – and show concise practical examples of setup and usage in a NestJS context.
-
-### 11.1 TypeORM with NestJS
-
-TypeORM is a popular ORM for Node.js that supports multiple relational databases (PostgreSQL, MySQL, SQLite, SQL Server, and so on), offering both Active Record and Data Mapper patterns.
-
-In NestJS, the `@nestjs/typeorm` package wraps TypeORM to provide:
-
--   **Automatic connection management** via `TypeOrmModule.forRoot()`
+-   **Decoradores de entidad** (`@Entity()`, `@Column()`, etc.) para la definición de esquemas
     
--   **Module-scoped repositories/entities** via `TypeOrmModule.forFeature()`
-    
--   **Dependency injection** for repositories and the `DataSource`/`Connection`
-    
--   **Entity decorators** (`@Entity()`, `@Column()`, and so on) for schema definition
-    
--   **Migrations** and advanced features via TypeORM CLI or programmatic usage
+-   **Migraciones** y funciones avanzadas a través de CLI de TypeORM o uso programático
     
 
-#### When to choose TypeORM
+#### Cuándo elegir TypeORM
 
-Type ORM is useful in several scenarios. Use it when your data is relational and you want a full-featured ORM with decorators and built-in migrations. It’s also great if you prefer to work with classes/entities and automatically map them to tables. And it’s a great choice if you value built-in features like eager/lazy relations, cascading, query builders, and repository patterns.
+TypeORM es útil en varios escenarios. Úsalo cuando tus datos sean relacionales y necesites un ORM completo con decoradores y migraciones integradas. También es excelente si prefieres trabajar con clases/entidades y mapearlas automáticamente a tablas. Y es una gran elección si valoras funciones integradas como relaciones ávidas/perezosas, cascadas, constructores de consultas y patrones de repositorio.
 
-#### Here’s how to use it:
+#### Aquí se explica cómo usarlo:
 
-1.  **Install dependencies:**
+1.  **Instalar dependencias:**
     
     ```
      npm install --save @nestjs/typeorm typeorm reflect-metadata
-     # Also install the database driver; e.g., for Postgres:
+     # También instala el controlador de base de datos; por ejemplo, para Postgres:
      npm install --save pg
     ```
     
-2.  **Configure the root module:**
+2.  **Configurar el módulo raíz:**
     
-    In `app.module.ts`, import `TypeOrmModule.forRoot()` with connection options. These can come from environment variables (discussed later in Configuration Management).
+    En `app.module.ts`, importa `TypeOrmModule.forRoot()` con opciones de conexión. Estas pueden provenir de variables de entorno (discutidas más adelante en Gestión de Configuración).
     
     ```
      // src/app.module.ts
@@ -1726,23 +1713,23 @@ Type ORM is useful in several scenarios. Use it when your data is relational and
            password: process.env.DB_PASS || 'password',
            database: process.env.DB_NAME || 'mydb',
            entities: [__dirname + '/**/*.entity{.ts,.js}'],
-           synchronize: false, // recommended false in production; use migrations
+           synchronize: false, // recomendado en producción; use migraciones
            // logging: true,
          }),
          UsersModule,
-         // ...other modules
+         // ...otros módulos
        ],
      })
      export class AppModule {}
     ```
     
-    -   `synchronize: true` can auto-sync schema in development, but in production prefer migrations.
+    -   `synchronize: true` puede auto-sincronizar el esquema en desarrollo, pero en producción prefiera migraciones.
         
-    -   Entities are auto-loaded via glob. Ensure path matches compiled output.
+    -   Las entidades se cargan automáticamente mediante glob. Asegúrate de que la ruta coincida con la salida compilada.
         
-3.  **Define an entity:**
+3.  **Definir una entidad:**
     
-    Create an entity class with decorators:
+    Crea una clase de entidad con decoradores:
     
     ```
      // src/users/user.entity.ts
@@ -1770,7 +1757,7 @@ Type ORM is useful in several scenarios. Use it when your data is relational and
      }
     ```
     
-4.  **Set up the feature module:**
+4.  **Configurar el módulo de funciones:**
     
     ```
      // src/users/users.module.ts
@@ -1784,14 +1771,14 @@ Type ORM is useful in several scenarios. Use it when your data is relational and
        imports: [TypeOrmModule.forFeature([User])],
        providers: [UsersService],
        controllers: [UsersController],
-       exports: [UsersService], // if other modules need UsersService
+       exports: [UsersService], // si otros módulos necesitan UsersService
      })
      export class UsersModule {}
     ```
     
-5.  **Inject the repository:**
+5.  **Inyectar el repositorio:**
     
-    In the service, inject the `Repository<User>`:
+    En el servicio, inyecta el `Repository<User>`:
     
     ```
      // src/users/users.service.ts
@@ -1809,7 +1796,7 @@ Type ORM is useful in several scenarios. Use it when your data is relational and
        ) {}
     
        async create(dto: CreateUserDto): Promise<User> {
-         const user = this.userRepository.create(dto); // maps DTO fields to entity
+         const user = this.userRepository.create(dto); // asigna campos DTO a la entidad
          return this.userRepository.save(user);
        }
     
@@ -1837,7 +1824,7 @@ Type ORM is useful in several scenarios. Use it when your data is relational and
      }
     ```
     
-6.  **Use in controller:**
+6.  **Usar en el controlador:**
     
     ```
      // src/users/users.controller.ts
@@ -1879,45 +1866,42 @@ Type ORM is useful in several scenarios. Use it when your data is relational and
      }
     ```
     
-7.  **Migrations (optional but recommended)**
+7.  **Migraciones (opcional pero recomendado)**
     
-    -   Use TypeORM CLI or programmatic migrations.
+    -   Usa TypeORM CLI o migraciones programáticas.
         
-    -   Configure a separate `ormconfig` or supply options in code.
+    -   Configura un `ormconfig` por separado o suministra opciones en código.
         
-    -   Generate and run migrations to evolve schema without data loss.
-        
+    -   Genera y ejecuta migraciones para evolucionar el esquema sin pérdida de datos.
 
-### 11.2 Mongoose (MongoDB)
+Mongoose es un ODM (Object Document Mapper) ampliamente utilizado para MongoDB. En NestJS, `@nestjs/mongoose` integra Mongoose para:
 
-Mongoose is a widely used ODM (Object Document Mapper) for MongoDB. In NestJS, `@nestjs/mongoose` integrates Mongoose to:
-
--   Define **schemas** via classes and decorators (`@Schema()`, `@Prop()`)
+-   Definir **esquemas** a través de clases y decoradores (`@Schema()`, `@Prop()`)
     
--   Register models in modules with `MongooseModule.forFeature()`
+-   Registrar modelos en módulos con `MongooseModule.forFeature()`
     
--   Manage the MongoDB connection with `MongooseModule.forRoot()`
+-   Gestionar la conexión a MongoDB con `MongooseModule.forRoot()`
     
--   Inject Mongoose **Model** instances into services
+-   Inyectar instancias de **modelo** de Mongoose en servicios
     
--   Work with documents in a type-safe way (with interfaces/types)
+-   Trabajar con documentos de forma segura en cuanto a tipos (con interfaces/tipos)
     
--   Leverage features like hooks, virtuals, and validation at schema level
+-   Aprovechar características como hooks, virtuales y validación a nivel de esquema
     
 
-#### When to choose Mongoose
+#### Cuándo elegir Mongoose
 
-Mongoose is a good choice if you need a document-oriented, schema-less/ schematized NoSQL store. It’s also great if your data shapes may vary, or you prefer MongoDB’s flexible schema. And it’s helpful if you want features like middleware hooks in schema (pre/post save), virtuals, and so on.
+Mongoose es una buena elección si necesitas un almacén NoSQL orientado a documentos, sin esquema/con esquema. También es ideal si las formas de tus datos pueden variar, o prefieres el esquema flexible de MongoDB. Y es útil si deseas características como hooks de middleware en esquemas (guardar pre/post), virtuales, etc.
 
-#### Here’s how to use it:
+#### Cómo usarlo:
 
-1.  **Install dependencies:**
+1.  **Instalar dependencias:**
     
     ```
      npm install --save @nestjs/mongoose mongoose
     ```
     
-2.  **Configure root module:**
+2.  **Configurar módulo raíz:**
     
     ```
      // src/app.module.ts
@@ -1929,15 +1913,15 @@ Mongoose is a good choice if you need a document-oriented, schema-less/ schemati
        imports: [
          MongooseModule.forRoot(process.env.MONGO_URI || 'mongodb://localhost/nest'),
          CatsModule,
-         // ...other modules
+         // ...otros módulos
        ],
      })
      export class AppModule {}
     ```
     
-3.  **Define a schema and document:**
+3.  **Definir un esquema y documento:**
     
-    Use decorators and interfaces:
+    Usa decoradores e interfaces:
     
     ```
      // src/cats/schemas/cat.schema.ts
@@ -1959,20 +1943,20 @@ Mongoose is a good choice if you need a document-oriented, schema-less/ schemati
      export const CatSchema = SchemaFactory.createForClass(Cat);
     ```
     
-    -   Extending `Document` gives the Mongoose document methods and properties.
+    -   Extender `Document` otorga los métodos y propiedades del documento de Mongoose.
         
-    -   `timestamps: true` auto-adds `createdAt` and `updatedAt`.
+    -   `timestamps: true` añade automáticamente `createdAt` y `updatedAt`.
         
-    -   You can add hooks:
+    -   Puedes añadir hooks:
         
         ```
           CatSchema.pre<Cat>('save', function (next) {
-            // e.g., modify data or log before saving
+            // por ejemplo, modificar datos o registrar antes de guardar
             next();
           });
         ```
         
-4.  **Set up feature module:**
+4.  **Configurar módulo de características:**
     
     ```
      // src/cats/cats.module.ts
@@ -1992,9 +1976,9 @@ Mongoose is a good choice if you need a document-oriented, schema-less/ schemati
      export class CatsModule {}
     ```
     
-5.  **Inject the model:**
+5.  **Inyectar el modelo:**
     
-    In the service, inject `Model<Cat>`:
+    En el servicio, inyecta `Model<Cat>`:
     
     ```
      // src/cats/cats.service.ts
@@ -2023,7 +2007,7 @@ Mongoose is a good choice if you need a document-oriented, schema-less/ schemati
        async findOne(id: string): Promise<Cat> {
          const cat = await this.catModel.findById(id).exec();
          if (!cat) {
-           throw new NotFoundException(`Cat ${id} not found`);
+           throw new NotFoundException(`Cat ${id} no encontrado`);
          }
          return cat;
        }
@@ -2033,7 +2017,7 @@ Mongoose is a good choice if you need a document-oriented, schema-less/ schemati
            .findByIdAndUpdate(id, dto, { new: true })
            .exec();
          if (!updated) {
-           throw new NotFoundException(`Cat ${id} not found`);
+           throw new NotFoundException(`Cat ${id} no encontrado`);
          }
          return updated;
        }
@@ -2041,13 +2025,13 @@ Mongoose is a good choice if you need a document-oriented, schema-less/ schemati
        async remove(id: string): Promise<void> {
          const res = await this.catModel.findByIdAndDelete(id).exec();
          if (!res) {
-           throw new NotFoundException(`Cat ${id} not found`);
+           throw new NotFoundException(`Cat ${id} no encontrado`);
          }
        }
      }
     ```
     
-6.  **Use in controller:**
+6.  **Usar en el controlador:**
     
     ```
      // src/cats/cats.controller.ts
@@ -2090,41 +2074,39 @@ Mongoose is a good choice if you need a document-oriented, schema-less/ schemati
      }
     ```
     
-7.  **Advanced Mongoose features**
+7.  **Características avanzadas de Mongoose**
     
-    -   **Virtuals**: define computed properties not stored in DB.
+    -   **Virtuales**: definir propiedades calculadas no almacenadas en la BD.
         
-    -   **Indexes**: via schema options or `@Prop({ index: true })`.
+    -   **Índices**: a través de opciones de esquema o `@Prop({ index: true })`.
         
-    -   **Populate**: reference other collections with `@Prop({ type: Types.ObjectId, ref: 'OtherModel' })`.
+    -   **Población**: referencia otras colecciones con `@Prop({ type: Types.ObjectId, ref: 'OtherModel' })`.
         
-    -   **Transactions**: use MongoDB sessions for multi-document atomic operations.
+    -   **Transacciones**: usar sesiones de MongoDB para operaciones atómicas multiregistro.
         
 
-### 11.3 Prisma
+Prisma es un ORM/Constructor de Consultas moderno que genera un cliente tipo seguro basado en una definición de esquema. Soporta bases de datos relacionales (PostgreSQL, MySQL, SQLite, SQL Server, y más).
 
-Prisma is a modern ORM/Query Builder that generates a type-safe client based on a schema definition. It supports relational databases (PostgreSQL, MySQL, SQLite, SQL Server, and more).
+Estas son algunas de sus características clave:
 
-Here are some of its key features:
-
--   **Type-safe queries**: Autogenerated TypeScript definitions prevent many runtime errors.
+-   **Consultas tipo seguras**: Las definiciones de TypeScript autogeneradas previenen muchos errores en tiempo de ejecución.
     
--   **Prisma schema**: A declarative `.prisma` file to define models, relations, and enums.
+-   **Esquema de Prisma**: Un archivo `.prisma` declarativo para definir modelos, relaciones y enums.
     
--   **Migrations**: `prisma migrate` for evolving schema.
+-   **Migraciones**: `prisma migrate` para evolucionar el esquema.
     
--   **Performance**: Lean query builder without heavy runtime overhead.
+-   **Rendimiento**: Constructor de consultas ligero sin sobrecarga pesada en tiempo de ejecución.
     
--   **Flexibility**: Supports raw queries when needed.
+-   **Flexibilidad**: Soporta consultas sin procesar cuando es necesario.
     
 
-#### When to choose Prisma
+#### Cuándo elegir Prisma
 
-Prisma is a great choice if you prefer a schema-first approach with a clear DSL and auto-generated type-safe client. It’s also great if you want modern features like efficient migrations, rich type inference, and a straightforward developer experience. And it’s a solid choice if you don’t need Active Record pattern. Instead, you use the Prisma client in services.
+Prisma es una gran elección si prefieres un enfoque primero de esquema con un DSL claro y cliente tipo seguro autogenerado. También es excelente si deseas características modernas como migraciones eficientes, rica inferencia de tipos, y una experiencia de desarrollador sencilla. Y es una elección sólida si no necesitas el patrón Active Record. En cambio, utilizas el cliente de Prisma en servicios.
 
-#### Here’s how it works:
+#### Aquí te explicamos cómo funciona:
 
-1.  **Install dependencies and initialize:**
+1.  **Instalar dependencias e inicializar:**
     
     ```
      npm install @prisma/client
@@ -2132,11 +2114,11 @@ Prisma is a great choice if you prefer a schema-first approach with a clear DSL 
      npx prisma init
     ```
     
-    This creates a `prisma/schema.prisma` file and a `.env` with `DATABASE_URL`.
+    Esto crea un archivo `prisma/schema.prisma` y un `.env` con `DATABASE_URL`.
     
-2.  **Define the schema:**
+2.  **Definir el esquema:**
     
-    In `prisma/schema.prisma`:
+    En `prisma/schema.prisma`:
     
     ```
      datasource db {
@@ -2169,18 +2151,18 @@ Prisma is a great choice if you prefer a schema-first approach with a clear DSL 
      }
     ```
     
-3.  **Run migrations and generate client:**
+3.  **Ejecutar migraciones y generar cliente:**
     
     ```
      npx prisma migrate dev --name init
      npx prisma generate
     ```
     
-    This updates the database schema and regenerates the TypeScript client.
+    Esto actualiza el esquema de la base de datos y regenera el cliente de TypeScript.
     
-4.  **Create a PrismaService in NestJS:**
+4.  **Crear un PrismaService en NestJS:**
     
-    A common pattern is to wrap the `PrismaClient` in an injectable service, handling lifecycle hooks.
+    Un patrón común es envolver el `PrismaClient` en un servicio inyectable, manejando hooks de ciclo de vida.
     
     ```
      // src/prisma/prisma.service.ts
@@ -2199,7 +2181,7 @@ Prisma is a great choice if you prefer a schema-first approach with a clear DSL 
      }
     ```
     
-5.  **Register PrismaService in a module:**
+5.  **Registrar PrismaService en un módulo:**
     
     ```
      // src/prisma/prisma.module.ts
@@ -2213,9 +2195,9 @@ Prisma is a great choice if you prefer a schema-first approach with a clear DSL 
      export class PrismaModule {}
     ```
     
-    Then import `PrismaModule` in any feature module needing DB access.
+    Luego, importa `PrismaModule` en cualquier módulo de característica que necesite acceso a la BD.
     
-6.  **Use in a feature service:**
+6.  **Usar en un servicio de característica:**
     
     ```
      // src/users/users.service.ts
@@ -2253,9 +2235,9 @@ Prisma is a great choice if you prefer a schema-first approach with a clear DSL 
      }
     ```
     
-    Note: DTO fields must align with Prisma schema types. Prisma client methods return typed results.
+    Nota: Los campos del DTO deben alinearse con los tipos de esquema de Prisma. Los métodos del cliente de Prisma devuelven resultados tipados.
     
-7.  **Inject in controller:**
+7.  **Inyectar en controlador:**
     
     ```
      // src/users/users.controller.ts
@@ -2297,63 +2279,60 @@ Prisma is a great choice if you prefer a schema-first approach with a clear DSL 
      }
     ```
     
-8.  **Advanced Prisma usage**
+8.  **Uso avanzado de Prisma**
     
-    -   **Relations and nested writes**: for example, create a post with nested author connect/create.
+    -   **Relaciones y escrituras anidadas**: por ejemplo, crear una publicación con autor conectado/creado anidado.
         
-    -   **Transactions**: `this.prisma.$transaction([...])` for atomic operations.
+    -   **Transacciones**: `this.prisma.$transaction([...])` para operaciones atómicas.
         
-    -   **Raw queries**: `this.prisma.$queryRaw` when needed.
+    -   **Consultas sin procesar**: `this.prisma.$queryRaw` cuando sea necesario.
         
-    -   **Middleware**: Prisma supports middlewares on the client side.
+    -   **Middleware**: Prisma soporta middlewares en el lado del cliente.
         
-    -   **Performance tuning**: select only needed fields, use pagination patterns.
-        
+    -   **Ajuste de rendimiento**: seleccionar solo los campos necesarios, utilizar patrones de paginación.
 
-With these three approaches, you can choose the database integration strategy that best fits your application’s needs:
-
--   **TypeORM** for a full-fledged ORM with decorators and migrations support in relational databases.
+-   **TypeORM** para un ORM completo con soporte para decoradores y migraciones en bases de datos relacionales.
     
--   **Mongoose** for flexible document schemas in MongoDB.
+-   **Mongoose** para esquemas de documentos flexibles en MongoDB.
     
--   **Prisma** for a modern, type-safe query builder/ORM alternative with excellent developer ergonomics.
+-   **Prisma** para un constructor de consultas moderno, seguro por tipo, y una alternativa a ORM con una excelente ergonomía para desarrolladores.
     
 
-In the next section, we’ll cover **Configuration Management** – how to handle environment variables and config modules in NestJS.
+En la siguiente sección, cubriremos **Gestión de Configuración** – cómo manejar variables de entorno y módulos de configuración en NestJS.
 
-## 12\. Configuration Management
+## 12\. Gestión de Configuración
 
-Managing configuration cleanly is crucial for applications to behave correctly across environments (development, staging, production). NestJS provides the `@nestjs/config` module to centralize configuration loading, validation, and injection.
+Gestionar la configuración de manera ordenada es crucial para que las aplicaciones se comporten correctamente a través de diferentes entornos (desarrollo, pruebas, producción). NestJS proporciona el módulo `@nestjs/config` para centralizar la carga, validación e inyección de configuración.
 
-### 12.1 @nestjs/config Module
+### 12.1 Módulo @nestjs/config
 
-The `@nestjs/config` module is a powerful utility for managing application configuration settings. Here are some of its key features:
+El módulo `@nestjs/config` es una utilidad poderosa para gestionar las configuraciones de la aplicación. Algunas de sus características clave son:
 
--   **Centralized config**: Instead of sprinkling `process.env` throughout your code, it uses a dedicated service that loads and validates configuration once at startup.
+-   **Configuración centralizada**: En lugar de dispersar `process.env` en tu código, utiliza un servicio dedicado que carga y valida la configuración una vez al iniciar.
     
--   **Environment agnostic**: It loads variables from `.env` files, environment variables, or other sources, with support for different files per environment.
+-   **Agnóstico de entorno**: Carga variables desde archivos `.env`, variables de entorno u otras fuentes, con soporte para diferentes archivos por entorno.
     
--   **Validation**: It integrates a schema (for example, via Joi) to ensure required variables are present and correctly typed, failing fast if misconfigured.
+-   **Validación**: Integra un esquema (por ejemplo, usando Joi) para asegurar que las variables requeridas están presentes y bien tipadas, fallando rápidamente si la configuración es incorrecta.
     
--   **Config Namespacing**: It organizes related settings into logical groups (for example, database, auth, third-party APIs) via configuration factories.
+-   **Espaciado de Configuración**: Organiza configuraciones relacionadas en grupos lógicos (por ejemplo, base de datos, autenticación, APIs de terceros) a través de fábricas de configuración.
     
--   **Injection**: It injects a `ConfigService` to read config values in services or modules, with type safety when using custom typed wrappers.
+-   **Inyección**: Inyecta un `ConfigService` para leer valores de configuración en servicios o módulos, con seguridad de tipos al usar envoltorios personalizados tipados.
     
 
-#### Here’s how it works:
+#### Así funciona:
 
-1.  **Install the package**
+1.  **Instalar el paquete**
     
     ```
      npm install @nestjs/config
-     npm install joi    # if you plan to validate via Joi schemas
+     npm install joi    # si planeas validar a través de esquemas Joi
     ```
     
-2.  **Import and initialize ConfigModule**
+2.  **Importar e inicializar ConfigModule**
     
-    In your root module (`AppModule`), import `ConfigModule.forRoot()`. Typical options:
+    En tu módulo raíz (`AppModule`), importa `ConfigModule.forRoot()`. Opciones típicas:
     
-    ```
+    ```typescript
      // src/app.module.ts
      import { Module } from '@nestjs/common';
      import { ConfigModule } from '@nestjs/config';
@@ -2363,35 +2342,35 @@ The `@nestjs/config` module is a powerful utility for managing application confi
      @Module({
        imports: [
          ConfigModule.forRoot({
-           // Load .env automatically; specify envFilePath if custom:
-           isGlobal: true,           // makes ConfigService available app-wide
+           // Carga automática de .env; especificar envFilePath para customización:
+           isGlobal: true,           // hace que ConfigService esté disponible en toda la aplicación
            envFilePath: ['.env.development.local', '.env.development', '.env'], 
-           load: [configuration],    // optional: load custom config factory(s)
-           validationSchema,         // optional: Joi schema to validate env vars
+           load: [configuration],    // opcional: carga fábricas de configuración personalizadas
+           validationSchema,         // opcional: esquema Joi para validar variables de entorno
            validationOptions: {
              allowUnknown: true,
              abortEarly: true,
            },
          }),
-         // ...other modules
+         // ...otros módulos
        ],
      })
      export class AppModule {}
     ```
     
-    -   `isGlobal: true` avoids importing `ConfigModule` in every feature module.
+    -   `isGlobal: true` evita importar `ConfigModule` en cada módulo de característica.
         
-    -   `envFilePath`: an array lets you try multiple files (for example, local overrides before default).
+    -   `envFilePath`: un array te permite probar múltiples archivos (por ejemplo, anular locales antes del predeterminado).
         
-    -   `load`: array of functions returning partial config objects – see next step.
+    -   `load`: array de funciones que retornan objetos de configuración parciales – ver el siguiente paso.
         
-    -   `validationSchema`: a Joi schema ensuring required variables exist and are correct type/format.
+    -   `validationSchema`: un esquema Joi que asegura que las variables requeridas existan y tengan el tipo/formato correctos.
         
-3.  **Define a configuration factory**
+3.  **Definir una fábrica de configuración**
     
-    Organize related settings into a typed object:
+    Organiza configuraciones relacionadas en un objeto tipado:
     
-    ```
+    ```typescript
      // src/config/configuration.ts
      export default () => ({
        port: parseInt(process.env.PORT, 10) || 3000,
@@ -2406,15 +2385,15 @@ The `@nestjs/config` module is a powerful utility for managing application confi
          secret: process.env.JWT_SECRET,
          expiresIn: process.env.JWT_EXPIRES_IN || '1h',
        },
-       // add other namespaces as needed
+       // agregar otros espacios de nombres según sea necesario
      });
     ```
     
-4.  **Validate environment variables**
+4.  **Validar variables de entorno**
     
-    Using Joi for validation:
+    Usar Joi para la validación:
     
-    ```
+    ```typescript
      // src/config/validation.ts
      import * as Joi from 'joi';
     
@@ -2430,17 +2409,17 @@ The `@nestjs/config` module is a powerful utility for managing application confi
        DB_NAME: Joi.string().required(),
        JWT_SECRET: Joi.string().min(32).required(),
        JWT_EXPIRES_IN: Joi.string().default('1h'),
-       // add other variables...
+       // agregar otras variables...
      });
     ```
     
-    If validation fails at startup, the application will error out with details, preventing misconfigured deployments.
+    Si la validación falla al iniciar, la aplicación dará un error con detalles, previniendo implementaciones mal configuradas.
     
-5.  **Inject ConfigService**
+5.  **Inyectar ConfigService**
     
-    Anywhere you need config, inject `ConfigService`:
+    Donde necesites configuración, inyecta `ConfigService`:
     
-    ```
+    ```typescript
      // src/some/some.service.ts
      import { Injectable } from '@nestjs/common';
      import { ConfigService } from '@nestjs/config';
@@ -2452,21 +2431,21 @@ The `@nestjs/config` module is a powerful utility for managing application confi
        getDbConfig() {
          const host = this.configService.get<string>('database.host');
          const port = this.configService.get<number>('database.port');
-         // Use these values to configure a database client, etc.
+         // Usa estos valores para configurar un cliente de base de datos, etc.
          return { host, port };
        }
      }
     ```
     
-    -   Use dot notation for nested config: for example, `'jwt.secret'`.
+    -   Usa notación de punto para configuración anidada: por ejemplo, `'jwt.secret'`.
         
-    -   You can also read raw env vars via `configService.get<string>('DB_HOST')` if needed, but preferring structured config is clearer.
+    -   También puedes leer variables de entorno sin procesar a través de `configService.get<string>('DB_HOST')` si es necesario, pero es más claro preferir una configuración estructurada.
         
-6.  **Typed wrapper for ConfigService (optional)**
+6.  **Envoltorio tipado para ConfigService (opcional)**
     
-    For stronger typing, create an interface matching your configuration and a wrapper:
+    Para mayor seguridad de tipo, crea una interfaz que coincida con tu configuración y un envoltorio:
     
-    ```
+    ```typescript
      // src/config/config.interface.ts
      export interface AppConfig {
        port: number;
@@ -2484,7 +2463,7 @@ The `@nestjs/config` module is a powerful utility for managing application confi
      }
     ```
     
-    ```
+    ```typescript
      // src/config/typed-config.service.ts
      import { Injectable } from '@nestjs/common';
      import { ConfigService } from '@nestjs/config';
@@ -2513,13 +2492,13 @@ The `@nestjs/config` module is a powerful utility for managing application confi
      }
     ```
     
-    Register `TypedConfigService` in a module if you prefer injecting it instead of raw `ConfigService`.
+    Registra `TypedConfigService` en un módulo si prefieres inyectarlo en lugar de `ConfigService` sin procesar.
     
-7.  **Dynamic module registration using config**
+7.  **Registro dinámico de módulos usando configuración**
     
-    Many Nest modules accept dynamic options. For example, TypeORM:
+    Muchos módulos de Nest aceptan opciones dinámicas. Por ejemplo, TypeORM:
     
-    ```
+    ```typescript
      // src/database/database.module.ts
      import { Module } from '@nestjs/common';
      import { TypeOrmModule } from '@nestjs/typeorm';
@@ -2545,31 +2524,29 @@ The `@nestjs/config` module is a powerful utility for managing application confi
      export class DatabaseModule {}
     ```
     
-    Using `forRootAsync` with `useFactory` ensures config is loaded before the module initializes.
+    Usar `forRootAsync` con `useFactory` asegura que la configuración se cargue antes de que el módulo se inicialice.
     
 
-### 12.2 Environment Variables
+Las variables de entorno sirven como puente entre el código y su entorno de ejecución, permitiendo desacoplar la configuración (como URLs de base de datos, claves de API o banderas de características) del código fuente.
 
-Environment variables serve as the bridge between code and its runtime environment, letting you decouple configuration (like database URLs, API keys, or feature flags) from your source.
+Al depender de variables de entorno, aseguras que el mismo paquete de aplicación pueda ejecutarse de manera segura en desarrollo, prueba y producción, cada uno proporcionando sus propios ajustes sensibles o específicos del entorno sin cambiar el código. Así es como funciona:
 
-By relying on environment variables, you ensure that the same application bundle can run safely across development, staging, and production – each providing its own sensitive or environment-specific settings without changing code. This is how it works:
-
--   **12-Factor app principle**: Stores config in the environment. Avoids hard-coding secrets or environment-specific settings in code.
+-   **Principio de las 12 Factor App**: Almacena la configuración en el entorno. Evita codificar secretos o configuraciones específicas del entorno en el código.
     
--   **Separation of concerns**: Code remains the same across environments. Behavior is driven by env vars or config files.
+-   **Separación de responsabilidades**: El código permanece igual en todos los entornos. El comportamiento es impulsado por variables de entorno o archivos de configuración.
     
--   **Security**: Keeps secrets (API keys, DB passwords) out of source control. Uses environment variables or secure vaults.
+-   **Seguridad**: Mantiene los secretos (claves de API, contraseñas de base de datos) fuera del control de versiones. Utiliza variables de entorno o bóvedas seguras.
     
--   **Overrides and precedence**: You may have multiple `.env` files (for example, `.env`, `.env.local`, `.env.production`) or CI/CD provided vars. It controls the order of loading.
+-   **Sobrescrituras y precedencias**: Puedes tener múltiples archivos `.env` (por ejemplo, `.env`, `.env.local`, `.env.production`) o variables proporcionadas por CI/CD. Controla el orden de carga.
     
--   **Defaults and fallbacks**: Provides sensible defaults in code or config factories so the app can run in development without requiring every variable.
+-   **Valores predeterminados y alternativos**: Proporciona valores predeterminados sensatos en el código o fábricas de configuración para que la aplicación pueda ejecutarse en desarrollo sin requerir cada variable.
     
 
-#### Here’s how to use it:
+#### Aquí te explico cómo usarlo:
 
-1.  **.env files**
+1.  **Archivos .env**
     
-    -   Create a `.env` file at project root with key-value pairs:
+    -   Crea un archivo `.env` en la raíz del proyecto con pares clave-valor:
         
         ```
           PORT=3000
@@ -2582,13 +2559,13 @@ By relying on environment variables, you ensure that the same application bundle
           JWT_EXPIRES_IN=2h
         ```
         
-    -   Optionally create `.env.development`, `.env.test`, `.env.production`, and load them based on `NODE_ENV`.
+    -   Opcionalmente crea `.env.development`, `.env.test`, `.env.production`, y cárgalos según `NODE_ENV`.
         
-    -   Ensure `.env` files are in `.gitignore` to avoid committing secrets.
+    -   Asegúrate de que los archivos `.env` estén en `.gitignore` para evitar comprometer secretos.
         
-2.  **Loading order**
+2.  **Orden de carga**
     
-    -   With `@nestjs/config`, specify `envFilePath` as an array, for example:
+    -   Con `@nestjs/config`, especifica `envFilePath` como un arreglo, por ejemplo:
         
         ```
           ConfigModule.forRoot({
@@ -2601,35 +2578,35 @@ By relying on environment variables, you ensure that the same application bundle
           });
         ```
         
-    -   This tries `.env.development.local`, then `.env.development`, then `.env`. CI/CD can set actual environment variables that override values in files.
+    -   Esto intenta cargar `.env.development.local`, luego `.env.development`, y luego `.env`. CI/CD puede establecer variables de entorno que sobrescriben los valores en los archivos.
         
-3.  **Accessing raw environment variables**
+3.  **Acceso a variables de entorno en bruto**
     
-    -   While structured config is preferred, sometimes you need direct access:
+    -   Aunque se prefiere la configuración estructurada, a veces necesitas acceso directo:
         
         ```
           const raw = process.env.SOME_VAR;
         ```
         
-    -   Avoid scattering `process.env` in multiple places. Instead, prefer reading once in configuration factory and injecting via `ConfigService`.
+    -   Evita dispersar `process.env` en múltiples lugares. En su lugar, prefiere leer una vez en la fábrica de configuración e inyectar a través de `ConfigService`.
         
-4.  **Default values**
+4.  **Valores predeterminados**
     
-    -   In configuration factory or when reading via `ConfigService`, provide defaults:
+    -   En la fábrica de configuración o al leer a través de `ConfigService`, proporciona valores predeterminados:
         
         ```
           const port = configService.get<number>('PORT', 3000);
         ```
         
-        or in factory:
+        o en la fábrica:
         
         ```
           port: parseInt(process.env.PORT, 10) || 3000
         ```
         
-5.  **Type coercion**
+5.  **Coerción de tipos**
     
-    -   Environment variables are strings by default. Convert to numbers or booleans as needed:
+    -   Las variables de entorno son cadenas por defecto. Convierte a números o booleanos según sea necesario:
         
         ```
           const isProd = configService.get<string>('NODE_ENV') === 'production';
@@ -2637,292 +2614,289 @@ By relying on environment variables, you ensure that the same application bundle
           const timeout = parseInt(configService.get<string>('TIMEOUT_MS'), 10) || 5000;
         ```
         
-6.  **Secret management**
+6.  **Gestión de secretos**
     
-    -   For sensitive data in production, consider using secret managers (AWS Secrets Manager, Vault) instead of plain `.env`. In that case, load secrets at startup (for example, via a custom provider or factory) and merge into the configuration.
+    -   Para datos sensibles en producción, considera usar gestores de secretos (AWS Secrets Manager, Vault) en lugar de un `.env` simple. En ese caso, carga los secretos al inicio (por ejemplo, a través de un proveedor o fábrica personalizado) e intégralos en la configuración.
         
-    -   Example: in `useFactory`, asynchronously fetch secrets and return a config object including them.
+    -   Ejemplo: en `useFactory`, recupera los secretos de manera asíncrona y devuelve un objeto de configuración que los incluya.
         
-7.  **Runtime configuration changes**
+7.  **Cambios de configuración en tiempo de ejecución**
     
-    -   Generally configs are static at startup. If you need to reload config without restarting, implement a custom mechanism (for example, read from a database or remote config service periodically). Inject a service that fetches and caches values, but note this departs from 12-factor principles.
-8.  **Validation in production**
+    -   Generalmente, las configuraciones son estáticas al inicio. Si necesitas recargar la configuración sin reiniciar, implementa un mecanismo personalizado (por ejemplo, lee desde una base de datos o un servicio de configuración remoto periódicamente). Inyecta un servicio que recupere y almacene en caché los valores, pero debes tener en cuenta que esto se desvía de los principios de las 12-factor.
+8.  **Validación en producción**
     
-    -   Always validate required env vars at startup so misconfigurations fail early. Use `validationSchema` with Joi or another validator.
+    -   Siempre valida las variables de entorno necesarias al inicio para que las configuraciones incorrectas fallen temprano. Utiliza `validationSchema` con Joi u otro validador.
         
-    -   Example error: if `JWT_SECRET` is missing or too short, the app should refuse to start, logging a clear error.
+    -   Ejemplo de error: si `JWT_SECRET` falta o es demasiado corto, la app debería negarse a iniciar, registrando un error claro.
         
 
-With configuration managed via `@nestjs/config` and environment variables, your NestJS app can adapt seamlessly across environments, keep secrets secure, and avoid environment-specific code changes. In the next section, we’ll cover **Authentication** strategies (JWT, OAuth2/social login).
+Con la gestión de configuraciones mediante `@nestjs/config` y variables de entorno, tu aplicación NestJS puede adaptarse sin problemas a diferentes entornos, mantener seguros los secretos y evitar cambios de código específicos del entorno. En la siguiente sección, cubriremos las estrategias de **Autenticación** (JWT, OAuth2 / inicio de sesión social).
 
-## 13\. Authentication
+## 13\. Autenticación
 
-Handling authentication securely is a common requirement. In NestJS, you typically use **Passport** strategies alongside the **@nestjs/jwt** module for JWT-based flows, or OAuth2 strategies for social login.
+Manejar la autenticación de manera segura es un requerimiento común. En NestJS, normalmente utilizas estrategias de **Passport** junto al módulo **@nestjs/jwt** para flujos basados en JWT, o estrategias OAuth2 para inicio de sesión social.
 
-Here, we’ll cover two common approaches:
+Aquí cubriremos dos enfoques comunes:
 
--   **JWT Strategy**: token-based authentication for APIs.
+-   **Estrategia JWT**: autenticación basada en tokens para APIs.
     
--   **OAuth2 / Social Login**: integrating providers like Google or GitHub.
+-   **OAuth2 / Inicio de sesión social**: integración de proveedores como Google o GitHub.
+
+```markdown
+Los JSON Web Tokens (JWTs) son un medio compacto y seguro para URLs de representar afirmaciones entre dos partes. En un contexto de autenticación, el servidor emite un token firmado que contiene la identidad del usuario y posiblemente otras afirmaciones, mientras que el cliente almacena y envía este token en solicitudes subsecuentes (típicamente en el encabezado `Authorization: Bearer <token>`).
+
+Debido a que el token está firmado (y opcionalmente cifrado), el servidor puede verificar su integridad y autenticidad sin necesidad de mantener el estado de la sesión en memoria o en una base de datos. Esta naturaleza sin estado simplifica el escalado y desacopla los servicios.
+
+Los tokens incluyen una expiración (`exp`) para que automáticamente se vuelvan inválidos después de cierto tiempo. Para sesiones de mayor duración, se puede utilizar un patrón de token de actualización encima.
+
+En NestJS, aprovechamos `@nestjs/jwt` para firmar y verificar tokens y `@nestjs/passport` con `passport-jwt` para integrar un guardia que verifica los tokens entrantes. A continuación se explica cómo funciona.
+
+-   **JWT (JSON Web Token)**: un token firmado que contiene afirmaciones (por ejemplo, ID de usuario) que los clientes envían en el encabezado `Authorization`.
     
-
-### 13.1 JWT Strategy
-
-JSON Web Tokens (JWTs) are a compact, URL-safe means of representing claims between two parties. In an authentication context, the server issues a signed token containing user identity and possibly other claims, while the client stores and sends this token on subsequent requests (typically in the `Authorization: Bearer <token>` header).
-
-Because the token is signed (and optionally encrypted), the server can verify its integrity and authenticity without needing to maintain session state in memory or a database. This stateless nature simplifies scaling and decouples services.
-
-Tokens include an expiration (`exp`) so they automatically become invalid after a certain time. For longer-lived sessions, you can layer a refresh-token pattern on top.
-
-In NestJS, we leverage `@nestjs/jwt` to sign and verify tokens and `@nestjs/passport` with `passport-jwt` to integrate a guard that checks incoming tokens. Below is how it works.
-
--   **JWT (JSON Web Token)**: a signed token containing claims (for example, user ID) that clients send in the `Authorization` header.
+-   **Sin estado**: el servidor verifica la firma del token sin almacenar el estado de la sesión.
     
--   **Stateless**: the server verifies the token signature without storing session state.
+-   **Expiración**: incruste vencimiento (`exp`) para que los tokens expiren automáticamente; posiblemente use tokens de actualización para sesiones de larga duración.
     
--   **Expiration**: embed expiry (`exp`) so tokens auto-expire; possibly use refresh tokens for long-lived sessions.
-    
--   In NestJS, you use `@nestjs/jwt` to sign/verify tokens and `@nestjs/passport` with `passport-jwt` to implement the guard.
+-   En NestJS, se utiliza `@nestjs/jwt` para firmar/verificar tokens y `@nestjs/passport` con `passport-jwt` para implementar el guardia.
     
 
-#### Here’s how to use it:
+#### Aquí está cómo usarlo:
 
-1.  **Install dependencies**
+1.  **Instalar dependencias**
     
     ```
-     npm install @nestjs/jwt passport-jwt @nestjs/passport passport
+    npm install @nestjs/jwt passport-jwt @nestjs/passport passport
     ```
     
-2.  **Configuration**
+2.  **Configuración**
     
-    Use `ConfigService` (from previous section) to load secrets and TTL:
-    
-    ```
-     // src/auth/auth.config.ts
-     export default () => ({
-       jwt: {
-         secret: process.env.JWT_SECRET || 'default-secret',
-         expiresIn: process.env.JWT_EXPIRES_IN || '1h',
-       },
-     });
-    ```
-    
-    Ensure `ConfigModule.forRoot({ load: [authConfig], isGlobal: true, validationSchema: ... })` is set in `AppModule`.
-    
-3.  **AuthModule setup**
+    Use `ConfigService` (de la sección anterior) para cargar secretos y TTL:
     
     ```
-     // src/auth/auth.module.ts
-     import { Module } from '@nestjs/common';
-     import { JwtModule } from '@nestjs/jwt';
-     import { PassportModule } from '@nestjs/passport';
-     import { ConfigService, ConfigModule } from '@nestjs/config';
-     import { JwtStrategy } from './jwt.strategy';
-     import { AuthService } from './auth.service';
-     import { UsersModule } from '../users/users.module'; // assumes a UsersService
+    // src/auth/auth.config.ts
+    export default () => ({
+      jwt: {
+        secret: process.env.JWT_SECRET || 'default-secret',
+        expiresIn: process.env.JWT_EXPIRES_IN || '1h',
+      },
+    });
+    ```
     
-     @Module({
-       imports: [
-         UsersModule,
-         PassportModule.register({ defaultStrategy: 'jwt' }),
-         JwtModule.registerAsync({
-           imports: [ConfigModule],
-           inject: [ConfigService],
-           useFactory: (config: ConfigService) => ({
-             secret: config.get<string>('jwt.secret'),
-             signOptions: { expiresIn: config.get<string>('jwt.expiresIn') },
-           }),
-         }),
-       ],
-       providers: [AuthService, JwtStrategy],
-       exports: [AuthService],
-     })
-     export class AuthModule {}
+    Asegúrese de que `ConfigModule.forRoot({ load: [authConfig], isGlobal: true, validationSchema: ... })` esté configurado en `AppModule`.
+    
+3.  **Configuración de AuthModule**
+    
+    ```
+    // src/auth/auth.module.ts
+    import { Module } from '@nestjs/common';
+    import { JwtModule } from '@nestjs/jwt';
+    import { PassportModule } from '@nestjs/passport';
+    import { ConfigService, ConfigModule } from '@nestjs/config';
+    import { JwtStrategy } from './jwt.strategy';
+    import { AuthService } from './auth.service';
+    import { UsersModule } from '../users/users.module'; // asume un UsersService
+    
+    @Module({
+      imports: [
+        UsersModule,
+        PassportModule.register({ defaultStrategy: 'jwt' }),
+        JwtModule.registerAsync({
+          imports: [ConfigModule],
+          inject: [ConfigService],
+          useFactory: (config: ConfigService) => ({
+            secret: config.get<string>('jwt.secret'),
+            signOptions: { expiresIn: config.get<string>('jwt.expiresIn') },
+          }),
+        }),
+      ],
+      providers: [AuthService, JwtStrategy],
+      exports: [AuthService],
+    })
+    export class AuthModule {}
     ```
     
 4.  **AuthService**
     
-    Responsible for validating credentials and issuing tokens:
+    Responsable de validar credenciales y emitir tokens:
     
     ```
-     // src/auth/auth.service.ts
-     import { Injectable, UnauthorizedException } from '@nestjs/common';
-     import { JwtService } from '@nestjs/jwt';
-     import { UsersService } from '../users/users.service';
-     import * as bcrypt from 'bcrypt';
+    // src/auth/auth.service.ts
+    import { Injectable, UnauthorizedException } from '@nestjs/common';
+    import { JwtService } from '@nestjs/jwt';
+    import { UsersService } from '../users/users.service';
+    import * as bcrypt from 'bcrypt';
     
-     @Injectable()
-     export class AuthService {
-       constructor(
-         private readonly usersService: UsersService,
-         private readonly jwtService: JwtService,
-       ) {}
+    @Injectable()
+    export class AuthService {
+      constructor(
+        private readonly usersService: UsersService,
+        private readonly jwtService: JwtService,
+      ) {}
     
-       // Validate user credentials (email/password)
-       async validateUser(email: string, pass: string) {
-         const user = await this.usersService.findByEmail(email);
-         if (user && (await bcrypt.compare(pass, user.password))) {
-           // exclude password before returning
-           const { password, ...result } = user;
-           return result;
-         }
-         return null;
-       }
+      // Validar credenciales de usuario (correo/contraseña)
+      async validateUser(email: string, pass: string) {
+        const user = await this.usersService.findByEmail(email);
+        if (user && (await bcrypt.compare(pass, user.password))) {
+          // excluir contraseña antes de devolver
+          const { password, ...result } = user;
+          return result;
+        }
+        return null;
+      }
     
-       // Called after validateUser succeeds
-       async login(user: any) {
-         const payload = { sub: user.id, email: user.email };
-         return {
-           access_token: this.jwtService.sign(payload),
-         };
-       }
-     }
+      // Llamado después de que validateUser tenga éxito
+      async login(user: any) {
+        const payload = { sub: user.id, email: user.email };
+        return {
+          access_token: this.jwtService.sign(payload),
+        };
+      }
+    }
     ```
     
 5.  **JwtStrategy**
     
     ```
-     // src/auth/jwt.strategy.ts
-     import { Injectable } from '@nestjs/common';
-     import { PassportStrategy } from '@nestjs/passport';
-     import { ExtractJwt, Strategy } from 'passport-jwt';
-     import { ConfigService } from '@nestjs/config';
+    // src/auth/jwt.strategy.ts
+    import { Injectable } from '@nestjs/common';
+    import { PassportStrategy } from '@nestjs/passport';
+    import { ExtractJwt, Strategy } from 'passport-jwt';
+    import { ConfigService } from '@nestjs/config';
     
-     @Injectable()
-     export class JwtStrategy extends PassportStrategy(Strategy) {
-       constructor(private readonly configService: ConfigService) {
-         super({
-           jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-           ignoreExpiration: false,
-           secretOrKey: configService.get<string>('jwt.secret'),
-         });
-       }
+    @Injectable()
+    export class JwtStrategy extends PassportStrategy(Strategy) {
+      constructor(private readonly configService: ConfigService) {
+        super({
+          jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+          ignoreExpiration: false,
+          secretOrKey: configService.get<string>('jwt.secret'),
+        });
+      }
     
-       async validate(payload: any) {
-         // payload.sub is user ID
-         return { userId: payload.sub, email: payload.email };
-         // returned value is assigned to req.user
-       }
-     }
+      async validate(payload: any) {
+        // payload.sub es el ID del usuario
+        return { userId: payload.sub, email: payload.email };
+        // el valor devuelto se asigna a req.user
+      }
+    }
     ```
     
-6.  **Auth Controller**
+6.  **Controlador de Auth**
     
-    Expose login endpoint:
-    
-    ```
-     // src/auth/auth.controller.ts
-     import { Controller, Post, Body, Request, UseGuards } from '@nestjs/common';
-     import { AuthService } from './auth.service';
-     import { LocalAuthGuard } from './local-auth.guard'; // optional if using local strategy
-    
-     @Controller('auth')
-     export class AuthController {
-       constructor(private readonly authService: AuthService) {}
-    
-       // Example: using a local strategy for email/password
-       @UseGuards(LocalAuthGuard)
-       @Post('login')
-       async login(@Request() req) {
-         // LocalAuthGuard attaches user to req.user
-         return this.authService.login(req.user);
-       }
-    
-       // Alternatively, implement login logic directly:
-       @Post('login-basic')
-       async loginBasic(@Body() body: { email: string; password: string }) {
-         const user = await this.authService.validateUser(body.email, body.password);
-         if (!user) {
-           throw new UnauthorizedException('Invalid credentials');
-         }
-         return this.authService.login(user);
-       }
-     }
-    ```
-    
-    -   **LocalAuthGuard** would use a LocalStrategy to validate credentials via Passport.
-7.  **Protecting routes**
-    
-    Use the **JwtAuthGuard**:
+    Exponga un endpoint de inicio de sesión:
     
     ```
-     // src/auth/jwt-auth.guard.ts
-     import { Injectable } from '@nestjs/common';
-     import { AuthGuard } from '@nestjs/passport';
+    // src/auth/auth.controller.ts
+    import { Controller, Post, Body, Request, UseGuards } from '@nestjs/common';
+    import { AuthService } from './auth.service';
+    import { LocalAuthGuard } from './local-auth.guard'; // opcional si se usa la estrategia local
     
-     @Injectable()
-     export class JwtAuthGuard extends AuthGuard('jwt') {}
+    @Controller('auth')
+    export class AuthController {
+      constructor(private readonly authService: AuthService) {}
+    
+      // Ejemplo: utilizando una estrategia local para correo/contraseña
+      @UseGuards(LocalAuthGuard)
+      @Post('login')
+      async login(@Request() req) {
+        // LocalAuthGuard adjunta el usuario a req.user
+        return this.authService.login(req.user);
+      }
+    
+      // Alternativamente, implementar la lógica de inicio de sesión directamente:
+      @Post('login-basic')
+      async loginBasic(@Body() body: { email: string; password: string }) {
+        const user = await this.authService.validateUser(body.email, body.password);
+        if (!user) {
+          throw new UnauthorizedException('Credenciales inválidas');
+        }
+        return this.authService.login(user);
+      }
+    }
     ```
     
-    Apply to controllers or routes:
+    -   **LocalAuthGuard** utilizaría una LocalStrategy para validar las credenciales mediante Passport.
+7.  **Protegiendo rutas**
+    
+    Use el **JwtAuthGuard**:
     
     ```
-     // src/profile/profile.controller.ts
-     import { Controller, Get, UseGuards, Request } from '@nestjs/common';
-     import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+    // src/auth/jwt-auth.guard.ts
+    import { Injectable } from '@nestjs/common';
+    import { AuthGuard } from '@nestjs/passport';
     
-     @Controller('profile')
-     export class ProfileController {
-       @UseGuards(JwtAuthGuard)
-       @Get()
-       getProfile(@Request() req) {
-         return req.user; // { userId, email }
-       }
-     }
+    @Injectable()
+    export class JwtAuthGuard extends AuthGuard('jwt') {}
     ```
     
-8.  **Refresh Tokens (optional)**
+    Aplique a controladores o rutas:
     
-    -   Issue a refresh token (longer expiry) and store it (for example, in DB or as HTTP-only cookie).
+    ```
+    // src/profile/profile.controller.ts
+    import { Controller, Get, UseGuards, Request } from '@nestjs/common';
+    import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+    
+    @Controller('profile')
+    export class ProfileController {
+      @UseGuards(JwtAuthGuard)
+      @Get()
+      getProfile(@Request() req) {
+        return req.user; // { userId, email }
+      }
+    }
+    ```
+    
+8.  **Tokens de actualización (opcional)**
+    
+    -   Emita un token de actualización (caducidad más larga) y guárdelo (por ejemplo, en la base de datos o como cookie solo para HTTP).
         
-    -   Create a separate endpoint to issue new access token when the access token expires.
+    -   Cree un endpoint separado para emitir un nuevo token de acceso cuando el token de acceso expire.
         
-    -   Verify refresh token validity (for example, compare stored token or a hashed version).
+    -   Verifique la validez del token de actualización (por ejemplo, compare el token almacenado o una versión hashed).
         
-    -   Implementation details vary – consider security best practices (rotate tokens, revoke on logout).
+    -   Los detalles de la implementación varían: considere las mejores prácticas de seguridad (rotar tokens, revocar al cerrar sesión).
         
+```
 
-### 13.2 OAuth2 / Social Login
+Iniciar sesión social mediante OAuth2 permite a los usuarios autenticarse con proveedores de terceros (Google, GitHub, Facebook, etc.) sin crear una contraseña separada para tu servicio.
 
-Social login via OAuth2 lets users authenticate with third-party providers (Google, GitHub, Facebook, and so on) without creating a separate password for your service.
+Bajo el flujo de Código de Autorización, el usuario es redirigido a la pantalla de consentimiento del proveedor. Después de otorgar permiso, el proveedor redirige de vuelta con un código temporal. El backend intercambia este código por tokens de acceso (y opcionalmente de refresco), obtiene el perfil del usuario, y luego puedes enlazar o crear un registro de usuario local. Finalmente, típicamente emites tu propio JWT (o sesión) para que el cliente pueda llamar a tus API seguras.
 
-Under the Authorization Code Flow, the user is redirected to the provider’s consent screen. After granting permission, the provider redirects back with a temporary code. The backend exchanges this code for access (and optionally refresh) tokens, fetches the user’s profile, and then you can link or create a local user record. Finally, you typically issue your own JWT (or session) so the client can call your secured APIs.
+Mantener los IDs/secretos de cliente de OAuth en variables de entorno (a través de `ConfigService`) asegura seguridad y flexibilidad. Así es como funciona:
 
-Keeping OAuth client IDs/secrets in environment variables (via `ConfigService`) ensures security and flexibility. Here’s how it works:
-
--   **OAuth2 Authorization Code Flow**: Redirect the user to the provider’s consent screen. The provider redirects back with a code. The back-end exchanges code for tokens and retrieves user info.
+-   **Flujo de Código de Autorización OAuth2**: Redirigir al usuario a la pantalla de consentimiento del proveedor. El proveedor redirige de vuelta con un código. El backend intercambia código por tokens y recupera información del usuario.
     
--   In server-side (NestJS) you use Passport strategies (for example, `passport-google-oauth20`, `passport-github2`).
+-   En el lado del servidor (NestJS) utilizas estrategias Passport (por ejemplo, `passport-google-oauth20`, `passport-github2`).
     
--   After getting user profile from provider, you look up or create a matching local user record, then issue your own JWT or session.
+-   Después de obtener el perfil del usuario del proveedor, buscas o creas un registro de usuario local correspondiente, luego emites tu propio JWT o sesión.
     
--   Keep secrets (client ID/secret) in environment variables and load via `ConfigService`.
+-   Mantén los secretos (ID/clave secreta de cliente) en variables de entorno y cárgalos a través de `ConfigService`.
     
 
-#### Here’s how to use it:
+#### Así es como se usa:
 
-1.  **Install dependencies**
+1.  **Instalar dependencias**
     
     ```
      npm install @nestjs/passport passport passport-google-oauth20
-     # or passport-facebook, passport-github2, etc.
+     # o passport-facebook, passport-github2, etc.
     ```
     
-2.  **Configuration**
+2.  **Configuración**
     
-    Add OAuth credentials to env and `ConfigModule`:
+    Añade credenciales OAuth al entorno y `ConfigModule`:
     
     ```
-     GOOGLE_CLIENT_ID=your-google-client-id
-     GOOGLE_CLIENT_SECRET=your-google-client-secret
+     GOOGLE_CLIENT_ID=tu-google-client-id
+     GOOGLE_CLIENT_SECRET=tu-google-client-secret
      GOOGLE_CALLBACK_URL=http://localhost:3000/auth/google/callback
     ```
     
-3.  **OAuth Strategy**
+3.  **Estrategia OAuth**
     
-    Example: Google
+    Ejemplo: Google
     
-    ```
+    ```typescript
      // src/auth/google.strategy.ts
      import { Injectable } from '@nestjs/common';
      import { PassportStrategy } from '@nestjs/passport';
@@ -2944,32 +2918,32 @@ Keeping OAuth client IDs/secrets in environment variables (via `ConfigService`) 
        async validate(accessToken: string, refreshToken: string, profile: any, done: VerifyCallback): Promise<any> {
          const { id, emails, displayName } = profile;
          const email = emails && emails[0]?.value;
-         // Delegate to AuthService to find or create local user
+         // Delegar a AuthService para encontrar o crear un usuario local
          const user = await this.authService.validateOAuthLogin('google', id, email, displayName);
          done(null, user);
        }
      }
     ```
     
-    In `AuthService`:
+    En `AuthService`:
     
-    ```
-     // src/auth/auth.service.ts (add method)
+    ```typescript
+     // src/auth/auth.service.ts (añadir método)
      async validateOAuthLogin(provider: string, providerId: string, email: string, name?: string) {
-       // Find existing user by provider+providerId or email
+       // Encontrar usuario existente por proveedor+providerId o email
        let user = await this.usersService.findByProvider(provider, providerId);
        if (!user) {
-         // Optionally check by email: if exists, link accounts; otherwise create new
+         // Opcionalmente verificar por email: si existe, enlazar cuentas; de lo contrario, crear nuevo
          user = await this.usersService.createOAuthUser({ provider, providerId, email, name });
        }
-       // Issue JWT or return user object; here we return minimal payload for login
+       // Emitir JWT o devolver objeto usuario; aquí devolvemos carga mínima para el inicio de sesión
        return user;
      }
     ```
     
-4.  **AuthController endpoints**
+4.  **Endpoints de AuthController**
     
-    ```
+    ```typescript
      // src/auth/auth.controller.ts
      import { Controller, Get, Req, UseGuards } from '@nestjs/common';
      import { AuthGuard } from '@nestjs/passport';
@@ -2982,76 +2956,74 @@ Keeping OAuth client IDs/secrets in environment variables (via `ConfigService`) 
        @Get('google')
        @UseGuards(AuthGuard('google'))
        async googleAuth(@Req() req) {
-         // Initiates Google OAuth2 flow
+         // Inicia flujo de OAuth2 Google
        }
     
        @Get('google/callback')
        @UseGuards(AuthGuard('google'))
        async googleAuthRedirect(@Req() req) {
-         // Google redirects here after consent; req.user set by GoogleStrategy.validate
+         // Google redirige aquí después del consentimiento; req.user es establecido por GoogleStrategy.validate
          const user = req.user;
-         // Issue JWT or set a cookie, then redirect or return token
+         // Emitir JWT o establecer una cookie, luego redirigir o devolver token
          const jwt = await this.authService.login(user);
-         // E.g., redirect with token as query, or set cookie:
+         // Por ejemplo, redirigir con token como query, o establecer cookie:
          // res.redirect(`http://frontend-app.com?token=${jwt.access_token}`);
          return { access_token: jwt.access_token };
        }
      }
     ```
     
-    -   The first endpoint (`/auth/google`) triggers redirect to Google.
+    -   El primer endpoint (`/auth/google`) desencadena la redirección a Google.
         
-    -   The callback endpoint handles the response, then issues your JWT.
+    -   El endpoint de callback maneja la respuesta, luego emite tu JWT.
         
-5.  **Session vs. Stateless**
+5.  **Sesión vs. Sin estado**
     
-    -   Many examples use sessions and `@nestjs/passport` session support, but for APIs you often skip sessions: Passport still invokes `validate`, returns user, and you issue JWT immediately.
+    -   Muchos ejemplos usan sesiones y soporte de sesión de `@nestjs/passport`, pero para API a menudo omites sesiones: Passport aún invoca `validate`, retorna usuario, y emites JWT inmediatamente.
         
-    -   Ensure you disable sessions in `PassportModule` registration: `PassportModule.register({ session: false })`.
+    -   Asegúrate de desactivar sesiones en el registro de `PassportModule`: `PassportModule.register({ session: false })`.
         
-6.  **Multiple Providers**
+6.  **Múltiples Proveedores**
     
-    -   Repeat strategy setup for each provider (for example, GitHubStrategy).
+    -   Repite la configuración de estrategia para cada proveedor (por ejemplo, GitHubStrategy).
         
-    -   In `validateOAuthLogin`, handle `provider` parameter to distinguish logic.
+    -   En `validateOAuthLogin`, maneja el parámetro `provider` para distinguir la lógica.
         
-    -   You can store in your user entity fields like `googleId`, `githubId`, and so on, or a separate table for OAuth accounts.
+    -   Puedes almacenar en tu entidad de usuario campos como `googleId`, `githubId`, etc., o una tabla separada para cuentas OAuth.
         
-7.  **Protecting routes post-login**
+7.  **Protección de rutas post-inicio de sesión**
     
-    -   Clients use the issued JWT in `Authorization: Bearer <token>` to access protected endpoints via `JwtAuthGuard`.
+    -   Los clientes usan el JWT emitido en `Authorization: Bearer <token>` para acceder a endpoints protegidos vía `JwtAuthGuard`.
         
-    -   If you prefer sessions/cookies, configure Nest to use sessions and Passport's session features, but for SPAs or mobile clients JWT is common.
+    -   Si prefieres sesiones/cookies, configura Nest para usar sesiones y las características de sesión de Passport, pero para SPAs o clientes móviles, el JWT es común.
         
-8.  **Frontend considerations**
+8.  **Consideraciones de front-end**
     
-    -   Redirect URIs must match those configured in the OAuth provider console.
+    -   Las URI de redirección deben coincidir con las configuradas en la consola del proveedor OAuth.
         
-    -   After receiving JWT, store it securely (for example, HTTP-only cookie or secure storage on client).
+    -   Después de recibir el JWT, almacénalo de forma segura (por ejemplo, cookie HTTP-only o almacenamiento seguro en cliente).
         
-    -   Handle token expiry: possibly combine OAuth refresh tokens or your own refresh token flow.
-        
+    -   Manejar la caducidad del token: posiblemente combinar tokens de refresco de OAuth o tu propio flujo de token de refresco.
 
-With JWT and OAuth2 strategies set up, your NestJS backend can support secured endpoints, user registration/login flows, and social logins.
 
-## Conclusion & Further Resources
+## Conclusión y Recursos Adicionales
 
-### Summary
+### Resumen
 
-We’ve walked through key aspects of building a NestJS application: its architectural patterns, core building blocks (modules, controllers, providers), dependency injection, routing and middleware, request lifecycle with pipes, guards, exception filters, interceptors, database integration options (TypeORM, Mongoose, Prisma), configuration management, authentication strategies (JWT, OAuth2), and strategies for migrating existing apps.
+Hemos recorrido aspectos clave para construir una aplicación NestJS: sus patrones arquitectónicos, bloques de construcción fundamentales (módulos, controladores, proveedores), inyección de dependencias, enrutamiento y middleware, ciclo de vida de la solicitud con pipes, guards, filtros de excepción, interceptores, opciones de integración de base de datos (TypeORM, Mongoose, Prisma), gestión de configuración, estrategias de autenticación (JWT, OAuth2) y estrategias para migrar aplicaciones existentes.
 
-NestJS provides a structured, TypeScript-first framework that accelerates development of scalable, maintainable backends. By leveraging its module system and built-in integrations, you get consistency, testability, and clear separation of concerns out of the box.
+NestJS proporciona un framework estructurado, orientado a TypeScript, que acelera el desarrollo de backends escalables y mantenibles. Al aprovechar su sistema de módulos y las integraciones integradas, se obtiene coherencia, capacidad de prueba y una clara separación de responsabilidades desde el principio.
 
-Whether you choose a relational database via TypeORM, a document store with Mongoose, or Prisma’s type-safe client, you can plug these into Nest’s DI container and configuration module. Authentication flows – both JWT-based and social login – fit naturally into Nest’s Passport integration.
+Ya sea que elija una base de datos relacional a través de TypeORM, un almacenamiento de documentos con Mongoose, o el cliente con tipo seguro de Prisma, puede integrar estos en el contenedor DI y módulo de configuración de Nest. Los flujos de autenticación, tanto basados en JWT como de inicio de sesión social, se integran naturalmente con la integración de Passport de Nest.
 
-Overall, NestJS is well-suited for APIs, microservices, real-time apps, and enterprise backends where maintainability and developer experience matter.
+En general, NestJS es adecuado para APIs, microservicios, aplicaciones en tiempo real y backends empresariales donde la mantenibilidad y la experiencia del desarrollador son importantes.
 
-### Official Docs and Community Links
+### Documentación Oficial y Enlaces de la Comunidad
 
--   **NestJS Official Documentation**: Comprehensive guide and API reference for all core features.
+-   **Documentación Oficial de NestJS**: Guía completa y referencia de API para todas las funciones principales.
     
     -   https://docs.nestjs.com
--   **GitHub Repository**: Source code, issue tracker, and community contributions.
+-   **Repositorio de GitHub**: Código fuente, seguimiento de problemas y contribuciones de la comunidad.
     
     -   [https://github.com/nestjs/nest][46]
 
@@ -3101,3 +3073,4 @@ Overall, NestJS is well-suited for APIs, microservices, real-time apps, and ente
 [44]: #heading-official-docs-and-community-links
 [45]: http://localhost:3000
 [46]: https://github.com/nestjs/nest
+
