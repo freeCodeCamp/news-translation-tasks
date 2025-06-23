@@ -1,130 +1,126 @@
 ---
-title: Why Vibe Coding Won't Destroy Software Engineering
+title: 为什么 “Vibe Coding” 不会摧毁软件工程
 date: 2025-06-03T03:38:40.544Z
 author: Ben
 authorURL: https://www.freecodecamp.org/news/author/justanothertechlead/
 originalURL: https://www.freecodecamp.org/news/why-vibe-coding-wont-destroy-software-engineering/
-posteditor: ""
+posteditor: "yiwei"
 proofreader: ""
 ---
 
-AI is disrupting all industries at a pace not seen at any time in history.
+AI 正在以史无前例的速度颠覆所有行业。
 
 <!-- more -->
 
-Technologies and industries that were once dominated by one or two companies or were very much “human-focused” are coming under threat.
+曾经由一两家公司主导或非常"以人为本"的技术和行业正面临威胁。
 
-[Google is losing ground to AI search][1], [truck drivers][2] may soon be a thing of the past, and low-skilled clerical [jobs are being lost every day][3].
+[Google 正在被 AI 搜索抢占市场][1]，[卡车司机][2]可能很快就会成为历史，低技能文书[工作每天都在流失][3]。
 
-Will this disruption destroy the Software Engineering industry? I don’t think so, and I’ll tell you why.
+这种颠覆会摧毁软件工程行业吗？我认为不会，我来告诉你为什么。
 
-### Here’s what we’ll discuss:
+### 我们将讨论的内容
 
-1.  [The Phenomenon of "Vibe Coding"][4]
-    
-2.  [How AI Has Changed Software Development][5]
-    
-3.  [The Productivity Paradox][6]
-    
-4.  [Why Human Engineers Are Still Critical][7]
-    
-5.  [AI as a “Capability Multiplier”][8]
-    
-6.  [Critical Skills for the AI Era][9]
-    
-7.  [The Path Forward][10]
-    
+1. ["Vibe Coding" 现象][4]
 
-## **The Phenomenon of "Vibe Coding"**
+2. [AI 如何改变软件开发][5]
 
-If you follow tech discussions on X, you've likely seen the term "vibe coding" – the practice of building software through trial and error, intuition, and AI-generated code snippets without deep technical knowledge.
+3. [生产力悖论][6]
 
-Modern AI assistants such as GitHub Copilot and ChatGPT can generate full functions, fix bugs, and create components based on simple descriptions. “Vibe Coders” are claiming that human coders will soon become obsolete.
+4. [为什么人类工程师仍然至关重要][7]
 
-From my perspective, these AI tools function more as skill multipliers than replacements.
+5. [AI 作为"能力倍增器"][8]
 
-They help talented developers work faster while exposing gaps in knowledge for less skilled programmers. Those lacking technical foundations will face problems they can't solve, but engineers who blend AI assistance with solid expertise will be able to be incredibly productive.
+6. [AI 时代的关键技能][9]
 
-## **How AI Has Changed Software Development**
+7. [前进之路][10]
 
-The software industry has seen rapid adoption of AI coding tools based on Large Language Models that analyze code repositories to predict and suggest next steps.
+## **"Vibe Coding" 现象**
 
-These tools have transformed daily programming work by:
+如果你关注技术讨论，你可能已经看到过 “Vibe Coding” 这个术语——通过试验和错误、直觉和 AI 生成的代码片段来构建软件，而不需要深入的技术知识。
 
--   Suggesting complete functions as you type
-    
--   Creating API endpoints from plain language descriptions
-    
--   Eliminating hours spent on standard code patterns
-    
--   Automating documentation tasks
-    
--   Handling repetitive logic quickly
-    
+现代 AI 助手，如 GitHub Copilot 和 ChatGPT，可以根据简单的描述生成完整的函数、修复 bug 和创建组件。“Vibe Coders”声称人类程序员很快就会变得过时。
 
-This shift toward "vibe coding" speeds up feature delivery. Programmers can now build without mastering every technical detail – they describe what they want, get AI suggestions, and adjust until the code works.
+从我的角度来看，这些 AI 工具更像是技能倍增器，而不是替代品。
 
-The risk? Developers often push code they can't explain. They move quickly during building but struggle when systems break or need changing.
+它们帮助有才华的开发者工作得更快，同时暴露了技能不足的程序员的知识缺口。那些缺乏技术基础的程序员会遇到他们无法解决的问题，但将 AI 助手与实用的专业知识相结合的工程师将能够非常高效地工作。
 
-There's also a concerning trend of non-programmers selling AI-built applications. Recently, someone with zero coding background launched a paid service created entirely through AI prompts, only to face a data breach days later when hackers exploited basic security flaws. This is dangerous. It has wasted people's money and exposed their data. Imagine if this became common place due to the rise of “vibe coders”?
+## **AI 如何改变软件开发**
 
-For anyone considering building software who isn’t a software engineer, there are a few basic levels of security that you need to consider:
+软件行业已经经历了基于大型语言模型的 AI 编码工具的快速采用，这些工具分析代码仓库以预测和建议下一步行动。
 
--   Adding authentication to your API endpoints: People can scan for open ports and endpoints across the internet. If they can then call your API endpoints without being authenticated, it can cause all sorts of problems
-    
--   Do not store passwords in plain text. This is a big no no. If you do this and your database gets exposed, those passwords are there for all to see. And if we’re being real, people re-use passwords, so those passwords will be their passwords for other sites too.
-    
--   SSL: Make sure your website is secure and has an up to date SSL certificate. Transmitting data in plain text is dangerous.
-    
--   Lock down unused ports: If you are hosting a backend service, make sure that any ports that you don’t use are locked down and people aren’t able to connect to them.
-    
--   If you have areas where people can upload files, limit the uploads to specific file types.
-    
+这些工具通过以下方式改变了日常编程工作：
 
-Those are just a few considerations around security for your site or product, but there are many more.
+- 根据你输入的内容建议完整的函数
 
-## **The Productivity Paradox**
+- 根据普通语言描述创建 API 端点
 
-AI assistance dramatically increases code output – but volume doesn't equal value in software engineering.
+- 消除了花在标准代码模式上的时间
 
-These tools excel at syntax but have no understanding about system architecture, scalability concerns, and maintenance requirements. Just as typing speed doesn't create a better novel, code generation speed doesn't produce better software systems.
+- 自动化文档任务
 
-AI works for individual functions but struggles with architectural decisions, security planning, and long-term support needs. Without proper review and understanding, AI-generated code often becomes tomorrow's tech-debt and maintenance burden.
+- 快速处理重复逻辑
 
-Consider this scenario: A developer implements an AI-created authentication system that works in isolation but causes subtle failures in users signing up to the product. Finding and fixing these integration issues might take experienced staff several days – negating any initial time savings. This is a quick path to losing money and trust.
+这种转变加速了功能交付。程序员现在可以在不掌握每个技术细节的情况下构建软件——他们描述他们想要的内容，获取 AI 建议，并在代码工作时进行调整。
 
-## **Why Human Engineers Are Still Critical**
+**风险在于，开发者经常推送他们无法解释的代码**。他们在构建过程中移动得很快，但在系统崩溃或需要更改时却会遇到困难。
 
-While AI tools handle syntax well, they cannot:
+还有一种令人担忧的趋势是非程序员在销售完全通过 AI 构建的应用程序。最近，一位没有编程背景的人通过 AI 提示推出了一个付费服务，只是在几天后就面临了数据泄露，因为黑客利用了基本的安全漏洞。这很危险。它浪费了人们的钱，并暴露了他们的数据。想象一下，如果这种情况由于 “Vibe Coders” 的崛起而变得普遍？
 
-1.  Plan systems that grow with user demand
-    
-2.  Create reliable deployment and testing pipelines
-    
-3.  Anticipate unusual but critical failure cases
-    
-4.  Make smart tradeoffs between performance and cost
-    
-5.  Find non-obvious security weaknesses
-    
+对于任何考虑构建软件但不是软件工程师的人来说，有一些基本的安全级别需要考虑：
 
-Great engineers think beyond code. They develop patterns that help entire teams, select the right technologies, and plan both for success and failure scenarios.
+- 向 API 端点添加身份验证：人们可以扫描整个互联网上的开放端口和端点。如果他们可以在没有身份验证的情况下调用你的 API 端点，那么这可能会导致各种问题
 
-Software creation involves complex tradeoffs: Do we prioritize speed or stability? Flexibility or simplicity? These decisions require both technical expertise and business knowledge.
+- 不要以明文存储密码。这是一个大禁忌。如果你这样做并且你的数据库被泄露，那么这些密码将被所有人看到。而且，如果我们要现实一点，人们会重复使用密码，所以这些密码将是他们在其他网站上的密码。
 
-The highest value engineers I work with spend more time thinking than typing. They consider: How will requirements evolve? What stress points might emerge? How will the system recover from failures?
+- SSL：确保你的网站安全并且具有最新的 SSL 证书。在明文中传输数据很危险。
 
-As basic code generation becomes widely accessible, your value comes from understanding system interactions. The competitive edge will be with those who know why certain approaches succeed, where they might fail, and how to build resilient solutions.
+- 锁定未使用的端口：如果你托管后端服务，请确保未使用的端口被锁定，人们无法连接到它们。
 
-Per the above, there are some things that AI without proper oversight can not do.
+- 如果你有允许上传文件的区域，请限制上传的文件类型。
 
-AI can, for instance, be great at passing simple prompts to create solutions to well known problems. If you use this prompt, for example:
+这些只是你网站或产品安全性的几个考虑因素，但还有很多。
+
+## **生产力悖论**
+
+AI 助手显著提高了代码输出量——但数量并不等于软件工程中的价值。
+
+这些工具在语法方面表现良好，但对系统架构、可扩展性问题和维护需求没有任何了解。就像打字速度不会创造出更好的小说一样，代码生成速度也不会产生更好的软件系统。
+
+AI 适用于单个函数，但在架构决策、安全规划和长期支持需求方面却很难。没有适当的审查和理解，AI 生成的代码通常会成为明天的技术债务和维护负担。
+
+想象一下这样的场景：开发者实现了一个 AI 创建的身份验证系统，它在隔离环境中有效，但在用户注册产品时会导致微妙的故障。找到并修复这些集成问题可能需要经验丰富的员工几天的时间——这抵消了最初的时间节省。这是一条快速失去钱和信任的道路。
+
+## **为什么人类工程师仍然至关重要**
+
+虽然 AI 工具在语法方面表现良好，但它们无法：
+
+1. 规划随着用户需求而增长的系统
+
+2. 创建可靠的部署和测试管道
+
+3. 预测不寻常但至关重要的故障情况
+
+4. 在性能和成本之间做出明智的权衡
+
+5. 找到不明显的安全漏洞
+
+伟大的工程师不仅仅是编写代码。他们开发有助于整个团队的模式，选择合适的技术，并为成功和失败场景做计划。
+
+软件创建涉及复杂的权衡：我们是否优先考虑速度或稳定性？灵活性或简单性？这些决策需要技术专业知识和商业知识。
+
+我合作的最有价值的工程师花更多的时间思考而不是输入代码。他们考虑：需求如何演变？哪些压力点可能出现？系统如何从故障中恢复？
+
+随着基础代码生成变得广泛可用，你的价值来自于理解系统交互。竞争优势将属于那些知道为什么某些方法会成功、它们可能在哪里失败以及如何构建弹性解决方案的人。
+
+正如上所述，有一些事情 AI 无法做到。
+
+AI 可以在简单的提示中创建解决方案来解决众所周知的问题。如果你使用此提示，例如：
 
 ![Prompt: "Create a Python module that will tell you if some input JSON is valid"](https://cdn.hashnode.com/res/hashnode/image/upload/v1747771377197/8aae1332-f852-435a-a724-a1770a4163bf.png)
 
-Here’s the code you might get:
+这里是你可能得到的代码：
 
-```
+```plain
 import json
 
 def is_valid_json(input_string: str) -> bool:
@@ -154,21 +150,21 @@ if __name__ == "__main__":
     main()
 ```
 
-Pretty basic.
+非常基本。
 
-I would not, though, ask an AI to build me a complex Forex Trading platform.
+我不会要求 AI 为我构建一个复杂的外汇交易平台。
 
 ![d212d814-7785-4391-8e01-79e80c05da44](https://cdn.hashnode.com/res/hashnode/image/upload/v1747771546630/d212d814-7785-4391-8e01-79e80c05da44.png)
 
-I’ll save you reading through all of the response, but suffice it to say that it was not able to do this for me.
+我不会让你阅读整个响应，但足以说它无法为我做到这一点。
 
-I thought I’d break that down to a slightly smaller subset of a financial trading platform:
+我想将其分解为一个稍微较小的金融交易平台子集：
 
 ![Prompt: "Create me an endpoint for a FIX message for an FX Financial security. Make it in Python and I want to be able to accept J messages. Security is key here, so I need this to be as secure as possible."](https://cdn.hashnode.com/res/hashnode/image/upload/v1747771773603/b65e1a13-97aa-4276-81c7-55303e5a04c6.png)
 
-Now, I will admit, this got closer. Here was the result:
+现在，我会承认，这更接近了。这里是结果：
 
-```
+```plain
 from fastapi import FastAPI, Request, HTTPException, Header
 from pydantic import BaseModel, Field
 from typing import Optional
@@ -227,36 +223,35 @@ async def receive_execution_report(
         raise HTTPException(status_code=400, detail=f"Invalid FIX message format: {str(e)}")
 ```
 
-But this does not come close to the final version. Even if you could use this code as a part of your trading system, unless you know how to build and architect and entire software system, where do you go from here? You can tell your clients that they can send you an “ExecutionReport”, but then what?
+但这仍然无法接近最终版本。即使你可以使用此代码作为交易系统的一部分，但除非你知道如何构建和架构整个软件系统，否则你将从哪里开始？你可以告诉客户他们可以发送“ExecutionReport”，但接下来呢？
 
-I’ve read and heard the arguments that you “just need to be better at prompting to build bigger systems”. But where does the benefit come from then? The complexity of financial trading systems is beyond comprehension. Prompting a system well enough, with enough information to make it fully featured, scalable, secure, and extensible (not to mention able to be debugged) would itself be a mammoth task. So where is the time being saved? Is it even possible?
+我已经阅读并听取了关于“你只需要更好地提示才能构建更大的系统”的论点。但是，从哪里获得好处呢？金融交易系统的复杂性超出了想象。提示一个系统足够好，以便构建一个功能齐全、可扩展、安全且可扩展的系统（不仅仅是可以调试）本身就是一项巨大的任务。那么时间节省在哪里？这是否可能？
 
-I’m yet to see any proof anywhere that anyone has build such a complex system without the oversight of a human, and I’m not convinced we will see it at any point in the near future.
+我还没有看到任何证据表明有人在没有人类监督的情况下构建了这样一个复杂的系统，我不相信我们会在近期看到。
 
-## **AI as a “Capability Multiplier”**
+## **AI 作为"能力倍增器"**
 
-These AI tools help magnify existing capabilities rather than replacing them. Skilled developers become far more productive, while less skilled ones generate problems more quickly.
+这些 AI 工具帮助放大现有的能力，而不是取代它们。有才华的开发者变得更加高效，而技能较弱的开发者则更快地生成问题。
 
-Effective engineers use AI to:
+有效的工程师使用 AI 来：
 
--   Handle basic implementation tasks
-    
--   Create initial project frameworks
-    
--   Compare different solution approaches
-    
--   Move past challenging problems
-    
+- 处理基本的实现任务
 
-Meanwhile, less capable developers use AI to mask skill gaps, implementing solutions they neither understand nor can modify. When these implementations fail, they lack the knowledge to fix them independently.
+- 创建初始项目框架
 
-This widens the skill gap. Top engineers leverage AI for mechanical tasks while focusing on higher-value thinking. Those using AI as a substitute for learning face limitations when working beyond the AI's knowledge boundaries.
+- 比较不同的解决方案方法
 
-A good example of something that AI is perfect for is translation logic:
+- 超越具有挑战性的问题
 
-Let’s say I have Python Dataclass representing an" “InternalUser”. I also have a Django ORM representation of the same entity. If I wanted to convert one to the other, I can just paste both representations in to ChatGPT and get it create me a conversion function. Notice that the conversion function also takes into account that the field names aren’t exact matches:
+同时，能力较弱的开发者使用 AI 来掩盖技能差距，实现他们不理解也不知道如何修改的解决方案。当这些实现失败时，他们缺乏独立修复它们的知识。
 
-```
+这扩大了技能差距。顶级工程师利用 AI 处理机械任务，同时专注于更高价值的思考。那些将 AI 用作学习替代品的人会在超出 AI 知识边界时遇到限制。
+
+一个很好的例子是 AI 完美适合的东西是翻译逻辑：
+
+假设我有一个 Python Dataclass 表示一个“内部用户”。我还有一个 Django ORM 表示相同的实体。如果我想将一个转换为另一个，我可以简单地将两个表示形式粘贴到 ChatGPT 中，并让它为我创建一个转换函数。请注意，转换函数还考虑到字段名称不完全匹配：
+
+```plain
 @dataclass
 class InternalUser:
     id: str
@@ -274,7 +269,7 @@ class InternalUser:
     notes: Optional[str] = None
 ```
 
-```
+```plain
 class InternalUser(models.Model):
     id = models.CharField(primary_key=True, max_length=100)  # Use UUIDField if preferred
     email = models.EmailField(unique=True)
@@ -296,7 +291,7 @@ class InternalUser(models.Model):
         return f"{self.fullName} ({self.email})"
 ```
 
-```
+```plain
 from typing import Optional
 from myapp.models import InternalUser as ORMInternalUser, Address as ORMAddress, Preferences as ORMPreferences, LoginActivity as ORMLoginActivity
 from mydataclasses import InternalUser as DCInternalUser  # assuming your dataclass lives here
@@ -348,11 +343,11 @@ def convert_internal_user_to_model(dc_user: DCInternalUser) -> ORMInternalUser:
     return orm_user
 ```
 
-This is a basic example, but extrapolate this out to an entire internal data model and you’ve saved hours and hours of code.
+这是一个基本的例子，但如果你将其扩展到整个内部数据模型，那么你将节省数小时的代码。
 
-You can even then ask it to create you the function stubs of the tests:
+你甚至可以要求它为你创建测试函数的存根：
 
-```
+```plain
 import pytest
 from datetime import datetime
 from yourmodule.dataclasses import InternalUser, Address, Preferences, LoginActivity, UserRole, AccountStatus
@@ -361,85 +356,85 @@ from yourmodule.conversion import dataclass_to_django_internal_user
 
 @pytest.mark.django_db
 def test_internal_user_conversion_basic_fields():
-    # Test that basic fields (email, name, etc.) are correctly copied
+    # 测试基本字段（电子邮件、姓名等）是否正确复制
     pass
 
 
 @pytest.mark.django_db
 def test_internal_user_conversion_with_address():
-    # Test that address fields are properly mapped to the ORM model
+    # 测试地址字段是否正确映射到 ORM 模型
     pass
 
 
 @pytest.mark.django_db
 def test_internal_user_conversion_with_preferences():
-    # Test preferences like dark mode, newsletter opt-in, and language
+    # 测试偏好设置，如暗黑模式、新闻通讯订阅和语言
     pass
 
 
 @pytest.mark.django_db
 def test_internal_user_conversion_with_login_activity():
-    # Test login attempts, last IP, and last login datetime
+    # 测试登录尝试、最后一次登录和最后一次 IP 地址
     pass
 
 
 @pytest.mark.django_db
 def test_internal_user_conversion_with_tags_and_notes():
-    # Test tags list and optional notes field
+    # 测试标签列表和可选备注字段
     pass
 
 
 @pytest.mark.django_db
 def test_internal_user_conversion_with_missing_optional_fields():
-    # Ensure None fields like address or lastLogin don’t break conversion
+    # 确保缺失的可选字段（如地址或最后一次登录）不会破坏转换
     pass
 
 
 @pytest.mark.django_db
 def test_internal_user_conversion_saves_correctly():
-    # Save all related models and main InternalUser model and check database
+    # 保存所有相关模型和主 InternalUser 模型，并检查数据库
     pass
 ```
 
-Now, I’m not suggesting that you take these as is and don’t add your own thought in to each possible test scenario, but it’s a great start.
+现在，我不会建议你将它们作为是，并且不在每个可能的测试场景中添加自己的想法，但这是一个很好的开始。
 
-These pieces of “grunt work” were never what we paid the top engineers for. These were just the things that they had to do to get the job done. People didn’t enjoy these tasks. They weren’t fulfilling.
+这些“苦差事”从来不是我们为顶级工程师付钱做的事情。这些只是他们必须做的事情来完成工作。人们不喜欢这些任务。它们没有成就感。
 
-## **Critical Skills for the AI Era**
+## **AI 时代的关键技能**
 
-As AI handles more coding tasks, successful engineers must develop strengths in areas where human judgment remains essential:
+随着 AI 处理更多的编码任务，成功的工程师必须在人类判断仍然至关重要的领域发展自己的优势：
 
-Systems thinking becomes the primary skill – understanding component interactions, identifying potential failures, and designing for future growth. This capability comes from experience, not prompting.
+系统思维成为主要技能——了解组件交互，识别潜在故障，并为未来的增长设计。这项能力来自经验，而不是提示。
 
-You should build expertise in infrastructure and deployment processes. Software that works in development but fails in production creates no value. So, learn about [continuous integration][11], [monitoring][12] systems, and [cloud platform capabilities][13].
+你应该在基础设施和部署流程方面建立专业知识。开发环境中有效但生产环境中失败的软件不会创造任何价值。因此，学习[持续集成][11]、[监控][12]系统和[云平台功能][13]。
 
-You should also master [API design][14] – the interfaces between systems. [Well-designed APIs][15] enable team independence. Poor interfaces create bottlenecks affecting everyone.
+你还应该掌握[API 设计][14]——系统之间的接口。[良好设计的 API][15]使团队独立。糟糕的接口会造成瓶颈，影响每个人。
 
-Another key skill is being able to integrate security throughout the development process. A single oversight can result in breaches, damaging both customer trust and business standing.
+另一个关键技能是将安全性集成到整个开发过程中。单一疏忽可能会导致泄露，损害客户信任和商业声誉。
 
-Make sure you develop communication skills for both technical and non-technical audiences. You’ll need to explain complex decisions clearly across different stakeholder groups.
+确保你发展与技术和非技术受众交流的能力。你将需要清晰地解释复杂的决策，跨越不同的利益相关者群体。
 
-And study how AI tools function to understand their limitations and strengths, allowing you to use them most effectively.
+并研究 AI 工具的工作原理，以了解它们的局限性和优势，使你能够更有效地使用它们。
 
-For senior developers, mentoring becomes increasingly important. New engineers need guidance on responsible AI usage – knowing when to accept suggestions and when to question them.
+对于高级开发人员，指导变得越来越重要。新工程师需要指导如何负责任地使用 AI——知道何时接受建议、何时质疑它们。
 
-## **The Path Forward**
+## **前进之路**
 
-The software field is entering a significant transition. AI will generate more code more quickly, transforming development practices. This shift presents both opportunities and challenges.
+软件领域正在经历一次重大的转变。AI 将生成更多代码，改变开发实践。这一转变带来了机遇和挑战。
 
-The most valuable positions will go to those good at tasks machines cannot handle. These engineers will determine what to build, how to design it, and how to balance technical constraints with business objectives.
+最有价值的职位将属于擅长机器无法处理的任务的工程师。这些工程师将决定什么要构建，如何设计，以及如何平衡技术约束与商业目标。
 
-"Vibe coding" serves as a useful technique for specific needs – like quickly building standard components. But it fails as a comprehensive strategy for complex system development.
+“Vibe Coding”是一种有用的技术，适用于特定的需求——例如快速构建标准组件。但是，它作为复杂系统开发的全面策略却失败了。
 
-Skilled engineers will advance by delegating routine work to AI while addressing more challenging problems. Less skilled engineers will struggle as fundamental knowledge gaps become apparent.
+有才华的工程师将通过将常规工作委派给 AI，同时解决更具挑战性的问题来推进。技能较弱的工程师将在基本知识缺口变得明显时遇到困难。
 
-With regards to learning how to use AI effectively, also use caution and judgement when following advice from people online. It’s still a fairly new field and changes constantly.
+在学习如何有效使用 AI 的同时，也要谨慎和判断地遵循在线的人们的建议。这仍然是一个相对较新的领域，并且不断变化。
 
-People online are giving away “free prompts” to generate code. These prompts may be great or may have problems. The prompts may have worked when they used them, but the AI models may have changed and maybe they’ll produce different results now. Be cautious and use your best judgement.
+人们在线提供“免费提示”来生成代码。这些提示可能很好，也可能有问题。提示可能在他们使用时很好，但 AI 模型可能已经改变，也可能会产生不同的结果。要谨慎并使用你的最佳判断。
 
-The future belongs to those who view AI as a collaborative tool rather than a replacement. Software development remains fundamentally human-driven, now supported by increasingly powerful assistance.
+未来属于那些将 AI 视为协作工具而不是替代品的人。软件开发仍然是人类驱动的，现在得到了越来越强大的支持。
 
-_In his spare time, Ben writes his tech blog_ [_Just Another Tech Lead_][16] _and runs a site on SEO,_ [_SmoothSEO_][17]_._
+在他的空闲时间里，Ben 写他的技术博客 [_Just Another Tech Lead_][16] 和运营一个关于 SEO 的网站 [_SmoothSEO_][17]。
 
 [1]: https://www.smoothseo.co/blog/misc/what-the-numbers-say-about-ais-growing-role-in-search/
 [2]: https://www.axios.com/2022/03/28/automation-long-haul-truckers-jobs
