@@ -1,113 +1,177 @@
-name: Articles auto translate
+name: Articles Auto Translate
 run-name: ${{ github.event.label.name }} - ${{ github.event.issue.title }}
+
 on:
   issues:
-    types:
-      - labeled
+    types: [labeled]
+
 jobs:
-  ArticlesAutoTranslate:
+  auto-translate:
     runs-on: ubuntu-latest
-    env:
-      ACTIONS_RUNNER_DEBUG: true
     permissions:
       issues: write
       contents: write
-    # Check if the label is 'auto'. If not, skip the entire job
-    if: ${{ github.event.label.name == 'auto' }}
+
     steps:
-      # Check if the issue body is empty. If so, exit the action
-      - name: Check if the description of the issue is empty
+      ### Queue lock: prevent concurrent conflicts
+      - uses: softprops/turnstyle@v1
+        with:
+          poll-interval-seconds: 10
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      ### Check issue body
+      - name: Validate issue body
         if: ${{ !github.event.issue.body }}
-        shell: bash
-        run: echo "The description of the issue is empty." 1>&2; exit 1;
-
-      - name: Extract language code (e.g., [zh])
-        id: extract-lang
         run: |
-          ISSUE_TITLE="${{ github.event.issue.title }}"
-          LANG_CODE=$(echo "$ISSUE_TITLE" | sed -E 's/^\[([a-zA-Z]+)\].*/\1/')
-          echo "::set-output name=lang::$LANG_CODE"
+          echo "Issue body is empty. Exiting."
+          exit 1
 
-      # Initialize git parameters
-      - uses: actions/checkout@v3
-      - name: Config git
+      ### Extract language code
+      - name: Extract language code
+        id: lang
         run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
+          title="${{ github.event.issue.title }}"
+          LANG_CODE=$(echo "$title" | sed -E 's/^\[([a-zA-Z]+)\].*/\1/')
+          echo "lang=$LANG_CODE" >> $GITHUB_OUTPUT
+          echo "LANG_CODE=$LANG_CODE" >> $GITHUB_ENV
+
+      ### Checkout repository
+      - uses: actions/checkout@v4
+
+      ### Configure Git
+      - name: Setup Git
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
           git config pull.rebase true
 
-      # Crawl new articles
-      - name: Process main branch
-        run: |
-          git checkout main
-          if [ -d "./articles/_tmp/" ]; then
-            rm -rf ./articles/_tmp/
-          fi
-
-      - name: Crawl pages and generate Markdown files
-        id: fetch-webpage-to-markdown
-        continue-on-error: true
+      ### Fetch article and generate Markdown
+      - name: Fetch article and convert to Markdown
+        id: fetch
         uses: freecodecamp/article-webpage-to-markdown-action@dev
         with:
-          newsLink: '${{ github.event.issue.Body }}'
+          newsLink: "${{ github.event.issue.body }}"
           includeSelector: 'span.author-card-name,section.post-content'
           ignoreSelector: '.ad-wrapper'
           skipSameArticleCheck: true
           skipIssueComment: true
           markDownFilePath: './articles/_tmp/'
-          githubToken: '${{ github.token }}'
+          githubToken: "${{ github.token }}"
 
-      - name: Push new article to repo
+      ### Backup fetched Markdown to external secure path (keep original filename)
+      - name: Backup fetched Markdown to /tmp
+        id: backup-md
         run: |
-          cp -f ${{ steps.fetch-webpage-to-markdown.outputs.markdown_file_path }} ./articles/${{ steps.extract-lang.outputs.lang }}/
-          cp -f ${{ steps.fetch-webpage-to-markdown.outputs.markdown_file_path }} ./articles/_raw/
-          git add articles/_tmp/*.md
-          git add articles/_raw/*.md
-          git add articles/${{ steps.extract-lang.outputs.lang }}/*.md
-          git commit -m 'Save article markdown.'
-          git push origin main
-      
-      # Checkout to a new branch
-      - name: Git checkout auto-translate
-        run: |
-          git fetch
-          git checkout -b auto-translate origin/auto-translate
-          git merge --strategy=recursive --strategy-option=theirs --allow-unrelated-histories main
+          original_file="${{ steps.fetch.outputs.markdown_file_path }}"
+          filename=$(basename "$original_file")
+          BACKUP_PATH="/tmp/$filename"
+          cp "$original_file" "$BACKUP_PATH"
+          echo "path=$BACKUP_PATH" >> $GITHUB_OUTPUT
+          echo "BACKUP_PATH=$BACKUP_PATH" >> $GITHUB_ENV
+          echo "Markdown backed up to $BACKUP_PATH"
 
-      - name: Articles auto translate
+      ### Save English raw text and commit to main branch
+      - name: Commit raw article to main
+        run: |
+          file="${{ steps.fetch.outputs.markdown_file_path }}"
+          base=$(basename "$file")
+          lang="${{ steps.lang.outputs.lang }}"
+
+          mkdir -p "./articles/_raw/"
+          cp "$file" "./articles/_raw/$base"
+          [ -f "./articles/$lang/$base" ] || cp "$file" "./articles/$lang/$base"
+
+          git add -f "./articles/_raw/$base" "./articles/$lang/$base" || true
+          git commit -m "Add raw article: $base" || echo "Nothing to commit."
+
+          git fetch origin main
+          git stash push -u -m "Auto-stash before rebase" || true
+          git pull --rebase origin main || true
+          git stash pop || true
+
+          for i in {1..3}; do
+            git push origin main && break
+            echo "Push failed. Retrying in 5s..."
+            sleep 5
+            git pull --rebase origin main || true
+          done
+
+      ### Switch to auto-translate branch (resolve conflicts & clean up temp files)
+      - name: Checkout auto-translate branch
+        run: |
+          # Check merge pending status
+          if [ -f ".git/MERGE_HEAD" ]; then
+            echo "Unfinished merge detected. Aborting..."
+            git merge --abort || git reset --merge
+          fi
+
+          # Clean up temp files to avoid branch contamination
+          rm -rf ./articles/_tmp/
+
+          git fetch origin
+          git checkout -B auto-translate origin/auto-translate
+
+          git merge --strategy=recursive --strategy-option=theirs main || true
+
+      ### Auto-translate article (use secure path)
+      - name: Translate article
         uses: freeCodeCamp/articles-auto-translate-action@main
         with:
-          with_issue_title: '${{ github.event.issue.title }}'
-          with_issue_body: '${{ github.event.issue.Body }}'
-          with_label_name: '${{ github.event.label.name }}'
-          with_github_token: '${{ github.token }}'
-          with_orginal_markdown_file_path: ${{ steps.fetch-webpage-to-markdown.outputs.markdown_file_path }}
-          with_task_fetch_to_save_path: './articles/_raw/'
-          with_task_fetch_to_include_selector: '.author-card-name,.post-content'
-          with_task_fetch_to_ignore_selector: '.ad-wrapper'
-          with_task_translate_openai_api_key: ${{ secrets.OPENAI_API_KEY }}
-          with_task_translate_to_save_path: './articles/{lang}/'
+          with_issue_title: "${{ github.event.issue.title }}"
+          with_issue_body: "${{ github.event.issue.body }}"
+          with_label_name: "${{ github.event.label.name }}"
+          with_github_token: "${{ github.token }}"
+          with_orginal_markdown_file_path: "${{ steps.backup-md.outputs.path }}"
+          with_task_fetch_to_save_path: "./articles/_raw/"
+          with_task_translate_openai_api_key: "${{ secrets.OPENAI_API_KEY }}"
+          with_task_translate_to_save_path: "./articles/{lang}/"
 
-      # Commit crawled article and auto-translated article to remote
-      - name: Commit raw article and auto-translated-article
+      ### Commit translated file
+      - name: Commit translated article
         run: |
-          if [ -d "./articles/_tmp/" ]; then
-            rm -rf ./articles/_tmp/
-          fi
-          git add ./articles/_tmp/*
-          git add ./articles/_raw/*.md
-          git add ./articles/${{ steps.extract-lang.outputs.lang }}/*.md
-          git commit -m 'Save auto-translated article markdown.'
-          git push origin auto-translate
+          base=$(basename "$BACKUP_PATH")
+          lang="${{ env.LANG_CODE }}"
+          translated="./articles/$lang/$base"
 
-      
-      # Remove _tmp of main
-      - name: rm _tmp
-        run: |
-          git checkout main
-          if [ -d "./articles/_tmp/" ]; then
-            rm -rf ./articles/_tmp/
+          [ -f "$translated" ] || { echo "Translated file missing."; exit 1; }
+
+          git add "$translated"
+          git commit -m "Add translated article: $base" || echo "Nothing to commit."
+
+          git fetch origin auto-translate
+
+          # Safe rebase, resolve conflicts
+          git stash push -u -m "Auto-stash before rebase" || true
+          if [ -f ".git/MERGE_HEAD" ]; then
+            echo "Unfinished merge detected. Aborting..."
+            git merge --abort || git reset --merge
           fi
-          git add ./articles/_tmp/*
-          git commit -m 'rm _tmp.'
-          git push origin main
+          git pull --rebase origin auto-translate || true
+          git stash pop || true
+
+          for i in {1..3}; do
+            git push origin auto-translate && break
+            echo "Push failed. Retrying in 5s..."
+            sleep 5
+            git pull --rebase origin auto-translate || true
+          done
+
+      ### Clean up temp directory
+      - name: Cleanup temp directory
+        run: |
+          rm -rf ./articles/_tmp/
+          git add -u ./articles/_tmp/ || true
+          git commit -m "Cleanup _tmp directory" || echo "Nothing to commit."
+
+          git fetch origin main
+          git stash push -u -m "Auto-stash before rebase" || true
+          git pull --rebase origin main || true
+          git stash pop || true
+
+          for i in {1..3}; do
+            git push origin main && break
+            echo "Push failed. Retrying in 5s..."
+            sleep 5
+            git pull --rebase origin main || true
+          done
