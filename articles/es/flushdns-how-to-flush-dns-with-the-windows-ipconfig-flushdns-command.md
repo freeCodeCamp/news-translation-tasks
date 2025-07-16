@@ -4,22 +4,22 @@ date: 2024-08-27T13:38:54.905Z
 author: Kolade Chris
 authorURL: https://www.freecodecamp.org/news/author/koladechris/
 originalURL: https://www.freecodecamp.org/news/flushdns-how-to-flush-dns-with-the-windows-ipconfig-flushdns-command/
-posteditor: ""
+posteditor: "lucas-agustin-morales-romero"
 proofreader: ""
 ---
 
-Probablemente hayas notado que, después de visitar un sitio web por primera vez, el sitio carga mucho más rápido la próxima vez que lo visitas.
+Probablemente,hayas notado que, una vez que visitas un sitio web nuevo pro primera vez, las siguientes cargará mucho mas rapido.
 
 <!-- more -->
 
-Esto se debe a que tu sistema operativo, o el navegador en el caso de Google Chrome, almacenan en caché las direcciones IP y la información de DNS (Sistema de Nombres de Dominio) de cualquier sitio web que visitas. La caché de DNS contiene:
+Esto se debe a que el sistema operativo (o el navegador, en caso de que uses Google Chrome) guarda las direcciones IP y la información del DNS (Domain Name System) de cada sitio que visitas. Esta cache contiene los siguientes datos: 
 
--   la dirección del sitio web o nombre de host, técnicamente llamada los datos del recurso (rdata)
+-   la dirección web o nombre de host, técnicamente llamada los datos del recurso (rdata)
 -   el nombre de dominio del sitio web
 -   tipo de registro (IPv4 o IPv6)
--   la validez de la caché o TTL (tiempo de vida)
+-   la validez de la caché o TTL (Time To Live)
 
-Cuando el TTL expira, la caché se vaciará y el DNS se limpiará automáticamente para ti. Pero hay momentos en que no quieres esperar horas o días para que el TTL expire, y deseas vaciar tu DNS manualmente.
+Cuando el TTL expira, la caché se borra automáticamente y el DNS se limpia solo. Pero a veces no querés esperar que eso ocurra automaticamente, y necesitás vaciar la caché DNS manualmente.
 
 En este artículo, explicaré por qué deberías vaciar tu DNS y cómo hacerlo en Windows 10 y Chrome.
 
@@ -47,7 +47,7 @@ Deberías obtener una respuesta que indique que la caché de DNS ha sido vaciada
 
 ![flushDNS](https://www.freecodecamp.org/news/content/images/2022/04/flushDNS.png)
 
-Esto significa que tu caché ha sido completamente vaciada, y se cargarán versiones frescas de cualquier sitio web que visites.
+Esto significa que tu caché se ha vaciado por completo y que, al visitar cualquier sitio web, se cargará una versión actualizada.
 
 ## Cómo Limpiar la Caché de DNS en Google Chrome
 
