@@ -53,7 +53,7 @@ jobs:
           # here use action or direct script
           # (simplify: directly operate in the target directory, avoid multiple copies)
           
-          base_name="article_$(date +%s).md"  # 或从URL提取
+          base_name="article_$(date +%s).md"  # or extract from URL
           lang="${{ env.LANG_CODE }}"
           
           # create necessary directories
