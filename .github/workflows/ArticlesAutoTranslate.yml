@@ -142,7 +142,7 @@ jobs:
           with_issue_body: "${{ github.event.issue.body }}"
           with_label_name: "${{ github.event.label.name }}"
           with_github_token: "${{ github.token }}"
-          with_orginal_markdown_file_path: "${{ steps.backup-md.outputs.path }}"
+          with_original_markdown_file_path: "${{ steps.backup-md.outputs.path }}"
           with_task_fetch_to_save_path: "./articles/_raw/"
           with_task_translate_openai_api_key: "${{ secrets.OPENAI_API_KEY }}"
           with_task_translate_to_save_path: "./articles/{lang}/"
