@@ -1,7 +1,6 @@
 ---
-title: "The Clean Code Handbook: How to Write Better Code for Agile Software
-  Development"
-date: 2025-04-10T13:43:06.827Z
+title: "清洁代码手册：如何为敏捷软件开发编写更好的代码"
+date: 2025-07-17T01:56:30.419Z
 author: Programming with Shahan
 authorURL: https://www.freecodecamp.org/news/author/codewithshahan/
 originalURL: https://www.freecodecamp.org/news/the-clean-code-handbook/
@@ -9,278 +8,269 @@ posteditor: ""
 proofreader: ""
 ---
 
-Building scalable software applications requires writing clean code that’s so simple that any dev can understand it.
+构建可扩展的软件应用程序需要编写干净的代码，这种代码简单到任何开发人员都能理解。
 
 <!-- more -->
 
-In this article, I’ll explain and demonstrate what clean code is. Then I’ll share my favorite clean code patterns for building modern Agile applications.
+在这篇文章中，我将解释并演示什么是干净的代码。然后，我将分享我最喜欢的干净代码模式，用于构建现代敏捷应用程序。
 
-I won’t use complex jargon. I’ll hit you with simple, clear JavaScript examples that focus on the core concepts. Straight to the point, no nonsense – that’s how I roll.
+我不会使用复杂的术语。我会用简单明了的 JavaScript 示例来展示核心概念。直接切入主题，没有废话——这就是我的风格。
 
-Let’s get started.
+让我们开始吧。
 
-## Table of Contents
+## 目录
 
-1.  [The Cost of Bad Code][1]
+1.  [坏代码的成本][1]
     
-2.  [Clean Coder vs. Messy Coder][2]
+2.  [清洁编码者 vs. 混乱编码者][2]
     
-3.  [AI Can’t Save You If Your Code is a Mess 🗑️][3]
+3.  [如果你的代码一团糟，AI 也救不了你 🗑️][3]
     
-4.  [12 Clean Code Design Patterns for Building Agile Applications ⚖️][4]
+4.  [用于构建敏捷应用的 12 个干净代码设计模式 ⚖️][4]
     
-    -   [🌿 Use Names That Mean Something][5]
+    -   [🌿 使用有意义的名称][5]
         
-    -   [🔨 Keep Functions Laser-Focused (SRP)][6]
+    -   [🔨 保持函数的专注性 (SRP)][6]
         
-    -   [🚪 Use Comments Thoughtfully][7]
+    -   [🚪 有效使用注释][7]
         
-    -   [⚡ Best Practices for Writing Good Comments][8]
+    -   [⚡ 写好注释的最佳实践][8]
         
-    -   [🧩 Make Your Code Readable][9]
+    -   [🧩 让你的代码可读][9]
         
-    -   [🏌️ Test Everything You Write][10]
+    -   [🏌️ 测试你写的所有内容][10]
         
-    -   [💉 Use Dependency Injection][11]
+    -   [💉 使用依赖注入][11]
         
-    -   [📂 Clean Project Structures][12]
+    -   [📂 干净的项目结构][12]
         
-    -   [🤹‍♂️ Be Consistent with Formatting][13]
+    -   [🤹‍♂️ 格式保持一致][13]
         
-    -   [✋ Stop Hardcoding Values][14]
+    -   [✋ 停止硬编码值][14]
         
-    -   [🤏 Keep Functions Short][15]
+    -   [🤏 保持函数简短][15]
         
-    -   [⛺ Follow the Boy Scout Rule][16]
+    -   [⛺ 遵循童子军原则][16]
         
-    -   [🏟️ Follow the Open/Closed Principle][17]
+    -   [🏟️ 遵循开放/封闭原则][17]
         
-5.  [Modern Best Practices to Help You Write Clean Code: A Summary 🥷][18]
+5.  [帮助你编写干净代码的现代最佳实践：总结 🥷][18]
     
-6.  [Automated Tools for Maintaining Clean Code ⚓][19]
+6.  [保持干净代码的自动化工具 ⚓][19]
     
-    -   [1️⃣ Static Analysis][20]
+    -   [1️⃣ 静态分析][20]
         
-    -   [2️⃣ Automated Code Formatting][21]
+    -   [2️⃣ 自动代码格式化][21]
         
-    -   [3️⃣ Continuous Integration (CI) Testing][22]
+    -   [3️⃣ 持续集成 (CI) 测试][22]
         
-    -   [4️⃣ CI/CD pipelines][23]
+    -   [4️⃣ CI/CD 管道][23]
         
-7.  [The Role of Documentation in Agile Software Development 🚣][24]
+7.  [文档在敏捷软件开发中的角色 🚣][24]
     
-8.  [Conclusion 🏁][25]
+8.  [结论 🏁][25]
     
-9.  [Frequently Asked Questions About Clean Code 🧯][26]
-    
-
-![Image of agile software development meme](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/xh3j6ccn1hc3euc3lfyl.png)
-
-In Agile, where change is the only constant, clean code is your armor. It makes you adaptable, swift, and, most importantly, in control.
-
-Here’s the truth: writing clean code is not optional if you want to survive in the software development industry. Fortunately, we human beings are able to master clean code with some effort and practice.
-
-## The Cost of Bad Code
-
-![Image of cost of messy code vs clean code graph by shahan](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/wdai6npb55j71sguj6kl.png)
-
-To explain this stack bar graph, in the initial development phase, bad code is **slightly** more costly to change than clean code.
-
-But as we move into the maintenance and refactoring phases, the gap widens significantly, with bad code costing nearly twice as much as clean code.
-
-By the legacy phase, bad code reaches 100% cost – now it’s extremely expensive to update, while clean code remains more manageable at 45%.
-
-As of now, the most recent analysis on the cost of poor software quality in the U.S. is the 2022 report by the Consortium for Information and Software Quality ([cisq.org][27]). This report estimates that poor software quality cost the U.S. economy at least $2.41 trillion in 2022, with technical debt accounting for about $1.52 trillion of this amount.
-
-You can [read more about that here][28].
-
-Recent discussions continue to highlight the significant impact of technical debt on software quality and business performance.
-
-For instance, [a 2024 survey][29] indicated that for more than 50% of companies, technical debt accounts for greater than a quarter of their total IT budget. And this can really hinder innovation if it’s not addressed.
-
-As you can see, there’s no doubt that bad code is a costly problem in software development.
-
-## **Clean Coder vs. Messy Coder**
-
-Here’s a graph that shows the journey of **two types** of coders:
-
-![Image of clean code vs bad code graph chart](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/c6ubf77uwipf4gtucw8q.png)
-
--   **⚠️ The Messy Coder (Red line):** Starts fast but crashes hard. The more lines they write, the more trouble they make.
-    
--   **⚡ The Clean Coder (Blue line):** Starts slow but stays consistent. Growth doesn’t stop — it accelerates.
+9.  [关于干净代码的常见问题 🧯][26]
     
 
-🫵 Now, you decide which line you want to follow.
+![敏捷软件开发迷因图片](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/xh3j6ccn1hc3euc3lfyl.png)
 
-## AI Can’t Save You If Your Code is a Mess 🗑️
+在敏捷中，变化是唯一不变的，干净代码是你的盔甲。它使你具有适应性、敏捷性，最重要的是，能够掌控局面。
 
-When you get stuck writing code, you might turn to AI. But let me tell you something: AI can’t save you if your code is a mess.
+事实是：如果你想在软件开发行业中生存，编写干净代码不是可选项。幸运的是，我们人类通过努力和练习可以掌握干净的代码。
 
-It’s like building a house on sand. Sure, it stands for a while, but one strong gust of wind or big wave, and it collapses.
+## 坏代码的成本
 
-Remember: AI is just a tool. If you don’t know how to write clean, scalable applications, you're setting yourself up for failure.
+![混乱代码与干净代码成本对比图表 by shahan](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/wdai6npb55j71sguj6kl.png)
 
-If you can’t maintain the code you write, you’re in trouble.
+为了解释这个堆叠条形图，在初始开发阶段，坏代码比干净代码的变更成本**稍微**高一些。
 
-I’ve seen it over and over again: developers who know five programming languages. They can build apps, websites, software. They know algorithms and data structures like the back of their hand.
+但是当我们进入维护和重构阶段时，这个差距显著扩大，坏代码的成本几乎是干净代码的两倍。
 
-But when faced with a large project or someone else’s messy code, they crumble.
+到了遗留阶段，坏代码成本达到100%——现在升级它非常昂贵，而干净代码仍然更易于管理，仅为45%。
 
-They’re like an aerospace engineer who designs and builds their own planes but doesn’t know how to fly them. They crash into their own code.
+截至目前，关于美国软件质量不佳成本的最新分析是信息和软件质量联盟 ([cisq.org][27]) 在2022年的报告。该报告估计，2022年软件质量不佳至少给美国经济造成了2.41万亿美元的损失，其中技术债务约占1.52万亿美元。
 
-This was me...once upon a time. I’d write thousands of lines of code, only to realize I couldn’t even understand what I wrote last week. It was chaos for me.
+你可以[在这里阅读更多内容][28]。
 
-But then it hit me — every developer struggles with this. It wasn't about how much I knew. It was about how I organized and structured what I knew. In other words, it was about knowing the art of programming itself.
+近期的讨论继续强调技术债务对软件质量和业务绩效的显著影响。
 
-I decided to escape this trap. After five months of intense work — four to five hours a day writing, designing, and researching — I created something I wish I had when I started programming. A book that’s a complete beginner’s guide: **Clean Code Zero to One.**
+例如，[2024年的一项调查][29]指出，超过50%的公司认为技术债务占其IT总预算的四分之一以上。如果不加以解决，这确实会阻碍创新。
 
-![cover image of clean code zero to one: from messy code to masterpiece](https://cdn.hashnode.com/res/hashnode/image/upload/v1737731329839/c4c862d9-7fdc-460a-ae2e-18b19468b6ec.png)
+如你所见，毫无疑问，在软件开发中，坏代码是一个代价高昂的问题。
 
-If you want to learn more about the book, I give you all the details at the end of this tutorial. So read on to learn more about writing clean code.
+## **清洁编码者 vs. 混乱编码者**
 
-## 12 Clean Code Design Patterns for Building Agile Applications ⚖️
+这是一个展示**两种**编码者历程的图表：
 
-If your code doesn’t follow these modern clean code design patterns, you could be creating a ticking time bomb. These patterns are your tools. Master them and enjoy the success of your projects. Let me show you one by one.
+![干净代码 vs 坏代码图表](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/c6ubf77uwipf4gtucw8q.png)
 
-### **🌿 Use Names That Mean Something**
+-   **⚠️ 混乱编码者（红线）：** 起步快但坠落得更惨。他们写的行数越多，问题也越多。
+    
+-   **⚡ 清洁编码者（蓝线）：** 开始慢但保持一致。增长不会停止——它会加速。
+    
 
-Naming your variables or functions b or x is not helpful. Call them what they are so they’re easier to understand. Here’s an example of both a bad and good variable name:
+🫵 现在，你可以决定想走哪条线。
+
+## 如果你的代码一团糟，AI 也救不了你 🗑️
+
+当你陷入写代码的困境时，你可能会求助于 AI。但让我告诉你：如果你的代码一团糟，AI 也救不了你。
+
+这就像是在沙子上建房子。没错，它会暂时站立，但一旦有强风或大浪，就会倒塌。
+
+记住：AI 只是一个工具。如果你不知道如何编写清晰、可扩展的应用程序，你就是在为失败做准备。
+
+我反复看到了这样的情况：那些熟悉五种编程语言的开发者。 他们能构建应用程序、网站、软件。他们对算法和数据结构了如指掌。
+
+但当面对大型项目或别人的混乱代码时，他们崩溃了。
+
+他们就像一位能设计和建造自己飞机的航天工程师，但却不知道如何驾驶它们。他们在自己的代码中坠毁。
+
+这曾经是我...... 从前的我。我会写上数千行代码，但却发现自己连上周写的东西都无法理解。对我来说，那是一片混乱。
+
+然后我恍然大悟 —— 每个开发者都在为此苦苦挣扎。问题不在于我知道多少，而在于我如何组织和结构化我所知道的东西。换句话说，这取决于对编程艺术本身的理解。
+
+我决定摆脱这个陷阱。经过五个月的密集工作——每天写作、设计和研究四到五个小时——我创造了一本我希望在开始编程时就能拥有的书。一本完整的初学者指南：**从零到一的清洁代码。**
+
+![从零到一的清洁代码封面图片：从混乱代码到杰作](https://cdn.hashnode.com/res/hashnode/image/upload/v1737731329839/c4c862d9-7fdc-460a-ae2e-18b19468b6ec.png)
+
+如果你想了解更多关于这本书的信息，我会在本教程的结尾告诉你所有细节。所以继续阅读以了解更多关于编写清洁代码的内容。
+
+## 构建敏捷应用程序的 12 种清洁代码设计模式 ⚖️
+
+如果你的代码不遵循这些现代清洁代码设计模式，你可能正在制造一个定时炸弹。这些模式是你的工具。掌握它们并享受项目成功的乐趣。让我一一展示给你看。
+
+### **🌿 使用有意义的名称**
+
+将你的变量或函数命名为 b 或 x 并没有帮助。将它们称为何物以便于理解。以下是一个坏变量名与好变量名的例子：
 
 ```
-// Weak and vague
+// 弱且模糊
 let b = 5;
 
-// Strong and clear
+// 强且清晰
 let numberOfUsers = 5;
 ```
 
-People who write unclear names don’t want to own their mistakes. Don’t be that person.
+那些写出不清晰名字的人不想承认他们的错误。不要成为那样的人。
 
-![Comic showing a bad vs a good variable name, by Shahan](https://cdn.hashnode.com/res/hashnode/image/upload/v1736165724746/37b2edc3-3c68-47a8-ab6f-f131a2239a01.png)
+![Shahan创作的关于不良变量名和良好变量名的漫画](https://cdn.hashnode.com/res/hashnode/image/upload/v1736165724746/37b2edc3-3c68-47a8-ab6f-f131a2239a01.png)
 
-### **🔨 Keep Functions Laser-Focused (SRP)**
+### **🔨 保持函数的专注 (SRP)**
 
-A function should do **one thing**—and do it perfectly. This is called the Single Responsibility Principle (**SRP**).
+一个函数应该做到**一件事**——并做到完美。这就是单一职责原则（**SRP**）。
 
-Good code is like a hammer. It hits one nail, not ten. For example, if you are hiring someone to do everything in your company — finance, sales, marketing, janitorial work, and so on — they’ll likely fail miserably because they can’t focus one one thing. The same goes for your classes in code.
+好的代码就像一把锤子。它只打一根钉子，不会打十根。例如，如果你招聘一个人来处理公司里的所有事情——财务、销售、市场营销、清洁工作等等——他们很可能会因为无法专注而惨败。同样的道理适用于你代码中的类。
 
-🚧 When a class or function does more than one thing, it becomes a tangled mess. Debugging it feels like solving a puzzle upside down. If your class handles both user input and database operations, for example, it’s not multitasking — it’s madness. Break it up. One method, one job.
+🚧 当一个类或函数做超过一件事时，它就成了一个纠结的混乱体。调试它感觉就像在倒立解谜。如果你的类同时处理用户输入和数据库操作，例如，这不是多任务——而是疯狂。拆开它。一种方法，一个工作。
 
-**🔥 My Rule:** Your code works for you. Keep it sharp, focused, and controllable, or it’s going to control you. Here is how to make that happen:
+**🔥 我的规则：**你的代码为你工作。保持它锋利、专注且可控，否则它会控制你。以下是实现这一目标的方法：
 
 ```
-// Clean: One job, one focus
+// 干净：一个工作，一种专注
 function calculateTotal(a, b) {
     return a + b;
 }
 
 function logTotal(user, total) {
-    console.log(`User: ${user}, Total: ${total}`);
+    console.log(`用户: ${user}, 总计: ${total}`);
 }
 
-// Messy: Trying to do EVERYTHING
+// 混乱：尝试做所有事情
 function calculateAndLogTotal(a, b, user) {
     let total = a + b;
-    console.log(`User: ${user}, Total: ${total}`);
+    console.log(`用户: ${user}, 总计: ${total}`);
 }
 ```
 
-🪧 When you mix tasks, you mix in confusion. As simple as that.
+🪧 当你混合任务时，你只是混合了混乱。就是这么简单。
 
-### **🚪 Use Comments Thoughtfully**
+### **🚪 谨慎使用注释**
 
-There is a great saying among professional developers:
+职业开发者中有一句名言：
 
-> “ Code speaks for itself. ”
+> “代码自有其解释。”
 
-You don’t explain what a door does every time someone walks into a room, do you? Your code should work the same way.
+你不会每次都解释门是做什么用的，当有人走进房间时，对吧？你的代码也应该这样工作。
 
-Comments aren’t bad, but if your code can’t stand on its own, then you may have a problem.
+注释并不是坏事，但如果你的代码不能独立站立，那你可能就存在问题。
 
-🪧 A good comment should tell “why” not “how or what”. If a developer doesn’t understand “how” something works, then they likely aren’t going to understand “why” either.
+🪧 一个好的注释应该告诉“为什么”而不是“如何或什么”。如果开发者不了解“如何”某件事情运作，那么他们可能也不会理解“为什么”。
 
-Here are some short examples of good comments vs bad comments. I’ll also show you a real-world project for writing clean comments.
+以下是一些好的注释与坏的注释的简短例子。我还将向你展示一个编写清洁注释的实际项目。
 
-**Example 1: Bad Comment 👎**
+**例子1：坏注释 👎**
 
 ```
-// Multiply the price by the quantity to calculate the total
+// 将价格乘以数量以计算总数
 const total = price * quantity;
 ```
 
-This is a **bad comment** because it simply repeats what the code already says. The code `price * quantity` is self-explanatory, so the comment doesn’t add anything useful.
+这是一个**坏注释**，因为它只是重复了代码已经说明的内容。代码 `price * quantity` 本身已经很清晰，因此这个注释没有增加任何有用的信息。
 
-**Good Comment: 👍**
+**好注释：👍**
 
-If the code is clear and simple, **you don’t need a comment.**
+如果代码清晰简明，**你不需要注释。**
 
 ```
 const total = price * quantity;
 ```
 
-![Image illustrating unnecessary comment vs "silent comment", by Shahan](https://cdn.hashnode.com/res/hashnode/image/upload/v1736165891398/6a942ad7-5b09-4990-9c7f-95358dafcbf3.png)
+![Shahan创作的说明不必要注释与“无声注释”的图像](https://cdn.hashnode.com/res/hashnode/image/upload/v1736165891398/6a942ad7-5b09-4990-9c7f-95358dafcbf3.png)
 
-**Example 2: Bad Comment 👎**
+**例子2：坏注释 👎**
 
 ```
-// Check if the user logged in
+// 检查用户是否登录
 function isUserLoggedIn(session) {
     return !!session.user;
 }
 ```
 
-This comment is bad because it doesn’t explain why the `isUserLoggin()` exists. It just explains what happens. But we already know that this is an auth function. This comment is a waste of time.
+这个注释不好，因为它没有解释 `isUserLoggin()` 的存在原因。它只是解释了正在发生的事情。但我们已经知道这是一个身份验证函数。这个注释是浪费时间。
 
-**Good Example 👍**
+**好例子 👍**
+
+这是一个**好的注释**，因为它解释了代码存在的**原因**。它告诉我们函数在允许访问应用程序的敏感部分之前检查用户是否已认证。它关注的是更大的图景。
+
+![之前：“检查用户是否已登录”。之后：“用户在访问受保护的资源之前已经通过认证。”作者：Shahan。](https://cdn.hashnode.com/res/hashnode/image/upload/v1736166143011/b3ddae3d-41cf-4534-8f1a-af710579922c.png)
+
+### **⚡ 编写好注释的最佳实践**
+
+1.  **解释“为什么”，而不是“什么”：**
+    写注释是为了解释代码的目的或背景，而不是代码正在做什么。
+    
+2.  **避免明显的注释：**
+    不要为代码已经清晰的部分写注释。
+    
+3.  **保持简短和精确：**
+    写简洁的注释，方便阅读，并直接解释目的。
+    
+4.  **定期更新注释：**
+    过时的注释可能误导开发者，所以在代码更改时务必更新注释。
+    
+
+**现实世界的例子（有好的注释） 🛒**
+
+让我们把这些实践应用到一个真实项目中：一个大型电子商务应用程序。一个函数根据订单详情计算运输成本。下面是完整的代码，我将在下面解释每个注释：
 
 ```
-// The user is authenticated before accessing protected resources
-function isUserLoggedIn(session) {
-    return !!session.user;
-}
-```
-
-This is a **good comment** because it explains **why** the code exists. It tells us that the function checks if the user is authenticated before allowing access to sensitive parts of the app. It focuses on the bigger picture.
-
-![Before: "Check if the user is logged in". After: "The user is authenticated before accessing protected resources." By Shahan.](https://cdn.hashnode.com/res/hashnode/image/upload/v1736166143011/b3ddae3d-41cf-4534-8f1a-af710579922c.png)
-
-### **⚡ Best Practices for Writing Good Comments**
-
-1.  **Explain the “Why,” not the “What”:**  
-    Write comments to explain the purpose or context of the code, not what the code is doing.
-    
-2.  **Avoid obvious comments:**  
-    Don’t write comments for things the code already makes clear.
-    
-3.  **Keep them short and precise:**  
-    Write concise comments that are easy to read and directly explain the purpose.
-    
-4.  **Update comments regularly:**  
-    Outdated comments can mislead developers, so always update them when the code changes.
-    
-
-**Real-World Example (with Good Comments) 🛒**
-
-Let’s implement these practices into a real-world project: a large e-commerce application. One function calculates shipping costs based on the order details. Here's the full code, I will explain each comment below:
-
-```
-// Shipping rules:
-// - Free shipping for orders over $100
-// - Standard shipping ($10) for orders below $100
-// - Additional $5 for international orders
+// 运输规则：
+// - 订单超过 $100 免费运输
+// - 低于 $100 的订单标准运输（$10）
+// - 国际订单额外 $5
 
 function calculateShipping(order) {
     let shippingCost = 0;
 
-    // Check if the order qualifies for free shipping
+    // 检查订单是否符合免费运输条件
     if (order.total >= 100) {
-        shippingCost = 0; // Free shipping
+        shippingCost = 0; // 免费运输
     } else {
-        shippingCost = 10; // Standard shipping cost
+        shippingCost = 10; // 标准运输费用
     }
 
-    // Add additional cost for international orders
+    // 为国际订单增加额外费用
     if (order.isInternational) {
         shippingCost += 5;
     }
@@ -288,78 +278,78 @@ function calculateShipping(order) {
     return shippingCost;
 }
 
-// Example usage
+// 示例使用
 const order1 = { total: 120, isInternational: false };
 const order2 = { total: 80, isInternational: true };
 
-console.log(calculateShipping(order1)); // Output: 0
-console.log(calculateShipping(order2)); // Output: 15
+console.log(calculateShipping(order1)); // 输出：0
+console.log(calculateShipping(order2)); // 输出：15
 ```
 
-At the start of the function, we include a comment explaining the rules for shipping costs. This gives the reader an overview of the logic without needing to read the full code.
+在函数的开始，我们包含了一个注释来解释运输费用的规则。这使读者在不需要阅读完整代码的情况下获得逻辑概览。
 
 ```
-// Shipping rules:
-// - Free shipping for orders over $100
-// - Standard shipping ($10) for orders below $100
-// - Additional $5 for international orders
+// 运输规则：
+// - 订单超过 $100 免费运输
+// - 低于 $100 的订单标准运输（$10）
+// - 国际订单额外 $5
 ```
 
-Then, the first condition checks if the order total is greater than or equal to $100. A comment here clarifies **why** free shipping is applied.
+然后，第一个条件检查订单总额是否大于或等于 $100。这里的注释明确了为什么会应用免费运输。
 
 ```
-// Check if the order qualifies for free shipping
+// 检查订单是否符合免费运输条件
 if (order.total >= 100) {
-    shippingCost = 0; // Free shipping
+    shippingCost = 0; // 免费运输
 }
 ```
 
-The second condition applies an additional charge for international shipping. The comment explains **why** the extra cost is added.
+第二个条件为国际运输应用附加收费。注释解释了为何增加额外费用。
 
 ```
-// Add additional cost for international orders
+// 为国际订单增加额外费用
 if (order.isInternational) {
     shippingCost += 5;
 }
 ```
 
-**Why are these comments good?**
+**为什么这些注释很好？**
 
-Imagine you’re working in a team of 20 developers. Someone reads the `calculateShipping` function six months later. Without these comments, they might waste time guessing why international orders have an extra fee. Good comments clarify the why and save hours of frustration.
+假设你在一个有20个开发者的团队中工作。六个月后某人阅读 `calculateShipping` 函数。如果没有这些注释，他们可能会浪费时间猜测为什么国际订单会有额外费用。好的注释阐明了原因，节省了大量的挫折。
 
-### **🧩 Make Your Code Readable**
+### **🧩 让你的代码可读**
 
-If someone reading your code feels like they’re solving a riddle, you’ve already become a troublemaker. Here is the proof:
+如果查看你代码的人感觉像是在解谜题，你可能已经制造了麻烦。 这就是证明：
 
 ```
-// Clean: Reads like a story
+// 干净：如阅读故事
 if (isLoggedIn) {
     console.log("Welcome!");
 } else {
     console.log("Please log in.");
 }
 
-// Messy: Feels like chaos
+// 杂乱：感到混乱
 if(isLoggedIn){console.log("Welcome!");}else{console.log("Please log in.");}
 ```
 
-If your code is messy and hard to read, it will confuse others—and even yourself later! Imagine coming back to your own code after six months and feeling like you’re reading a foreign language. Readable code saves time, reduces bugs, and makes everyone’s life easier.
+如果你的代码杂乱且难以阅读，它会让他人甚至是你自己感到困惑！想象六个月后回到自己写的代码却感觉像在读一种外语。可读性高的代码节省时间，减少错误，使每个人的生活更轻松。
 
-**🍵 Why is Readability Important?**
+**🍵 为什么可读性很重要？**
 
-1.  **For yourself:** When you revisit your code after weeks or months, clean code helps you pick up where you left off without wasting time figuring out what you did.
+1.  **对于你自己：** 当你在几周或几个月后重新访问代码时，整洁的代码能帮助你在不浪费时间弄清楚自己做了什么的情况下继续进行。
     
-2.  **For your team:** If someone else reads your code, they shouldn’t have to solve a puzzle. Clean code makes teamwork smoother and prevents miscommunication.
+2.  **对于你的团队：** 如果其他人阅读你的代码，他们不应该像是在解谜题。整洁的代码让团队合作更顺畅，防止沟通不畅。
     
-3.  **Fewer bugs:** Clear code is easier to debug because you can quickly spot mistakes.
+3.  **更少的错误：** 清晰的代码更易于调试，因为你能快速发现错误。
     
 
-**🧙‍♂️ How to Write Readable Code**
+**🧙‍♂️ 如何编写可读的代码**
 
-Let’s build a simple program to manage books in a library. We’ll make it clean and readable and then I will break down this code below:
+让我们构建一个简单的程序来管理图书馆中的书籍。我们将使其整洁和可读，接下来我将分解这段代码：
 
 ```
-// A class to represent a book
+// 一个表示书籍的类
 class Book {
     constructor(title, author, isAvailable) {
         this.title = title;
@@ -381,147 +371,125 @@ class Book {
         console.log(`You returned "${this.title}".`);
     }
 }
+```
 
-// A function to display available books
-function displayAvailableBooks(books) {
-    console.log("Available books:");
-    books.forEach((book) => {
-        if (book.isAvailable) {
-            console.log(`- ${book.title} by ${book.author}`);
-        }
-    });
-}
-
-// Example usage
+```markdown
+// 示例使用
 const book1 = new Book("The Clean Coder", "Robert Martin", true);
 const book2 = new Book("You Don’t Know JS", "Kyle Simpson", false);
 const book3 = new Book("Eloquent JavaScript", "Marijn Haverbeke", true);
 
 const library = [book1, book2, book3];
 
-displayAvailableBooks(library); // Show available books
-book1.borrow(); // Borrow a book
-displayAvailableBooks(library); // Show available books again
-book1.returnBook(); // Return the book
-displayAvailableBooks(library); // Final list
+displayAvailableBooks(library); // 显示可用的书籍
+book1.borrow(); // 借阅一本书
+displayAvailableBooks(library); // 再次显示可用的书籍
+book1.returnBook(); // 归还这本书
+displayAvailableBooks(library); // 最终列表
 ```
 
-We created a `Book` class to represent each book. It has properties like `title`, `author`, and `isAvailable` to track its status.
+我们创建了一个 `Book` 类来表示每本书。它具有像 `title`、`author` 和 `isAvailable` 这样的属性来追踪其状态。
 
--   The `borrow` method checks if the book is available. If yes, it marks it as unavailable and prints a message.
-    
--   The `returnBook` method makes the book available again.
-    
--   The `displayAvailableBooks` function loops through the library and prints only the books that are available.
-    
--   We create three books (`book1`, `book2`, `book3`) and store them in a `library` array.
-    
--   We borrow and return books, showing how the list of available books changes.
-    
+- `borrow` 方法检查书籍是否可用。如果是，则将其标记为不可用并打印一条消息。
+- `returnBook` 方法使书籍再次可用。
+- `displayAvailableBooks` 函数循环遍历图书馆，只打印可用的书籍。
+- 我们创建了三本书（`book1`、`book2`、`book3`）并将它们存储在一个 `library` 数组中。
+- 我们借阅和归还书籍，展示了可用书籍列表如何变化。
 
-As you can see, readable code is not just about style. It saves time, prevents bugs, and preserves your code as useful for years to come.
+如你所见，可读代码不仅仅关乎风格。它节省时间，防止错误，并将你的代码在未来几年内保持有用。
 
-### **🏌️ Test Everything You Write**
+### **🏌️ 测试你写的所有东西**
 
-If you don’t take the time to write tests, you shouldn’t be surprised if your code breaks. If you do want to write tests, follow this unit testing strategy to catch problems ahead.
+如果你没有花时间编写测试，那么当代码出错时不应感到惊讶。如果你确实想编写测试，请遵循此单元测试策略以提前发现问题。
 
-**What Is Unit Testing?**
+**什么是单元测试？**
 
-Concretely, unit testing checks individual parts of your code (like functions or classes) to ensure they work correctly. Just like checking each brick of your house for soundness before building the walls.
+具体来说，单元测试检查代码的各个部分（如函数或类）以确保其正常工作。就像在建造房子的墙之前检查每一块砖是否完好一样。
 
-Let me give you an example of how unit testing works:
+让我给你一个单元测试工作原理的例子：
 
-```
+```javascript
 class Calculator {
     add(a, b) { return a + b; }
     subtract(a, b) { return a - b; }
 }
 
-// Test it (Unit Test)
+// 测试它（单元测试）
 const calculator = new Calculator();
-console.assert(calculator.add(2, 3) === 5, "Addition failed");
-console.assert(calculator.subtract(5, 3) === 2, "Subtraction failed");
+console.assert(calculator.add(2, 3) === 5, "加法失败");
+console.assert(calculator.subtract(5, 3) === 2, "减法失败");
 ```
 
-Here’s what’s going on in this code:
+这里代码中发生的事情是：
 
-First, we create the calculator class:
+首先，我们创建计算器类：
 
-```
+```javascript
 class Calculator {
     add(a, b) { return a + b; }
     subtract(a, b) { return a - b; }
 }
 ```
 
-The `Calculator` class has two methods: `add` and `subtract`.
+`Calculator` 类有两个方法：`add` 和 `subtract`。
 
--   `add(a, b)` takes two numbers and returns their sum.
-    
--   `subtract(a, b)` takes two numbers and returns their difference.
-    
+- `add(a, b)` 接受两个数字并返回它们的和。
+- `subtract(a, b)` 接受两个数字并返回它们的差。
 
-Next, we set up the tests:
+接下来，我们设置测试：
 
-```
+```javascript
 const calculator = new Calculator();
 ```
 
-Here, we’re creating an instance of the `Calculator` class to test its methods.
+在这里，我们创建一个 `Calculator` 类的实例以测试其方法。
 
-Then we write test cases:
+然后我们编写测试用例：
 
-```
-console.assert(calculator.add(2, 3) === 5, "Addition failed");
-console.assert(calculator.subtract(5, 3) === 2, "Subtraction failed");
-```
-
-`console.assert(condition, message)` checks if the condition is `true`. If it’s `false`, the message ("Addition failed" or "Subtraction failed") is displayed in the console.
-
--   **First test**: `calculator.add(2, 3) === 5`
-    
-    -   Calls the `add` method with `2` and `3`.
-        
-    -   Checks if the result is `5`.
-        
--   **Second test**: `calculator.subtract(5, 3) === 2`
-    
-    -   Calls the `subtract` method with `5` and `3`.
-        
-    -   Checks if the result is `2`.
-        
-
-So what happens if something breaks? It’s pretty simple to solve any issues that arise here. In this case, if the `add` or `subtract` method doesn’t work correctly, the test will fail. For example:
-
-```
-console.assert(calculator.add(2, 3) === 6, "Addition failed");
+```javascript
+console.assert(calculator.add(2, 3) === 5, "加法失败");
+console.assert(calculator.subtract(5, 3) === 2, "减法失败");
 ```
 
--   The condition `calculator.add(2, 3) === 6` is `false`.
-    
--   The console will display: `"Addition failed"`.
-    
+`console.assert(condition, message)` 检查条件是否为 `true`。如果是 `false`，则消息（“加法失败”或“减法失败”）将显示在控制台中。
 
-**Real-World Example: Testing a Login System 👥**
+- **第一次测试**：`calculator.add(2, 3) === 5`
+  - 调用 `add` 方法，给出 `2` 和 `3`。
+  - 检查结果是否为 `5`。
 
-Let’s test a simple login system to see how unit testing works in a real-world scenario.
+- **第二次测试**：`calculator.subtract(5, 3) === 2`
+  - 调用 `subtract` 方法，给出 `5` 和 `3`。
+  - 检查结果是否为 `2`。
 
+那么如果出错了会发生什么呢？在这里解决出现的问题是相当简单的。在这种情况下，如果 `add` 或 `subtract` 方法不能正常工作，测试将失败。例如：
+
+```javascript
+console.assert(calculator.add(2, 3) === 6, "加法失败");
 ```
+
+- 条件 `calculator.add(2, 3) === 6` 是 `false`。
+- 控制台将显示：“加法失败”。
+
+**实际例子：测试一个登录系统 👥**
+
+让我们测试一个简单的登录系统，看看单元测试在实际场景中如何工作。
+
+```javascript
 class Auth {
     login(username, password) {
         return username === "admin" && password === "1234";
     }
 }
 
-// Test the Auth class
+// 测试 Auth 类
 const auth = new Auth();
-console.assert(auth.login("admin", "et5t45#@") === true, "Login failed for valid credentials");
-console.assert(auth.login("user", "wrongpassword") === false, "Login succeeded for invalid credentials");
+console.assert(auth.login("admin", "et5t45#@") === true, "有效凭证登录失败");
+console.assert(auth.login("user", "wrongpassword") === false, "无效凭证登录成功");
 ```
 
-First, create the `Auth` class:
+首先，创建 `Auth` 类：
 
-```
+```javascript
 class Auth {
     login(username, password) {
         return username === "admin" && password === "1234";
@@ -529,238 +497,226 @@ class Auth {
 }
 ```
 
-The `login` method checks if the username is `"admin"` and the password is `"1234"`. If both match, it returns `true` – otherwise, `false`.
+`login` 方法检查用户名是否为 `"admin"` 且密码是否为 `"1234"`。如果两者都匹配，则返回 `true`，否则返回 `false`。
 
-Next, set up the tests:
+接下来，设置测试：
 
-```
+```javascript
 const auth = new Auth();
 ```
 
-Create an instance of the `Auth` class. Then write the test cases:
+创建一个 `Auth` 类的实例。然后编写测试用例：
+
+```javascript
+console.assert(auth.login("admin", "1234") === true, "有效凭证登录失败");
+console.assert(auth.login("user", "wrongpassword") === false, "无效凭证登录成功");
+```
+
+- **第一次测试**：检查有效凭证（`"admin"`，`"1234"`）是否成功。如果不成功，就会显示 “有效凭证登录失败”。
+- **第二次测试**：检查无效凭证（`"user"`，`"wrongpassword"`）是否失败。如果没有失败，就会显示 “无效凭证登录成功”。
+
+**🌱 为什么测试会导致干净的代码：**
+```
+
+### **💉 使用依赖注入**
+
+将依赖硬编码就像在额头上纹上某人的名字——它是永久性的，可能是磨蚀性的，并且限制了你的选择。
+
+那么，依赖注入做了什么？它通过将依赖关系作为参数传递来管理代码的关系。它是灵活、可适应且易于维护的。
+
+为了演示其工作原理，我这里使用 Nodemailer 依赖项向用户发送电子邮件：
 
 ```
-console.assert(auth.login("admin", "1234") === true, "Login failed for valid credentials");
-console.assert(auth.login("user", "wrongpassword") === false, "Login succeeded for invalid credentials");
-```
-
--   **First test**: Checks if valid credentials (`"admin"`, `"1234"`) succeed. If not, `"Login failed for valid credentials"` is displayed.
-    
--   **Second test**: Checks if invalid credentials (`"user"`, `"wrongpassword"`) fail. If not, `"Login succeeded for invalid credentials"` is displayed.
-    
-
-**🌱 Why testing results in clean code:**
-
-1.  You naturally write smaller, more focused functions to make your code testable
-    
-2.  Tests verify that your code behaves as expected under different conditions.
-    
-3.  With tests in place, you can confidently update your code, knowing the tests will catch any mistakes.
-    
-
-### **💉 Use Dependency Injection**
-
-Hardcoding dependencies is like tattooing someone’s name on your forehead — it’s permanent, can be abrasive, and locks you in.
-
-So, what does Dependency Injection do? It lets you manage your code's relationships by passing dependencies as arguments. It’s flexible, adaptable, and maintainable.
-
-To demonstrate how it works, here I’m using the Nodemailer dependency for sending emails to users:
-
-```
-// Dependency: Sending emails with Nodemailer
+// 依赖：使用 Nodemailer 发送电子邮件
 const nodemailer = require('nodemailer');
 function sendEmail(to, subject, message) {
-    const transporter = nodemailer.createTransport({ /* config */ });
+    const transporter = nodemailer.createTransport({ /* 配置 */ });
     return transporter.sendMail({ from: "programmingwithshahan@gmail.com", to, subject, text: message });
 }
 ```
 
-⚠️ To save yourself from risk, make sure to avoid **hardcoding** dependencies. Use abstraction or configuration files for secure maintenance.
+⚠️ 为了避免风险，请确保避免将依赖关系**硬编码**。使用抽象或配置文件进行安全维护。
 
-This is just one example. As a developer, you may use hundreds of libraries or dependencies.
+这只是一个例子。作为开发人员，你可能会使用数百个库或依赖项。
 
-I’m not saying you shouldn’t rely on dependencies/libraries at all, as nowadays it is hard to avoid them. But you should be very careful before installing them in your coding projects.
+我并不是说你绝对不应该依赖依赖项/库，因为如今很难避免它们。但在将它们安装到你的编码项目中之前，你应该非常小心。
 
-You should check the security, performance, quality, or functionality of an organization's software systems. Because they sometimes contain risks that can ruin your entire project.
+你应该检查组织的软件系统的安全性、性能、质量或功能。因为它们有时可能包含会毁掉你整个项目的风险。
 
-🚧 Always control your tools, don't let them control you.
+🚧 永远要控制你的工具，不要让它们控制你。
 
-### **📂 Clean Project Structures**
+### **📂 清理项目结构**
 
-A well-organized project is the difference between a **trash heap** and a high-end **boutique**.
+一个组织良好的项目就像一座高端**精品店**与一堆**垃圾堆**的区别。
 
-Here is how each folder should be organized:
+以下是每个文件夹的组织方式：
 
-![Image of clean code project structure by shahan](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/9xwyg9iqqcybz21lsgxz.png)
+![Shahan 的干净代码项目结构图](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/9xwyg9iqqcybz21lsgxz.png)
 
-If your codebase looks like a junk drawer, you’ve already caused trouble for your future self.
+如果你的代码库像个杂物抽屉，那你已经给未来的自己制造了麻烦。
 
-Let’s go through the clean project structure you can see above to better understand it:
+让我们浏览上面的干净项目结构，以更好地理解它：
 
 **1.** `myProjet/src`
 
-This is the main container for your entire application. Everything your app needs is stored inside this folder. It has subfolders to keep things tidy and managed in one place.
+这是整个应用程序的主容器。应用所需的一切都存储在这个文件夹中。它有子文件夹，可以保持整洁并在一个地方管理。
 
 **2.** `components`
 
-This is where you keep all the reusable pieces of your app. You can use these components in multiple places without building them again.
+这是存放应用所有可重用部分的地方。你可以在多个地方使用这些组件，而无需再次构建它们。
 
 **3.** `services`
 
-This is the "brain" of your app. It handles all the work behind the scenes for both the frontend and backend. `emailService.js`, `userService.js` and `productService.js` are some of the example files for your `services` folder.
+这是应用的“大脑”。它在前端和后端为幕后工作提供支持。`emailService.js`、`userService.js` 和 `productService.js` 是 `services` 文件夹的一些示例文件。
 
 **4.** `utils`
 
-This contains all the small, handy tools you need to make your application run smoothly and make your life easier. For example, `formatedate.js`, `validateEmail.js` and `generateId.js` are some of the common utils files to make reusable pieces of components for your entire project.
+这包含了所有运行应用程序所需的小工具，使你的生活更轻松。例如，`formatedate.js`、`validateEmail.js` 和 `generateId.js` 是一些常见的 utils 文件，用于为整个项目制作可重用的组件。
 
 #### **5.** `tests`
 
-Conventionally, test files are typically located **outside** the `src` folder, at the project root level. This keeps your production code (`src`) separate from your test code (`tests`), making it cleaner and easier to manage. Have a look:
+根据惯例，测试文件通常位于项目根级别的 `src` 文件夹**之外**。这样可以将生产代码（`src`）与测试代码（`tests`）分隔开，使其更清晰易于管理。查看下面结构：
 
 ```
 myProject/
-├── src/              # Production code
+├── src/              # 生产代码
 │   ├── components/
 │   ├── services/
 │   └── utils/
-├── tests/            # Test files
+├── tests/            # 测试文件
 │   ├── components/
 │   ├── services/
 │   └── utils/
-├── package.json      # Project configuration
-└── README.md         # Documentation
+├── package.json      # 项目配置
+└── README.md         # 文档
 ```
 
-Some developers may prefer creating one testing file inside the `test` folder to test everything in one place. Unfortunately, it may feel clean at first, but as your project grows, you’ll have to find and search for specific code blocks. It’s ugly and can produce unexpected testing results. So breaking them into multiple testing files inside the `tests` folder is highly recommended.
+一些开发人员可能更喜欢在 `test` 文件夹中创建一个测试文件来测试所有内容。遗憾的是，一开始它看起来很整洁，但随着项目的发展，你将不得不寻找和搜索特定代码块。这样显得杂乱无章，并可能产生意外的测试结果。因此，强烈建议在 `tests` 文件夹中将它们分解成多个测试文件。
 
-**Real-world example 📧**
+**实际例子 📧**
 
-So let me create a clean, durable project structure for you to apply in any future projects you might work on. Needless to say, clean project structure is the foundation of building a maintainable project.
+让我为你创建一个干净、耐用的项目结构，以便在任何将来可能从事的项目中应用。不用说，干净的项目结构是构建可维护项目的基础。
 
-From our previous email sending application example, we will write a clean project structure for this app. We want to build an application that sends emails to users. Your clean project structure for this app should look like this:
+根据我们之前的发送电子邮件应用程序的示例，我们将为该应用程序编写一个干净的项目结构。我们希望构建一个向用户发送电子邮件的应用程序。此应用的干净项目结构应如下所示：
 
-![Image of email app clean code project structure by shahan](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/6v6rlc5qiplgxz1h4dps.png)
+![Shahan 的邮箱应用干净代码项目结构图](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/6v6rlc5qiplgxz1h4dps.png)
 
-As you can see, I packed every subfolder and file inside the `src` folder which is the main container of our application. Inside the `src` folder, we created `components`, `services`, `utiles`. Finally, we have a manageable `test` folder outside the `src` folder to test each component independently. This test folder has nothing to do with our production code that is located inside the `src` folder.
+如你所见，我将每个子文件夹和文件都打包在应用的主容器 `src` 文件夹中。在 `src` 文件夹中，我们创建了 `components`、`services`、`utiles`。最后，我们在 `src` 文件夹外有一个可管理的 `test` 文件夹，以独立测试每个组件。这个测试文件夹与位于 `src` 文件夹中的生产代码没有任何关系。
 
-### **🤹‍♂️ Be Consistent with Formatting**
+### **🤹‍♂️ 保持格式一致性**
 
-Don’t write code like you’re 10 different people. Be consistent with your formatting.
+不要写得像是 10 个人写的代码。保持格式的一致性。
 
-Use tools like [Prettier][30] or [ESLint][31] to enforce a consistent style. If every file looks different, you’re creating chaos that no one wants to fix.
+使用 [Prettier][30] 或 [ESLint][31] 等工具强制执行一致的风格。如果每个文件都看起来不同，你只是在制造没人愿意解决的混乱。
 
-I would say that consistency in formatting is one of the most important aspects of writing clean code.
-
-Have a look...
-
-![Image of consistent formatting snippets from clean code zero to one book](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/46zu4k5nnrkcdesgqrye.png)
+我认为格式一致性是编写干净代码的最重要方面之一。
 
 ```
-// Always use 2 spaces for indentation
+// 始终使用2个空格进行缩进
 function calculateArea(width, height) {
   if (width <= 0 || height <= 0) {
-    throw new Error("Dimensions must be positive numbers.");
+    throw new Error("维度必须是正数。");
   }
   return width * height;
 }
 
-// Add meaningful whitespace for readability
+// 添加有意义的空白以提高可读性
 const rectangle = {
   width: 10,
   height: 20,
 };
 
-// Clear separation of logic
+// 清晰的逻辑分离
 try {
   const area = calculateArea(rectangle.width, rectangle.height);
-  console.log(`Area: ${area}`);
+  console.log(`面积: ${area}`);
 } catch (error) {
   console.error(error.message);
 }
 ```
 
-Let’s examine some of the aspects of this code that make it clean:
+让我们来看一下这段代码中的一些使其简洁的方面：
 
-#### 1️⃣ Consistent Indentation
+#### 1️⃣ 一致的缩进
 
-Why 2 or 4 spaces? It’s clean, minimal, and universally accepted in many JavaScript style guides. It doesn’t overwhelm the eyes, and the code structure stands out clearly. When you mix inconsistent indentation (2 spaces here, 4 spaces there), you confuse people—and confused people make mistakes.
+为什么用2个或4个空格？这很简洁、最小化，并且被许多JavaScript风格指南普遍接受。它不会让眼睛感到负担，并且代码结构清晰。如果你在这里用2个空格，那里用4个空格，就会让人感到困惑——而困惑时容易犯错。
 
-#### 2️⃣ Meaningful Whitespace: Giving Code Room to Breathe
+#### 2️⃣ 有意义的空白：给代码留出呼吸空间
 
-That extra line break between the rectangle definition and the `try` block is like a pause in a sentence — it gives the reader time to process.
+在`rectangle`定义和`try`块之间的额外换行就像句子中的停顿——它让读者有时间去处理信息。
 
-#### 3️⃣ Clear Separation of Logic: Modular Thinking
+#### 3️⃣ 清晰的逻辑分离：模块化思维
 
 ```
 try {
   const area = calculateArea(rectangle.width, rectangle.height);
-  console.log(`Area: ${area}`);
+  console.log(`面积: ${area}`);
 } catch (error) {
   console.error(error.message);
 }
 ```
 
-Look at how the logic is divided into clear sections:
+看看逻辑是如何被分成清晰的部分：
 
--   First, the calculation (`calculateArea` function).
+-   首先是计算（`calculateArea`函数）。
     
--   Then, the output (`console.log`).
+-   然后是输出（`console.log`）。
     
--   Finally, error handling (`catch` block).
+-   最后是错误处理（`catch`块）。
     
 
-Each task has its own space and purpose.
+每个任务都有自己的空间和目的。
 
-#### 4️⃣ Readable Error Handling
+#### 4️⃣ 可读的错误处理
 
-When you throw errors or log messages, you format them cleanly. No vague or cryptic messages here. A developer seeing this will immediately know the problem.
+当你抛出错误或记录消息时，请整洁地格式化它们。不要使用模糊或隐晦的信息。看到这样的代码，开发者立刻就能知道出了什么问题。
 
 ```
-throw new Error("Dimensions must be positive numbers.");
+throw new Error("维度必须是正数。");
 ```
 
-**🐦‍⬛ General tips for consistent formatting:**
+**🐦‍⬛ 一般的格式一致性建议：**
 
--   Use 2 or 4 spaces for indentation consistently throughout your codebase. Avoid tabs to maintain uniformity across different editors.
+-   在整个代码库中一致地使用2个或4个空格进行缩进。避免使用制表符，以维护在不同编辑器间的一致性。
     
--   Keep lines to a maximum of 100-120 characters to prevent horizontal scrolling and improve readability.
+-   将每行的字符数限制在最多100-120个以内，以防止水平滚动并提高可读性。
     
--   Group related logic together and separate blocks of code with blank lines to highlight their purpose.
+-   将相关逻辑集中在一起，用空行分隔代码块以突出强调其用途。
     
--   Finally, avoid over-aligning code. Instead, let indentation naturally guide the flow of logic.
+-   最后，避免过度对齐代码。相反，让缩进自然引导逻辑流程。
     
 
-### **✋ Stop Hardcoding Values**
+### **✋ 停止硬编码值**
 
-Hardcoding values is a lazy way to code. Here is the proof:
+硬编码值是一种懒惰的编码方式。以下是证明：
 
 ```
-// Bad: Hardcoded and rigid
+// 糟糕：硬编码且僵化
 function createUser() {
     const maxUsers = 100;
-    if (currentUsers >= maxUsers) throw "Too many users!";
+    if (currentUsers >= maxUsers) throw "用户太多！";
 }
 
-// Clean: Dynamic and flexible
+// 简洁：动态且灵活
 const MAX_USERS = 100;
 function createUser() {
-    if (currentUsers >= MAX_USERS) throw "Too many users!";
+    if (currentUsers >= MAX_USERS) throw "用户太多！";
 }
 ```
 
-You see, changing this variable won’t surprise you in the future. You know exactly where to find it to change uncertain values.
+你看，改变这个变量将来不会让你感到意外。你确切地知道在哪里可以找到它来改变不确定的值。
 
-Its best to store your fixed values in the global configuration (config) file.
+最好将固定值存储在全局配置（配置）文件中。
 
-🪧 So, avoid hardcoding values at all costs. Hardcoding is the shortcut that may drive your future self (or others) crazy.
+🪧 因此，无论如何避免硬编码。硬编码是一种可能会让你的未来自我（或其他人）感到抓狂的捷径。
 
-### **🤏 Keep Functions Short**
+### **🤏 保持函数简洁**
 
-If your function is longer than 20 lines, it’s probably trying to do too much_._
+如果你的函数超过20行，可能它试图做得太多了。
 
-Short functions are sharp functions. They hit their mark every time.
+短小精悍的函数总是能命中目标。
 
-Long, bloated functions are messy and hard to read, but short functions are clear and focused. Here is how your large functions should break down:
+冗长的函数又乱又难读，而短小的函数则清晰且集中。以下是你应如何将大型函数拆解：
 
 ```
 function updateCart(cart, item) {
@@ -775,26 +731,26 @@ function addItemToCart(cart, item) {
 }
 ```
 
-Let me explain this code so you understand why breaking down large functions is a winning strategy.
+让我解释一下这段代码，以便你理解为何将大型函数拆分是一个明智的策略。
 
-1.  **The Main Function:** `updateCart()` calls smaller helper functions to handle specific tasks like:
+1.  **主函数：** `updateCart()` 调用较小的辅助函数来处理特定的任务，如：
     
-    -   Adds the item to the cart.
+    -   将物品添加到购物车。
         
-    -   Calculates the total price.
+    -   计算总价格。
         
-    -   Logs the details of the transaction.
+    -   记录交易细节。
         
-    -   Finally, it returns the total price.
+    -   最后，返回总价格。
         
 
-Instead of one long block of code that tries to do everything, it delegates tasks to helper functions.
+这并不是一个试图做所有事情的长块代码，而是将任务委派给辅助函数。
 
-2.  **Helper Function:** `addItemToCart()` This function **only** handles adding the item to the cart. if you need to change how items are added (for example, checking for duplicates). You could just edit this small function instead of digging through a giant block of code in `updateCart`. That’s how you write clean code functions that’s a joy to read and easy to maintain.
+2.  **辅助函数：** `addItemToCart()` 这个函数**只**负责将物品添加到购物车。如果你需要更改添加物品的方式（例如，检查重复项）。你只需编辑这个小函数，而不必在`updateCart`中一大块代码中寻找更改。这就是编写干净代码函数的方式，令人愉悦和易于维护。
 
-**What Happens If Functions Are Too Long? 💤**
+**函数过长会怎样？ 💤**
 
-Let’s say you didn’t break down the `updateCart` function. Here’s what it might look like:
+假设你没有拆分`updateCart`函数。它可能看起来像这样：
 
 ```
 function updateCart(cart, item) {
@@ -803,41 +759,40 @@ function updateCart(cart, item) {
     for (let i = 0; i < cart.items.length; i++) {
         total += cart.items[i].price;
     }
-    console.log(`Added ${item.name}. Total is now $${total}.`);
+    console.log(`添加了${item.name}。总价现在是$${total}。`);
     return total;
 }
 ```
 
-What are the problems here?
+这里的问题是什么？
 
--   It’s trying to do everything.
+-   它试图做所有事情。
     
--   It’s hard to read, especially if it grows bigger.
+-   特别是当它变得更庞大时，难以阅读。
     
--   If something breaks, you’ll waste time figuring out which part is the problem.
+-   如果出了问题，你将浪费时间去找出问题的所在部分。
     
+```
 
-Now the choice is yours: stick with the messy all-in-one approach or practice the clean one function one job mindset.
+### **⛺ 遵循童子军规则**
 
-### **⛺ Follow the Boy Scout Rule**
+> 总是让你的营地比你找到它时更干净。
 
-> Always leave your campsite cleaner than you found it.
+让我为你解释一下。你不能仅仅使用某样东西，却让它变得更糟。这是不体贴的行为。真正的专业人士会让事情变得比他们发现时更好。
 
-Let me break it down for you. You don’t just use something and leave it worse than before. That’s inconsiderate behavior. Real professionals leave things better than they found them.
+用编程的话来说，每次你接触代码库时，**让它更好。** 清理代码，重构混乱的部分，提高可读性。如果你不这样做，你就只是在堆积垃圾，最终会崩溃在你头上。
 
-In coding terms, every time you touch the codebase, **make it better.** Clean it up, refactor messy parts, and improve readability. If you don’t, you’re just piling on garbage that will eventually collapse on your head.
-
-Here is an example. Instead of improving it, we’re just adding more layers of complexity:
+举个例子。我们没有改善它，而是增加了复杂性：
 
 ```
-// Original code: Hard to read, poorly named variables
+// 原始代码：难以阅读，变量命名不好
 function calc(a, b) {
   let x = a + b;
   let y = x * 0.2;
   return y;
 }
 
-// We're adding to it but not cleaning it up
+// 我们只是不断添加而未进行清理
 function calcDiscount(a, b, discountRate) {
   let total = calc(a, b);
   let final = total - discountRate;
@@ -845,10 +800,10 @@ function calcDiscount(a, b, discountRate) {
 }
 ```
 
-After: it gets better every time. Here’s how a disciplined coder works — they improve as they go:
+之后：每次都有所改善。这是一个有纪律的程序员的工作方式——他们在改进中前行：
 
 ```
-// Improved code: Clear names, refactored for clarity
+// 改进后的代码：清晰的命名，重构以提高清晰度
 function calculateSubtotal(price, quantity) {
   return price * quantity;
 }
@@ -860,23 +815,23 @@ function calculateDiscountedTotal(price, quantity, discountRate) {
 }
 ```
 
-Now, anyone can tell what’s happening at a glance. Because we’ve broken down the code into smaller, more focused functions. Thus, adding new features won’t break existing functionality. 🏕️
+现在，任何人一目了然地看出发生了什么。因为我们将代码拆解为更小、更集中的函数。因此，增加新功能不会破坏现有功能。🏕️
 
-### **🏟️ Follow the Open/Closed Principle**
+### **🏟️ 遵循开闭原则**
 
-This design principle suggests your code should be designed to allow extensions without changing the existing foundation.
+这个设计原则建议你的代码应该设计为允许扩展而不改变现有基础。
 
-You want to add features _—_ not rip it apart every time you upgrade_._ Modifying old code to fit new requirements is exactly like trying to rebuild your house every time you buy new furniture. It’s not sustainable.
+你想添加功能_——_而不是每次升级时都要将其撕裂重建。修改旧代码以适应新要求，就像每次你买新家具都要重建你的房子。这是不可持续的。
 
-Let’s see how you can build smarter, scalable code that lets you add features without breaking everything else.
+让我们看看你如何构建更智能、更可扩展的代码，让你可以添加功能而不破坏其他内容。
 
-#### Before: Violating the principle
+#### 之前：违反原则
 
-You’ve got a class to handle payments — simple enough. At first, it just handles credit cards.
+你有一个处理支付的类——这很简单。一开始，它只处理信用卡。
 
-But then your boss shows up and says, _“Hey, now we need PayPal support.”_
+但接着你的老板来了，说：“嘿，现在我们需要支持 PayPal。”
 
-And because you didn’t bother learning clean code, your code looks like a spaghetti monster straight out of a legacy enterprise system from 1995. Here’s the masterpiece you’ve crafted:
+而因为你没费心学习如何写干净代码，你的代码看起来就像是来自 1995 年的遗留企业系统中的面条怪物。以下是你创造的杰作：
 
 ```
 class PaymentProcessor {
@@ -896,40 +851,40 @@ paymentProcessor.processPayment("creditCard", 100);
 paymentProcessor.processPayment("paypal", 200);
 ```
 
-Alas! Every new payment type (like Apple Pay, Google Pay, and so on) requires modifying the `processPayment` method. Needless to say, you risk breaking existing functionality while adding new features. If you had learned this principle, you might not be in this mess.
+唉！每新增一种支付方式（例如 Apple Pay、Google Pay 等），都需要修改 `processPayment` 方法。不用说，你在添加新功能时有可能破坏现有功能。如果你学过这个原则，你就不会陷入这个困境。
 
-Don’t worry: I’ll help you to fix this. First, we need to refactor the code. Instead of modifying the existing class, we’ll extend its functionality using [polymorphism][32]:
+不要担心：我会帮你解决这个问题。首先，我们需要重构代码。我们将通过使用[多态][32]来扩展其功能，而不是修改现有的类：
 
 ```
-javascriptCopy code// Base class
+javascriptCopy code// 基础类
 class PaymentProcessor {
   processPayment(amount) {
     throw new Error("processPayment() must be implemented");
   }
 }
 
-// Credit card payment
+// 信用卡支付
 class CreditCardPayment extends PaymentProcessor {
   processPayment(amount) {
     console.log(`Processing credit card payment of $${amount}`);
   }
 }
 
-// PayPal payment
+// PayPal 支付
 class PayPalPayment extends PaymentProcessor {
   processPayment(amount) {
     console.log(`Processing PayPal payment of $${amount}`);
   }
 }
 
-// Adding a new payment type? Just extend the class!
+// 添加新的支付类型？只需扩展类！
 class ApplePayPayment extends PaymentProcessor {
   processPayment(amount) {
     console.log(`Processing Apple Pay payment of $${amount}`);
   }
 }
 
-// Usage
+// 使用方法
 const payments = [
   new CreditCardPayment(),
   new PayPalPayment(),
@@ -939,176 +894,175 @@ const payments = [
 payments.forEach((payment) => payment.processPayment(100));
 ```
 
-Now, adding new payment methods doesn’t require changing the existing `PaymentProcessor` class. You just created a new subclass. So the original code remains untouched, meaning there’s no risk of breaking existing features.
+现在，添加新的支付方式不需要更改现有的 `PaymentProcessor` 类。你只需要创建一个新的子类。所以原始代码保持不变，这意味着不会有破坏现有功能的风险。
 
-Each payment type has its own class, and adding PayPal payment support, for example, doesn’t break the code. Now you can reply to your boss: _“Of course, I will add this feature in 5 minutes.”_ Your promotion is waiting for you to accept it.
+每种支付方式都有自己的类，例如添加 PayPal 支持不会破坏代码。现在你可以回复你的老板：“当然，我在五分钟内就能添加这个功能。” 升职在等着你去接受。
 
-I share even more tips in my book [Clean Code Zero to One][33].
+我在我的书 [从零到一的干净代码][33] 中分享了更多的技巧。
 
-## Modern Best Practices to Help You Write Clean Code: A Summary 🥷
+## 帮助你编写干净代码的现代最佳实践：总结 🥷
 
-Now let me show you the best practices and summarise our 12 Clean Code design principles to help you write clean code for agile application development.
+现在让我向你展示最佳实践，并总结我们的 12 个干净代码设计原则，以帮助你为敏捷应用程序开发编写清晰的代码。
 
-### 🔎 Common Code Smells and How to Fix Them
+### 🔎 常见代码异味及其修复方法
 
--   💊 Duplication: If you're copying code, you’re creating more work for yourself. Extract it into a function, and do it right.
+-   💊 代码重复：如果你在复制代码，就是在为自己制造更多工作。将其提取到一个函数中，并正确完成。
     
--   🛤️ Long methods: If your method needs a scroll bar, it's doing too much. Break it down, keep it focused.
+-   🛤️ 方法过长：如果你的方法需要滚动条，它就做得太多了。将其拆分，保持专注。
     
--   👑 King objects: No class should be doing everything. Simplify responsibilities, or your codebase will become messy.
-    
-
-### 💬 Effective Commenting Practices
-
--   💭 When to comment: Only comment if the code isn't clear. If it is, comments are just clutter.
-    
--   🫗 Clarity: Comments should tell why, not what. If your code needs explaining, it might be too complex.
-    
--   🌴 Avoid redundancy: Don't comment what's obvious. If your function is addNumbers, don't comment it does that.
+-   👑 大而全的对象：没有哪个类应该无所不能。简化职责，否则你的代码库会变得混乱。
     
 
-### 🧼 Refactoring Techniques for Clean Code
-
--   🏭 Extract methods: Big methods? Break them down. It's not just about cleanliness –– it's about control.
+```markdown
+-   💭 什么时候需要写注释：只有当代码不清晰时才写注释。如果代码已经清晰，注释只会显得多余。
     
--   🫕Rename variables: If your variable names don’t shout their purpose, change and improve them. Precision in naming is precision in thought.
+-   🫗 清晰：注释应该解释“为什么”，而不是“做什么”。如果代码需要解释，那么它可能太复杂了。
     
--   🍃 Simplify conditionals: If your conditionals look like algebra, simplify them. If a == true, just write if(a).
-    
-
-### 🧪 Testing and Clean Code
-
--   🧙 Unit tests: Test every piece of code like you're interrogating a suspect. No stone unturned.
-    
--   🏇TDD (Test Driven Development): Write tests first. It's not just about catching bugs, it's about knowing exactly what your code should do before you write it.
-    
--   🧽 Clean tests: Your tests should be as clean as your code. If they're messy, they’re not going to be helpful.
+-   🌴 避免冗余：不要对显而易见的事情写注释。如果你的函数名叫 addNumbers，就不要注释它是加法运算。
     
 
-### 🐛 Error Handling and Clean Code
+### 🧼 整理代码技巧
 
--   ⁉️ Exceptions: Use them. They're not just for errors, they're also for keeping your code clean from error clutter.
+-   🏭 提取方法：方法太大？分解它们。这不仅仅是为了清洁度，更是为了控制。
     
--   🖍️ Fail fast: If something's wrong, stop right there. Don't let errors add up. Deal with them immediately.
+-   🫕重命名变量：如果你的变量名没有清晰地表达它们的目的，那就改名并优化。命名的精确性即思维的精确性。
     
--   🚨 Logging: Log like you're documenting a crime scene. Clear, precise, and only what's necessary.
-    
-
-### 🌱 Code Reviews and Clean Code
-
--   🚢 Process: Have a system. No cowboy coding. Review, critique, improve.
-    
--   🔪 Tools: Use tools that make reviews easy. They're not just for catching mistakes, they're also for teaching discipline.
-    
--   🧦 Culture: Cultivate a culture where feedback is gold. Help your team learn how to handle and receive critiques.
+-   🍃 简化条件语句：如果你的条件语句像代数一样复杂，简化它们。如果 a == true，直接写 if(a)。
     
 
-## Automated Tools for Maintaining Clean Code ⚓
+### 🧪 测试与清洁代码
 
-Tools and automation techniques can be really helpful in writing clean code. If you’re not using the right tools and automating things to save yourself time, you’re missing out.
-
-You think you can "eyeball" your way through code quality? Guess again. Without automation, this is what happens:
-
-1.  👎 You miss obvious mistakes because you're "too busy."
+-   🧙 单元测试：测试每一段代码，就像在审问一个嫌疑犯。无一遗漏。
     
-2.  🤕 Your code looks different in every file, making collaboration a headache.
+-   🏇 TDD（测试驱动开发）：先写测试。这不仅仅是为了发现漏洞，更是为了在编写代码前明确其功能。
     
-3.  🪦 Deployment breaks because you skipped a critical test.
+-   🧽 清洁测试：测试代码应该与实际代码一样整洁。如果它们混乱，也不会提供帮助。
     
 
-Successful developers use the right tools to automate code and get things done. Here are four strategies for maintaining clean code using modern tools.
+### 🐛 错误处理与清洁代码
 
-### **1️⃣ Static Analysis**
-
-Static analysis is actually a code inspector that reads through your code and points out potential issues early on. The best part? It works **before** runtime, catching errors that could otherwise lead to crashes, downtime, or embarrassing bugs.
-
-#### **How does it work?**
-
-1.  **Syntax checking**: It looks at your code to analyze everything written in the correct syntax. If you misspell a variable or forget a closing bracket, it’ll call you out instantly.
+-   ⁉️ 异常：使用它们。异常不仅仅是用于错误，还可以使代码从错误的杂乱中解放出来。
     
-2.  **Code quality rules**: Tools like ESLint enforce rules like consistent indentation, avoiding unused variables, and sticking to best practices.
+-   🖍️ 快速失败：如果出现问题，立刻停止。不要让错误积累。立即处理它们。
     
-3.  **Error prevention**: It identifies logic errors, such as using variables that haven’t been defined, or making comparisons that don’t make sense.
+-   🚨 日志记录：记录日志就像记录犯罪现场一样。清晰、精确，并且只记录必要的内容。
     
 
-Here’s how static analysis works in action:
+### 🌱 代码审查及清洁代码
 
-#### 🚨 Before static analysis:
+-   🚢 流程：建立系统。不搞牛仔式编程。审查、评论、改善。
+    
+-   🔪 工具：使用能够简化审查的工具。它们不仅仅用于找出错误，还用于培养纪律。
+    
+-   🧦 文化：培养一种将反馈视为宝贵的文化。帮助你的团队学会处理和接受评论。
+    
 
-```
+## 维护清洁代码的自动工具 ⚓
+
+工具和自动化技术对于编写清洁代码非常有帮助。如果你没有使用合适的工具和自动化来节省时间，那就错过了机会。
+
+你认为可以"凭眼力"判断代码质量？再想想吧。没有自动化，这会发生：
+
+1.  👎 因为“太忙”而错过显而易见的错误。
+    
+2.  🤕 你的代码在每个文件中看起来都不同，协作起来头疼。
+    
+3.  🪦 部署失败，因为你跳过了关键测试。
+    
+
+成功的开发者使用合适的工具来自动化代码和完成任务。以下是使用现代工具维护清洁代码的四种策略。
+
+### **1️⃣ 静态分析**
+
+静态分析实际上是一个代码检查器，它在早期找出潜在问题。最棒的是，它在**运行前**工作，捕获可能导致崩溃、停机或令人尴尬的错误。
+
+#### **它是如何工作的？**
+
+1.  **语法检查**：检查代码中编写的语法是否正确。如果拼写错误或遗漏了闭合括号，它会立即指出。
+    
+2.  **代码质量规则**：像 ESLint 这样的工具强制执行规则，如一致的缩进、避免未使用的变量，以及遵循最佳实践。
+    
+3.  **错误预防**：识别逻辑错误，比如使用未定义的变量或进行无意义的比较。
+    
+
+以下是静态分析的实际操作：
+
+#### 🚨 在静态分析之前：
+
+```javascript
 let sum = (a, b) => { return a + b; }
 console.log(sume(2, 3)); // Typo, unnoticed until runtime
 ```
 
--   **Problem**: The typo in `sume` will only cause an error when the code runs, and that could lead to frustrating debugging sessions or worse — breaking the app in production.
+-   **问题**：`sume`中的拼写错误只有在运行代码时才会导致错误，这可能会导致令人沮丧的调试会话，或者更糟糕的是，在生产环境中中断应用程序。
 
-#### 🚑 After static analysis (using ESLint):
+#### 🚑 使用 ESLint 之后的静态分析：
 
 ```
 codeError: 'sume' is not defined.
 ```
 
--   **Solution**: [ESLint][34] immediately flags the typo before you even run the code. The error is caught early, saving you time and headaches.
+-   **解决方案**：ESLint 立即标记拼写错误，你甚至在运行代码之前就发现了问题。早期捕获错误，节省了时间和麻烦。
 
-### **2️⃣ Automated Code Formatting**
+### **2️⃣ 自动代码格式化**
 
-Before Formatting:
+格式化前：
 
-```
+```javascript
 function calculate ( x , y ){ return x+ y;}
 console.log( calculate (2,3 ) )
 ```
 
--   **Problem**: Inconsistent spacing and formatting make the code harder to read.
+-   **问题**：不一致的空格和格式化使代码难以阅读。
 
-#### After using Prettier:
+#### 使用 Prettier 之后：
 
-```
+```javascript
 function calculate(x, y) {
   return x + y;
 }
 console.log(calculate(2, 3));
 ```
 
--   **Solution**: Clean, consistent, and professional formatting is applied automatically. No more nitpicking over spaces or alignment.
+-   **解决方案**：自动应用干净、一致、专业的格式。不再挑剔空格或对齐问题。
 
-Pretty basic stuff though. I covered this in case you write code in notepad or something where IDE is not provided (for example, a job interview).
+这些都是很基本的东西。不过我提到这些是万一你在记事本或没有提供 IDE 的地方写代码（例如，工作面试）。
 
-### **3️⃣ Continuous Integration (CI) Testing**
+### **3️⃣ 持续集成（CI）测试**
 
-CI testing make sure every new change to your code is verified automatically. It’s like a safety net that catches bugs introduced during development. CI tools run your tests every time you push code, so nothing breaks after deployment.
+CI 测试确保你对代码的每一次更改都得到自动验证。它就像一个安全网，可以捕捉开发过程中引入的错误。CI 工具在每次推送代码时运行测试，因此在部署后没有任何中断。
 
-#### **How Does CI Testing Work?**
+#### **CI 测试如何工作？**
 
-1.  **Triggers on change**: Each time code is committed, the CI tool (like [GitHub Actions][35], [Jenkins][36]) runs automated tests.
+1.  **变化触发**：每次提交代码时，CI 工具（如 GitHub Actions、Jenkins）会运行自动测试。
     
-2.  **Feedback**: It gives you instant feedback if something fails.
+2.  **反馈**：如果出现问题，它会立即提供反馈。
     
-3.  **Prevents broken code**: Commits only clean, and the working code gets merged into the main branch.
+3.  **防止代码破坏**：只有干净且工作的代码会被合并到主分支。
+    
+```
+```
+
+我们也使用 CI/CD 流水线作为一个持续的过程，其中包括代码构建、测试和部署，而 CI 测试是这个过程中专注于自动化代码变更测试的部分。
+
+**CI/CD 流水线与 CI 测试的区别：**
+
+-   **CI/CD 流水线：** CI/CD 流水线将代码构建、测试和部署整合为一个单一过程。这个过程确保对主分支代码的所有更改都可以发布到生产环境。CI/CD 流水线可以减少部署时间、降低成本并改善团队协作。
+    
+-   **CI 测试：** CI 测试是自动测试集成到中央代码库中的代码变更的过程。CI 测试专注于确保代码库的稳定性以及解决集成问题。CI 测试帮助开发者构建稳定的、无错误的软件并满足功能需求。
     
 
-### **4️⃣ CI/CD pipelines**
+🚧 这些就是 CI 测试和 CI/CD 流水线概念的真正含义。并不像想象中那么复杂。所以让我详细讲解一下使用 GitHub Actions 进行的 CI 测试，因为我们现在通常通过自动化工具运行测试。
 
-We also use CI/CD pipelines as a continuous process that includes code building, testing, and deployment, while CI testing is a part of that process that focuses on automating the testing of code changes.
+### **⚡ 使用 GitHub Actions 进行持续集成（CI）测试**
 
-**Differece between CI/CD pipelines vs CI testing:**
+正如我之前所说，CI 工具会在每次您推送代码或打开拉取请求时运行自动化测试。这确保只有正常工作的、无错误的代码才会被合并到主分支。
 
--   **CI/CD pipelines:** A CI/CD pipeline combines code building, testing, and deployment into a single process. This process make sure that all changes to the main branch code are releasable to production. CI/CD pipelines can reduce deployment time, decrease costs, and improve team collaboration.
-    
--   **CI testing:** CI testing is the process of automatically testing code changes that are integrated into a central repository. CI testing focuses on making sure the codebase is stable and that integration issues are resolved. CI testing help developer build software that is stable, bug-free, and meets functional requirements
-    
+#### 如何使用 GitHub Actions 设置 CI 测试
 
-🚧 This is what CI testing CI/CD pipelines concepts are really about. Not as complex as it seems. So let me elaborate more on CI testing with GitHub Actions, as we usually run tests through automated tools nowadays.
+**步骤 1：创建您的代码库**
 
-### **⚡ Continuous Integration (CI) Testing with GitHub Actions**
-
-As I said earlier, CI tools run automated tests every time you push code or open a pull request. This guarantees that only working, bug-free code gets merged into the main branch.
-
-#### How to Set Up CI Testing with GitHub Actions
-
-**Step 1: Create Your Repository**
-
-Set up a GitHub repository for your project. Then, push your code to GitHub using the following commands:
+为您的项目设置一个 GitHub 代码库。然后，使用以下命令将代码推送到 GitHub：
 
 ```
 git init
@@ -1119,89 +1073,85 @@ git remote add origin https://github.com/codewithshahan/codewithshahan.git
 git push -u origin main
 ```
 
-Or you can create a new repo from your GitHub account without using the command. Just login to your GItHub account and visit dashboard. Here you will find a “New” button to create a brand new repo:
+或者您可以在不使用命令的情况下从 GitHub 账户创建一个新的代码库。只需登录到您的 GitHub 账户并访问仪表板。您会发现一个“New”按钮来创建一个全新的代码库：
 
-![image of creating a new repo on github by Shahan](https://cdn.hashnode.com/res/hashnode/image/upload/v1737618697327/dcef8be8-0d08-45d7-8000-34c4c65df425.png)
+![在 GitHub 上创建新代码库的图片由 Shahan 提供](https://cdn.hashnode.com/res/hashnode/image/upload/v1737618697327/dcef8be8-0d08-45d7-8000-34c4c65df425.png)
 
-**Step 2: Add a GitHub Actions Workflow**
+**步骤 2：添加一个 GitHub Actions 工作流**
 
-Navigate to your repository’s **Actions** tab. To do this, first, you have to visit your repo on Github (you will find the link after creating your repo). In this case, I created a new repo called “codewithshahan”. Here, look for the **Actions** tab on the right side of the navigation bar.
+导航到您代码库的 **Actions** 选项卡。要执行此操作，首先您必须访问 GitHub 上的代码库（创建代码库后您会找到链接）。在此示例中，我创建了一个名为“codewithshahan”的新代码库。在这里，看一下导航栏右侧的 **Actions** 选项卡。
 
-![Image of github actions navigation tab by shahan](https://cdn.hashnode.com/res/hashnode/image/upload/v1737618879398/7c5aa37a-72be-4701-a8f8-9ea9e05c0d5d.png)
+![GitHub Actions 导航选项卡的图片由 Shahan 提供](https://cdn.hashnode.com/res/hashnode/image/upload/v1737618879398/7c5aa37a-72be-4701-a8f8-9ea9e05c0d5d.png)
 
-After navigating the Actions tab, scroll down a little and you will find the **continuous integration** section:
+进入 Actions 选项卡后，向下滚动一点，您会找到 **continuous integration** 部分：
 
-![Image of CI (Continuous Integration) testing on Github Actions Page by Shahan](https://cdn.hashnode.com/res/hashnode/image/upload/v1737619002674/60003e57-f2b2-48f1-bef8-9bde39149faf.png)
+![GitHub Actions 页面上的 CI（持续集成）测试图片由 Shahan 提供](https://cdn.hashnode.com/res/hashnode/image/upload/v1737619002674/60003e57-f2b2-48f1-bef8-9bde39149faf.png)
 
-Choose a setup workflow yourself. I will use Node.js for this project.
+选择一个适合您的工作流设置。我将在这个项目中使用 Node.js。
 
-After clicking the configure button, a `node.js.yml` file will be created automatically, and you can adjust the code depending on your goals.
+点击配置按钮后，会自动创建一个 `node.js.yml` 文件，您可以根据目标调整代码。
 
-![Image of GitHub workflow snippet for automated testing by Shahan](https://cdn.hashnode.com/res/hashnode/image/upload/v1737619475568/74da6d46-c105-42c8-8662-fc72e9410bda.png)
+![GitHub 自动测试工作流代码段的图片由 Shahan 提供](https://cdn.hashnode.com/res/hashnode/image/upload/v1737619475568/74da6d46-c105-42c8-8662-fc72e9410bda.png)
 
-I won’t go into detail about how should modify your `.yml` file. It depends on your project goals and personal preference. Also, it is a whole different broader topic and as this article has already become quite long, so I’ll explain it in a future article. For now, just stick with this foundational knowledge.
+我不会详细说明如何修改 `.yml` 文件。这取决于您的项目目标和个人偏好。此外，这是一个完全不同的更广泛的话题，鉴于这篇文章已经相当长，我将在以后的文章中再做解释。目前，请坚持这些基础知识。
 
-This CI Testing workflow is best for modern application development. Your app remains stable while incorporating key features including testing (e,g. Dark Mode), Building and deploying applications directly within your GitHub repository. This way, you can push your code confidently, knowing your code is always clean and ready for production.
+这个 CI 测试工作流非常适合现代应用程序开发。您的应用程序在包含关键功能（例如：暗模式）、在 GitHub 代码库中直接构建和部署应用程序时保持稳定。通过这种方式，您可以自信地推送代码，确保您的代码始终清晰并准备好投入生产。
 
-## The Role of Documentation in Agile Software Development 🚣
+## 在敏捷软件开发中的文档作用 🚣
 
-If you want your code to be top-notch, you need to understand how to write good documentation. If you think documentation is just about scribbling down how the code works, you’re wrong. It's about explaining **why** it works, not just how it works. That’s where most people miss the mark.
+如果您希望您的代码达到顶级水准，您需要了解如何编写好的文档。如果您认为文档只是匆忙写下代码如何工作，那么您错了。这是关于解释**为什么**它可以工作，而不仅仅是如何工作。这是大多数人忽视的一点。
 
-### 1\. 🚡 Create **Useful Docs (Explain Why, Not Just How)**
+### 1\. 🚡 创建**有用的文档（解释为什么，而不仅仅是如何）**
 
-When you write documentation, you're not just throwing down some instructions for how to use the code. You're telling the next person (or even yourself in the future) why this piece of code exists in the first place. That’s the difference between good and bad documentation.
+当您编写文档时，您不仅仅是写下一些关于如何使用代码的说明。您是在告诉下一个人（或者未来的自己）为什么这个代码段最初存在。这就是好文档和差文档的区别。
 
-Bad docs leave people scratching their heads. They’re too vague, too simple, and they don’t answer the big questions. If your documentation is unclear, that likely means your thinking is unclear. You’re basically saying, _"I don’t care if you understand this, it works, just use it."_ That’s not helpful.
+糟糕的文档会让人困惑。它们太模糊、太简单，并且没有回答重要的问题。如果您的文档不清晰，这可能意味着您的思考不清晰。您基本上是在说，“我不在乎你是否理解这个，它管用，直接用就行。”这没有帮助。
 
-Great documentation answers the tough questions:
+优秀的文档回答了棘手的问题：
 
--   ✅ Why did you choose this approach over another?
+-   ✅ 为什么您选择了这种方法而不是其他方法？
     
--   ✅ Why does this function exist? What problem does it solve?
+-   ✅ 为什么这个函数存在？它解决了什么问题？
     
--   ✅ Why did you write this code the way you did?
-    
+-   ✅ 为什么您这样编写代码？
 
-If your docs are just regurgitating how to use the code, you’re not being as helpful as you can be. Start thinking deeper and explaining the reasoning behind everything.
+### 2\. ⏳ **保持文档更新（过时的文档比没有文档更糟）**
 
-### 2\. ⏳ **Keep the Docs Updated (Outdated Docs Are Worse Than No Docs)**
+过时的文档是最糟糕的。事实上，它可能比没有文档更糟。当你的文档与代码不同步时，你是在给未来的自己——或下一个必须处理它的人——带来巨大的麻烦。
 
-Outdated documentation is the worst. In fact, it can be worse than having no docs at all. When you leave documentation that’s out of sync with the code, you’re doing your future self — or whoever has to deal with it next — a huge disservice.
+每当你的代码发生变化时，你的文档也需要改变。它必须反映事物的当前状态。不要误导未来的开发者（或你自己），留下过时的信息只会让他们感到困惑，并浪费他们的时间。如果某些内容不再相关，就删除它。过时的文档就像一个凌乱的头脑——它会阻碍你的发展。
 
-Every time your code changes, your documentation needs to change too. It has to reflect the current state of things. Don’t mislead future developers (or yourself) by leaving outdated info that will only confuse them and waste their time. If something is no longer relevant, delete it. Outdated documentation is the equivalent of a cluttered mind — it holds you back.
+养成定期检查和更新文档的习惯。每当代码行改变，文档也应该改变。就是这样。
 
-Make it a habit to check and update your documentation regularly. The minute a line of code changes, so should your documentation. Period.
+### 3\. 🚆 **整合注释（代码中的良好注释是文档的一部分）**
 
-### 3\. 🚆 **Integrate Comments (Good Comments in Code Are Part of Documentation)**
+这个道理是——你代码中的注释应与文档**整合**。良好的注释不仅仅是那些无法在其他地方解释代码的开发者的拐杖。它们应该改善你的文档，而不是取代它。
 
-Here’s the deal — comments in your code should **integrate** with your documentation. Good comments aren’t just a crutch for developers who can’t explain their code elsewhere. They should improve your docs, not replace them.
+注释是对文档的补充。写清晰、易懂的代码，这样需要的解释就很少，但当有些地方不够清楚时，加入注释。记住代码注释的原则：解释**为什么**，而不是**如何**。这里也是如此。不要重复。让你的代码说话。注释应补充你的文档的大局观，而不是作为糟糕代码的创可贴。
 
-Comments are supplements to your documentation. You write clean, understandable code that needs minimal explanation, but when something isn’t crystal clear, throw in a comment. Remember the rule for comments in your code: explain the **why**, not the **how**. It’s the same here. Don’t repeat yourself. Let your code do the talking. Comments should complement the bigger picture of your documentation, not act as a band-aid for sloppy code.
+🪧 优秀的代码应不言自明。修正代码，然后在必要时添加注释澄清。保持注释简洁、重点突出。
 
-🪧 Great code should be self-explanatory. Fix the code, then add comments for clarification if necessary. Keep comments clean, short, and to the point.
+如果你想编写干净、高效且易于维护的代码，文档是关键。不要把文档视为事后补充或仅仅是填充空间的东西。它是你代码的延伸——是你明确有效沟通的方式。它是未来开发者的路线图，也是你思路的体现。
 
-If you want to write clean, efficient, and maintainable code, documentation is key. Stop thinking of docs as an afterthought or something you do to fill space. It’s an extension of your code — your way of communicating clearly and effectively. It’s your roadmap for future developers, and it’s a reflection of your thought process.
+## 结论 🏁
 
-## Conclusion 🏁
+干净的代码不是可有可无的——对于那些想要领导的人来说是必须的。它关系到控制、效率和长远的改进。最终，它将帮助你在敏捷软件开发的游戏中取得成功。
 
-Clean code isn't a nice-to-have –– it's a must-have for those who aim to lead. It's about control, efficiency, and improvement over time in the long run. And ultimately, it’ll help you succeed in the game of agile software development.
+🪧 如果你想真正掌握你的手艺，写出干净的代码，让效率自身证明。
 
-🪧 If you want to truly master your craftsmanship, write clean code, and let the efficiency speak for itself.
+## 关于干净代码的常见问题 🧯
 
-## Frequently Asked Questions About Clean Code 🧯
+1. **什么是干净的代码？** 是指不会让你想把电脑扔出窗外的代码。
+   
+2. **为什么干净的代码在敏捷中很重要？** 因为敏捷注重速度和变化，凌乱的环境中你不可能快速行动。
+   
+3. **什么是代码异味？** 是你即将失去对代码库控制的迹象。
+   
+4. **我该如何改善注释？** 只对必要的部分进行注释，并确保每个注释都增加价值而不是噪音。
 
-1.  **What is clean code?** It's code that doesn't make you want to throw your laptop out the window.
-    
-2.  **Why is clean code important in Agile?** Because Agile is about speed and change, and you can't be quick with a mess.
-    
-3.  **What are code smells?** Signs that you're about to lose control of your codebase.
-    
-4.  **How can I improve commenting?** Only comment on what's necessary, and make sure each comment adds value, not noise.
-    
+感谢您的陪伴。您可以访问我的 [Twitter 账号][37] 或 [我的网站][38] 阅读更多关于干净代码和敏捷应用程序开发的文章。下次再见……继续改进你的代码库。
 
-Thank you for being with me. You can visit my [Twitter account][37] or [my website][38] to read more posts about clean code and Agile application development. Until next time… keep improving your codebase.
-
-If you’re serious about mastering clean code and taking your programming career to the next level, then my book is for you: [**Clean Code Zero to One**][39]. This book is your full guide from zero to one in clean code, from messy code to masterpiece. I am offering a 50% discount using the code "earlybird" — only for the first 50 copies. Plus, there’s a 30-day money-back guarantee — no risk, all reward.
+如果你认真想掌握干净代码并提升你的编程职业生涯，我的书就是为你而写的：[**从零到一的干净代码**][39]。这本书是你从零到一掌握干净代码的完整指南，从杂乱到杰作。我正在提供50%的折扣，使用代码“earlybird”——仅限前50本。此外，还有30天的退款保证——无风险，纯奖励。
 
 [1]: #heading-the-cost-of-bad-code
 [2]: #heading-clean-coder-vs-messy-coder
@@ -1242,3 +1192,4 @@ If you’re serious about mastering clean code and taking your programming caree
 [37]: https://x.com/shahancd
 [38]: https://www.codewithshahan.com
 [39]: https://codewithshahan.gumroad.com/l/cleancode-zero-to-one
+
