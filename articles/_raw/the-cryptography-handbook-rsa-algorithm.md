@@ -1,6 +1,6 @@
 ---
 title: "The Cryptography Handbook: Exploring RSA PKCSv1.5, OAEP, and PSS"
-date: 2025-04-10T13:08:59.171Z
+date: 2025-07-17T02:05:54.139Z
 author: Hamdaan Ali
 authorURL: https://www.freecodecamp.org/news/author/hamdaan/
 originalURL: https://www.freecodecamp.org/news/the-cryptography-handbook-rsa-algorithm/
