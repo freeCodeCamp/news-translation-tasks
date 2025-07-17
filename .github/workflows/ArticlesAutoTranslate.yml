@@ -49,14 +49,14 @@ jobs:
       - name: Fetch and process article
         id: process
         run: |
-          # 获取文章
-          # 这里使用action或者直接的脚本
-          # （简化：直接在目标目录操作，避免多次复制）
+          # fetch article
+          # here use action or direct script
+          # (simplify: directly operate in the target directory, avoid multiple copies)
           
           base_name="article_$(date +%s).md"  # 或从URL提取
           lang="${{ env.LANG_CODE }}"
           
-          # 创建必要目录
+          # create necessary directories
           mkdir -p "./articles/_raw" "./articles/$lang"
           
           echo "base_name=$base_name" >> $GITHUB_OUTPUT
