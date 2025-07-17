@@ -1,6 +1,6 @@
 ---
 title: The C# Class Handbook – Types of Classes with Code Examples
-date: 2025-02-06T15:27:56.141Z
+date: 2025-07-17T02:15:02.960Z
 author: Isaiah Clifford Opoku
 authorURL: https://www.freecodecamp.org/news/author/Clifftech/
 originalURL: https://www.freecodecamp.org/news/classes-in-c-sharp-handbook-with-examples/
