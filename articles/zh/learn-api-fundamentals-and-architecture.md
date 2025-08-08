@@ -4,15 +4,15 @@ date: 2025-04-10T13:13:38.910Z
 author: Ikegah Oliver
 authorURL: https://www.freecodecamp.org/news/author/Oliverkrane/
 originalURL: https://www.freecodecamp.org/news/learn-api-fundamentals-and-architecture/
-posteditor: ""
+posteditor: Congeeboi
 proofreader: ""
 ---
 
-Here are some questions for you: How do you log in to apps with your Google, Apple, or Microsoft account? How do online payments with Paystack or PayPal work? How do apps like Facebook and Instagram share information and notifications?
+以下有一些问题：你是如何使用 Google、Apple 或 Microsoft 账号登录应用的？如何使用 Paystack 或 PayPal 进行在线支付？像 Facebook 和 Instagram 这样的应用是如何共享信息和通知的？
 
 <!-- more -->
 
-The answer is: they use APIs. These are powerful tools that drive mobile and web development and a wide range of applications, including cloud services, IoT devices, desktop software, and more.
+答案是：它们使用 API。这些是推动移动和网络开发以及各种应用程序（包括云服务、物联网设备、桌面软件等）的强大工具。
 
 APIs enable communication between applications, facilitating data exchange and verification.
 
@@ -51,7 +51,7 @@ In this article, you’ll learn all about APIs: the different types, their archi
 -   [Conclusion and Future Trends][15]
     
 
-This article is well-suited for beginners in web and mobile development and developers seeking a concise understanding of APIs and how they function.
+这篇文章非常适合于网络和移动开发初学者，以及希望简要了解 API 及其如何运作的开发者。
 
 ## What is an API?
 
@@ -61,11 +61,11 @@ APIs simplify complex code into simple commands, letting developers connect syst
 
 ### How Do APIs Work?
 
-Imagine a restaurant: the customer (client) orders food through the waiter (API), who then communicates the order to the kitchen (server). The kitchen prepares the meal and sends it back through the waiter to the customer. Just like the waiter, the API handles requests and responses, letting the customer enjoy the meal without needing to know the details of the kitchen's operations.
+想象一下有一家餐馆：顾客（客户端）通过服务员（API）点餐，然后服务员通知厨房（服务器）。厨房备餐后通过服务员传递给顾客。就像服务员一样，API 处理请求和响应，让顾客在无需了解厨房操作细节的情况下享受餐点。
 
 A more practical example is when you buy a subscription online, and your payment information is securely sent to Paystack through its payment API. The API is a middleman that takes your request, verifies and processes your payment details with the bank, and then returns a confirmation to the website without directly exposing sensitive data.
 
-Technically, a client initiates a request aimed at a server, specifying either data retrieval or procedural execution. Upon receiving and authenticating this request, the API performs the required operations. Then the API sends a response to the client, including the request's outcome (success or failure) and any requested data elements.
+从技术上讲，客户端向服务器发起请求，指定要获取数据还是执行某个流程。接收并认证该请求后，API 会执行所需操作。随后， API 向客户端发送响应，包括请求的结果（成功或失败）和任何请求的数据元素。
 
 ![Diagram from shiksha.com illustrating how an API works.](https://lh7-rt.googleusercontent.com/docsz/AD_4nXeho5OxXyKdS_-Sam70CtbZIH6y1wFMH3r21I0ZeNDVFNqoY0Jr2Lk5u_FfsiIas6LEnMPjRbQticIaDZi0iCF93Zj-JpxjZzXrwEGtdS_vIopXEUtNG5mvVHnVpf5vvhZGHw4Q?key=2qCWq-hs7d172uM7WbtEHg_B)
 
@@ -73,7 +73,7 @@ Technically, a client initiates a request aimed at a server, specifying either d
 
 APIs are crucial in software development because they make connecting different applications and services easier. They let you integrate external functionalities without building everything from scratch, saving time and reducing complexity through standardised commands.
 
-For users, APIs also enhance security and user experience. They serve as secure gateways that filter data exchange between apps and external services, protecting sensitive information while ensuring smooth, reliable interactions.
+对于用户来说，API 还可以提高安全性和用户体验。它们作为安全网关，过滤应用和外部服务之间的数据交换，保护敏感信息，同时确保流畅、可靠的互动。
 
 ## Types of APIs
 
@@ -107,7 +107,9 @@ Some very useful Open APIs include:
 
 Partner APIs are shared with specific business partners and often require authentication and agreements. They perform essential functions for businesses and applications.
 
-For example, a payment API like Paystack directly communicates with service providers and banking platforms to process payments for products and services.
+例如，像 Paystack 这样的支付 API 直接与服务提供商和银行平台通信，以处理产品和服务的支付。
+
+### 内部 API
 
 ### Internal APIs
 
@@ -133,16 +135,11 @@ APIs are structured differently depending on use case, scalability, security, an
     
 4.  gRPC
     
-
-### REST APIs
-
-Representational State Transfer (REST) is an architectural style that uses HTTP methods (POST, GET, PUT, DELETE) to perform CRUD (Create, Read, Update, Delete) operations on resource-based URIs.
-
-REST APIs are built with frameworks like Express.js (Node.js), Django/Flask (Python), and Spring Boot (Java).
-
-#### Key Components
-
-1.  Resources and endpoints:
+    -   API 公开的实体可以包括任何内容：用户、产品、文档等。
+        
+    -   每个资源由唯一的 URI（统一资源标识符）标识。
+        
+2.  HTTP 方法:
     
     -   The entities exposed by the API can include anything: users, products, documents, and so on.
         
@@ -155,16 +152,9 @@ REST APIs are built with frameworks like Express.js (Node.js), Django/Flask (Pyt
         
     -   POST: Creates a new resource.
         
-    -   PUT: Updates an existing resource.
-        
-    -   DELETE: Removes a resource.
-        
-    -   PATCH: Partially updates an existing resource.
-        
-
-3.  Data representation:
+4.  HTTP 标头和查询参数:
     
-    -   Resources can have multiple representations (for example, JSON, XML).
+    -   HTTP 标头提供有关请求或响应的附加信息。
         
     -   The API responds with the requested representation, allowing data to be structured and parsed easily.
         
@@ -185,7 +175,7 @@ REST APIs are built with frameworks like Express.js (Node.js), Django/Flask (Pyt
 
 Other notable components are cacheability, HTTP Status, and HATEOAS. Together, these components define the structure and behaviour of RESTful systems, enabling seamless and efficient communication between clients and servers.
 
-#### Operation Overview
+REST API 通过唯一的 URI 公开资源，并允许客户端使用 HTTP 方法（如 GET、POST、PUT、DELETE 和 PATCH）执行操作。客户端可以请求各种格式的数据，如 JSON 或 XML，并通过 HTTP 头和查询参数包含附加细节。
 
 REST APIs expose resources through unique URIs and let clients perform operations using HTTP methods such as GET, POST, PUT, DELETE, and PATCH. Clients can request data in various formats, such as JSON or XML, and include additional details through HTTP headers and query parameters.
 
@@ -193,7 +183,7 @@ Each request is stateless and contains all the information required for processi
 
 ![Diagram from apisec.ai illustrating the flow of a REST API, including endpoints, HTTP methods, and data exchange between client and server.](https://lh7-rt.googleusercontent.com/docsz/AD_4nXcYW8ovzOrZJB1eV1X82hvfuddZwjl7mwI56bYpZKCvzf4I4tNEfx58lhIjs_GMRaei9mXAxR78BUAIacBYoCw4J-CmkVKRDGa5ruK4KdYnmBV2Y0u9qz9QjOYSWNHBmUIPsopXuA?key=2qCWq-hs7d172uM7WbtEHg_B)
 
-#### Practical Example and Real-world Use Cases
+为了说明 REST API 在实践中的工作原理，我们以一个允许用户管理图书集合的图书API 为例。我们的示例 API 是使用 [NodeJS][20] 和 [ExpressJS][21] 框架创建的。这里我们不解释这些框架的具体工作原理，因为这超出了本文的范围。所以如果你不了解下面代码的语法，不用担心，只需关注 **请求** 和 **响应** 逻辑。
 
 To illustrate how REST APIs work in practice, let’s consider a Book API that lets users manage a collection of books. Our example API has been created using the [NodeJS][20] and [ExpressJS][21] frameworks. I won’t explain how these frameworks actually work here, as that’s beyond the scope of this article. So if you don’t understand the syntax in the code below, don’t worry – just focus on the **Requests** and **Responses** logic.
 
@@ -275,7 +265,7 @@ Teams utilize REST APIs for web services, mobile apps, and cloud integrations. S
 
 ### SOAP APIs
 
-The Simple Object Access Protocol (SOAP) uses XML for messaging and includes built-in standards for security, transactions, and error handling. Its formal contract is defined by a WSDL (Web Services Description Language).
+简单对象访问协议（SOAP）使用 XML 进行消息传递，并包括用于安全、事务和错误处理的内置标准。其正式约定由 WSDL（Web 服务描述语言）定义。
 
 This architecture prioritises security and reliability through features like WS-Security and transaction management, making it suitable for complex enterprise applications that require rigid standards and robust error handling.
 
@@ -287,10 +277,9 @@ SOAP APIs are created using frameworks or tools such as Apache CXF, .NET WCF, an
     
     -   This is the root element of a SOAP message and defines the overall structure of the XML document.
         
-    -   It contains the SOAP Header and SOAP Body.
+    - 它包含 SOAP Header（SOAP 标头）和 SOAP Body（SOAP 主体）。
         
-
-2.  SOAP body:
+2. SOAP body（SOAP 主体）:
     
     -   This section contains the actual data being exchanged between the client and server.
         
@@ -315,7 +304,7 @@ There is also the SOAP Endpoint, which is the URL where the SOAP service can be 
 
 #### Operation Overview
 
-SOAP APIs operate by encapsulating data within an XML-based structure defined by a SOAP Envelope, which contains both a Header for metadata and a Body for the actual request or response information. The Body carries the exchange data, while a WSDL document serves as a contract detailing the service's operations, message formats, and data types.
+SOAP APIs 通过将数据封装在由 SOAP 封套定义的基于 XML 的结构中运行，该信封包含用于元数据的标头和用于实际请求或响应信息的主体。主体承载交换数据，而 WSDL 文档则作为契约，详细说明服务的操作、消息格式和数据类型。
 
 A SOAP Processor then parses the XML, extracts relevant data, and executes the requested operations according to rules defined by an accompanying XML Schema (XSD). Communication with the service occurs through a specific SOAP Endpoint, ensuring a standardised, interoperable framework for web service interactions.
 
@@ -325,7 +314,7 @@ A SOAP Processor then parses the XML, extracts relevant data, and executes the r
 
 To illustrate SOAP APIs and how they work practically, let’s consider a SOAP-based Banking Service API that provides secure operations for managing accounts and transactions. SOAP APIs use XML messaging to ensure secure and structured communication between systems. Creating a SOAP API and XML messaging is beyond the scope of this article, so here we’ll just focus on the Request and Response logic.
 
-How it works:
+如何运作：
 
 -   **Retrieve account information**: The client sends an XML request to fetch a user’s account details:
 
@@ -384,43 +373,43 @@ The server responds with an XML message containing the account details:
          </soapenv:Body>
       </soapenv:Envelope>
     ```
+
+银行、医疗保健提供者和政府机构使用 SOAP 进行安全、可靠的 API。金融机构以严格的身份验证处理交易，而医疗系统在遵从法规下交换患者数据。航空公司依赖 SOAP 进行预订和售票，确保跨系统的一致数据完整性。
+
+### GraphQL API
+
+GraphQL 是一种由 Facebook 开发的用于 APIs 的查询语言和运行时。它允许客户端在一个请求中精确地请求所需的数据，减少过度获取和不足获取。
+
+#### 关键组件
+
+1.  模式: 这是 GraphQL API 的核心。它定义了数据的结构，包括对象类型、其字段及其关系。它作为客户端和服务器之间的契约，指定可以查询的数据。
+    
+2.  类型: 这些定义了数据中对象的结构。它们指定每个对象拥有的字段及这些字段的数据类型。
+    
+3.  字段: 这些是可以在一个对象上查询的独立数据片段。
+    
+4.  查询: 这些是客户端请求以检索数据。它们指定客户端希望恢复的字段。
+    
+5.  变更: 这些是客户端请求以修改数据（创建、更新或删除）。
+    
+6.  解析器: 这些是为模式中每个字段获取数据的函数。它们将 GraphQL 模式连接到底层数据源。
+    
+7.  订阅: 这些启用实时更新。客户端可以订阅特定事件，服务器将在事件发生时推送更新。
     
 
 Banks, healthcare providers, and government agencies use SOAP for secure, reliable APIs. Financial institutions process transactions with strict authentication, while healthcare systems exchange patient data under compliance regulations. Airlines rely on SOAP for booking and ticketing, ensuring consistent data integrity across systems.
 
-### GraphQL APIs
+GraphQL 定义了一个指定可用数据类型及其关系的 schema。然后，客户端构建查询或变更，精确请求所需数据字段。GraphQL 服务器处理这些请求，使用解析器从后端源获取数据。
 
-GraphQL is a query language and runtime for APIs developed by Facebook. It allows clients to request exactly the data they need in a single request, reducing over-fetching and under-fetching.
+服务器根据模式验证请求，执行解析器，并返回仅包含请求数据的 JSON 响应。客户端可以建立实时更新的订阅，使服务器在数据改变时推送数据。这种方法最小化了过度获取和不足获取，提高了数据检索的效率和灵活性。
 
 #### Key Components
 
 1.  Schema: This is the heart of a GraphQL API. It defines the structure of your data, including the types of objects, their fields, and their relationships. It acts as a contract between the client and server, specifying what data can be queried.
 
-2.  Types: These define the structure of objects in your data. They specify the fields that each object has and the data types of those fields.
+让我们通过一个由 GraphQL 驱动的电子商务 API 来实际探讨 GraphQL API 的工作原理。此 API 可以高效地获取产品详情、评论和库存可用性。服务器是使用 NodeJS 和 [Apollo Server][22] 创建的。创建服务器超出了本文的范围，因此我们将专注于 Schema（关系数据库是如何构建和可视表示的）及 **请求** 和 **响应** 逻辑。
 
-3.  Fields: These are the individual pieces of data that can be queried on an object.
-
-4.  Queries: These are requests from the client to retrieve data. They specify the fields that the client wants to recover.
-
-5.  Mutations: These are requests from the client to modify data (create, update, or delete).
-
-6.  Resolvers: These are functions that fetch the data for each field in the schema. They connect the GraphQL schema to the underlying data sources.
-
-7.  Subscriptions: These enable real-time updates. Clients can subscribe to specific events, and the server will push updates whenever they occur.
-
-#### Operation Overview
-
-GraphQL defines a schema that specifies available data types and their relationships. Clients then construct queries or mutations that precisely request the needed data fields. The GraphQL server processes these requests, using resolvers to fetch data from backend sources.
-
-The server validates the request against the schema, executes the resolvers, and returns a JSON response containing only the requested data. Clients can establish subscriptions for real-time updates, enabling the server to push data changes as they occur. This approach minimises over-fetching and under-fetching, improving efficiency and flexibility in data retrieval.
-
-![Diagram from kinsta.com illustrating a GraphQL server architecture, showing the transfer of GraphQL Query request and JSON payload from the server.](https://lh7-rt.googleusercontent.com/docsz/AD_4nXcmC7u4hu44TvJ603f9ODRYIgi3UiHMs-Q4qjE8FZqwPnEGDPTU6DhZSvLCZU3BO7WITNnuls_801ChJyACz6xpKOdvoQ5hLswAMIHZ3-Ii4dyg7CEKZ5m1AAgv70sso-c26Cl_sQ?key=2qCWq-hs7d172uM7WbtEHg_B)
-
-#### Practical Examples and Real-world Use Cases
-
-Let’s explore how GraphQL APIs work practically by considering an E-commerce API powered by GraphQL. This API can efficiently fetch product details, reviews, and stock availability. The server is created using NodeJS and [Apollo Server][22]. Creating the server is beyond the scope of this article, so we will focus on the Schema (how a relational database is structured and visually represented) and the **Request** and **Response** logic.
-
-1.  Schema:
+1.  模式:
 
 ```
 # Schema (schema.graphql)
@@ -439,13 +428,14 @@ type Query {
   products(category: String): [Product!]!
 }
 
+```markdown
 type Mutation {
   createProduct(name: String!, description: String, price: Float!, inventory: Int!, category: String!): Product!
   updateProductInventory(id: ID!, inventory: Int!): Product!
 }
 ```
 
-The Schema defines the data types (`Product`, `Query`, `Mutation`) and specifies the available queries (`product`, `products`), and mutations (`createProduct`, `updateProductInventory`). It uses the [GraphQL type system][23] (String, Int, Float, ID, \[ \], !)
+这个模式定义了数据类型（`Product`、`Query`、`Mutation`）并指定了可用的查询（`product`、`products`）和变更操作（`createProduct`、`updateProductInventory`）。它使用了 [GraphQL 类型系统][23]（String、Int、Float、ID、\[ \]、!）
 
 2.  Requests and Response
     
@@ -518,7 +508,7 @@ Companies like Facebook and Shopify use GraphQL for efficient, flexible APIs. E-
 
 Remote Procedure Call (gRPC) is a high-performance RPC framework that serialises structured data using HTTP/2 and Protocol Buffers. It supports synchronous and asynchronous communication and features like streaming.
 
-HTTP/2 is the latest evolution of HTTP, designed with exciting features like binary framing, multiplexing, header compression, and server push to boost performance and reduce latency. gRPC takes full advantage of these capabilities, enabling quick, efficient, and simultaneous communication, which makes it a perfect fit for microservices and real-time applications.
+HTTP/2 是 HTTP 的最新演进，具备二进制分帧、多路复用、标头压缩和服务器推送等令人兴奋的特性，以提高性能和减少延迟。gRPC 充分利用了这些功能，实现快速、高效、同时的通信，使其非常适合微服务和实时应用。
 
 #### Key Components
 
@@ -528,7 +518,7 @@ HTTP/2 is the latest evolution of HTTP, designed with exciting features like bin
     
 3.  Stubs: Auto-generated client and server code that lets the client call remote methods as if they were local and enables the server to implement the service logic.
     
-4.  Channels: These manage the connection between client and server, handling the underlying network communication.
+4. 通道：它们管理客户端和服务器之间的连接，处理底层网络通信。
     
 5.  RPC methods: gRPC supports different types of calls, including unary (single request-response), client streaming, server streaming, and bidirectional streaming, each suited for different use cases.
     
@@ -537,13 +527,13 @@ HTTP/2 is the latest evolution of HTTP, designed with exciting features like bin
 
 #### Operation Overview
 
-gRPC enables developers to define service contracts and message types in a .proto file with Protocol Buffers, serving as a blueprint for available RPC methods. The code generator produces client and server stubs, allowing remote procedures to be invoked like local functions, while channels manage HTTP/2-based network communication.
+gRPC 让开发者能够在 .proto 文件中使用协议缓冲定义服务契约和消息类型，作为可用 RPC 方法的蓝图。代码生成器生成客户端和服务器存根，允许像本地函数一样调用远程过程，同时通道管理基于 HTTP/2 的网络通信。
 
 It supports unary, client streaming, server streaming, and bidirectional streaming for different data exchange patterns. Also, interceptors and metadata can be integrated for tasks like authentication and logging, keeping the system robust, secure, and efficient.
 
 #### Practical Examples and Real-world Use Cases
 
-Let’s consider a ride-sharing application that uses gRPC for fast communication between clients (mobile apps) and backend services. gRPC uses binary serialization via protocol buffers (Protobuf) instead of text-based formats like JSON or XML. This makes network communication significantly faster and more efficient.
+让我们考虑一个使用 gRPC 快速在客户端（移动应用）和后端服务之间快速通信的打车应用。gRPC 使用协议缓冲（Protobuf）进行二进制序列化，而不是像 JSON 或 XML 这样的基于文本的格式。这使得网络通信显著更快且更高效。
 
 1.  The .proto file defines the API structure:
 
@@ -648,7 +638,7 @@ APIs have become a mainstay in modern software development, facilitating seamles
 
 Understanding the various API architectures, like REST, SOAP, GraphQL, and gRPC, empowers developers to select the optimal approach for their specific needs, balancing performance, scalability, and ease of use.
 
-Looking ahead, the API landscape is set for exciting changes. With AI-driven APIs, decentralized architectures, and improved security measures, we’ll see new ways to build and interact with software. The continuous evolution of API standards and the growth of low-code/no-code platforms are making API development more accessible to everyone.
+展望未来，API 领域将迎来令人兴奋的变化。随着 AI 驱动的 API、去中心化架构和改进的安全措施的出现，我们将看到新的方式来构建和交互软件。API 标准的持续演变和低代码/无代码平台的增长使 API 开发变得更容易为所有人所用。
 
 [1]: #heading-what-is-an-api
 [2]: #heading-how-do-apis-work
