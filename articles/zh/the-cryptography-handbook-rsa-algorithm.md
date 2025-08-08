@@ -1,6 +1,7 @@
+```markdown
 ---
-title: "The Cryptography Handbook: Exploring RSA PKCSv1.5, OAEP, and PSS"
-date: 2025-04-10T13:08:59.171Z
+title: "密码学手册：探索 RSA PKCSv1.5、OAEP 和 PSS"
+date: 2025-07-17T02:05:54.139Z
 author: Hamdaan Ali
 authorURL: https://www.freecodecamp.org/news/author/hamdaan/
 originalURL: https://www.freecodecamp.org/news/the-cryptography-handbook-rsa-algorithm/
@@ -8,138 +9,137 @@ posteditor: ""
 proofreader: ""
 ---
 
-The RSA algorithm was introduced in 1978 in the seminal paper, "A Method for Obtaining Digital Signatures and Public-Key Cryptosystems". Over the decades, as RSA became integral to secure communications, various vulnerabilities and attacks have emerged, underscoring the importance of understanding and implementing RSA correctly.
+RSA 算法于 1978 年在开创性的论文《获取数字签名和公钥密码系统的方法》中提出。几十年来，随着 RSA 成为安全通信中不可或缺的一部分，各种漏洞和攻击也随之出现，这强调了正确理解和实现 RSA 的重要性。
 
 <!-- more -->
 
-This handbook will help you understand the internal workings of the RSA algorithm, how they have evolved over the years, and the schemes defined under various RFCs. This knowledge will help you make informed choices about the most suitable RSA schemes depending on your business requirements.
+本手册将帮助您理解 RSA 算法的内部工作原理，它们如何随着时间的推移而演变，以及在各种 RFC 中定义的方案。通过这些知识，您可以根据自己的业务需求对最合适的 RSA 方案做出明智的选择。
 
-In this handbook, we’ll begin by exploring the foundational principles of the RSA algorithm. By examining its mathematical underpinnings and historical evolution, you will gain insight into the diverse array of attacks that have emerged over the years.
+在本手册中，我们将首先探索 RSA 算法的基础原理。通过研究其数学基础和历史演变，您将深入了解多年来出现的各种攻击。
 
-The narrative unfolds as an evolutionary journey: from the original, straightforward (textbook) RSA implementation, through the discovery of vulnerabilities, to the development of effective countermeasures, and further refinements as new challenges were encountered. This progression illuminates how RSA has transformed over time and also demonstrates how modern cryptographic libraries have integrated these advancements to achieve secure implementations in today’s applications.
+这一叙述如同一段进化之旅：从最初的简单（教科书）RSA 实现，到发现漏洞，再到开发有效的对策，以及在遇到新挑战时的进一步改进。这个过程揭示了 RSA 如何随着时间的发展而改变，也展示了现代密码库如何集成这些进步，以在当今应用中实现安全实现。
 
-You can also watch the associated video here:
+您还可以在这里观看相关视频：
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/jpcLbsuHWbU" style="aspect-ratio: 16 / 9; width: 100%; height: auto;" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="" loading="lazy"></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/jpcLbsuHWbU" style="aspect-ratio: 16 / 9; width: 100%; height: auto;" title="YouTube 视频播放器" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="" loading="lazy"></iframe>
 
-## Table of Contents
+## 目录
 
--   [Prerequisites][1]
+-   [先决条件][1]
     
--   [The Alice-Bob Paradigm][2]
+-   [Alice-Bob 范式][2]
     
--   [The Birth of the RSA Cryptosystem][3]
+-   [RSA 密码系统的诞生][3]
     
-    -   [Prime Numbers and Composite Moduli][4]
+    -   [素数与合成模量][4]
         
-    -   [The Euler Totient Function][5]
+    -   [欧拉函数][5]
         
-    -   [Computing the Keys][6]
+    -   [密钥计算][6]
         
--   [RSA Operations][7]
+-   [RSA 操作][7]
     
-    -   [Encryption][8]
+    -   [加密][8]
         
-    -   [Decryption][9]
+    -   [解密][9]
         
-    -   [Digital Signatures][10]
+    -   [数字签名][10]
         
--   [Issues with Euler’s Totient Function in RSA][11]
+-   [RSA 中的欧拉函数问题][11]
     
--   [The Carmichael Function][12]
+-   [Carmichael 函数][12]
     
-    -   [Mathematical Implication of The Carmichael function][13]
+    -   [Carmichael 函数的数学意义][13]
         
-    -   [The Carmichael Function in Modern Implementations][14]
+    -   [现代实现中的 Carmichael 函数][14]
         
--   [Issues with Raw RSA][15]
+-   [原始 RSA 的问题][15]
     
--   [Exploiting Textbook RSA’s Determinism and Malleability][16]
+-   [利用教科书 RSA 的确定性和可操控性][16]
     
-    -   [Key Generation (Setup)][17]
+    -   [密钥生成（设置）][17]
         
-    -   [Encryption Process][18]
+    -   [加密过程][18]
         
-    -   [Determinism Exploit (Ciphertext Guessing Attack)][19]
+    -   [确定性利用（密文猜测攻击）][19]
         
-    -   [Malleability Exploit (Ciphertext Manipulation Attack)][20]
+    -   [可操控性利用（密文操控攻击）][20]
         
--   [Low-Exponent Attacks][21]
+-   [低指数攻击][21]
     
--   [Håstad’s Broadcast Attack: Low Exponent Meets Multiple Recipients][22]
+-   [Håstad 的广播攻击：低指数遇上多个接收者][22]
     
--   [Introduction to Padding Schemes in RSA][23]
+-   [RSA 填充方案简介][23]
     
--   [Public Key Cryptography Standards (PKCS#1 v1.5)][24]
+-   [公钥密码学标准 (PKCS#1 v1.5)][24]
     
-    -   [The Mathematics Behind PKCS#1 v1.5][25]
--   [The Bleichenbacher Attack][26]
+    -   [PKCS#1 v1.5 背后的数学原理][25]
+-   [Bleichenbacher 攻击][26]
     
--   [Optimal Asymmetric Encryption Padding (OAEP)][27]
+-   [最优非对称加密填充 (OAEP)][27]
     
-    -   [The Mathematics Behind OAEP][28]
--   [Why SHA-1 or MD5 Are Safe in RSA-OAEP][29]
+    -   [OAEP 背后的数学原理][28]
+-   [为什么 SHA-1 或 MD5 在 RSA-OAEP 中是安全的][29]
     
-    -   [Label Hashing][30]
+    -   [标签哈希][30]
         
-    -   [Mask Generation Function (MGF1)][31]
+    -   [掩码生成函数 (MGF1)][31]
         
--   [Adoption in Cryptographic Libraries (PKCS#1 v1.5 vs OAEP)][32]
+-   [加密库中的采用 (PKCS#1 v1.5 vs OAEP)][32]
     
--   [Enhancing Digital Signatures: The Transition to PSS][33]
+-   [增强数字签名：向 PSS 的过渡][33]
     
-    -   [Problems with Early RSA Signature Schemes][34]
+    -   [早期 RSA 签名方案的问题][34]
         
-    -   [Birth of the Probabilistic Signature Scheme (PSS)][35]
+    -   [概率签名方案 (PSS) 的诞生][35]
         
-    -   [The Mathematics Behind PSS][36]
+    -   [PSS 背后的数学原理][36]
         
--   [The Road Ahead: Assessing RSA’s Long-Term Viability][37]
+-   [前方的道路：评估 RSA 的长期可行性][37]
     
--   [References][38]
+-   [参考文献][38]
     
 
-## Prerequisites
+## 先决条件
 
-1.  **Linear Algebra:** A foundational understanding of Linear Algebra and Modular Arithmetic will help you understand certain sections of the handbook, though it is not an absolute requirement. This handbook provides comprehensive explanations of mathematical expressions and their underlying concepts as they arise.
+1.  **线性代数：** 线性代数和模算术的基础知识将帮助您理解手册的某些部分，尽管这并不是绝对必要的。本手册提供了数学表达式及其基础概念的全面解释。
 
-For a concise and relevant introduction to the Chinese Remainder Theorem (CRT) in the context of the handbook, you may find this resource helpful: [CRT, RSA, and Low Exponent Attacks | YouTube][39].
+为了在本手册的背景下对中国剩余定理 (CRT) 进行简洁且相关的入门介绍，您可能会发现这个资源有所帮助：[CRT, RSA, 和低指数攻击 | YouTube][39]。
 
-2.  **Patience (and a Sense of Adventure):** RFCs can sometimes get dull to read, and research papers can feel intimidating at first glance. This handbook is designed to make standard cryptographic concepts accessible to everyone, guiding you through each step with clarity and intuition. Every concept is reinforced with clear, step-by-step examples, ensuring not only a thorough understanding but also familiarity with widely used standard notations. So take your time, take a deep breath, and embrace the journey.
+2.  **耐心（以及冒险精神）：** RFC 有时可能会显得枯燥，研究论文初看上去也可能令人望而生畏。本手册旨在使标准密码学概念对每个人都容易理解，以清晰和直观的方式引导您一步步学习。每个概念都通过明确的步骤和示例强化，不仅保证彻底理解，而且使您熟悉广泛使用的标准符号。所以请慢慢来，深呼吸，尽情享受这段旅程。
+```
 
-For visual learners, the associated video may offer a more engaging experience.
+## **Alice-Bob 范式**
 
-## **The Alice-Bob Paradigm**
+在本手册中，你将遇到大量采用 Alice-Bob 范式的序列图和数学证明。
 
-Throughout this handbook, you will come across numerous sequence diagrams and mathematical proofs that use the Alice-Bob Paradigm.
+Alice-Bob 范式是密码学中的一个常见约定，其中通常使用名为 Alice 和 Bob 的两个通用实体来说明各种场景、协议或密码学原理。
 
-The Alice-Bob paradigm is a common convention in cryptography where two generic entities, often named Alice and Bob, are used to illustrate various scenarios, protocols, or cryptographic principles.
+![Alice Bob 范式](https://cdn.hashnode.com/res/hashnode/image/upload/v1742677993632/c9312974-4cb9-4496-8b23-b6d0d61c0a45.png)
 
-![The Alice Bob Paradigm](https://cdn.hashnode.com/res/hashnode/image/upload/v1742677993632/c9312974-4cb9-4496-8b23-b6d0d61c0a45.png)
+这些角色代表进行通信的两个方，其中 Alice 通常代表发送者或发起者，Bob 代表接收者或响应者。
 
-These characters represent two parties engaged in communication, with Alice typically representing the sender or initiator, and Bob representing the receiver or responder.
+我们经常引入 Eve 作为第三方，象征窃听者或潜在攻击者，增加了一个安全风险因素，并演示外部实体可能尝试拦截或操控通信的场景。
 
-We often introduce Eve as a third party, symbolizing an eavesdropper or potential attacker, adding an element of security risk, and illustrating scenarios where external entities might attempt to intercept or manipulate the communication.
+## RSA 密码系统的诞生
 
-## The Birth of the RSA Cryptosystem
+1978 年见证了一个密码学新时代的诞生，即 RSA 密码系统的引入，该系统以其发明者（Rivest、Shamir 和 Adleman）的名字命名。
 
-The year 1978 witnessed the birth of a new era in cryptography with the introduction of the RSA cryptosystem, named after its inventors (Rivest, Shamir, and Adleman).
+这种发展在论文 “A Method for Obtaining Digital Signatures and Public-Key Cryptosystems” 中被介绍，提供了一种安全的数字通信方法，并为现代公钥密码学奠定了基础。
 
-This development, introduced in the paper "A Method for Obtaining Digital Signatures and Public-Key Cryptosystems", provided a method for secure digital communication and laid the foundation for modern public-key cryptography.
+RSA 的核心是基础数论——特别是质数的性质和模运算。首先让我们理解这些关键概念如何构成其数学基础。
 
-At the heart of RSA lies elementary number theory – specifically, the properties of prime numbers and modular arithmetic. Let’s first understand how these key concepts form its mathematical foundations.
+### 质数与复合模数
 
-### Prime Numbers and Composite Moduli
+该算法首先选择两个大质数，记为 _p_ 和 _q_。它们的乘积 (\\(n = p \\times q\\)) 构成了公钥和私钥的模数。
 
-The algorithm starts by selecting two large prime numbers, denoted as _p_ and _q_. Their product (\\(n = p \\times q\\)) forms the modulus for both the public and private keys.
+RSA 的安全性在很大程度上依赖于这样一个事实：虽然这些质数的乘积计算起来很简单，但对结果的大复合数 _n_ 进行因数分解对于足够大的质数来说是不可行的。
 
-The security of RSA depends heavily on the fact that, while multiplying these primes is computationally straightforward, factoring the resulting large composite number _n_ is considered infeasible for sufficiently large primes.
+此时，重要的是要注意，p 和 q 必须是大质数才能确保 RSA 的安全性。幸运的是，现代库通过使用成熟的质数生成算法自动处理了这一点。因此，您可以专注于应用程序的更高层次方面，而无需管理质数选择的低级细节。
 
-At this point, it’s important to note that p and q must be large prime numbers to ensure RSA’s security. Fortunately, modern libraries handle this automatically by using well-established prime-generation algorithms. As a result, you can focus on higher-level aspects of your applications without having to manage the low-level details of prime selection.
+例如，让我们看看 OpenSSL 的 RSA 密钥生成例程，它执行若干检查以确保生成的模数 \\(n = p \\times q \\) 满足所需的位长度要求：
 
-For instance, let’s have a look at OpenSSL’s RSA key generation routine which performs several checks to ensure that the resulting modulus \\(n = p \\times q \\) meets the desired bit-length requirements:
-
-The below snippet right-shifts the product of the generated primes (stored in `r1`) by `bitse - 4` bits to isolate the top 4 bits, which are then checked to ensure that the modulus meets the desired size criteria.
+下面的代码段通过将生成的质数的乘积（存储在 `r1` 中）右移 `bitse - 4` 位来隔离最高的 4 位，然后检查以确保模数满足所需的大小标准。
 
 ```
 if (!BN_rshift(r2, r1, bitse - 4))
@@ -147,14 +147,14 @@ if (!BN_rshift(r2, r1, bitse - 4))
 bitst = BN_get_word(r2);
 ```
 
-The extracted bits (`bitst`) are then compared against a predefined range (from `0x9` to `0xF`). This range ensures that the most significant byte of the modulus isn’t too small or too large.
+提取出的位 (`bitst`) 然后与预定义范围（从 `0x9` 到 `0xF`）比较。此范围确保模数的最高有效字节既不太小也不太大。
 
 ```
 if (bitst < 0x9 || bitst > 0xF) {
     bitse -= bitsr[i];
 ```
 
-If the significant bits do not fall within the desired range, the bit length is adjusted and the prime-generation process is retried. If the number of retries exceeds a set limit, the entire process is restarted.
+如果明显位不在所需范围内，则调整位长度并重试质数生成过程。如果重试次数超过设定限制，则重新启动整个过程。
 
 ```
 if (!BN_GENCB_call(cb, 2, n++))
@@ -177,736 +177,717 @@ retries++;
 goto redo;
 ```
 
-To ensure that the numbers are necessarily primes, these libraries use a combination of probabilistic tests, including the Rabin-Miler Primality Testing, and sieving methods to quickly eliminate non-prime candidates.
+为了确保这些数字一定是质数，这些库使用了一系列概率测试，包括 Rabin-Miler 素数检测，以及筛法来快速消除非素数候选。
 
-### The Euler Totient Function
+### 欧拉函数
 
-For a number _n_ that is the product of two primes, the Euler totient function is given by:
+对于一个质数乘积构成的数字 _n_，欧拉函数表示为：
 
 $$\\varphi(n) = (p-1)(q-1)$$
 
-This function counts the number of integers less than \\(n\\) that are co-prime to \\(n\\). Euler’s theorem, which states that for any integer _a_ co-prime to _n_, \\( a^{\\varphi(n)} \\equiv 1 \\pmod{n}\\) plays a central role in proving why RSA’s operations are reversible.
+这个函数计算出小于 \\(n\\) 且与 \\(n\\) 互质的整数个数。欧拉定理指出，对于与 _n_ 互质的任何整数 _a_，有\\( a^{\\varphi(n)} \\equiv 1 \\pmod{n}\\)，这在证明 RSA 操作可逆性中起到了核心作用。
 
-But most modern RSA cryptosystems use the Carmichael function instead of the Euler’s Totient Function. We will examine the reasoning behind this shift in the next few sections.
+但现在大多数现代 RSA 密码系统使用 Carmichael 函数代替欧拉函数。我们将在接下来的几个部分中研究这一变化的理由。
 
-### Computing the Keys
+### 密钥的计算
 
-Now we select an integer \\(e\\) such that \\(1 < e < \\varphi(n)\\)and \\(\\gcd(e, \\varphi(n)) = 1\\). This \\(e\\) becomes the public exponent you see as a parameter in the RSA function calls you make.
+现在，我们选择一个整数 \\(e\\)，使得 \\(1 < e < \\varphi(n)\\) 且 \\(\\gcd(e, \\varphi(n)) = 1\\)。这个 \\(e\\) 就是你在使用 RSA 函数时看到的公钥指数参数。
 
-With that done, now let’s determine \\(d\\) as the modular multiplicative inverse of \\(e \\, \\, modulo \\, \\varphi(n)\\). In other words, \\(d\\) is computed such that:
+完成此步骤后，现在让我们确定 \\(d\\) 作为 \\(e \\, \\, modulo \\, \\varphi(n)\\) 的模数乘法逆元。换句话说，\\(d\\) 的计算满足：
 
 $$e \\times d \\equiv 1 \\pmod{\\varphi(n)}$$
 
-This step is the mathematical linchpin ensuring that decryption is the inverse operation of encryption.
+这一步是确保解密是加密反操作的数学支撑。
 
-In the 1978 paper, the authors explicitly provided these formulas and steps. They showed that if you encrypt a message m using \\(c = m^e \\mod n\\) and then decrypt using \\(m = c^d \\mod n \\) , the original message is recovered – thanks to the properties of modular exponentiation and Euler’s theorem. This mathematical framework was novel at the time and immediately set the stage for a new era in cryptography.
+在 1978 年的论文中，作者明确提供了这些公式和步骤。他们展示了如果你用 \\(c = m^e \\mod n\\) 对信息 m 加密，然后 用 \\(m = c^d \\mod n \\) 解密，原始信息可以被恢复——这要归功于模指数运算和欧拉定理的性质。这个数学框架当时很新颖，并立即为密码学的新纪元奠定了起点。
 
-## RSA Operations
+现在数学基础已经奠定，RSA算法可以视为一组三个核心操作：加密、解密和签名。在本手册的后续章节中，我们将批判性地分析这些操作，并了解每个操作中的若干陷阱。之后，我们将检查这些问题是如何被新方案的诞生所避免的，每个方案都解决了在此过程中发现的新问题。
 
-Now that the mathematical foundations are laid, the RSA algorithm can be seen as a set of three core operations: Encryption, Decryption, and Signing. Throughout this handbook's next sections, we will critically analyze these operations and learn about several pitfalls in each. Then we will examine how these were averted with the birth of new schemes, each to solve a new issue discovered on the way.
+### 加密
 
-### Encryption
-
-With the public key \\((n, e)\\) available to everyone, any user can encrypt a message \\(m\\) (where \\(m\\) is first encoded as an integer in the range \\(0 \\leq m < n\\) ) using the formula:
+由于公钥\\((n, e)\\)对所有人开放，任何用户可以通过以下公式加密消息\\(m\\)（其中\\(m\\)首先被编码为范围在\\(0 \\leq m < n\\)之间的整数）：
 
 $$c = m^e \\mod n$$
 
-Here, c is the ciphertext. Because the operation is based on modular exponentiation, even if m is known, recovering m from c without knowing d is computationally hard.
+其中，c是密文。因为该操作基于模幂运算，即使知道m，如果不知道d，想从c中恢复m是计算上很困难的。
 
-### Decryption
+### 解密
 
-The intended recipient, who possesses the private key \\(d\\), decrypts the cipher text \\(c\\) by computing:
+拥有私钥\\(d\\)的指定接收者，通过计算下方公式来解密密文\\(c\\)：
 
 $$m = c^d \\bmod n$$
 
-Using the relationship (\\(e \\times d \\equiv 1 \\pmod{\\varphi(n)}\\)) and properties from Euler’s theorem, the above operation exactly inverts the encryption step, recovering the original message \\(m\\).
+利用关系式(\\(e \\times d \\equiv 1 \\pmod{\\varphi(n)}\\))以及欧拉定理的性质，上述操作精确地逆转了加密步骤，从而恢复原始消息\\(m\\)。
 
-This ensures that only the holder of the private key can read the encrypted message. This is the backbone of RSA’s use in secure communication.
+这确保了只有私钥的持有者才能读取加密信息。这是RSA用于安全通信的基础。
 
-The sequence diagram below wraps up our discussion so far:
+下方的时序图总结了我们迄今为止的讨论：
 
-![Sequence Diagram: Textbook RSA Encryption](https://cdn.hashnode.com/res/hashnode/image/upload/v1742754978876/9b007639-8595-4d11-93ff-355820cb98c7.png)
+![时序图：教材RSA加密](https://cdn.hashnode.com/res/hashnode/image/upload/v1742754978876/9b007639-8595-4d11-93ff-355820cb98c7.png)
 
-### Digital Signatures
+### 数字签名
 
-Digital signatures fulfill a different security goal: authenticity and integrity rather than confidentiality. While encryption and decryption use the public key for “locking” and the private key for “unlocking,” digital signatures reverse these roles.
+数字签名满足不同的安全目标：真实性和完整性，而非机密性。当加密和解密使用公钥进行“锁定”和私钥进行“解锁”时，数字签名恰好相反。
 
-#### 1\. Signing
+#### 1. 签名
 
-The author of a message uses their private key \\(d\\) to compute a signature \\(s\\) on the message \\(m\\), guided by the formula mentioned below:
+消息的作者使用他们的私钥\\(d\\)来计算消息\\(m\\)的签名\\(s\\)，引导公式如下：
 
 $$s = m^d \\bmod n$$
 
-This can later be verified by others using the corresponding public key. The purpose here is not to recover a secret message but to create a proof of authenticity.
+之后可以通过对应的公钥进行验证。这里的目的是不是要恢复一个秘密消息，而是为了创建一个认证证明。
 
-#### 2\. Verification:
+#### 2. 验证：
 
-Anyone with the public key \\((n, e)\\) can verify that the signature s indeed belongs to the message \\(m\\) by computing:
+任何人都可以借助公钥\\((n, e)\\)来验证签名s是否确实属于消息\\(m\\)，通过计算：
 
 $$m \\equiv s^e \\bmod n$$
 
-If the equivalence holds, it confirms two key points: That the message has not been tampered with (that is, integrity), and that the signature must have been generated using the private key d (that is, authenticity).  
-As long as \\(d\\) is kept secret, only the legitimate signer can produce a valid signature. Take at look at the sequence diagram below to understand the complete process.
+如果这个等式成立，它可以确认两个关键点：消息没有被篡改（即完整性），签名必然是使用私钥d生成的（即真实性）。  
+只要\\(d\\)保持秘密，只有合法的签署者才能生成有效的签名。请查看下方的时序图以了解完整过程。
 
-![Sequence Diagram: Textbook RSA Signatures](https://cdn.hashnode.com/res/hashnode/image/upload/v1742755268516/6dea4239-f214-42c4-96c7-5fc55c7249d9.png)
+![时序图：教材RSA签名](https://cdn.hashnode.com/res/hashnode/image/upload/v1742755268516/6dea4239-f214-42c4-96c7-5fc55c7249d9.png)
 
-## Issues with Euler’s Totient Function in RSA
+## RSA中的欧拉函数问题
 
-While using Euler’s Totient Function works well in theory, implementers of the scheme realized its practical downsides. Simply put, the primary issue was that Euler’s Totient Function can lead to a larger private exponent \\(d\\) than what was necessary.
+虽然使用欧拉函数在理论上效果很不错，但方案的实现者意识到其实际的缺陷。简单说，主要的问题在于欧拉函数可能导致私钥指数\\(d\\)比必要的大。
 
-To completely appreciate this fact, let’s take a step back to understand why the size of the private exponent \\(d\\) matters in RSA.
+要完全理解这一点，我们先退一步来了解私钥指数\\(d\\)的大小为何在RSA中重要。
 
-RSA decryption (or signing) involves computing \\(m^d ~~mod ~n\\) which is done via modular exponentiation. The time complexity of exponentiation algorithms (like square-and-multiply) grows with the number of bits in \\(d\\). A larger \\(d\\) means more multiplications and squarings, that is slower decryption.
+RSA解密（或签名）涉及计算\\(m^d ~~mod ~n\\)，该计算通过模幂运算完成。指数运算算法（如平方-乘法算法）的时间复杂度随\\(d\\)中的位数增加而增长。较大的\\(d\\)意味着更多的乘积与平方运算，因而解密速度更慢。
 
-In practice, if using the Euler’s Totient Function makes \\(d\\) roughly twice as large as what is required, then decryption can be almost twice as slow compared to using the minimal \\(d\\). This inefficiency is especially noticeable when \\(e\\) is small (common public exponents like 3 or 65537). A small \\(e\\) leads to a very large \\(d\\) under \\(φ(n)\\).
+在实际中，如果使用欧拉函数使\\(d\\)大约是所需的两倍，那么解密速度可能几乎减少一半，这种低效尤其在当\\(e\\)很小（如常用公钥指数3或65537）时显著。小的\\(e\\)在\\(φ(n)\\)下会导致非常大的\\(d\\)。
 
-Beyond performance, having an unnecessarily large \\(d\\) can increase storage size slightly (a few more bytes for the key). This can also lead to interoperability quirks, which is why standards and protocols such as FIPS 186-4 \[1\] and RFC 8017 \[2\] expect \\(d\\) to be below a certain size. We will take a detailed look at this in the next section.
+除了性能影响，拥有不必要大的\\(d\\)可能略微增加存储需求（密钥需要更多字节）。这也可能导致某些兼容性问题，这就是为什么FIPS 186-4 \[1\]和RFC 8017 \[2\]等标准和协议要求\\(d\\)保持在一定大小以下。在下一节我们会对此进行详细讨论。
 
-To combat these issues, cryptographers utilized the Carmichael function to generate RSA keys. Before we dive into how the Carmichael function helps our case, let’s quickly understand what the Carmichael function actually is.
+为了应对这些问题，密码学家们利用Carmichael函数来生成RSA密钥。在我们深入Carmichael函数如何有助于我们的问题之前，我们先快速了解什么是Carmichael函数。
 
-## The Carmichael Function
+## Carmichael函数
 
-The Carmichael Function, represented by \\(λ(n)\\), also known as the reduced totient or least universal exponent, is defined as the smallest positive integer \\(m\\) such that for every integer \\(a\\) co-prime to \\(n\\), \\( a^m ≡ 1 (mod n)\\).
+Carmichael函数，由\\(λ(n)\\)表示，也称为缩减的欧拉函数或最小公倍指数，被定义为对于每一个与\\(n\\)互质的整数\\(a\\)，使\\( a^m ≡ 1 (mod n)\\)的最小正整数\\(m\\)。
 
-To put this in easy terms, \\(λ(n)\\) is the exponent of the multiplicative group modulo \\(n\\) (the least common multiple of the orders of all elements). For RSA-style moduli (product of primes), the Carmichael function is guided by the formula:
+简单来说，\\(λ(n)\\)是模\\(n\\)乘法群的指数（所有元素阶的最小公倍数）。对于RSA风格的模数（素数积），Carmichael函数通过以下公式进行指导：
 
 $$\\lambda(n) = \\operatorname{lcm}(p-1,\\,q-1)$$
 
-where \\(n = p . q\\) with \\(p\\) and \\(q\\) being the large primes.
+您现在可以更好地理解 Carmichael 函数，如果我们用以下方式来解释：\\(λ(n)\\) 是每个质数幂次整除 n 的 \\(λ(n)\\) 的最小公倍数。因此，对于一个质数 \\(p\\)，\\(λ(p) = φ(p) = p – 1\\)，而对于两个质数，我们取 \\(p-1 \\) 和 \\(q-1\\) 的 \\(lcm\\)。
 
-You may now understand the Carmichael function better if we put it in the following way: \\(λ(n)\\) is the least common multiple of \\(λ(n)\\) of each prime power dividing n. So for a prime \\(p\\), \\(λ(p) = φ(p) = p – 1\\), and for two primes, we take the \\(lcm\\) of \\(p-1 \\) and \\(q-1.\\)
+### Carmichael 函数的数学意义
 
-### Mathematical Implication of The Carmichael function
+Carmichael 函数 \\(λ(n)\\) 是一个“更紧”的界限。这意味着 \\(λ(n)\\) 可以整除 \\(φ(n)\\)（因为有限群的指数总是可以被群的阶数整除，根据拉格朗日定理 \[3\]）
 
-The Carmichael function \\(λ(n)\\) is a “tighter” bound. What this means is that \\(λ(n)\\) divides \\(φ(n)\\) (since the exponent of a finite group always divides the group order by Lagrange’s Theorem \[3\])
-
-If \\(p\\) and \\(q\\) are both odd primes, then \\(p–1\\) and \\(q–1 \\) are even, so their least common multiple is roughly half of \\((p–1)(q–1)\\). Mathematically:
+如果 \\(p\\) 和 \\(q\\) 都是奇数质数，则 \\(p–1\\) 和 \\(q–1 \\) 是偶数，因此它们的最小公倍数大约是 \\((p–1)(q–1)\\) 的一半。数学上：
 
 $$λ(n) = \\dfrac{(p–1)(q–1)} {gcd(p–1, q–1)}$$
 
-We can observe that this \\(λ(n)\\) is lesser than or equal to \\(φ(n)\\) and often considerably smaller. This means \\(λ(n)\\) provides the minimal exponent needed for RSA’s correctness, whereas \\(φ(n)\\)might be a larger number that still works but isn’t necessary.
+我们可以观察到这个 \\(λ(n)\\) 小于或等于 \\(φ(n)\\)，并且通常要小很多。这意味着 \\(λ(n)\\) 提供了 RSA 正确性所需的最小指数，而 \\(φ(n)\\) 可能是一个更大的数字，虽然也可以使用，但并不是必要的。
 
-When you choose two large random primes \\(p\\) and \\(q\\), you have:
+当您选择两个大的随机质数 \\(p\\) 和 \\(q\\) 时，您有：
 
 $$\\varphi(n) = (p-1)(q-1) \\approx n,$$
 
-because for large primes, the subtracted ones make only a small difference compared to \\(p\\) and \\(q\\) themselves.
+因为对于大质数，减去的几个通常相对于 \\(p\\) 和 \\(q\\) 自身差别不大。
 
-Now, since both \\(p-1\\) and \\(q-1 \\) are even, they each have a factor of 2. If those are their only common factors (which is often the case for random primes), then:
+现在，因为 \\(p-1\\) 和 \\(q-1 \\) 都是偶数，所以它们各有一个因子 2。如果这是它们唯一的公因子（对于随机质数通常是这种情况），那么：
 
 $$\\lambda(n) = \\mathrm{lcm}(p-1, q-1) \\approx \\frac{\\varphi(n)}{2}.$$
 
-When you compute the private exponent \\(d\\) as the modular inverse of \\(e\\) (a small number) modulo \\( \\varphi(n)\\) versus modulo \\(\\lambda(n)\\), the range from which \\(d\\) is chosen is roughly twice as large in the former case. That means the typical \\(d\\) when computed modulo \\(\\varphi(n)\\) can be about twice as large as when computed modulo \\(\\lambda(n)\\). A larger \\(d\\) means that during decryption (or signing) the modular exponentiation \\(c^d \\mod n\\) takes slightly more time.
+当您计算私有指数 \\(d\\) 作为 \\(e\\)（小数字）模 \\(\\varphi(n)\\) 的模反元素与模 \\(\\lambda(n)\\) 相比，前者中选择的 \\(d\\) 范围大约是后者的两倍。这意味着通常用模 \\(\\varphi(n)\\) 计算的 \\(d\\) 可能大约是用模 \\(\\lambda(n)\\) 计算的两倍大。较大的 \\(d\\) 意味着在解密（或签名）时模幂运算 \\(c^d \\mod n\\) 所需的时间略多。
 
-Intuitively, using \\(λ(n)\\) ensures we don’t “overshoot” the exponent required for the modular arithmetic to cycle back to 1.
+直观上，使用 \\(λ(n)\\) 确保我们不会“超出”模运算回到 1 所需的指数。
 
-A smaller \\(d\\) makes every RSA decryption and signature operation faster. For instance, if \\(λ(n)\\) is roughly half of \\(φ(n)\\), then \\(d\\) will have one less bit than it would otherwise, cutting the exponentiation work by about 50%. This is a free performance gain, as we aren’t changing the security assumptions or the key size \\(n\\), just using the mathematically tight value for the exponent. The RSA algorithm’s security is not weakened by this and now the \\(d\\) is different but functionally equivalent.
+较小的 \\(d\\) 使得每次 RSA 解密和签名操作更快。例如，如果 \\(λ(n)\\) 大约是 \\(φ(n)\\) 的一半，那么 \\(d\\) 将比其他情况下少一位，从而将幂运算工作量减少约 50%。这是一种免费的性能提升，因为我们没有改变安全假设或密钥大小 \\(n\\)，只是使用了数学上紧凑的指数值。RSA 算法的安全性没有因此被削弱，而 \\(d\\) 现在虽然不同但在功能上等效。
 
-### The Carmichael Function in Modern Implementations
+### Carmichael 函数在现代实现中的应用
 
-The critical property for RSA (\\(e·d ≡ 1 ~mod ~~λ(n)\\)) is both necessary and sufficient for correct decryption, thanks to Carmichael’s theorem. So there’s no need for \\(d\\) to also satisfy the stronger condition modulo \\(φ(n)\\).
+对 RSA 的关键属性（\\(e·d ≡ 1 ~mod ~~λ(n)\\)）是必要且充分的，因为 Carmichael 定理保证了正确解密。因此，\\(d\\) 不需要额外满足模 \\(φ(n)\\) 的更强条件。
 
-By switching to computing \\(d ~ modulo ~~ λ(n)\\) (i.e., \\(d = e^{-1} ~mod ~~λ(n)\\)), we directly get the smallest working private exponent. Ronald Rivest himself noted this optimization in his 1999 seminal paper \[4\], stating that solving for \\(d\\) using \\( λ(n)\\) instead of \\(φ(n)\\) is slightly preferable because it can result in a smaller value for d.
+通过切换到计算 \\(d ~ mod ~~ λ(n)\\)（即 \\(d = e^{-1} ~mod ~~λ(n)\\)），我们直接获得了最小可用的私有指数。罗纳德·里维斯特（Ronald Rivest）在其 1999 年开创性论文中 \[4\] 指出，使用 \\( λ(n)\\) 而不是 \\(φ(n)\\) 求解 \\(d\\) 是稍微优选的，因为这样可以得到更小的 \\(d\\) 值。
 
-Over time, the use of \\( λ(n)\\) in RSA moved from an academic suggestion to an industry standard. Today’s cryptographic standards explicitly acknowledge or require the \\(λ(n)\\) approach.
+随着时间推移，使用 \\( λ(n)\\) 在 RSA 中从一个学术建议发展为工业标准。今天的加密标准明确承认或要求使用 \\(λ(n)\\) 方法。
 
-For example, the official RSA standard (PKCS #1 v2.2, RFC 8017 \[2\]) defines the RSA key generation in terms of \\(λ(n)\\). It specifies that the private exponent \\(d\\) is chosen such that \\(e·d ≡ 1 (mod λ(n))\\) (with \\(λ(n) = lcm(p–1, q–1)\\)). In other words, PKCS #1 expects the Carmichael function to be used for the modulus of the exponent. Likewise, NIST’s FIPS 186-4 (Digital Signature Standard) mandates that \\(d\\) be less than \\(λ(n)\\).
+例如，官方 RSA 标准（PKCS #1 v2.2，RFC 8017 \[2\]）定义了基于 \\(λ(n)\\) 的 RSA 密钥生成。它指定私有指数 \\(d\\) 被选择，使得 \\(e·d ≡ 1 (mod λ(n))\\)（其中 \\(λ(n) = lcm(p–1, q–1)\\)）。换句话说，PKCS #1 期望 Carmichael 函数用于指数的模数。同样，美国国家标准技术研究所 (NIST) 的 FIPS 186-4（数字签名标准）要求 \\(d\\) 小于 \\(λ(n)\\)。
 
-Any RSA key where \\(d\\) is larger than \\(λ(n)\\) is considered non-compliant in those strict contexts. This effectively forces implementations to use the smaller \\(λ(n)\\)-based exponent, since any “oversized” \\(d\\) can be reduced \\(mod ~~λ(n)\\) to meet the criterion.
+在那些严格的背景下，任何 \\(d\\) 大于 \\(λ(n)\\) 的 RSA 密钥都被认为不合规。这实际上迫使实现使用基于 \\(λ(n)\\) 的较小指数，因为任何“超大” \\(d\\) 都可以简化为 \\(mod ~~λ(n)\\) 以满足标准。
 
-Standards such as FIPS 186-4 \[1\] (the Digital Signature Standard) and RFC 8017 \[2\] (which specifies PKCS#1 v2.2 for RSA Cryptography) include requirements or recommendations that imply the private exponent \\(d\\) should be as small as possible and ideally less than \\( \\lambda(n)\\). Using \\(\\lambda(n)\\) (the least common multiple of \\(p-1\\) and \\(q-1\\)) directly produces the smallest valid \\(d\\), whereas using \\(\\varphi(n)\\) often results in a \\(d\\) that is larger than necessary. This not only improves performance (by reducing the number of modular multiplications needed during decryption/signing) but also helps maintain interoperability with protocols that expect d to be below a certain size.
+诸如 FIPS 186-4 \[1\]（数字签名标准）和 RFC 8017 \[2\]（规定 RSA 加密的 PKCS#1 v2.2）的标准包含要求或建议，暗示私有指数 \\(d\\) 应尽可能小，理想情况下小于 \\( \\lambda(n)\\)。直接使用最小公倍数 \\(p-1\\) 和 \\(q-1\\) 来计算 \\(\\lambda(n)\\) 会生成最小的有效 \\(d\\)，而使用 \\(\\varphi(n)\\) 通常导致 \\(d\\) 比必要的要大。这不仅提高了性能（通过减少解密/签名过程中所需的模乘次数），还帮助保持协议间的互操作性，这些协议期望 \\(d\\) 小于某个特定大小。
 
-The Python cryptography library (PyCA cryptography) explicitly documents \[5\] that it uses Carmichael’s totient to generate the “smallest working value of \\(d\\),” noting that older implementations (including the original RSA paper) used Euler’s totient and ended up with larger exponents. OpenSSL also uses the Carmichael function in their low-level RSA APIs \[6\].
+Python 的加密库（PyCA cryptography）明确记录\[5\]指出，其使用 Carmichael 的充分函数来生成“最小的有效 \\(d\\) 值”，并指出旧实现（包括原始的 RSA 论文）使用欧拉函数得到了更大的指数。OpenSSL 也在其低级 RSA API 中使用了 Carmichael 函数 \[6\]。
 
-This shift to the Carmichael function ensures that under the hood your RSA key is a bit more efficient than the ones from the late 1970s while providing the same level of security.
+以下是翻译后的内容：
 
-## Issues with Raw RSA
+## 原始 RSA 的问题
 
-Raw or “Textbook” RSA soon turned out to be insecure when two major weaknesses were discovered.
+当发现两个主要的弱点时，原始或“教科书”RSA 很快被发现是不安全的。
 
-The operations involved in RSA are entirely deterministic, which means that for a given plaintext \\(m\\), encryption always produces the same cipher text \\(C = m^e \\mod n\\).
+RSA 所涉及的操作完全是确定性的，这意味着对于给定的明文 \\(m\\)，加密总会产生相同的密文 \\(C = m^e \\mod n\\)。
 
-An eavesdropper or an attacker, say Eve, can guess or derive plain texts by exploiting the predictability of outputs. Since RSA encryption is a public operation, an attacker can encrypt likely messages and compare results to a target cipher text – a trivial chosen plaintext _attack_.
+窃听者或攻击者，例如 Eve，可以通过利用输出的可预测性来猜测或推导明文。由于 RSA 加密是一个公开操作，攻击者可以加密可能的消息并将结果与目标密文进行比较——一种简单的选择明文_攻击_。
 
-Besides this, textbook RSA is also malleable. This means that its algebraic structure allows attackers to manipulate cipher texts in meaningful ways. For instance, given a cipher text \\(C = RSA(M)\\), an attacker can multiply it by the encryption of a known value (say, r) to produce a new cipher text \\(C’ = C · r^e ~~mod ~n\\), which decrypts to the plaintext \\(M·r\\). When the legitimate receiver decrypts \\(C'\\), the result is \\(M·r\\), from which the attacker can often recover \\(M\\).
+除此之外，教科书 RSA 也是可塑的。这意味着它的代数结构允许攻击者以有意义的方式操作密文。例如，给定一个密文 \\(C = RSA(M)\\)，攻击者可以将其乘以已知值（假设为 r）的加密来生成新的密文 \\(C’ = C · r^e ~~mod ~n\\)，该密文解密为明文 \\(M·r\\)。当合法接收者解密 \\(C'\\) 时，结果是 \\(M·r\\)，攻击者可以从中常常恢复 \\(M\\)。
 
-Let’s understand these vulnerabilities with a small practical example.
+让我们通过一个小的实际例子来理解这些漏洞。
 
-## Exploiting Textbook RSA’s Determinism and Malleability
+## 利用教科书 RSA 的确定性和可塑性
 
-### **Key Generation (Setup)**
+### **密钥生成（设置）**
 
-For our toy example, we’ll choose small prime numbers and generate an RSA key pair:
+在我们的玩具示例中，我们将选择小的素数并生成一个 RSA 密钥对：
 
-Let’s select the values of \\(p =3\\) and \\(q=11\\). Both of these values are prime. Now, compute the modulus and Totient Function as follows:
+选择 \\(p =3\\) 和 \\(q=11\\)。这两个值都是素数。现在，计算模数和欧拉函数：
 
 $$\\begin{gather} \\begin{split} n = p × q = 3 × 11 = 33 \\\\ φ(n) = (p – 1) × (q – 1) = 2 × 10 = 20 \\end{split} \\end{gather}$$
 
-Now choose the public exponent. Let’s consider \\(e=3\\) since it is coprime with \\( φ(n) = 20\\), and \\(gcd(3, 20) = 1\\).
+现在选择公开指数。我们考虑 \\(e=3\\)，因为它与 \\( φ(n) = 20\\) 互质，且 \\(gcd(3, 20) = 1\\)。
 
-Now let’s compute the private exponent. We know that d is the modular inverse of \\(e ~~mod ~φ(n)\\). We need to find d such that \\((d × e) ≡ 1~~ (mod ~20)\\). Using this knowledge we can compute \\(d = 7\\) as \\(3 × 7 = 21 ≡ 1 ~~ (mod~ 20)\\).
+现在计算私有指数。我们知道 d 是 \\(e ~~mod ~φ(n)\\) 的模逆。我们需要找到 d 使得 \\((d × e) ≡ 1~~ (mod ~20)\\)。根据这个知识我们可以计算 \\(d = 7\\)，因为 \\(3 × 7 = 21 ≡ 1 ~~ (mod~ 20)\\)。
 
-Finally, the public key is \\((n = 33, ~ e = 3)\\) and the private key (secret) is \\(d = 7\\).
+最后，公开密钥是 \\((n = 33, ~ e = 3)\\)，私有密钥（秘密）是 \\(d = 7\\)。
 
-### Encryption Process
+### 加密过程
 
-Now, let’s encrypt a simple message using the above key. Let us select our plaintext to be \\(M = 4\\). The cipher text in this case would be:
+现在，让我们使用上述密钥加密一个简单的消息。选择明文为 \\(M = 4\\)。此时的密文为：
 
 $$\\begin{gather} \\begin{split} C = 4^3 ~~mod ~33 \\\\ C = 64 ~~mod ~33 \\\\ C = 64 – 33×1 = 31 \\end{split} \\end{gather}$$
 
-To consolidate the findings so far, if we encrypt message \\(4\\) with the public key \\((e=3, n=33)\\), we will produce the cipher text \\(31\\). Now, let’s try the exploits.
+到目前为止的结论是，如果我们用公开密钥 \\((e=3, n=33)\\) 加密消息 \\(4\\)，将会产生密文 \\(31\\)。现在，让我们尝试这些利用手法。
 
-### Determinism Exploit (Ciphertext Guessing Attack)
+### 确定性利用（密文猜测攻击）
 
-Textbook RSA is deterministic – the same plaintext always yields the same ciphertext (with no randomness involved). An attacker who intercepts the ciphertext \\(C=31\\) can exploit this by encrypting likely plaintext guesses and comparing results:
+教科书 RSA 是确定性的——相同的明文总是产生相同的密文（没有涉及随机性）。攻击者截获到密文 \\(C=31\\)，可以通过加密可能的明文猜测并比较结果来利用这一点：
 
-The adversary, say Eve, will try encrypting candidate plaintexts with the public key and see which one produces \\(31\\). They may pick randomized values to increase their efficiency:
+假设攻击者 Eve 将尝试用公开密钥加密候选明文，并查看哪个产生 \\(31\\)。他们可能会选择随机值来提高效率：
 
 $$\\begin{gather} \\begin{aligned} Guess~ M = 1 ⇒ 1^3~~ mod ~33 = 1 \\\\ Guess~ M = 2 ⇒ 2^3~~ mod ~33 = 8 \\\\ Guess~ M = 3 ⇒ 3^3~~ mod ~33 = 27 \\\\ Guess~ M = 4 ⇒ 4^3~~ mod ~33 = 31 \\\\ \\end{aligned} \\end{gather}$$
 
-By simply comparing ciphertexts, the attacker finds that encrypting \\(4\\) yields 31, which matches the intercepted ciphertext. Thus, the attacker learns the original plaintext \\(M\\) was \\(4\\). This is possible because there’s no randomization in textbook RSA – an eavesdropper can identify a message by trial encryption of guesses, breaking confidentiality if the message space is small or guessable.
+通过简单地比较密文，攻击者发现加密 \\(4\\) 得到 31，与截获的密文相吻合。因此，攻击者了解到原始明文 \\(M\\) 是 \\(4\\)。这是可能的，因为教科书 RSA 中没有随机化——窃听者可以通过尝试加密猜测来识别消息，如果消息空间较小或可猜测，则可能破坏保密性。
 
-### Malleability Exploit (Ciphertext Manipulation Attack)
+### 可塑性利用（密文操控攻击）
 
-Raw RSA is also malleable. This means an attacker can take a ciphertext and modify it in a way that results in a predictable change in the decrypted plaintext. Let’s understand how this works.
+原始 RSA 也是可塑的。这意味着攻击者可以获取密文并以某种方式修改它，使得解密后的明文发生可预测的变化。让我们了解这是如何工作的。
 
-RSA has a multiplicative property, that is, multiplying two ciphertexts corresponds to multiplying their plaintexts before encryption:
+RSA 具有乘法属性，即两个密文相乘相当于在加密前相乘它们的明文：
 
 $$E(M\_1) \\cdot E(M\_2) \\mod n = (M\_1^e \\mod n)\\times(M\_2^e \\mod n) \\mod n = (M\_1 \\cdot M\_2)^e \\mod n$$
 
-The sequence diagram below explains how the malleability exploit works in naive RSA.
+下面的序列图解释了在天真的 RSA 中可塑性利用是如何工作的。
 
 ![Sequence Diagram: Malleability Exploit](https://cdn.hashnode.com/res/hashnode/image/upload/v1741314973046/6be306c5-3ca6-4ea8-8daf-d1937b6459df.png)
 
-Alice sends a ciphertext to Bob after the initialization phase. Note that by this point, n and e are public knowledge. Eve intercepts this ciphertext by using mechanisms such as a MiTM (Man in the Middle) attack.
+Alice 在初始化阶段后将密文发送给 Bob。注意到此时，n 和 e 是公知的。Eve 使用诸如 MiTM（中间人）攻击等机制截获此密文。
 
-Now, Eve picks a known value to manipulate the message. Let’s say the attacker chooses \\(X = 2\\) (with the intent to double the original plaintext).
+现在，Eve 选择一个已知值来操控消息。假设攻击者选择 \\(X = 2\\)（意图将原始明文加倍）。
 
-Then they compute the encryption of X using the public key:
+然后他们使用公钥计算 X 的加密：
 
 $$E(X) = 2^3 \\mod 33 = 8.$$
 
-Now, Eve multiplies the original ciphertext by this value (mod n) to get a new ciphertext:
+现在，Eve 将原始密文乘以该值（mod n）来得到新的密文：
 
 $$\\begin{gather} \\begin{split} C{\\prime} = C \\times E(X) \\mod n = 31 \\times 8 \\mod 33 \\\\ C{\\prime} = 248~~ mod~ 33 = 248 – 33×7 = 248 – 231 = 17 \\end{split} \\end{gather}$$
 
-This new ciphertext \\(C{\\prime}\\) is the encryption of the product of the original plaintext and \\(2\\). If we directly encrypted \\(M \\times X = 4 \\times 2 = 8\\) with RSA, we would get \\(8^3 \\mod 33 = 512 \\mod 33 = 17\\). This means that \\(C′\\) corresponds to the plaintext \\(8\\), which is the original message \\(4\\) multiplied by \\(2\\).
+在现实世界中的选择密文攻击中，攻击者可能会访问解密预言机或观察系统响应以揭示关于 \\(M{\\prime}\\) 的信息。解密结果 \\(8\\) 正好是 \\(M \\times 2\\)（原始消息乘以攻击者选定的因子）。知道因子 \\(X = 2\\)，攻击者可以通过除法来推断原始消息：\\(8/ 2 = 4\\)。
 
-In a real-world chosen ciphertext attack, the attacker may have access to a decryption oracle or observe a system response that reveals information about \\(M{\\prime}\\). The decryption result \\(8\\) is exactly \\(M \\times 2\\) (the original message multiplied by the attacker’s chosen factor). Knowing the factor \\(X = 2\\), the attacker can deduce the original message by dividing: \\(8/ 2 = 4\\).
+请注意，Eve 并没有在此处破解 RSA 的数学基础。他们只是使用公钥计算了 \\(2\\) 的加密，然后将其与截获的密文结合起来。他们尚不知道原始明文，但他们以一种方式操纵了密文，使他们知道新明文是原始消息的两倍。
 
-Note that Eve has not broken the mathematical foundations behind RSA here. They have only used the public key to compute an encryption of \\(2\\), and then combined it with the intercepted ciphertext. They don’t know the original plaintext yet, but they have manipulated the ciphertext in a way that they know the new plaintext is twice the original message.
+## 低指数攻击
 
-## Low-Exponent Attacks
+除了确定性和可塑性漏洞之外，传统的 RSA 也容易受到低指数攻击。使用小的公指数如 \\(e = 3\\)（有时是 \\(17\\)）非常流行，因为这可以加快加密和签名验证速度。但是，这很快就成了安全隐患。
 
-Beyond determinism and malleability exploits, textbook RSA is also vulnerable to Low-Exponent Attacks. Using a small public exponent like \\(e = 3\\) (or sometimes \\(17\\)) was popular because it used to speed up encryption and signature verification. But this soon turned out to be a security concern.
+当 RSA 使用小的公指数（例如 \\(e = 3\\)）且明文非常短（使得 \\(M^3\\) 小于模数 \\(n\\)）时，加密不会模 \\(n\\) “环绕”。在数学上：
 
-When RSA uses a small public exponent (say, \\(e = 3\\)) and the plaintext is very short (so that \\(M^3\\) is smaller than the modulus \\(n\\)), the encryption does not “wrap around” modulo \\(n\\). Mathematically:
+$$c = M^3 \\mod n = M^3 \\quad \\text{(当 \\( M^3 < n \\) 时)}$$
 
-$$c = M^3 \\mod n = M^3 \\quad \\text{(if \\( M^3 < n \\))}$$
+让我们通过一个简单的例子来理解这一点：
 
-Let’s understand this with an easy example:
+假设我们的明文是： \\(M = 5\\)。我们计算 \\(M^3\\) 为 \\(M^3 = 5^3 = 125\\)。
 
-Consider our plaintext to be: \\(M = 5\\). We compute \\(M^3\\) as \\(M^3 = 5^3 = 125\\).
+现在假设 \\(n\\) 是一个 \\(4096\\) 位的数字，相比于 \\125\\ 这个值很大。在这种情况下，密文只是 \\(c = 125\\)。Eve 截获到 \\(c = 125\\) 可以计算 \\125\\ 的立方根以获得明文：\\(\\sqrt\[3\]{125} = 5\\)，从而直接恢复 \\(M\\)。
 
-Now assume \\(n\\) is a \\(4096\\)‑bit number which is large compared to \\(125\\). In this case, the ciphertext is simply \\(c = 125\\). Eve intercepting \\(c = 125\\) can compute the cube root of \\(125\\) to get the plaintext: \\(\\sqrt\[3\]{125} = 5\\) thus recovering \\(M\\) directly.
+这表明如果 \\(M\\) 足够小，当 \\(e\\) 较低时密文会泄露明文。
 
-This shows that if \\(M\\) is small enough, the ciphertext leaks the plaintext when \\(e\\) is low.
+## Håstad 的广播攻击：低指数遇上多个接收者
 
-## Håstad’s Broadcast Attack: Low Exponent Meets Multiple Recipients
+1985 年，Johan Håstad 阐明了广播攻击，展示了当低指数 \\(e\\) 在相同消息被广播到多个方时的危险性。
 
-In 1985, Johan Håstad’s highlighted the broadcast attack that illustrates the danger of a low exponent, \\(e\\), when the same message is sent to multiple parties as a broadcast.
-
-Imagine Alice wants to send the same plaintext message M to three different recipients. Each recipient has their own RSA public key with modulus \\(N\_1, N\_2, N\_3,\\) but for speed all use \\(e = 3\\) (a common practice historically). Alice encrypts \\(M\\) with each public key, yielding ciphertexts:
+假设 Alice 想要将相同的明文消息 M 发送给三个不同的接收者。每个接收者都有各自的 RSA 公钥，其模数为 \\(N\_1, N\_2, N\_3,\\)，但为了加速他们都使用 \\(e = 3\\)（这是过去常见的做法）。Alice 使用每个公钥加密 \\(M\\)，得出密文：
 
 $$\\begin{gather} \\begin{split} C\_1 = M^3 \\bmod N\_1 \\\\ C\_2 = M^3 \\bmod N\_2 \\\\ C\_3 = M^3 \\bmod N\_3 \\end{split} \\end{gather}$$
 
-Eve, who intercepts all three \\(C\_1, C\_2, C\_3\\) can recover _M_ without breaking any single RSA key.
+Eve 拦截所有三个 \\(C\_1, C\_2, C\_3\\) 可以在不破解任何单一 RSA 密钥的情况下恢复 M。
 
-Since each \\(N\_i \\) is different (and we assume they are pairwise coprime, as RSA keys should be), the attacker can use the Chinese Remainder Theorem (CRT) to combine the three congruences \\(x \\equiv C\_i \\pmod{N\_i}\\). Note that at this point Eve only has \\(C\_1\\), \\(C\_2\\) and \\(C\_3\\). They do not have the plaintext \\(M\\) or \\(M^3\\) and yet they can reconstruct \\(M^3\\) with the intercepted data. To understand the Chinese Remainder Theorem and this reconstruction, you may follow this: [CRT, RSA, and Low Exponent Attacks | Youtube][40].
+由于每个 \\(N\_i \\) 是不同的（我们假设它们是两两互质的，如 RSA 密钥应当是），攻击者可以使用中国剩余定理（CRT）结合 三个同余 \\(x \\equiv C\_i \\pmod{N\_i}\\)。注意此时 Eve 只有 \\(C\_1\\)，\\(C\_2\\) 和 \\(C\_3\\)。她没有明文 \\(M\\) 或 \\(M^3\\)，但她可以用截获的数据重构 \\(M^3\\)。要理解中国剩余定理和这种重构，您可以参见这篇：[CRT, RSA, and Low Exponent Attacks | Youtube][40]。
 
-There is a unique solution modulo \\(N\_1N\_2N\_3\\) for \\(x\\), and that solution turns out to be an integer, \\(x = M^3\\) (because the true integer \\(M^3\\) is smaller than the product \\(N\_1N\_2N\_3\\) of each \\(M < N\_i \\) ). In essence, CRT lets Eve reconstruct \\(M^3\\) exactly. Once they have \\(M^3\\) as an ordinary integer, they simply take the cube root to find \\(M\\). There’s no need to factor any modulus or invert the RSA function – the math falls out due to the low exponent.
+对于 \\(x\\)，存在模 \\(N\_1N\_2N\_3\\) 的唯一解，该解实际上是一个整数，\\(x = M^3\\) （因为真正的整数 \\(M^3\\) 小于每个 \\(M < N\_i \\) 的乘积 \\(N\_1N\_2N\_3\\)）。本质上，CRT 让 Eve 能够准确地重构 \\(M^3\\)。一旦他们拥有了作为普通整数的 \\(M^3\\)，他们只需取立方根即可找到 \\(M\\)。不需要分解任何模数或逆转 RSA 函数——数学由于低指数的原因自然而然地解决了。
 
-The sequence diagram below aims to provide a high-level understanding of the attack:
+下面的序列图旨在提供对攻击的高级理解：
 
-![Sequence Diagram: Håstad’s Broadcast Attack](https://mermaid.ink/img/pako:eNqNlN9P2zAQx_-VmyWkIpWqSeostTQkFvawh-6h7AFNEcgk19RSY3e2A3RV__dd-gNoExB5is_f-_jum3PWLDcFMsEc_q1R53itZGlllWmgZymtV7laSu3haqFyhN4N6gLteXv_u3mA3hRppZCWQYckldYs3orCDtG1fMS3mqhD86ORXBWPaJ20KxLsJL-MRzAUPSlW7NdPlOvAG3AUhwqdkyXCpIn4uUUEezjVDQ7MYxJcXF62OxXQbDugyBytx2cPvfQ-gG8wuYugMgXo-4MfHbwOW7qJ4RExfJ_Y9rAbGB0Boxcjz862Fivt0ea4JNP2ZjnoFcZ7LEBaa57cvoST7wEX79j08xVI_nyQ22nJUXb4QXZX-0fJUXtiTkACKN1o522dU0rvdufUOdRO6RLS6e8DolUBFdCCpaZa1p7sS-sHhKkxHswMbj9RRhOgsWw2aXTnJLOqVFouXuf3S6ZZn1VoK6kKusrrBpoxEleYMUGvBc5kvfAZy_SGpLL25malcyaoPeyzellIf7j5TMzkwlGUbhoTa_bMRMCHAx7xMU84j5I4HPfZiolRMhgNR-NkxOM45FE8ijd99s8YIgwH4zCMEp4EQTLkX0MebHF_tpu7M7FQ3tjJ7uez_Qf1mTV1OX85v7RNNzu13Q53amrtmUjGm_8gLoH2?type=png)
+![序列图：Håstad 的广播攻击](https://mermaid.ink/img/pako:eNqNlN9P2zAQx_-VmyWkIpWqSeostTQkFvawh-6h7AFNEcgk19RSY3e2A3RV__dd-gNoExB5is_f-_jum3PWLDcFMsEc_q1R53itZGlllWmgZymtV7laSu3haqFyhN4N6gLteXv_u3mA3hRppZCWQYckldYs3orCDtG1fMS3mqhD86ORXBWPaJ20KxLsJL-MRzAUPSlW7NdPlOvAG3AUhwqdkyXCpIn4uUUEezjVDQ7MYxJcXF62OxXQbDugyBytx2cPvfQ-gG8wuYugMgXo-4MfHbwOW7qJ4RExfJ_Y9rAbGB0Boxcjz862Fivt0ea4JNP2ZjnoFcZ7LEBaa57cvoST7wEX79j08xVI_nyQ22nJUXb4QXZX-0fJUXtiTkACKN1o522dU0rvdufUOdRO6RLS6e8DolUBFdCCpaZa1p7sS-sHhKkxHswMbj9RRhOgsWw2aXTnJLOqVFouXuf3S6ZZn1VoK6kKusrrBpoxEleYMUGvBc5kvfAZy_SGpLL25malcyaoPeyzellIf7j5TMzkwlGUbhoTa_bMRMCHAx7xMU84j5I4HPfZiolRMhgNR-NkxOM45FE8ijd99s8YIgwH4zCMEp4EQTLkX0MebHF_tpu7M7FQ3tjJ7uez_Qf1mTV1OX85v7RNNzu13Q53amrtmUjGm_8gLoH2?type=png)
 
-Now let’s see this attack in action with a sample:
+现在让我们以一个示例来看这种攻击：
 
-Suppose three different RSA public keys all use exponent \\(e=3\\), with moduli \\( n\_b = 187\\) (for Bob),  
-\\(n\_c = 115 \\) (for Carol), and \\(n\_d = 87\\) (for Dave).
+假设三个不同的 RSA 公钥都使用 \\(e=3\\) 指数，通过模数 \\( n\_b = 187\\)（为 Bob）， 
+\\(n\_c = 115 \\)（为 Carol），和 \\(n\_d = 87\\)（为 Dave）。
 
-These \\(n\_i\\) are pairwise coprime (\\(gcd\\) of each pair is \\(1\\)). Now assume the same plaintext message \\(M\\) is encrypted with each public key. Let’s take a concrete \\(M\\). For example with \\(M=42\\), we will have:
+这些 \\(n\_i\\) 是两两互质的（每对的 \\(gcd\\) 为 \\(1\\)）。现在假设相同的明文消息 \\(M\\) 被用每个公钥加密。让我们取一个具体的 \\(M\\)。例如，\\(M=42\\)，我们将得到：
 
 $$\\begin{gather} \\begin{split} c\_b = M^3 \\bmod n\_b \\\\ c\_c = M^3 \\bmod n\_c \\\\ c\_d = M^3 \\bmod n\_d \\\\ \\end{split} \\end{gather}$$
 
-On calculating these, we have:
-
 $$\\begin{gather} \\begin{split} c\_b = 42^3 \\bmod 187 = 36 \\\\ c\_c = 42^3 \\bmod 115 = 28 \\\\ c\_d = 42^3 \\bmod 87 = 51 \\\\ \\end{split} \\end{gather}$$
 
-So the three ciphertexts observed are \\(36\\), \\(28\\), and \\(51\\), respectively. Eve who knows \\(n\_b, n\_c, n\_d\\) and these ciphertexts can now recover \\(M\\) as follows:
+因此，观察到的三个密文分别是 \\(36\\), \\(28\\), 和 \\(51\\)。Eve 知道 \\(n\_b, n\_c, n\_d\\) 和这些密文，现在可以如下恢复 \\(M\\)：
 
-1.  Eve will compute the total modulus \\(N = n\_b \\cdot n\_c \\cdot n\_d = 187 \\times 115 \\times 87 = 1,870,935.\\) (This is the modulus for the combined system of congruences).
+1.  Eve 将计算总模数 \\(N = n\_b \\cdot n\_c \\cdot n\_d = 187 \\times 115 \\times 87 = 1,870,935.\\) （这是方程组的总模数）。
     
-2.  Now Eve will compute the partial products for each congruence:
+2.  现在 Eve 将为每个方程计算部分乘积：
     
 
 $$\\begin{gather} \\begin{split} N\_b = \\frac{N}{n\_b} = \\frac{1,870,935}{187} = 10,005 \\\\ N\_c = \\frac{N}{n\_c} = \\frac{1,870,935}{115} = 16,269 \\\\ N\_d = \\frac{N}{n\_d} = \\frac{1,870,935}{87} = 21,505 \\end{split} \\end{gather}$$
 
-3.  At this point, Eve needs the inverses of each \\(N\_i\\) modulo its corresponding \\(n\_i\\):
+3.  此时，Eve 需要每个 \\(N\_i\\) 在对应 \\(n\_i\\) 下的逆元：
     
-    -   First Eve computes \\(M\_b = (N\_b)^{-1} \\bmod n\_b\\), i.e. the number \\(M\_b\\) such that \\(N\_b \\cdot M\_b \\equiv 1 \\pmod{187}\\). In this case, \\(N\_b = 10005\\). Using the extended Euclidean algorithm, Eve can find \\(M\_b = 2\\) (since \\(10005 \\times 2 = 20010 \\equiv 1 \\pmod{187}\\)).
+    -   首先，Eve 计算 \\(M\_b = (N\_b)^{-1} \\bmod n\_b\\)，即一个数 \\(M\_b\\)，使得 \\(N\_b \\cdot M\_b \\equiv 1 \\pmod{187}\\)。在此情况下，\\(N\_b = 10005\\)。使用扩展欧几里得算法，Eve 可以找到 \\(M\_b = 2\\) (因为 \\(10005 \\times 2 = 20010 \\equiv 1 \\pmod{187}\\))。
         
-    -   Then Eve computes \\(M\_c = (N\_c)^{-1} \\bmod n\_c\\). Here \\(N\_c = 16269\\). The inverse mod \\(115\\) turns out to be \\(M\_c = 49\\) (For verification: \\(16269 \\times 49 \\equiv 1 \\pmod{115}\\)).
+    -   然后，Eve 计算 \\(M\_c = (N\_c)^{-1} \\bmod n\_c\\)。此时 \\(N\_c = 16269\\)。模 \\(115\\) 的逆元是 \\(M\_c = 49\\) (验证方法：\\(16269 \\times 49 \\equiv 1 \\pmod{115}\\))。
         
-    -   Next up, Eve computes \\(M\_d = (N\_d)^{-1} \\bmod n\_d\\). For \\(N\_d = 21505\\), the inverse mod \\(87\\) is \\(M\_d = 49\\) as well (coincidentally the same value in this case, since \\(21505 \\times 49 \\equiv 1 \\pmod{87}\\)).
+    -   接下来，Eve 计算 \\(M\_d = (N\_d)^{-1} \\bmod n\_d\\)。对于 \\(N\_d = 21505\\)，模 \\(87\\) 的逆元也是 \\(M\_d = 49\\) (巧合的是，在这种情况下相同，因为 \\(21505 \\times 49 \\equiv 1 \\pmod{87}\\))。
         
 
-Now Eve reconstructs the combined value using the Chinese Remainder Theorem for three congruencies. The construction of this formula is beyond the scope of this handbook, but to completely understand how this springs into action, you may go through this video: [CRT, RSA and Low Exponent Attacks | Youtube][41].
+现在，Eve 使用中国剩余定理重建结合值，针对三个方程组的同余。构建此公式超出本手册的范围，但要完全了解其如何生效，您可以观看此视频：[CRT, RSA and Low Exponent Attacts | YouTube][41]。
 
 $$C \\;=\\; c\_b \\cdot N\_b \\cdot M\_b \\;+\\; c\_c \\cdot N\_c \\cdot M\_c \\;+\\; c\_d \\cdot N\_d \\cdot M\_d \\pmod{N}$$
 
-On substituting the numbers:
+替换数字：
 
 $$C = 36 \\cdot 10005 \\cdot 2 \\;+\\; 28 \\cdot 16269 \\cdot 49 \\;+\\; 51 \\cdot 21505 \\cdot 49 \\pmod{1,870,935}$$
 
-Let’s carefully evaluate each term:
+让我们仔细计算每个项：
 
 $$\\begin{gather} \\begin{split} 36 \\cdot 10005 \\cdot 2 = 720,360 \\\\ 28 \\cdot 16269 \\cdot 49 = 22,341,348 \\\\ 51 \\cdot 21505 \\cdot 49 = 5,37,40,995 \\\\ \\end{split} \\end{gather}$$
 
-Summing these gives a raw total of \\(7,20,360 + 2,23,21,068 + 5,37,40,995 = 7,67,82,423\\). Now reduce this modulo \\(N = 1,870,935\\):
+将这些加在一起得到一个总值 \\(7,20,360 + 2,23,41,348 + 5,37,40,995 = 7,67,82,423\\)。现在，取模 \\(N = 1,870,935\\)：
 
 $$\\begin{align} \\begin{split} C \\equiv 7,67,82,423 \\pmod{1,870,935}\\\\ C = 74,088 \\\\ \\end{split} \\end{align}$$
 
-Now Eve will simply take the cube root of \\(C: \\sqrt\[3\]{74088} = 42\\), which is the original plaintext.  
-Eve has successfully recovered \\(M\\).
+现在，Eve 将简单地取 \\(C\\) 的立方根：\\(\\sqrt\[3\]{74088} = 42\\)，这就是原始明文。  
+Eve 成功恢复了 \\(M\\)。
 
-The key takeaway from these attacks is that without proper defenses. RSA alone does not satisfy modern definitions of security. It is not resistant to chosen-plaintext or chosen-cipher text attacks. This gap between the theoretical one-way function (RSA’s trapdoor permutation) and a secure encryption scheme became evident as implementers found that naive RSA could be “broken” by various clever tricks.
+这些攻击的关键教训是没有适当的防护措施。RSA 本身并不满足现代安全性的定义。它不抗选择明文或选择密文本攻击。理论上的单向函数（RSA 的陷门置换）与安全加密方案之间的差距在实施者发现简单 RSA 可以被各种聪明的技巧“破解”时变得显而易见。
 
-To counter these weaknesses, standards bodies introduced padding schemes to strengthen RSA encryption. In the following sections, you will learn about each of these paddings schemes and how they’ve been exploited over the years.
+为了弥补这些弱点，标准组织引入了填充方案来增强 RSA 加密。在接下来的部分中，您将学习关于这些填充方案及其如何被利用的内容。
 
-## Introduction to Padding Schemes in RSA
+## RSA 填充方案介绍
 
-Before we dive into the padding schemes and how it helps our case, let’s quickly recap the need for padding in RSA.
+在我们深入讨论填充方案及其对我们的案例有何帮助之前，让我们快速回顾一下使用填充的必要性。
 
-Textbook RSA encryption is deterministic. The same plaintext always produces the same ciphertext under a given public key. This determinism makes raw RSA insecure. An attacker can guess possible messages, encrypt them with the public key, and compare with the target ciphertext to see which guess matches.
+教科书中的 RSA 加密是确定性的。在给定公钥下，相同的明文总是产生相同的密文。这种确定性使得原始 RSA 不安全。攻击者可以猜测可能的信息，用公钥加密它们，并与目标密文比较，以查看哪个猜测匹配。
 
-Beyond determinism, small-exponent attacks illustrate why padding is critical. If the message \\(m\\) is too small relative to the modulus, raising it to a small public exponent (like \\(e=3\\)) might not wrap around \\(N\\). Padding the plaintext with random data before encryption remedies these problems by making the ciphertext unpredictable and ensuring \\(m^e\\) spans the modulus’ range.
+除了确定性之外，小指数攻击说明了为何填充至关重要。如果消息 \\(m\\) 相对于模数太小，将其提升到较小的公开号（如 \\(e=3\\)）可能不会在 \\(N\\) 上绕行。用随机数据填充明文后再加密可以通过使密文不可预测并确保 \\(m^e\\) 跨越模数的范围，来解决这些问题。
 
-## **Public Key Cryptography Standards (PKCS#1 v1.5)**
+## **公钥密码学标准 (PKCS#1 v1.5)**
 
-In 1998, Kaliski and RSA Laboratories introduced PKCS#1 v1.5 to the world in a public publication \[7\]. In PKCS#1 v1.5, every RSA‐encrypted message is wrapped inside a special “encryption block” \\(EB\\). This block ensures that the raw message is both the right size for RSA and padded in a way that’s hard to tamper with.
+1998 年，Kaliski 和 RSA 实验室在一份公开发布的文档中向世界介绍了 PKCS#1 v1.5 \[7\]。在 PKCS#1 v1.5 中，每个 RSA 加密消息都被包装在一个特殊的“加密块” \\(EB\\) 中。此块确保原始消息的大小适合 RSA，并以难以篡改的方式填充。
 
-In this scheme, the plaintext is padded to the size of the modulus \\(N\\) (in bytes) as:
+在这个方案中，明文被填充为模数 \\(N\\) 的大小（字节）：
 
 $$EB = 00 ~||~ BT ~||~ PS ~||~ 00 ~||~ M$$
 
-Here, \\(0x00\\) (Leading Zero Byte) is always at the front. It ensures that, when the concatenated string \\(EB\\) is converted to a big‐endian integer, the value is less than the RSA modulus (that is, we don’t end up with a number too large for RSA to handle). You will better appreciate this fact when we dive into the mathematics behind this.
+这里，\\(0x00\\)（前导零字节）始终在前面。它确保当连接的字符串 \\(EB\\) 转换为大端整数时，值小于 RSA 模数（即，我们不会得到一个对 RSA 来说太大的数）。当我们深入研究背后的数学时，您会更加欣赏这一事实。
 
-The next octet is the Block Type, \\(BT\\), which tells us the “type” of padding being used. The standard defines three possible \\(BT\\) values: \\(00, 01, \\) and \\(02\\)- to support different operations. For example, \\(BT=00\\) and \\(BT = 01\\) is used for private-key operations (such as digital signatures) and \\(BT = 02\\) is used for public-key operations. For encryption under PKCS#1 v1.5, this is always \\(0x02\\). It’s basically a label that says, “This is an encryption block, not something else”.
+接下来的一段是填充字符串 \\(PS\\)。这是一个由非零随机字节组成的字符串。这对安全性至关重要，因为它在每次加密中引入了随机性。如果同一消息被多次加密，这些随机字节可以确保每个密文看起来不同，从而阻止许多依赖于检测重复模式的简单攻击。
 
-The next block is the Padding String \\(PS\\). This is a string of nonzero random bytes. This is crucial for security because it introduces randomness into each encryption. If the same message is encrypted multiple times, these random bytes ensure that each ciphertext looks different, foiling many simple attacks that rely on seeing repeated patterns.
+接下来的一个字节 \\(0x00\\) 是一个**分隔符**。这个单一的零字节标志着填充的结束。在解密过程中，这有助于接收方快速识别填充结束和实际消息开始的位置。
 
-The next octet, \\(0x00\\), is a Delimiter**.** This single zero byte marks the end of the padding. During decryption, this helps the recipient quickly identify where the padding stops and the real message begins.
+最后，我们有您想要保护的实际数据——\\(M\\)。一旦接收方验证了填充，他们就确切知道在哪里可以找到这条消息。
 
-Finally, we have the actual data you want to protect – \\(M\\). Once the recipient has verified the padding, they know exactly where to find this message.
+这种机制帮助解决了天真 RSA 的确定性问题。在接下来的部分中，让我们了解 PKCS#1 v1.5 填充中涉及的数学及其安全影响。
 
-This mechanism helped solve the deterministic issue of naive RSA. In the next sections, let’s understand the mathematics involved in PKCS#1 v1.5 padding and its security implications.
+### PKCS#1 v1.5 背后的数学
 
-### The Mathematics Behind PKCS#1 v1.5
+在开始之前，让我们正确使用符号和缩写。我们将使用大写符号（例如 \\(EB\\)）来表示八位字节字符串和位字符串。我们将使用小写符号（例如 \\(n\\)）来表示整数。
 
-Before we begin, let’s get our symbols and abbreviations correct. We will use upper-case symbols (such as \\(EB\\)) to denote octet strings and bit strings. We will use lower-case symbols (such as \\(n\\)) to denote integers.
-
-In PKCS#1 v1.5, we will use \\(k\\) to represents the length of the RSA modulus \\(n\\) in bytes. For example, if you have a \\(1024\\)-bit RSA key, then the RSA modulus \\(n\\) is a \\(1024\\)-bit number. Since there are \\(8\\) bits in a byte, if your RSA modulus is \\(L\\) bits long, then:
+在 PKCS#1 v1.5 中，我们将使用 \\(k\\) 来表示 RSA 模数 \\(n\\) 的长度，单位为字节。例如，如果您有一个\\(1024\\)位的 RSA 密钥，则 RSA 模数 \\(n\\) 是一个 \\(1024\\)位的数字。由于一个字节有 \\(8\\)位，如果您的 RSA 模数是 \\(L\\)位长，那么：
 
 $$k = \\left\\lceil \\frac{L}{8} \\right\\rceil = \\frac{1024}{8} = 128 \\text{ bytes}$$
 
-The total length of the encryption block will be equal to this RSA key length \\(k\\) (in bytes). Now here the length of the data \\(M\\) shall not be more than \\(k-11\\) octets, since the 11 bytes are consumed by the blocks – \\(0x00 ~||~ 0x02 ~||~ PS ~||~ 0x00\\). This limitation guarantees that the length of the padding string \\(PS\\) is at least eight octets, which is a security condition in PKCS#1v1.5:
+加密块的总长度将等于此 RSA 密钥长度 \\(k\\)（以字节为单位）。在这里，数据 \\(M\\) 的长度不得超过 \\(k-11\\) 个八位字节，因为 \\(11\\) 个字节用于块 – \\(0x00 ~||~ 0x02 ~||~ PS ~||~ 0x00\\)。这种限制保证了填充字符串 \\(PS\\) 的长度至少为八个八位字节，这是 PKCS#1v1.5 中的一个安全条件：
 
 $$∣PS∣=k~−∣M∣−~3$$
 
-For example, with a \\(1024\\)-bit RSA modulus, the value of \\(k\\) comes out to be \\(128\\). Here Alice could encrypt up to \\(128 - 11 = 117\\) bytes of data. The \\(11\\) bytes are used for the \\(0x00 ~||~ 0x02 ~||~ PS ~||~ 0x00\\) structure. The random \\(PS \\) ensures that each encryption of the same message produces a different ciphertext, preventing the deterministic encryption problem.
+例如，对于 \\(1024\\)位的 RSA 模数，\\(k\\) 的值为 \\(128\\)。此时爱丽丝可以加密最多 \\(128 - 11 = 117\\) 字节的数据。\\(11\\) 个字节用于 \\(0x00 ~||~ 0x02 ~||~ PS ~||~ 0x00\\) 结构。随机的 \\(PS\\) 确保对同一消息的每次加密都会产生不同的密文，从而防止确定性加密问题。
 
-RSA doesn’t directly operate on the bytes. Once the padded string \\(EB\\) is ready, it needs to be converted into an integer guided by the Octet String to Integer Primitive (OS2IP) formula:
+RSA 不直接对字节进行操作。一旦填充后的字符串 \\(EB\\) 准备好，就需要按照八位字节字符串到整数基本公式（OS2IP）将其转换为整数：
 
 $$x = \\sum\_{i=1}^{k} 2^{8(k - i)} \\,\\mathrm{EB}\_i$$
 
-where \\(EB\_i\\) are the octets of \\(EB\\) from first to last. In other words, \\(EB\_1\\) (the first byte) is the most significant byte, and \\(EB\_k\\) (the last byte) is the least significant. Now Alice can simply encrypt this block using \\(C = x^c \\mod n\\).
+其中 \\(EB\_i\\) 是从头到尾的 \\(EB\\) 的八位字节。换句话说，\\(EB\_1\\)（第一个字节）是最高有效字节，\\(EB\_k\\)（最后一个字节）是最低有效字节。现在，爱丽丝可以简单地使用 \\(C = x^c \\mod n\\) 加密此块。
 
-To solidify our learnings so far, let’s apply this to a sample plaintext and find the padded blocks.
+为巩固我们到目前为止的学习，让我们将其应用于一个示例明文并寻找填充块。
 
-Let’s assume the RSA modulus is \\(8\\) bytes long (\\(k=8\\)). Suppose we want to encrypt a message \\(M\\) that is \\(2\\) bytes long. Then the padding string \\(PS\\) must fill the remaining space:
+假设 RSA 模数是 \\(8\\) 字节长（\\(k=8\\)）。假设我们要加密一个 \\(2\\) 字节长的消息 \\(M\\)。然后，填充字符串 \\(PS\\) 必须填充剩余空间：
 
 $$Total ~ bytes=k=8=1(0x00)+1(BT)+∣PS∣+1(delimiter)+∣M∣$$
 
-Since \\(∣M∣=2\\) and there are \\(∣M∣=2∣\\) fixed bytes, can find the required length of the padding string:
+由于 \\(∣M∣=2\\) 并且存在 \\(∣M∣=2∣\\) 个固定字节，可以找到填充字符串所需的长度：
 
 $$∣PS∣=8−3−2=3 ~ bytes$$
 
-Let’s pick 3 arbitrary nonzero bytes for \\(PS\\), say - \\(0xA3, ~0x5F, ~0xC2\\). And let’s say the message is the ASCII text “Hi”. In hexadecimal, that’s: \\(0x48\\) for 'H' and \\(0x69\\) for 'i'.
+让我们选择 \\(PS\\) 的 3 个任意非零字节，例如 - \\(0xA3, ~0x5F, ~0xC2\\)。假设消息为 ASCII 文本“Hi”。在十六进制中，表示为：'H' 的 \\(0x48\\) 和 'i' 的 \\(0x69\\)。
 
-Thus, the complete encryption block becomes:
+因此，完整的加密块为：
 
-![Sample Encryption Block in PKCS#1 v1.5](https://cdn.hashnode.com/res/hashnode/image/upload/v1742368983011/f682532c-6664-4197-8e77-60ea034f82c5.png)
+![PKCS#1 v1.5 中的示例加密块](https://cdn.hashnode.com/res/hashnode/image/upload/v1742368983011/f682532c-6664-4197-8e77-60ea034f82c5.png)
 
-Now we will convert this octet string to an integer using the OS2IP formula we discussed above:
+现在我们将使用之前讨论的 OS2IP 公式将此八位字节字符串转换为整数：
 
 $$x = \\sum\_{i=1}^{k} 2^{8(k - i)} \\,\\mathrm{EB}\_i$$
 
-For our example, with \\(k=8\\) the conversion is:
+对于我们的示例，使用 \\(k=8\\) 的转换是：
 
 $$x=  0x00×256^7+0x02×256^6+0xA3×256^5+0x5F×256^4+0xC2×256^3+0x00×256^2+0x48×256^1+0x69×256^0$$
 
-Note that the hexadecimal values can be converted to decimal as needed. For instance, \\(0xA3 = 163, 0x5F = 95, 0xC2 = 194, 0x48 = 72,\\) and \\(0x69 = 105\\).
+注意，可以根据需要将十六进制值转换为十进制。例如，\\(0xA3 = 163, 0x5F = 95, 0xC2 = 194, 0x48 = 72,\\) 和 \\(0x69 = 105\\)。
 
-There is an interesting observation in the application of this formula. Because the first two bytes are fixed (\\(0x00\\) and \\(0x02\\)), the integer \\(x\\) has a known lower bound. The contribution of the first two bytes is:
+在应用该公式时，有一个有趣的观察。由于前两个字节是固定的（\\(0x00\\) 和 \\(0x02\\)），整数 \\(x\\) 具有已知的下限。前两个字节的贡献是：
 
 $$0×256^ 7 +2×256^ 6 =2×256^ 6$$
 
-The rest of the bytes (\\(PS\\), the delimiter, and \\(M\\)) add some value that is at least \\(0\\) and at most just less than \\(256^6\\) (since the second byte is fixed as \\(0x02\\) and cannot be \\(0x03\\)). Thus, \\(x\\) is in the range:
+其余字节（\\(PS\\)、分隔符和 \\(M\\)）增加了一些值，该值至少为 \\(0\\) 并且最大不到 \\(256^6\\)（因为第二个字节固定为 \\(0x02\\) 而不能为 \\(0x03\\)）。因此，\\(x\\) 的范围是：
 
 $$2×256 ^ 6 ≤x<3×256 ^ 6$$
 
-This property which makes the range predictable, paved the way for the Bleichenbacher attack (also known as the “padding oracle” attack). If a system reveals whether a decrypted block is “correctly padded,” an attacker can systematically probe different ciphertexts and narrow down the plaintext – because the attacker knows it must lie in that narrow range. Let’s take a detailed look at the Bleichenbacher attack in the next sections and understand how the exploit works.
+这种使范围可预测的特性为 Bleichenbacher 攻击（也称为“填充 oracle”攻击）铺平了道路。如果一个系统显示解密块是否“填充正确”，攻击者可以系统地探测不同的密文并缩小明文的范围，因为攻击者知道它必须在该窄范围内。让我们在接下来的部分中详细了解 Bleichenbacher 攻击，并了解该攻击的工作原理。
 
-## The Bleichenbacher Attack
+在1998年，Daniel Bleichenbacher发表了一篇开创性的论文\[8\]，展示了一种针对使用PKCS#1 v1.5填充的RSA的自适应选择密文攻击。Bleichenbacher攻击，也被称为“百万消息”攻击，展示了如果攻击者可以访问一个能够告知提交的密文是否解密为正确填充的明文的oracle（即，PKCS#1 v1.5格式是否正确），攻击者可以逐渐恢复完整的明文。让我们来分解这个攻击是如何运作的：
 
-In 1998, Daniel Bleichenbacher published a seminal paper \[8\] demonstrating an adaptive chosen-ciphertext attack against RSA with PKCS#1 v1.5 padding. The Bleichenbacher Attack, also dubbed as the “million messages” attack, demonstrated that if an attacker has access to an oracle that tells whether a submitted ciphertext decrypts to a properly padded plaintext (that is, whether the PKCS#1 v1.5 formatting is correct), the attacker can gradually recover the full plaintext. Let’s break down how this attack works:
+首先，Eve需要一个Oracle。攻击假设攻击者可以查询一个系统，比如一个SSL/TLS服务器，并找出给定的密文\\(C\\)是否符合PKCS#1 v1.5。在1998年的论文中，Bleichenbacher利用了这样一个事实：当一个TLS服务器被提供一个填充不正确的RSA加密预主密钥时，如果填充错误，它会以一个特定的错误警报响应。本质上来说，服务器充当了一个oracle：它会用其私钥解密\\(C\\)，然后简单地告诉攻击者“填充OK”或“填充错误”（错误可能是基于时间的或是明确的警报）。
 
-First, Eve needs an Oracle. The attack assumes the attacker can query a system, such as an SSL/TLS server, and find out if a given ciphertext \\(C\\) is PKCS#1 v1.5 conformant. In the 1998 paper, Bleichenbacher exploited the fact that a TLS server, when presented with an improperly padded RSA-encrypted premaster secret, would respond with a specific error alert if the padding was wrong. Essentially, the server acted as an oracle: it would decrypt \\(C\\) with its private key and simply tell the attacker “padding OK” or “padding error” (the error could be timing-based or an explicit alert).
+注意，这个oracle并不会透露明文。它一次只会透露一个比特的信息：“填充合法与否。”这看似无害，但Bleichenbacher证明了这足以最终恢复明文。
 
-Note that the oracle does not reveal the plaintext. It only reveals a single bit of information at a time: “valid padding or not.” This might seem harmless, but Bleichenbacher showed that it’s enough to eventually recover the plaintext.
+快速回顾一下，攻击者的目标是使用oracle找到未知的消息整数\\(m\\)（作为整数的PKCS#1填充明文），给定其密文\\(C = m^e \\bmod N\\)。我们知道如果\\(m\\)是正确填充的，它处于一个特定的数字范围内：\\(2B \\le m < 3B\\) 这里\\(B = 2^{8\*(k-2)}\\)，如前所述。
 
-To quickly recap, the attacker’s goal is to find the unknown message integer \\(m\\) (the PKCS#1-padded plaintext as an integer) given its ciphertext \\(C = m^e \\bmod N\\), using the oracle. We know that if \\(m\\) is properly padded, it lies in a specific numeric range: \\(2B \\le m < 3B\\) where \\(B = 2^{8\*(k-2)}\\), as defined earlier.
+如果\\(k=128\\)字节，那么\\(B=2^{8\*126}\\)，一个正确填充的\\(m\\)将以\\(0x00 ~||~0x02\\)开头，因此它在\\(2B\\)和\\(3B\\)之间。攻击者Eve最初只知道\\(m\\)在范围\\(\[2B, 3B)\\)内。
 
-If \\(k=128\\) bytes, then \\(B=2^{8\*126}\\), and a correctly padded \\(m\\) will start with \\(0x00 ~||~0x02\\), so it’s between \\(2B\\) and \\(3B\\). The attacker, Eve, initially only knows that \\(m\\) is in the range \\(\[2B, 3B)\\).
+在Bleichenbacher攻击中，Eve将利用RSA的乘法属性。他们将选择一个数字\\(s\\)（称为乘数）并计算一个新的密文\\(C' = (C s^e) \\bmod N\\)。这里这\\(C'\\)对应一个新的明文：\\(m' = m s \\bmod N\\)（因为\\(C' \\equiv m^e \* s^e \\equiv (ms)^e \\pmod{N}\\)）。
 
-In the Bleichenbacher Attack, Eve will exploit RSA’s multiplicative property. They will choose a number \\(s\\) (called the multiplier) and compute a new ciphertext \\(C' = (C s^e) \\bmod N\\). This \\(C'\\) here corresponds to a new plaintext: \\(m' = m s \\bmod N\\) (because \\(C' \\equiv m^e \* s^e \\equiv (ms)^e \\pmod{N}\\)).
+为了开始攻击，Eve找到一个\\(s\_0\\)，使得\\(C\_0 = C \* (s\_0)^e \\mod N\\)生成一个有效填充。这被称为蒙蔽步骤。这通常很简单——例如，\\(s\_0\\)可以被选择为使\\(m \* s\_0\\)略高于\\(N\\)，这几乎肯定会环绕并落在\\(\[2B,3B)\\)中。攻击者不知道\\(m\\)可以直接验证这一点。他们依靠填充oracle的是/否响应来推断蒙蔽的明文\\((m×s\_0)\\mod  N\\)落在正确的范围内。
 
-To begin the attack, Eve finds some \\(s\_0\\) such that \\(C\_0 = C \* (s\_0)^e \\mod N\\) yields a valid padding. This is referred to as the Blinding step. This is usually easy – for example, \\(s\_0\\) can be chosen so that \\(m \* s\_0\\) is just slightly above \\(N\\), which almost certainly will wrap around and land in \\(\[2B,3B)\\). The attacker does not know \\(m\\) to verify this directly. They rely on the padding oracle’s yes/no response to infer that the blinded plaintext \\((m×s\_0)\\mod  N\\) falls in the correct range.
+如果oracle返回“填充有效”对于给定的\\(s\_0\\)，它告诉攻击者\\(s\_0 \\mod N\\)落在\\(2B\\)和\\(3B\\)之间。从数学上说：
 
-If the oracle returns “valid padding” for a given \\( s\_0\\), it tells the attacker that \\(s\_0 \\mod N\\)lies between \\(2B\\)and \\(3B\\). Mathematically:
+\[2B≤(m×s\_0)~mod  N<3B\]
 
-$$2B≤(m×s\_0)~mod  N<3B$$
+现在，Eve将在一个循环中尝试缩小这个范围，这通常被称为区间缩减步骤。最初，Eve有一个宽广的区间\\(\[a, b\] = \[2B, 3B)\\)包含\\(m\\)。在每次迭代中，Eve尝试递增的\\(s\\)值（从某个最小值开始），直到oracle返回“填充OK”对于\\(C' = C\_0 \* s^e\\)。假设这一点发生在某个\\(s = s\_i\\)。根据这个反馈，Eve现在知道：
 
-Now, Eve will try to try to narrow down this range in a loop, which is often referred to as the interval having step. Initially, Eve had one wide interval \\(\[a, b\] = \[2B, 3B)\\) that contains \\(m\\). In each iteration, Eve tries increasing values of \\(s\\) (starting from a certain minimum) until the oracle returns “padding OK” for \\(C' = C\_0 \* s^e\\). Suppose this happens at some \\(s = s\_i\\). Given this feedback, Eve now knows:
+\[2B ≤  (m × s\_i) ~ mod N < 3B\]
 
-$$2𝐵 ≤  (𝑚 × 𝑠\_i) ~ mod 𝑁 < 3𝐵$$
+这个同余意味着存在某个整数\\(r\\)，使得：
 
-This congruence implies there exists some integer \\(r\\) such that:
+\[2B  ≤ (m×s\_i)−rN  <  3B\]
 
-$$2B  ≤ ( m×s\_i)−rN  <  3B$$
+重组，我们对\\(m\\)得出约束：
 
-Rearranging, we get a constraint on \\(m\\):
+\[\frac{2B+rN}{s\_i}  ≤  m  <  \frac{3B+rN}{s\_i}\]
 
-$$\\frac{2B+rN}{s\_i}  ≤  m  <  \\frac{3B+rN}{s\_i}$$
+Eve无法立即知道\\(r\\)，但他们可以通过考虑当前区间\\(\[a,b\]\\)对\\(m\\)来解出\\(r\\)的可能范围。本质上，Eve使用先前关于\\(m\\)的界限来猜测哪个\\(r\\)会使不等式成立，然后更新新的界限\\(\[a, b\]\\)为所有\\(m\\)可能解的交集。这会显著缩小区间。
 
-Eve doesn’t know \\(r\\) outright, but they can solve for the possible range of \\(r\\) by considering the current interval \\(\[a,b\]\\) for \\(m\\). Essentially, Eve uses the previous bounds on \\(m\\) to guess which \\(r\\) would make the inequality true, then updates the new bounds \\(\[a, b\]\\) as the intersection of all possible solutions for \\(m\\). This dramatically shrinks the interval.
+每次oracle查询得到这样的约束。最终，区间\\(\[a,b\]\\)收缩到一个单一的值，\\(\[a,a\]\\)。此时，Eve可以使用以下方式找到明文：
 
-Each oracle query yields such a constraint. Eventually, the interval \\(\[a,b\]\\) collapses to a single value, \\(\[a,a\]\\). Now, Eve can find the plaintext using:
+\[m = (a × s\_i^{-1}) ~ mod N\]
 
-$$m = (a × s\_i^{-1}) ~ mod N$$
+那时，Eve已经恢复了整个填充明文\\(m\\)，通过去除填充，得到原始消息。
 
-At that point, Eve has recovered the entire padded plaintext \\(m\\), and by stripping off the padding, the original message itself.
+下面的序列图巩固了我们对攻击的学习：
 
-The sequence diagram below consolidates our learning of the attack:
+![序列图：Bleichenbacher攻击](https://cdn.hashnode.com/res/hashnode/image/upload/v1742498318544/6e297215-ca3e-451d-9574-117c0f8a12cb.png)
 
-![Sequence Diagram: The Bleichenbacher’s Attack](https://cdn.hashnode.com/res/hashnode/image/upload/v1742498318544/6e297215-ca3e-451d-9574-117c0f8a12cb.png)
+Bleichenbacher攻击显示了PKCS#1 v1.5中的填充格式泄露了足够的信息，从而在不需要因式分解N的情况下实现了完整的私钥操作（解密消息）。这个攻击利用了可以构造密文，使其解密为一个看似有效的明文而不需知道明文的事实。本质上，PKCS#1 v1.5填充使得大约\\(1\\)在\\(2^{16}\\)（大致）机会中，随机数据块会显得“有效填充”。这足以让自适应攻击以可行的查询次数成功。
 
-The Bleichenbacher attack showed that the format of the padding in PKCS#1 v1.5 leaked just enough info to enable a full private-key operation (decrypting the message) without ever factoring N. The attack leveraged the fact that it’s possible to craft ciphertexts that will decrypt to a valid-looking plaintext without knowing the plaintext​. In essence, PKCS#1 v1.5 padding allowed about \\(1\\) in \\(2^{16}\\) chance (roughly) for a random blob to appear as “valid padding.” That was enough for an adaptive attack to succeed with feasible queries.
+为了解决 Bleichenbacher 攻击而不立即更改填充方案，从业者实施了一些防御措施。例如，TLS 应该将所有解密失败的情况视为相同（这样攻击者就无法区分填充和其他错误），并且服务器在填充失败时会生成一个假预主密钥以继续握手并避免时间泄露。然而，最安全的做法还是弃用 PKCS#1 v1.5 加密，转而使用例如 RSA-OAEP 的方案。[​][42]
 
-This is precisely what later padding designs like OAEP fixed. OAEP’s design makes such random valid ciphertexts astronomically unlikely (plaintext aware). We will learn about RSA-OAEP in the next sections.
+## 最佳非对称加密填充（OAEP）
 
-To mitigate the Bleichenbacher attack without immediately changing the padding scheme, practitioners implemented defensive measures. For example, TLS should treat all decryption failures the same way (so an attacker can’t distinguish padding vs. other errors), and servers would generate a fake premaster secret on padding failure to continue the handshake and avoid timing leaks. Nonetheless, the safest course has been to deprecate PKCS#1 v1.5 encryption in favor of schemes like RSA-OAEP.[​][42]
+到 1995 年底，Bellare 和 Rogaway 提出了最佳非对称加密填充（OAEP），目标是实现可证明的安全性。这个填充旨在使 RSA 加密不仅对被动攻击，而且对自适应选择密文攻击具有抗性。换句话说，即使攻击者可以诱使系统解密选择的密文（作为一个“oracle”），他们也不应从中学到关于明文的任何有用信息。随后，OAEP 在 PKCS#1 v2.0 中被标准化（在 1998 年作为 RFC 2437 发布）及后来的版本。
 
-## Optimal Asymmetric Encryption Padding (OAEP)
+与 PKCS#1 v1.5 相比，OAEP 有一个更复杂的编码，使用哈希函数和遮罩生成函数（MGF）在 RSA 加密前彻底随机化明文，提供更强的保证。
 
-By the end of 1995, Bellare and Rogaway proposed Optimal Asymmetric Encryption Padding (OAEP) with the goal of achieving provable security. This padding aimed to make RSA encryption resistant not just to passive attacks but also to adaptive chosen-ciphertext attacks. In other words, even if an attacker can trick a system into decrypting chosen ciphertexts (as an “oracle”), they should learn nothing useful about the plaintext. OAEP was subsequently standardized in PKCS#1 v2.0 (published as RFC 2437 in 1998) and later versions.
+OAEP 的设计可以看作是一个使用随机种子的两层类似 Feistel 的网络。它利用输入消息并以仅在具有正确种子的情况下可以逆转的方式对其进行随机化。该方案在随机 Oracle 模型中被证明具有明文感知性，这意味着对手不能在不知道相应明文的情况下捏造出一个有效的密文。如果攻击者试图伪造或篡改密文，他们几乎肯定会生成一个无效的填充，将被拒绝。这个特性直接抵御了填充 Oracle 攻击。
 
-Compared to PKCS#1 v1.5, OAEP has a more complex encoding that uses hash functions and a mask generation function (MGF) to thoroughly randomize the plaintext before RSA encryption, providing stronger guarantees.
+OAEP（与适当的哈希/MGF 一起使用）能在假设 RSA 难以反转并将哈希函数视为随机 Oracle 的情况下，在自适应选择密文攻击中提供语义安全性。与缺乏正式证明的 PKCS#1 v1.5 不同，OAEP 提供了一个证明草案，该草案显示破解 RSA-OAEP 与破解 RSA 本身一样困难。
 
-OAEP’s design can be viewed as a two-layer Feistel-like network using a random seed. It takes the input message and randomizes it in a way that is reversible only with the correct seed. The scheme was proven plaintext-aware in the random oracle model which means that an adversary cannot concoct a valid ciphertext without knowing the corresponding plaintext. If an attacker tries to forge or tamper with ciphertexts, they almost surely produce an _invalid_ padding that will be rejected. This property directly counters padding-oracle attacks.
+在实际中，这意味着 OAEP 大大降低了任何填充 Oracle 攻击的风险：攻击者几乎无法轻易找到通过填充检查的密文，除非通过暴力破解，其成功概率为 \\(2^{-hLen\*8}\\)。例如，使用 SHA-1 的成功概率为 \\(2^{-160}\\)。
 
-OAEP (with a proper hash/MGF) is semantically secure against adaptive chosen ciphertext attacks, assuming RSA is hard to invert and treating the hash functions as random oracles. Unlike PKCS#1 v1.5, which lacked a formal proof, OAEP comes with a proof sketch that breaking RSA-OAEP is as hard as breaking RSA itself.
+下图是 OAEP 编码方案的可视化表现：
 
-In practice, this means OAEP drastically reduces the risk of any padding oracle: an attacker can no longer easily find ciphertexts that slip through the padding check except by brute force which has a \\(2^{-hLen\*8}\\) success probability. For example, the success probability with SHA-1 would be \\(2^{-160}\\).
+![最佳非对称加密填充](https://cdn.hashnode.com/res/hashnode/image/upload/v1742663541136/1c418939-80f6-45ea-8667-cacdc5cdab2b.png)
 
-The block diagram below is a visual representation of the OAEP encoding schema:
+接下来，让我们了解这些数学概念的含义和 RSA-OEAP 的工作原理。
 
-![Optimal Asymmetric Encryption Padding](https://cdn.hashnode.com/res/hashnode/image/upload/v1742663541136/1c418939-80f6-45ea-8667-cacdc5cdab2b.png)
+### OAEP 背后的数学
 
-Let’s understand what these mathematical notions mean and the workings of RSA-OEAP, up next.
+最佳非对称加密填充需要一个哈希函数，用于我们将在本节讨论的两个操作。我们将在 OAEP 中选择 SHA-1 作为哈希函数，\\(hLen\\) 表示哈希函数输出的字节长度。稍后我们将证明，即使不是抗碰撞的，MD5 或 SHA-1 也是 OAEP 的安全选择。
 
-### The Mathematics Behind OAEP
+在我们深入数学之前，先回顾一些符号并定义我们将使用的主要部分：
 
-Optimal Asymmetric Encryption Padding requires a hash function for two operations we will discuss in this section. We will choose SHA-1 as a hash function in OAEP and \\(hLen\\) denotes the length in octets of the hash function output. We will later demonstrate why even MD5 or SHA-1 is a secure choice for OAEP even if it is not collision resistant.
+在 RSA 中，\\(N\\) 是模数，\\(k\\) 是 _bytes_ 为单位的 \\(N\\) 的大小。对于一个 \\(2048\\) 位的模数，\\(k=256\\) 字节。  
+\\(M\\) 是要加密的消息或明文。这个明文必须足够短以适合填充块（最多 \\(k−2⋅hLen−2\\) 字节）。在我们的符号中，\\(Hash\\) 指的是输出长度为 \\(hLen\\) 的加密哈希函数（例如，SHA-1，SHA-256）。例如，若使用 SHA-1，\\(hLen=20\\) 字节。
 
-Before we dive into the mathematics, let’s recap a few notations and define the main pieces we’ll be using:
+我们还将使用一个与消息相关的可选字符串（通常为空）。这是标签 \\(L\\)。如果这个标签为空，它的哈希是一个固定值。（例如：空字符串的 SHA-1）。
 
-In RSA, \\(N\\)is the modulus, and \\(k\\) is the size of \\(N\\) in _bytes_. For a \\(2048\\)-bit modulus, \\(k=256\\) bytes.  
-\\(M \\) is the message or plaintext to be encrypted. This plaintext must be short enough to fit into the padded block (at most \\(k−2⋅hLen−2\\) bytes). In our notation, \\(Hash\\) refers to the cryptographic hash function (for example, SHA-1, SHA-256) of output length \\(hLen\\). For example: If using SHA-1, \\(hLen=20\\) bytes.
+标签 \\(L\\) 的哈希表示为 \\(lHash\\)，其中 \\(lHash=Hash(L)\\)。如前所述，如果 \\(L\\) 为空，那么 \\(lHash\\) 就是 \\(Hash('')\\)。这意味着在任何情况下 \\(lHash\\) 都将持有一个值。
 
-We will also use an optional string associated with the message (often empty). This is the Label \\(L\\). If this label is empty, its hash is a fixed value. (For example: the SHA-1 of an empty string).
+我们还将使用一个遮罩生成函数，\\(MGF\\)，通常记为 \\(MGF1\\)。这个函数接受一个输入（种子或遮罩数据）并通过迭代底层哈希函数产生指定长度的输出。我们将写作 \\(MGF(input,length)\\) 来表示“从 \\(input\\) 生成一个长度为 \\(length\\) 字节的遮罩”。
 
-The hash of this label \\(L\\) is represented by \\(lHash\\), where \\(lHash=Hash(L)\\). As mentioned earlier, if \\(L\\) is empty, \\(lHash\\) is simply \\(Hash('')\\). This means that in any case \\(lHash\\) will hold a value.
+现在你已经熟悉了所有必要的符号，我们可以开始编码步骤了。
 
-We will also use a Mask Generation Function, \\(MGF\\), which is often mentioned as \\(MGF1\\). This function takes an input (seed or masked data) and produces an output of a specified length by iterating the underlying hash function. We’ll write \\(MGF(input,length)\\) to indicate “generate a mask of \\(length\\) bytes from \\(input\\)”.
+#### 步骤 1: 构建数据块（DB）
 
-Now that you are familiar with all the necessary notations, we are ready to begin the encoding step.
+我们将计算 \\(lHash=Hash(L)\\)。如果 \\(L\\) 为空，\\(lHash\\) 是一个常数（例如，空字符串的 SHA-1）。
 
-#### Step 1: Constructing the Data Block (DB)
+形成填充字符串 \\(PS\\)，\\(PS\\) 的长度选为整个块 \\(DB\\) 的长度为 \\((k−hLen−1)\\) 字节。数值上，\\(PS\\) 有 \\((k−mLen−2⋅hLen−2)\\) 字节的 \\(0x00\\)，其中 \\(mLen\\) 是消息 \\(M\\) 的长度。
 
-We will compute \\(lHash=Hash(L)\\). If \\(L\\) is empty, \\(lHash\\) is a constant (For example, the SHA-1 of the empty string).
+现在，我们简单地将这些块连接起来生成数据块（\\(DB\\)）的八位字节字符串：
 
-Form the padding string \\(PS\\), the length of \\(PS\\) is chosen so that the entire block \\(DB\\) has length \\((k−hLen−1)\\) bytes. Numerically, \\(PS\\) has \\((k−mLen−2⋅hLen−2)\\) bytes of \\(0x00\\), where \\(mLen\\) is the length of the message \\(M\\).
+在这个例子中，单字节 \\(0x01\\) 作为一个分隔符，标记零填充结束和实际消息 \\(M\\) 开始的位置。\\(DB\\) 最终为 \\((k−hLen−1)\\) 个字节。
 
-Now we simply concatenate the blocks to generate the octet string for the Data Block (\\(DB\\)):
+#### 第 2 步：为数据块生成掩码
 
-$$DB=lHash~∣∣~PS~∣∣~0x01~∣∣~M$$
+首先，我们选择一个长度为 \\(hLen\\) 字节的随机字符串称为 \\(seed\\)。例如，在使用 SHA-1 时，\\(hLen=20\\)，那么我们说种子由 \\(20\\) 个随机字节组成。
 
-Here the single byte \\(0x01\\) acts as a delimiter which marks where the zero padding ends and the actual message \\(M\\) begins. \\(DB\\) ends up being \\((k−hLen−1)\\) bytes.
-
-#### Step 2: Generating a Mask for the Data Block
-
-First, we pick a random string called \\(seed\\) of length \\(hLen\\) bytes. For example, when using SHA-1 where \\(hLen=20\\), then we say that the seed consists of \\(20\\) random bytes.
-
-Now we use the mask generation function, \\(MGF\\), on the \\(seed\\) to create a mask the same length as \\(DB\\):
+现在，我们使用掩码生成函数 \\(MGF\\) 对 \\(seed\\) 创建一个与 \\(DB\\) 长度相同的掩码：
 
 $$dbMask=MGF(seed,k−hLen−1)$$
 
-The idea is to spread the randomness of the seed across the entire \\(DB\\).
+其目的是将种子的随机性传播到整个 \\(DB\\)。
 
-#### Step 3: Mask the Data Block
+#### 第 3 步：掩盖数据块
 
-Now, we will Combine \\(DB\\) and \\(dbMask\\) with the bitwise \\(XOR\\) operation:
+现在，我们将使用按位 \\(XOR\\) 操作组合 \\(DB\\) 和 \\(dbMask\\)：
 
 $$maskedDB=DB \\oplus dbMask$$
 
-This step “scrambles” \\(DB\\) with the random seed.
+此步骤利用随机种子“扰乱”了 \\(DB\\)。
 
-#### Step 4: Generate a Mask for the Seed
+#### 第 4 步：为种子生成掩码
 
-Next, we will produce a mask for the seed itself, based on \\(maskedDB\\):
+接下来，我们将根据 \\(maskedDB\\) 生成种子本身的掩码：
 
 $$seedMask=MGF(maskedDB,hLen)$$
 
-This step simply ensures that the seed is not left in the clear.
+这一步只是确保种子不会被清晰显示出来。
 
-#### Step 5: Mask the Seed
+#### 第 5 步：掩盖种子
 
-Now we will combine the original seed and the new mask with an \\(XOR\\) operation:
+现在我们将使用 \\(XOR\\) 操作结合原始种子和新掩码：
 
 $$maskedSeed=seed \\oplus seedMask$$
 
-Now the seed is also “scrambled” by the data block.
+现在种子也被数据块“扰乱”。
 
-#### Step 6: Form the Final Encoded Message (EM)
+#### 第 6 步：形成最终编码消息 (EM)
 
-We are now ready to build our final block. Simply concatenate everything into a \\(k\\)-byte string:
+我们现在准备构建我们的最终块。只需将所有内容连接成一个 \\(k\\) 字节的字符串：
 
 $$EM=0x00~∣∣~maskedSeed~∣∣~maskedDB$$
 
-The leading \\(0x00\\) byte ensures that when \\(EM\\) is interpreted as an integer, it’s less than the RSA modulus \\(N\\). At this point, \\(EM\\) is your OAEP-padded message of length \\(k\\).
+前导 \\(0x00\\) 字节确保当 \\(EM\\) 被解释为整数时，小于 RSA 模数 \\(N\\)。此时，\\(EM\\) 为长度为 \\(k\\) 的 OAEP 填充消息。
 
-#### Step 7: Covert concatenated String to Integer
+#### 第 7 步：将连接的字符串转换为整数
 
-Remember from our discussion before on PKCS#1v1.5 that RSA cannot directly operate on this concatenated string of bytes. We need to convert the \\(EM\\) block to a non-negative integer using the OS2IP formula:
+请记住我们之前关于 PKCS#1v1.5 的讨论，RSA 无法直接操作此字节的连接字符串。我们需要使用 OS2IP 公式将 \\(EM\\) 块转换为非负整数：
 
 $$x = \\sum\_{i=1}^{k} 2^{8(k - i)} \\,\\mathrm{EB}\_i$$
 
-#### Step 8: Perform RSA Encryption
+#### 第 8 步：执行 RSA 加密
 
-Now that we have the encoded message (\\(EM\\)) as an integer \\(x\\), we are ready to perform RSA guided by the formula:
+现在我们已将编码消息 (\\(EM\\)) 转换为整数 \\(x\\)，准备执行基于公式的 RSA：
 
 $$C =x^e \\bmod N$$
 
-where \\((e,N)\\) is the public key. The thus computed \\(C\\) is our ciphertext generated using RSA-OAEP.
+其中 \\((e,N)\\) 是公钥。由此计算出的 \\(C\\) 就是我们使用 RSA-OAEP 生成的密文。
 
-When decrypting, the process is reversed: the recipient uses their private key \\(d\\) to compute \\(m = c^d \\bmod N\\), recovers the \\(EM\\), then splits it into the \\(0x00\\), \\(maskedSeed\\), and \\(maskedDB\\), and uses the same \\(MGF\\) and hash function to unravel the \\(XORs\\) in reverse order​. Finally, they check that the recovered \\(lHash'\\) matches the expected hash and that the block contains the proper structure​ (\\(...||0x01||...\\)).
+在解密时，过程是反向的：接收方使用其私钥 \\(d\\) 计算 \\(m = c^d \\bmod N\\)，恢复 \\(EM\\)，然后将其拆分为 \\(0x00\\)、\\(maskedSeed\\) 和 \\(maskedDB\\)，并使用相同的 \\(MGF\\) 和哈希函数逆向解开 \\(XOR\\)。最后，他们检查恢复的 \\(lHash'\\) 是否与预期的哈希匹配，并且块包含正确的结构​ (\\(...||0x01||...\\))。
 
-If any check fails, the padding is invalid. Only if everything checks out is the message \\(M\\) returned. The result is that an invalid ciphertext will almost always be detected and rejected without giving an attacker any useful information.
+如果任何检查失败，则填充无效。只有当所有检查通过时，消息 \\(M\\) 才会返回。结果是，无效的密文几乎总是会被检测和拒绝，而不会给攻击者提供任何有用的信息。
 
-By design, OAEP effectively foiled the padding oracle problem. The chance that a random guess produces a valid OAEP encoding is negligible: on the order of \\(2^{-hLen\*8}\\)). In fact, Daniel Bleichenbacher (after breaking PKCS#1 v1.5) advocated for exactly such a “plaintext-aware” padding where forging a valid padding is infeasible.
+设计上，OAEP 有效地解决了填充 oracle 问题。随机猜测产生有效 OAEP 编码的机会微乎其微：大约是 \\(2^{-hLen\*8}\\)。事实上，Daniel Bleichenbacher（在破坏 PKCS#1 v1.5 之后）提倡使用这样的“明文感知”填充，使得伪造有效填充变得不可行。
 
-## **Why SHA-1 or MD5 Are Safe in RSA-OAEP**
+## **为什么 SHA-1 或 MD5 在 RSA-OAEP 中是安全的**
 
-Earlier in the section above, we mentioned that we’d be using SHA-1 for our mathematical formulation and examples. When you see SHA-1 or MD5 used in the context of RSA-OAEP, don’t let the fact that these hash functions are considered broken for collision resistance alarm you. If you notice carefully in the previous section, the hash functions serve two very specific roles that do not rely on their collision resistance. Let’s break them down one by one:
+在上面一节中，我们提到我们将使用 SHA-1 进行数学公式和示例。当您在 RSA-OAEP 的上下文中看到 SHA-1 或 MD5 时，不要因这些哈希函数被认为在抗碰撞方面已被破坏而惊慌。仔细观察前一节，哈希函数在其中的作用非常具体，不依赖其碰撞抗性。让我们逐项分解：
 
-### **Label Hashing**
+### **标签哈希**
 
-The hash function is used to compute a fixed-length hash of an optional label \\(L\\) (often empty).
+哈希函数用于计算一个可选标签 \\(L\\)（通常为空）的固定长度哈希。
 
-Now let’s see why is this safe in the context. This hash, called \\(lHash\\), acts as a domain separator. Its job is simply to ensure that the label is correctly associated with the ciphertext during decryption. As long as the label is chosen wisely (that is, not built from adversary-controlled parts), collision resistance isn’t critical here.
+现在让我们看看为什么在这个上下文中是安全的。这个被称为 \\(lHash\\) 的哈希充当域分隔符。它的任务只是确保标签在解密期间正确地与密文关联。只要标签被明智地选择（即，不是由对手控制的部分构建），那么碰撞抗性在这里就不是关键。
 
-### **Mask Generation Function (MGF1)**
+### **掩码生成函数 (MGF1)**
 
-The hash function is also used inside \\(MGF1\\) to create a pseudorandom mask. This mask is applied both to the data block \\(DB\\) and to the random seed used in the encoding process.
+哈希函数还在 \\(MGF1\\) 中用于创建伪随机掩码。这个掩码同样应用于数据块 \\(DB\\) 和编码过程中使用的随机种子。
 
-In this context, the hash function is treated as a random oracle. The job is to spread the randomness of the seed across a larger block of data. For this purpose, properties like length extension or collision resistance are not relevant. What matters is that the output appears random, and even SHA-1 or MD5 can deliver that when used in this controlled, fixed-input scenario.
+在此上下文中，哈希函数被视为随机 oracle。任务是将种子的随机性传播到更大的数据块中。为此，类似长度扩展或碰撞抗性的属性不相关。重要的是输出看起来是随机的，甚至 SHA-1 或 MD5 能在这种受控的、固定输入情况下提供这样的输出。
 
-## Adoption in Cryptographic Libraries (PKCS#1 v1.5 vs OAEP)
+## 加密库中的采用 (PKCS#1 v1.5 vs OAEP)
 
-After the Bleichenbacher attack, standards and libraries migrated to OAEP or at least added support for it, while treating PKCS#1 v1.5 as a legacy option. Modern cryptographic libraries and protocols reflect these lessons.
+在 Bleichenbacher 攻击之后，标准和库迁移到 OAEP 或至少添加对其的支持，同时将 PKCS#1 v1.5 视为遗留选项。现代加密库和协议反映了这些经验教训。
 
-In 1998, the RSA standard was updated. PKCS#1 v2.0 introduced RSAES-OAEP as the new recommended encryption scheme, and by PKCS#1 v2.1 and v2.2 (RFC 3447 and RFC 8017), OAEP is required for new applications, with PKCS#1 v1.5 included only for backward compatibility.
+```markdown
+OpenSSL 不鼓励用户使用 PKCS#1 v1.5，因为它会泄漏信息，可能被用于发动 Bleichenbacher 填充攻击 \[10\]。文档明确提到，强烈建议在新的应用程序中使用 `RSA_PKCS1_OAEP_PADDING`。
 
-OpenSSL discourages users from using PKCS#1 v1.5 as it leaks information that can potentially be used to mount a Bleichenbacher padding oracle attack \[10\]. The documentation clearly mentions that it is highly recommended to use `RSA_PKCS1_OAEP_PADDING` in new applications.
+Python 加密库（PyCA cryptography）也建议开发者在加密中使用 OAEP 而非 PKCS#1 v1.5 \[11\]。
 
-The Python cryptography library (PyCA cryptography) also asks developers to use OAEP for encryption instead of PKCS#1 v1.5 \[11\].
+在 Bleichenbacher 1998 年攻击之后，立即在所有地方替换 PKCS#1 v1.5 是不可行的。因此，协议设计者发布了对策。
 
-After Bleichenbacher’s 1998 attack, it was impractical to instantly replace PKCS#1 v1.5 everywhere. Instead, protocol designers issued countermeasures.
+例如，TLS 的应对方法是改变错误处理：服务器不会显式揭示填充失败。它将生成一个虚假的 premaster secret，并继续以防止时间线索的暴露，并始终在稍后阶段返回通用的握手失败，这使得攻击者更难分辨解密失败的原因。
 
-TLS, for example, responded by changing the error handling: the server would not reveal a padding failure distinctly. It would generate a fake premaster secret and proceed to prevent timing clues, and always return a generic handshake failure at a later stage, making it harder for the attacker to distinguish why decryption failed.
+这些对策降低了 oracle 的精准度，但在不同的实现中很难做到完美无缺。事实上，并不是所有人都做对了——当实现中在错误处理上出错时，Bleichenbacher 攻击以各种形式重新浮现。
 
-These countermeasures reduced the oracle’s fidelity but were tricky to get right across different implementations. In fact, not everyone got it right – the Bleichenbacher attack continued to resurface in various forms when implementations made mistakes in error handling.
+在 2018 年，研究人员发现了 ROBOT 攻击（重返 Bleichenbacher Oracle 威胁）：几种 TLS 实现出现了微妙的漏洞，重现了一个填充 oracle，使得 19 年后的攻击成功。ROBOT 论文表明，即使有对策指南，由于一致处理错误的复杂性，受欢迎的产品中还是会出现错误。
 
-In 2018, researchers discovered the ROBOT attack (Return Of Bleichenbacher’s Oracle Threat): several TLS implementations had subtle bugs that recreated a padding oracle, allowing the attack to succeed 19 years later. The ROBOT paper showed that even with countermeasure guidelines, the complexity of uniformly handling errors led to slip-ups in popular products.
+这强调了修补不安全方案常常容易出错——设计上安全的方案（如 OAEP）是更优的选择。
 
-This underscores that patching an insecure scheme is often error-prone – a design that is secure by construction (like OAEP) is preferable.
+由于这些临时的安全措施和不能在所有现有系统中突然移除的事实，PKCS#1 v1.5 继续存在。它通常被视为“遗留”或“为兼容性而维护”。共同的智慧很明确：尽可能使用 OAEP 进行 RSA 加密。
 
-PKCS#1 v1.5 continues to exist because of these patchwork security measures and the fact that it cannot be abruptly removed from all existing systems. It is generally regarded as "legacy" or maintained "for compatibility" purposes. The collective wisdom is clear: use OAEP for RSA encryption whenever possible.
+## 增强数字签名：向 PSS 过渡
 
-## Enhancing Digital Signatures: The Transition to PSS
+既然你已经了解到 OAEP 如何通过减轻确定性填充中的漏洞来改造 RSA 加密，现在是时候关注 RSA 数字签名了——确保消息完整性和真实性的关键功能。
 
-Now that you understand how OAEP transformed RSA encryption by mitigating vulnerabilities in deterministic padding, it’s time to turn our attention to RSA digital signatures – a critical function for ensuring message integrity and authenticity.
+早期的 RSA 签名方案存在与原始加密类似的问题：其确定性特性使其容易伪造和重放攻击。这一漏洞为改进铺平了道路：概率签名方案（PSS）。
 
-Early RSA signature schemes suffered from similar problems as raw encryption: their deterministic nature made them prone to forgery and replay attacks. This vulnerability paved the way for an improvement: the Probabilistic Signature Scheme (PSS).
+在深入探讨 PSS 本身之前，我们先快速了解一下早期 RSA 签名的痛点。
 
-Before we dive into PSS itself, let’s quickly understand the pain points with early RSA signatures.
+### 早期 RSA 签名方案的问题
 
-### Problems with Early RSA Signature Schemes
-
-Traditional RSA signatures were generated by simply applying the RSA decryption function on a message digest (often with minimal formatting):
+传统的 RSA 签名是通过对消息摘要（通常进行少量格式化）简单应用 RSA 解密函数来生成的：
 
 $$s=m^d \\bmod N$$
 
-where \\(m\\) is the hash (or encoded hash) of the message. This approach was deterministic which meant that each time the same message was signed, the exact signature was produced. Such determinism had two major drawbacks:
+其中 \\(m\\) 是消息的哈希（或编码哈希）。这种方法是确定性的，这意味着每次对相同消息进行签名，都会产生相同的签名。这种确定性有两个主要缺点：
 
-1.  #### Predictability and Replay
+1.  #### 可预测性和重放
     
-    Since the signature for a given message was always identical, an attacker could replay a captured signature with impunity or forge signatures if they could deduce patterns in the signature scheme.
+    由于给定消息的签名总是相同的，攻击者可以毫无顾忌地重放捕获的签名，或者如果他们能够推断签名方案中的模式，则可伪造签名。
     
-2.  #### Forgery Risks
+2.  #### 伪造风险
     
-    In a deterministic setting, if an attacker finds any structure or mathematical relationship in the signature, they might be able to forge a valid signature for a new message. In certain scenarios, weak formatting could allow an adversary to create a “signature transformation” that produces a valid signature without having access to the private key.
+    在确定性环境中，如果攻击者在签名中发现任何结构或数学关系，他们可能能够为新消息伪造出有效签名。在某些场景中，弱格式化可能使对手能够创建“签名变换”，生成有效签名而无需访问私钥。
     
 
-These issues highlighted that a signature scheme must be probabilistic to be secure against adaptive forgery attempts and to ensure non-repudiation. This means that the signer should not be able to repudiate a signature because it is bound to a random value known only at signing time.
+这些问题表明，为了防止自适应伪造尝试并确保不可抵赖性，签名方案必须是概率性的。这意味着签名者不能否认一个签名，因为它绑定于仅在签名时已知的随机值。
 
-### Birth of the Probabilistic Signature Scheme (PSS)
+### 概率签名方案（PSS）的诞生
 
-Towards the end of 1998, Bellare and Rogaway also proposed a scheme to overcome the inherent limitations of deterministic RSA signatures \[12\]. The core idea was to introduce randomness into the signature generation process so that even when signing the same message twice, the resulting signatures would be different. This randomness comes from a salt value and a carefully designed encoding process. The result is a signature method with strong, provable security guarantees.
+在 1998 年底，Bellare 和 Rogaway 也提出了一种方案以克服确定性 RSA 签名的固有限制 \[12\]。核心思想是把随机性引入签名生成过程，以便即使在两次签同一条消息时，结果签名也不同。这种随机性来自一个盐值和一个精心设计的编码过程。结果是一个具有强大、可证明安全性保证的签名方法。
 
-This randomness prevents attackers from exploiting patterns in the signature process. The probabilistic Signature Scheme was designed to be provably secure in the random oracle model, meaning that forging a signature would be as hard as breaking RSA itself under certain assumptions \[13\].
+这种随机性防止攻击者利用签名过程中的模式。概率签名方案被设计为在随机 oracle 模型中可证明安全的，这意味着在某些假设下，伪造签名的难度相当于破解 RSA 本身 \[13\]。
 
-The block diagram below is a visual representation of the PSS encoding schema:
+下图是 PSS 编码方案的视觉表示：
 
-![Probabilistic Signature Scheme](https://cdn.hashnode.com/res/hashnode/image/upload/v1742669558156/8137f535-deb7-4437-887a-53cf7a412089.png)
+![概率签名方案](https://cdn.hashnode.com/res/hashnode/image/upload/v1742669558156/8137f535-deb7-4437-887a-53cf7a412089.png)
 
-Let’s understand what these mathematical notions mean as well as the workings of RSA-PSS, up next.
+接下来，让我们了解这些数学概念的含义以及 RSA-PSS 的运作。
+```
 
-### The Mathematics Behind PSS
+在深入了解 RSA-PSS 的机制之前，先了解一下在接下来的步骤中会看到的符号和术语是很有帮助的。
 
-Before diving into the mechanics of RSA-PSS, it’s helpful to define the notations and terms you’ll see in the steps ahead.
+在 RSA 中，\\(N\\) 是模数，一个由两个素数的乘积构成的大整数。\\(k\\) 是 \\(N\\) 的长度，单位为 _字节_。对于一个 \\(2048\\) 位的密钥，\\(k=256\\) 字节。
 
-In RSA, \\(N\\)is the modulus, a large integer that is the product of two primes. \\(k\\) is the length of \\(N\\) in _bytes_. For an \\(2048\\)-bit key, \\(k=256\\) bytes.
+\\(M\\) 代表您要签名的消息数据或文档。在 RSA-PSS 中，通常会首先计算 \\(M\\) 的哈希。\\(Hash\\) 指的是一种加密哈希函数（例如 SHA-256），将数据映射到一个固定大小的输出。输出长度记为 \\(hLen\\)。对于 SHA-256，\\(hLen=32\\) 字节。
 
-\\(M\\)represents the message data or document you want to sign. In RSA-PSS, you’ll typically first compute a hash of \\(M\\). \\(Hash\\) refers to a cryptographic hash function (for example, SHA-256) that maps data to a fixed-size output. The output length is denoted \\(hLen\\). For SHA-256, \\(hLen=32\\) bytes.
+我们将使用一个盐值 \\(S\\)，这是一段固定长度的随机生成字符串（通常与 \\(hLen\\) 相同）。这种随机性确保每个签名都是唯一的，即使是同一信息。
 
-We will use a salt, \\(S\\), randomly generated string of fixed length (often the same as \\(hLen\\)). This randomness is essential in ensuring that each signature is unique, even for the same message.
+\\(H\\) 或者 \\(mHash\\) 是消息 \\(M\\) 的哈希，而 \\(H'\\) 是一个包括 \\(M\\) 和盐值 \\(S\\) 的二次哈希。这出现在 PSS 编码步骤中。
 
-\\(H\\) or \\(mHash\\) is the hash of the message \\(M\\)and \\(H'\\) is a secondary hash that includes both \\(M\\) and the salt \\(S\\). This appears in the PSS encoding step.
+掩码生成函数 \\(MGF\\) 是一个使用内部哈希产生任意长度伪随机输出的函数。在 PSS 中，它用来“掩盖”数据块的部分，使签名难以伪造。
 
-The Mask Generation Function, \\(MGF\\), is a function that uses the hash internally to produce a pseudorandom output of arbitrary length. In PSS, it is used to “mask” parts of the data block so that the signature is hard to forge.
+一个固定字节 \\(0xbc\\)（以十六进制表示）被附加在编码消息的末尾，标记 PSS 结构的边界。这在解码过程中作为简单的完整性检查。成功编码后，我们会得到一个长度为 \\(emLen = \\left\\lceil{\\frac{emBits}{8}}\\right\\rceil\\) 的编码消息 \\(EM\\)，它是一个八位字节串。
 
-A fixed byte, \\(0xbc\\) (in hex) is appended at the end of the encoded message to mark the boundary of the PSS structure. This serves as a simple integrity check during decoding. After a successful encoding we receive an encoded message \\(EM\\) which is an octet string of length \\(emLen = \\left\\lceil{\\frac{emBits}{8}}\\right\\rceil\\).
+现在您已经熟悉所有必要的符号说明，我们可以开始编码步骤了。
 
-Now that you are familiar with all the necessary notations, we are ready to begin the encoding step.
+#### 步骤 1: 消息哈希和盐值生成
 
-#### Step 1: Message Hashing and Salt Generation
+我们计算消息的哈希为 \\(H~(mHash)=Hash(M)\\)，其中 \\(M\\) 是我们的消息。我们还将创建一个随机的盐值 \\(S\\)（固定长度，比如使用 SHA-1 时为 20 个字节）。
 
-We compute the hash of the message as \\(H~( mHash)=Hash(M)\\) where \\(M\\) is our message. We will also create a random salt \\(S\\) (of fixed length, say 20 bytes if you use SHA-1).
+#### 步骤 2: 用盐值编码哈希（PSS-Encode）
 
-#### Step 2: Encoding the Hash with the Salt (PSS-Encode)
-
-We will construct a Data Block, \\(DB\\), by combining a padding with the hash and the salt. The padding is a sequence of \\(0\\)’s that fills space and ensures a fixed length. Mathematically:
+我们将通过垫补、哈希和盐值构建一个数据块 \\(DB\\)。垫补是一串 \\(0\\) 的序列，用来填充并确保长度固定。数学上表示为：
 
 $$M' = (0x)~00 ~00 ~00 ~00 ~00 ~00 ~00 ~00 ~||~ mHash ~||~ salt$$
 
-Now we compute the Hash of this block as \\(H' = Hash(M')\\). We will generate another octet string \\(PS\\) and concatenate it with the salt and \\(0x01\\) as a delimiter:
+现在我们计算这个块的哈希为 \\(H' = Hash(M')\\)。我们将生成另一个八位字节串 \\(PS\\) 并将其与盐值和 \\(0x01\\) 作为分隔符连接起来：
 
 $$DB = PS ~||~ 0x01 ~||~ salt$$
 
-Note that DB is an octet string of length \\(emLen - hLen - 1\\). The mask that you see in the visual representation above must be of this length. Mathematically:
+注意，DB 是一个长度为 \\(emLen - hLen - 1\\) 的八位字节串。您在上面的可视化表示中看到的掩码必须是这个长度。数学上表示为：
 
 $$dbMask = MGF(H, emLen - hLen - 1)$$
 
-We will then apply this mask on the \\(DB\\) block using an \\(XOR\\) operation to produce our \\(maskedDB\\):
+然后我们将在 \\(DB\\) 块上应用这个掩码，使用 \\(XOR\\) 运算来产生我们的 \\(maskedDB\\)：
 
 $$maskedDB = DB \\oplus dbMask$$
 
-Recollect that \\(emLen\\) is the intended length of the Encoded Message \\(EM\\) and \\(hLen\\) is the length of the hash output. Now we append a fixed trailer field \\(0xbc\\) and produce the encoded message in its octet string representation:
+回想一下 \\(emLen\\) 是编码消息 \\(EM\\) 的预期长度，\\(hLen\\) 是哈希输出的长度。现在我们附加一个固定的尾部字段 \\(0xbc\\) 并以八位字节串的形式产生编码消息：
 
 $$EM = maskedDB ~||~ H ~||~ 0xbc$$
 
-This encoding process ensures that both the salt and the hash are mixed together in a non-reversible, pseudorandom manner. The randomness from the salt is “spread” over the data block by the \\(MGF\\), making it extremely difficult for any adversary to manipulate the signature.
+这个编码过程保证了盐值和哈希以不可逆的伪随机方式混合在一起。盐值的随机性通过 \\(MGF\\) 被“传播”到数据块中，使得任何对手几乎不可能篡改签名。
 
-#### Step 3: RSA Signature Generation
+#### 步骤 3: RSA 签名生成
 
-Once you have the encoded message \\(EM\\), the RSA signature is produced by using the RSA private key. First, convert the Octet String to its integer representation using the OS2IP method we’ve discussed before. Then apply the RSA Private Key Operation:
+一旦您有了编码消息 \\(EM\\)，可以使用 RSA 私钥生成 RSA 签名。首先，使用我们先前讨论过的 OS2IP 方法将八位字节串转换为整数表示。随后进行 RSA 私钥运算：
 
 $$s=m^d \\bmod N$$
 
-where \\(d\\) is the private exponent and \\(N\\) is the RSA modulus.
+这里 \\(d\\) 是私钥指数，\\(N\\) 是 RSA 模数。
 
-#### Step 4: Signature Verification
+#### 步骤 4: 签名验证
 
-At the receiver end, when any recipient wants to verify a signature, they reverse the process:
+在接收方，当任何接收者希望验证签名时，他们会反向执行此过程：
 
 $$m′= s^e \\bmod N$$
 
-and convert \\(m'\\) back to an encoded message \\(EM\\). The verifier then extracts the components \\((MaskedDB, H′, trailer)\\) and recomputes \\(H'\\) from the message and salt. The verifier confirms that the hash and salt embedded in \\(EM\\) match what is expected. If everything checks out, the signature is valid.
+并将 \\(m'\\) 转换回编码消息 \\(EM\\)。验证者然后提取组件 \\((MaskedDB, H′, trailer)\\) 并重新从消息和盐值计算 \\(H'\\)。验证者确认嵌入在 \\(EM\\) 中的哈希和盐值符合预期。如果一切都验证无误，则签名有效。
 
-## **The Road Ahead: Assessing RSA’s Long-Term Viability**
+## **前路：评估 RSA 的长期可行性**
 
-In 1994, Peter Shor’s algorithm \[14\], demonstrated that a quantum computer can factor large integers in polynomial time, thereby efficiently breaking RSA’s underlying hard problem – the difficulty of factoring \\(N = p \\times q\\).
+1994 年，Peter Shor 的算法 \[14\] 显示量子计算机可以在多项式时间内分解大整数，从而有效攻破 RSA 所倚赖的难题——分解 \\(N = p \\times q\\) 的困难。
 
-Although experimental quantum computers have made progress, they remain far from having the number of stable qubits required to break RSA keys of practical sizes (2048 or 4096 bits).
+尽管实验性的量子计算机已有所进展，但距离拥有足够数量稳定量子比特以破解实际大小的 RSA 密钥（2048 或 4096 位）仍有很大距离。
 
-In anticipation of large-scale quantum computers, the cryptographic community is actively developing and standardizing algorithms believed to be resistant to quantum attacks. These include lattice-based schemes (such as CRYSTALS-Kyber and NTRU), code-based cryptography (such as the McEliece cryptosystem), hash-based signatures (such as XMSS), and multivariate polynomial cryptosystems.
+为应对大规模量子计算机的到来，加密社区正在积极研发和标准化被认为能抵御量子攻击的算法。这些方案包括基于格子的方案（例如 CRYSTALS-Kyber 和 NTRU）、基于编码的加密（例如 McEliece 加密系统）、基于哈希的签名（例如 XMSS）和多变量多项式加密系统。
 
-It’s important to note that while OAEP and PSS improve the security of RSA against classical attacks, they do not protect RSA from quantum attacks. In a post-quantum world, even the most secure classical padding will not prevent a quantum computer from breaking RSA using Shor’s algorithm.
+需要注意的是，虽然 OAEP 和 PSS 提升了 RSA 抵御传统攻击的安全性，但它们无法保护 RSA 不受量子攻击的影响。在一个后量子时代，即便是最安全的经典填充也无法阻止量子计算机使用 Shor 算法破解 RSA。
 
-In the near term, RSA remains in widespread use and, when implemented with padding schemes such as OAEP and PSS, continues to provide strong security against classical adversaries. But looking ahead, it’s expected that organizations will gradually migrate to post-quantum algorithms as they mature and become standardized.
+```markdown
+## 参考文献
 
-## References
+\[1\] FIPS 186-5: [数字签名标准 (DSS)][43]
 
-\[1\] FIPS 186-5: [Digital Signature Standard (DSS)][43]
+\[2\] RFC 8017 PKCS #1: [RSA 加密规范][44]
 
-\[2\] RFC 8017 PKCS #1: [RSA Cryptography Specifications][44]
+\[3\] [拉格朗日定理][45]
 
-\[3\] [Lagrange's theorem][45]
-
-\[4\] Ronald L. Rivest, Robert D. Silverman: [Are Strong Primes Needed for RSA][46]?
+\[4\] Ronald L. Rivest, Robert D. Silverman: [RSA 需要强素数吗][46]?
 
 \[5\] [pyca/cryptography][47]
 
 \[6\] [OpenSSL Github][48]: `rsa_chk.c`
 
-\[7\] RFC 2313: [PKCS #1: RSA Encryption][49]
+\[7\] RFC 2313: [PKCS #1: RSA 加密][49]
 
-\[8 \] Daniel Bleichenbacher: [Chosen Ciphertext Attacks Against Protocols Based on the RSA Encryption Standard PKCS #1][50]
+\[8 \] Daniel Bleichenbacher: [针对基于 RSA 加密标准 PKCS #1 的协议的选择密文攻击][50]
 
-\[9\] RFC 8017: [PKCS #1 RSA Cryptography Specifications Version 2.2][51]
+\[9\] RFC 8017: [PKCS #1 RSA 加密规范版本 2.2][51]
 
-\[10\] RSA\_public\_encrypt: [Warnings][52]
+\[10\] RSA\_public\_encrypt: [警告][52]
 
 \[11\] [pyca/PKCS1v1][53]
 
-\[12\] [Probabilistic signature scheme][54]
+\[12\] [概率签名方案][54]
 
 \[13\] RFC 8017: [RSASSA-PSS][55]
 
-\[14\] [Algorithms for quantum computation][56]: discrete logarithms and factoring
+\[14\] [用于量子计算的算法][56]: 离散对数和因式分解
 
 [1]: #heading-prerequisites
 [2]: #heading-the-alice-bob-paradigm
@@ -964,3 +945,5 @@ In the near term, RSA remains in widespread use and, when implemented with paddi
 [54]: https://en.wikipedia.org/wiki/Probabilistic_signature_scheme
 [55]: https://www.rfc-editor.org/rfc/rfc8017#section-8.1
 [56]: https://ieeexplore.ieee.org/abstract/document/365700/
+```
+
