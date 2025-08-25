@@ -4,11 +4,11 @@ date: 2025-07-17T02:03:57.312Z
 author: Ikegah Oliver
 authorURL: https://www.freecodecamp.org/news/author/Oliverkrane/
 originalURL: https://www.freecodecamp.org/news/learn-api-fundamentals-and-architecture/
-posteditor: ""
+posteditor: "miyatest"
 proofreader: ""
 ---
 
-这里有一些问题：你是如何使用 Google、Apple 或 Microsoft 账号登录应用的？使用 Paystack 或 PayPal 在线支付是如何工作的？像 Facebook 和 Instagram 这样的应用是如何共享信息和通知的？
+思考这些问题：你是如何使用 Google、Apple 或 Microsoft 账号登录应用的？使用 Paystack 或 PayPal 在线支付是如何工作的？像 Facebook 和 Instagram 这样的应用是如何共享信息和通知的？
 
 <!-- more -->
 
