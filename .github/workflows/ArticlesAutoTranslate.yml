@@ -64,15 +64,6 @@ jobs:
         run: |
           title="${{ github.event.issue.title }}"
           LANG_CODE=$(echo "$title" | sed -E 's/^\[([a-zA-Z]+)\].*/\1/')
-          
-          # Validate against supported languages
-          valid_langs=("es" "it" "ja" "pt" "uk" "zh" "ko")
-          if [[ ! " ${valid_langs[@]} " =~ " ${LANG_CODE} " ]]; then
-            echo "::error::Invalid language code: $LANG_CODE"
-            echo "Supported languages: ${valid_langs[*]}"
-            exit 1
-          fi
-          
           echo "lang=$LANG_CODE" >> $GITHUB_OUTPUT
           echo "LANG_CODE=$LANG_CODE" >> $GITHUB_ENV
 
