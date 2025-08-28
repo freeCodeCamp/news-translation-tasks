@@ -6,7 +6,7 @@ on:
     types: [labeled]
 
 env:
-  # use for push to remote repo
+  # Git helper functions for push retry
   PUSH_RETRY_SCRIPT: |
     push_with_retry() {
       local branch=${1:-main}
@@ -27,6 +27,7 @@ env:
       echo "Push failed after $max_retries attempts"
       return 1
     }
+
 jobs:
   auto-translate:
     runs-on: ubuntu-latest
@@ -121,8 +122,9 @@ jobs:
           git pull --rebase origin main || true
           git stash pop || true
 
-          # use push_with_retry function
-          eval "$PUSH_RETRY_SCRIPT" main
+          # Use push retry function
+          eval "$PUSH_RETRY_SCRIPT"
+          push_with_retry main
 
       ### Switch to auto-translate branch (resolve conflicts & clean up temp files)
       - name: Checkout auto-translate branch
@@ -177,8 +179,9 @@ jobs:
           git pull --rebase origin auto-translate || true
           git stash pop || true
 
-          # use push_with_retry function
-          eval "$PUSH_RETRY_SCRIPT" auto-translate
+          # Use push retry function
+          eval "$PUSH_RETRY_SCRIPT"
+          push_with_retry auto-translate
 
       ### Clean up temp directory
       - name: Cleanup temp directory
@@ -192,5 +195,6 @@ jobs:
           git pull --rebase origin main || true
           git stash pop || true
 
-          # use push_with_retry function
-          eval "$PUSH_RETRY_SCRIPT" main
+          # Use push retry function for final cleanup
+          eval "$PUSH_RETRY_SCRIPT"
+          push_with_retry main
