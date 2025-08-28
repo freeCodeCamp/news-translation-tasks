@@ -53,7 +53,7 @@ jobs:
       - name: Validate URL format
         run: |
           url="${{ github.event.issue.body }}"
-          if [[ ! "$url" =~ ^https?://.*freecodecamp\.org ]]; then
+          if [[ ! "$url" =~ ^https?://([^.]+\.)?freecodecamp\.org/ ]]; then
             echo "::error::Invalid URL. Must be from freecodecamp.org"
             exit 1
           fi
