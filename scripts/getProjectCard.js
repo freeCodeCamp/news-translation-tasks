@@ -1,29 +1,20 @@
-/**
- * Retrieves project card information for a given issue
- * @param {Object} params - Parameters from GitHub Actions
- * @returns {Object} - Project card information
- */
-async function getProjectCard({ github, context, core }) {
-  const issueNodeId = context.payload.issue.node_id;
-  
-  const query = `
-    query ($id: ID!) {
-      node(id: $id) {
-        ... on Issue {
-          projectsV2(first: 1) {
-            edges {
-              node {
-                id
-                url
-                title
-                items(first: 100) {
-                  edges {
-                    node {
-                      id
-                      content {
-                        ... on Issue {
-                          id
-                        }
+const PROJECT_QUERY = `
+  query ($id: ID!) {
+    node(id: $id) {
+      ... on Issue {
+        projectsV2(first: 1) {
+          edges {
+            node {
+              id
+              url
+              title
+              items(first: 100) {
+                edges {
+                  node {
+                    id
+                    content {
+                      ... on Issue {
+                        id
                       }
                     }
                   }
@@ -34,10 +25,18 @@ async function getProjectCard({ github, context, core }) {
         }
       }
     }
-  `;
+  }
+`;
+
+/**
+ * Retrieves project card information for a given issue
+ * @param {Object} params - Parameters from GitHub Actions
+ * @returns {Object} - Project card information
+ */
+async function getProjectCard({ github, context, core }) {
+  const issueNodeId = context.payload.issue.node_id;
   
-  const variables = { id: issueNodeId };
-  const result = await github.graphql(query, variables);
+  const result = await github.graphql(PROJECT_QUERY, { id: issueNodeId });
   
   console.log(`GraphQL Result: ${JSON.stringify(result)}`);
   
@@ -62,19 +61,12 @@ async function getProjectCard({ github, context, core }) {
     throw new Error('Could not find the project card for this issue. The issue may not be properly added to the project board.');
   }
   
-  const cardId = cardEdge.node.id;
-  const projectUrl = projectEdge.node.url;
-  const projectName = projectEdge.node.title;
+  const { id: cardId } = cardEdge.node;
+  const { url: projectUrl, title: projectName } = projectEdge.node;
   
-  console.log(`Card ID: ${cardId}`);
-  console.log(`Project URL: ${projectUrl}`);
-  console.log(`Project Name: ${projectName}`);
+  console.table({ cardId, projectUrl, projectName });
   
-  return {
-    cardId,
-    projectUrl,
-    projectName
-  };
+  return { cardId, projectUrl, projectName };
 }
 
 /**
@@ -84,6 +76,8 @@ async function getProjectCard({ github, context, core }) {
 async function main({ github, context, core }) {
   try {
     const cardInfo = await getProjectCard({ github, context, core });
+
+    console.table({ cardId, projectUrl, projectName });
     
     core.setOutput('card_id', cardInfo.cardId);
     core.setOutput('project_url', cardInfo.projectUrl);
@@ -93,4 +87,4 @@ async function main({ github, context, core }) {
   }
 }
 
-module.exports = { getProjectCard, main };
+export { getProjectCard, main };
