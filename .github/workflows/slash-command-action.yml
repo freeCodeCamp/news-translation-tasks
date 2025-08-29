@@ -87,9 +87,23 @@ jobs:
             const result = await github.graphql(query, variables);
             console.log(`Result: ${JSON.stringify(result)}`);
 
-            const cardId = result.node.projectsV2.edges[0].node.items.edges.find(edge => edge.node.content.id === process.env.ISSUE_NODE_ID).node.id;
-            const projectUrl = result.node.projectsV2.edges[0].node.url;
-            const projectName = result.node.projectsV2.edges[0].node.title;
+            // Check if project associations exist
+            if (!result.node?.projectsV2?.edges?.length) {
+              core.setFailed('This issue is not associated with any project boards. Please ensure the issue is added to a project before using slash commands.');
+              return;
+            }
+
+            const projectEdge = result.node.projectsV2.edges[0];
+            const cardEdge = projectEdge.node.items.edges.find(edge => edge.node.content.id === process.env.ISSUE_NODE_ID);
+            
+            if (!cardEdge) {
+              core.setFailed('Could not find the project card for this issue. The issue may not be properly added to the project board.');
+              return;
+            }
+
+            const cardId = cardEdge.node.id;
+            const projectUrl = projectEdge.node.url;
+            const projectName = projectEdge.node.title;
 
             console.log(`Card ID: ${cardId}`);
             console.log(`Project URL: ${projectUrl}`);
