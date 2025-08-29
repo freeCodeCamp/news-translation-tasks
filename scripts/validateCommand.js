@@ -3,7 +3,7 @@
  * @param {string} comment - The comment text to validate
  * @returns {Object} - Command validation result
  */
-function validateCommand(comment) {
+export function validateCommand(comment) {
   const commandMap = {
     '/postedit': { command: 'postedit', targetStatus: 'in Postediting' },
     '/post-edit': { command: 'postedit', targetStatus: 'in Postediting' },
@@ -24,7 +24,7 @@ function validateCommand(comment) {
  * Main function to validate command and set outputs
  * @param {Object} params - Parameters from GitHub Actions
  */
-async function main({ github, context, core }) {
+export async function main({ github, context, core }) {
   const comment = context.payload.comment.body;
   const result = validateCommand(comment);
   
@@ -36,5 +36,3 @@ async function main({ github, context, core }) {
     core.setFailed('Invalid command. The comment must start with /postedit or /review.');
   }
 }
-
-module.exports = { validateCommand, main };
