@@ -20,6 +20,8 @@ jobs:
       project_url: ${{ steps.get_card.outputs.project_url }}
       project_name: ${{ steps.get_card.outputs.project_name }}
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
       - name: Validate command
         id: command_check
         uses: actions/github-script@v7
