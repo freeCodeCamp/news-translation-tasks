@@ -4,38 +4,20 @@
  * @returns {Object} - Command validation result
  */
 function validateCommand(comment) {
-  // For ease of use, accept both /postedit and /post-edit.
-  if (comment.startsWith('/postedit') || comment.startsWith('/post-edit')) {
-    return {
-      command: 'postedit',
-      targetStatus: 'in Postediting',
-      isValid: true
-    };
-  }
-  
-  // We can remove this condition for /translate when we move to /postedit command completely.
-  // Keeping this for now to make the old command work during the transition period.
-  if (comment.startsWith('/translate')) {
-    return {
-      command: 'translate',
-      targetStatus: 'in Translation',
-      isValid: true
-    };
-  }
-  
-  if (comment.startsWith('/review')) {
-    return {
-      command: 'review',
-      targetStatus: 'in Review',
-      isValid: true
-    };
-  }
-  
-  return {
-    command: null,
-    targetStatus: null,
-    isValid: false
+  const commandMap = {
+    '/postedit': { command: 'postedit', targetStatus: 'in Postediting' },
+    '/post-edit': { command: 'postedit', targetStatus: 'in Postediting' },
+    '/translate': { command: 'translate', targetStatus: 'in Translation' },
+    '/review': { command: 'review', targetStatus: 'in Review' }
   };
+  
+  for (const [prefix, config] of Object.entries(commandMap)) {
+    if (comment.startsWith(prefix)) {
+      return { ...config, isValid: true };
+    }
+  }
+  
+  return { command: null, targetStatus: null, isValid: false };
 }
 
 /**
