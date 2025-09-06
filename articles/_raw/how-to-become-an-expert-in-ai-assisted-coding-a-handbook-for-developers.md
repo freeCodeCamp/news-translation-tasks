@@ -1,6 +1,6 @@
 ---
 title: How to Become an Expert in AI-Assisted Coding – A Handbook for Developers
-date: 2025-09-06T01:49:34.313Z
+date: 2025-09-06T01:49:58.171Z
 author: Mrugesh Mohapatra
 authorURL: https://www.freecodecamp.org/news/author/mrugesh/
 originalURL: https://www.freecodecamp.org/news/how-to-become-an-expert-in-ai-assisted-coding-a-handbook-for-developers/
