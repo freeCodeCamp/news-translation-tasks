@@ -50,15 +50,6 @@ jobs:
           echo "::error::Issue body is empty. Please provide article URL."
           exit 1
 
-      ### Validate URL format
-      - name: Validate URL format
-        run: |
-          url="${{ github.event.issue.body }}"
-          if [[ ! "$url" =~ ^https?://([^.]+\.)?freecodecamp\.org/ ]]; then
-            echo "::error::Invalid URL. Must be from freecodecamp.org"
-            exit 1
-          fi
-
       ### Extract language code
       - name: Extract language code
         id: lang
