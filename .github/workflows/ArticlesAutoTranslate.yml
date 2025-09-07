@@ -5,6 +5,29 @@ on:
   issues:
     types: [labeled]
 
+env:
+  # Git helper functions for push retry
+  PUSH_RETRY_SCRIPT: |
+    push_with_retry() {
+      local branch=${1:-main}
+      local max_retries=${2:-3}
+      
+      for i in $(seq 1 $max_retries); do
+        if git push origin "$branch"; then
+          echo "Push to $branch successful"
+          return 0
+        else
+          echo "Push failed, attempt $i/$max_retries"
+          if [ $i -lt $max_retries ]; then
+            git pull --rebase origin "$branch" || true
+            sleep 5
+          fi
+        fi
+      done
+      echo "Push failed after $max_retries attempts"
+      return 1
+    }
+
 jobs:
   auto-translate:
     runs-on: ubuntu-latest
@@ -24,7 +47,7 @@ jobs:
       - name: Validate issue body
         if: ${{ !github.event.issue.body }}
         run: |
-          echo "Issue body is empty. Exiting."
+          echo "::error::Issue body is empty. Please provide article URL."
           exit 1
 
       ### Extract language code
@@ -90,12 +113,9 @@ jobs:
           git pull --rebase origin main || true
           git stash pop || true
 
-          for i in {1..3}; do
-            git push origin main && break
-            echo "Push failed. Retrying in 5s..."
-            sleep 5
-            git pull --rebase origin main || true
-          done
+          # Use push retry function
+          eval "$PUSH_RETRY_SCRIPT"
+          push_with_retry main
 
       ### Switch to auto-translate branch (resolve conflicts & clean up temp files)
       - name: Checkout auto-translate branch
@@ -150,12 +170,9 @@ jobs:
           git pull --rebase origin auto-translate || true
           git stash pop || true
 
-          for i in {1..3}; do
-            git push origin auto-translate && break
-            echo "Push failed. Retrying in 5s..."
-            sleep 5
-            git pull --rebase origin auto-translate || true
-          done
+          # Use push retry function
+          eval "$PUSH_RETRY_SCRIPT"
+          push_with_retry auto-translate
 
       ### Clean up temp directory
       - name: Cleanup temp directory
@@ -169,9 +186,6 @@ jobs:
           git pull --rebase origin main || true
           git stash pop || true
 
-          for i in {1..3}; do
-            git push origin main && break
-            echo "Push failed. Retrying in 5s..."
-            sleep 5
-            git pull --rebase origin main || true
-          done
+          # Use push retry function for final cleanup
+          eval "$PUSH_RETRY_SCRIPT"
+          push_with_retry main
