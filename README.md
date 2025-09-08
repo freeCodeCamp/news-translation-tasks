@@ -133,6 +133,49 @@ Once your pull request is merged, the language lead will take over the final ste
 
 Thank you ahead of time!
 
+## Developer Documentation
+
+### Slash Command Workflow Architecture
+
+The slash command system has been refactored to use modular JavaScript components for better maintainability and readability. The workflow is now organized as follows:
+
+#### Structure
+
+- **`scripts/validateCommand.js`** - Handles command validation logic
+  - Validates `/postedit`, `/translate`, and `/review` commands
+  - Supports both `/postedit` and `/post-edit` formats
+  - Returns command type and target status
+
+- **`scripts/getProjectCard.js`** - Handles project card retrieval
+  - Fetches project associations using GraphQL
+  - Validates project structure and card existence
+  - Provides clear error messages for debugging
+
+- **`scripts/assignPosteditor.js`** - Assigns issues to posteditors
+- **`scripts/assignReviewer.js`** - Assigns issues to reviewers
+
+#### Workflow Flow
+
+1. **Command Validation** → Validates the slash command format
+2. **Project Card Lookup** → Retrieves project card information
+3. **Issue Assignment** → Assigns to appropriate user
+4. **Status Update** → Updates project card status
+
+#### Error Handling
+
+The system includes comprehensive error handling:
+- Project association validation
+- Card existence verification
+- Clear error messages for users
+- Graceful failure modes
+
+#### Maintenance Benefits
+
+- **Separation of Concerns**: Each script has a single responsibility
+- **Testability**: Individual modules can be tested independently
+- **Readability**: JavaScript code has proper syntax highlighting
+- **Reusability**: Components can be reused across different workflows
+
 ## Tips
 
 ### How to add a table of contents
