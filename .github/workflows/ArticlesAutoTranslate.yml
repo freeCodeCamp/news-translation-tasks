@@ -60,7 +60,7 @@ jobs:
           echo "LANG_CODE=$LANG_CODE" >> $GITHUB_ENV
 
       ### Checkout repository
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       ### Configure Git
       - name: Setup Git
