@@ -1,33 +1,32 @@
-```markdown
 ---
 title: Come Lavorare con SQLite in Python – Un Manuale per Principianti
 date: 2024-11-04T13:16:41.256Z
 author: Ashutosh Krishna
 authorURL: https://www.freecodecamp.org/news/author/ashutoshkrris/
 originalURL: https://www.freecodecamp.org/news/work-with-sqlite-in-python-handbook/
-posteditor: ""
+posteditor: Filippo Presti
 proofreader: ""
 ---
 
-SQLite è uno dei sistemi di gestione di database relazionali (RDBMS) più popolari. È leggero, significa che non occupa molto spazio sul tuo sistema. Una delle sue migliori caratteristiche è che è senza server, quindi non è necessario installare o gestire un server separato per usarlo.
+SQLite è uno dei sistemi di gestione di database relazionali (RDBMS) più popolari. È leggero, significa che non occupa molto spazio sul tuo sistema. Una delle sue migliori caratteristiche è che è serverless (senza server), quindi non è necessario installare o gestire un server separato per usarlo.
 
 <!-- more -->
 
-Invece, memorizza tutto in un semplice file sul tuo computer. Inoltre, richiede zero configurazione, quindi non c'è un processo di configurazione complicato, rendendolo perfetto per principianti e piccoli progetti.
+Invece, salva tutto in un semplice file sul tuo computer. Inoltre, non richiede alcuna configurazione, quindi non c'è un processo di configurazione complicato, rendendolo perfetto per principianti e piccoli progetti.
 
-SQLite è una scelta eccellente per applicazioni piccole o medie perché è facile da usare, veloce e può gestire la maggior parte dei compiti che i database più grandi possono fare, ma senza l'inconveniente di gestire software extra. Sia che tu stia costruendo un progetto personale o prototipando una nuova app, SQLite è un'opzione solida per far partire le cose rapidamente.
+SQLite è un'ottima scelta per applicazioni piccole o medie perché è facile da usare, veloce e può gestire la maggior parte delle attività che i database più grandi possono svolgere, ma senza l'inconveniente di gestire software aggiuntivi. Che tu stia costruendo un progetto personale o prototipando una nuova app, SQLite è un'opzione solida per iniziare rapidamente.
 
 In questo tutorial, imparerai come lavorare con SQLite usando Python. Ecco cosa copriremo in questo tutorial:
 
--   [Come Preparare il Tuo Ambiente Python][1]
+-   [Come Impostare il Tuo Ambiente Python][1]
     
 -   [Come Creare un Database SQLite][2]
     
--   [Come Creare Tabelle nel Database][3]
+-   [Come Creare Tabelle del Database][3]
     
 -   [Come Inserire Dati in una Tabella][4]
     
--   [Come Interrogare i Dati][5]
+-   [Come Eseguire Query sui Dati][5]
     
 -   [Come Aggiornare e Eliminare Dati][6]
     
@@ -40,17 +39,17 @@ In questo tutorial, imparerai come lavorare con SQLite usando Python. Ecco cosa 
 -   [Come Esportare e Importare Dati \[Sezione Bonus\]][10]
     
 -   [Conclusioni][11]
-    
+  
 
 Questo tutorial è perfetto per chiunque desideri iniziare a lavorare con i database senza addentrarsi in configurazioni complesse.
 
-## Come Preparare il Tuo Ambiente Python
+## Come Impostare il Tuo Ambiente Python
 
 Prima di lavorare con SQLite, assicuriamoci che il tuo ambiente Python sia pronto. Ecco come configurare tutto.
 
 ### Installare Python
 
-Se non hai ancora Python installato sul tuo sistema, puoi scaricarlo dal sito ufficiale di [Python][12]. Segui le istruzioni di installazione per il tuo sistema operativo (Windows, macOS o Linux).
+Se non hai ancora installato Python sul tuo sistema, puoi scaricarlo dal sito ufficiale di [Python][12]. Segui le istruzioni di installazione per il tuo sistema operativo (Windows, macOS o Linux).
 
 Per verificare se Python è installato, apri il tuo terminale (o prompt dei comandi) e digita:
 
@@ -58,19 +57,19 @@ Per verificare se Python è installato, apri il tuo terminale (o prompt dei coma
 python --version
 ```
 
-Questo dovrebbe mostrare la versione attuale di Python installata. Se non è installato, segui le istruzioni sul sito di Python.
+Dovresti vedere la versione attuale di Python installata. In caso contrario, segui le istruzioni sul sito di Python.
 
 ### Installare il Modulo SQLite3
 
-La buona notizia è che SQLite3 è integrato con Python! Non è necessario installarlo separatamente perché è incluso nella libreria standard di Python. Questo significa che puoi iniziare a usarlo subito senza alcuna configurazione aggiuntiva.
+La buona notizia è che SQLite3 è integrato con Python! Non è necessario installarlo separatamente perché è incluso nella libreria standard di Python. Questo significa che puoi iniziare subito a usarlo senza ulteriori configurazioni.
 
 ### Come Creare un Ambiente Virtuale (Opzionale ma Consigliato)
 
-È una buona idea creare un ambiente virtuale per ogni progetto per tenere organizzate le tue dipendenze. Un ambiente virtuale è come un foglio bianco dove puoi installare pacchetti senza influenzare la tua installazione globale di Python.
+È una buona pratica creare un ambiente virtuale per ogni progetto, così da mantenere le dipendenze organizzate. Un ambiente virtuale è come una tabula rasa dove puoi installare pacchetti senza influenzare l'installazione globale di Python.
 
 Per creare un ambiente virtuale, segui questi passaggi:
 
-1.  In primo luogo, apri il tuo terminale o prompt dei comandi e naviga nella directory dove vuoi creare il tuo progetto.
+1.  Apri il tuo terminale o prompt dei comandi e naviga nella directory dove vuoi creare il tuo progetto.
     
 2.  Esegui il seguente comando per creare un ambiente virtuale:
     
@@ -91,7 +90,7 @@ env\Scripts\activate
 env/bin/activate
 ```
 
-Dopo aver attivato l'ambiente virtuale, noterai che il prompt del terminale cambia, mostrando il nome dell'ambiente virtuale. Questo significa che stai lavorando all'interno di esso.
+Dopo aver attivato l'ambiente virtuale, noterai che il prompt del terminale cambia, mostrando il nome dell'ambiente virtuale. Questo significa che stai lavorando al suo interno.
 
 ### Installare le Librerie Necessarie
 
@@ -108,16 +107,17 @@ Per installare `pandas` e `faker`, esegui semplicemente i seguenti comandi:
 pip install pandas faker
 ```
 
-Questo installerà sia `pandas` che `faker` nel tuo ambiente virtuale. Con questo, il tuo ambiente è pronto e sei pronto per iniziare a creare e gestire il tuo database SQLite in Python!
+Questo installerà sia `pandas` che `faker` nel tuo ambiente virtuale. Con questo, il tuo ambiente è pronto per iniziare a creare e gestire il tuo database SQLite con Python!
 
 ## Come Creare un Database SQLite
 
-Un database è un modo strutturato per memorizzare e gestire dati affinché possano essere facilmente accessibili, aggiornati e organizzati. È come un sistema di archiviazione digitale che ti permette di memorizzare grandi quantità di dati in modo efficiente, sia che si tratti di un'app semplice o di un sistema più complesso. I database usano tabelle per organizzare i dati, con righe e colonne che rappresentano singoli record e i loro attributi.
+Un database è un modo strutturato per archiviare e gestire dati affinché possano essere facilmente accessibili, aggiornati e organizzati. È come un sistema di archiviazione digitale che ti permette di memorizzare grandi quantità di dati in modo efficiente, sia che si tratti di un'app semplice o di un sistema più complesso. I database usano tabelle per organizzare i dati, con righe e colonne che rappresentano singoli record e i loro attributi.
 
 ### Come Funzionano i Database SQLite
 
-A differenza della maggior parte degli altri sistemi di database, SQLite è un database senza server. Questo significa che non richiede di impostare o gestire un server, rendendolo leggero e facile da usare. Tutti i dati sono memorizzati in un singolo file sul tuo computer, che puoi facilmente spostare, condividere o copiare. Nonostante la sua semplicità, SQLite è abbastanza potente da gestire molti compiti comuni dei database ed è ampiamente usato in app mobili, sistemi embedded e progetti di piccole o medie dimensioni.
-```
+A differenza della maggior parte degli altri sistemi di database, SQLite è un database senza server. Questo significa che non richiede di impostare o gestire un server, rendendolo leggero e facile da usare. Tutti i dati sono memorizzati in un singolo file sul tuo computer, che puoi facilmente spostare, condividere o copiare. Nonostante la sua semplicità, SQLite è abbastanza potente da gestire molti casi d'uso comuni dei database ed è ampiamente usato in app mobili, sistemi embedded e progetti di piccole o medie dimensioni.
+
+### Come Creare un Nuovo Database SQLite
 
 Creiamo un nuovo database SQLite e impariamo a interagire con esso utilizzando la libreria `sqlite3` di Python.
 
@@ -178,18 +178,22 @@ with sqlite3.connect('my_database.db') as connection:
 
 D'ora in poi, utilizzeremo l'istruzione `with` nei nostri prossimi esempi di codice per gestire le connessioni ai database in modo efficiente. Questo renderà il codice più conciso e facile da mantenere.
 
-## Come Creare le Tabelle nel Database
+## Come Creare Tabelle del Database
 
-Ora che abbiamo creato un database SQLite e ci siamo connessi ad esso, il passaggio successivo è creare delle tabelle all'interno del database. Una tabella è dove memorizzeremo i nostri dati, organizzati in righe (record) e colonne (attributi). Per questo esempio, creeremo una tabella chiamata `Students` per memorizzare le informazioni sugli studenti, che riutilizzeremo nelle sezioni successive.
+Ora che abbiamo creato un database SQLite e ci siamo connessi ad esso, il passo successivo è creare delle tabelle all'interno del database. Una tabella è il luogo dove memorizzeremo i nostri dati, organizzati in righe (record) e colonne (attributi). In questo esempio, creeremo una tabella chiamata `Students` per memorizzare le informazioni sugli studenti, che riutilizzeremo nelle sezioni successive.
 
-Per creare una tabella, utilizziamo l'istruzione `CREATE TABLE` di SQL. Questo comando definisce la struttura della tabella, inclusi i nomi delle colonne e i tipi di dati per ciascuna colonna.
+Per creare una tabella, utilizziamo l'istruzione `CREATE TABLE` di SQL. Questo comando definisce la struttura della tabella, compresi i nomi delle colonne e i relativi tipi di dati per ciascuna colonna.
 
 Ecco un semplice comando SQL per creare una tabella `Students` con i seguenti campi:
 
-- `id`: Un identificatore univoco per ciascuno studente (un intero).
-- **name**: Il nome dello studente (testo).
-- **age**: L'età dello studente (un intero).
-- **email**: L'indirizzo email dello studente (testo).
+-   `id`: Un identificatore univoco per ciascuno studente (un intero).
+
+-   **name**: Il nome dello studente (testo).
+
+-   **age**: L'età dello studente (un intero).
+
+-   **email**: L'indirizzo email dello studente (testo).
+
 
 Il comando SQL per creare questa tabella sarà il seguente:
 
@@ -233,39 +237,40 @@ with sqlite3.connect('my_database.db') as connection:
     print("Tabella 'Students' creata con successo!")
 ```
 
-- `IF NOT EXISTS`: Questo assicura che la tabella venga creata solo se non esiste già, prevenendo errori se la tabella è stata creata in precedenza.
+- `IF NOT EXISTS`: Questo garantisce che la tabella venga creata solo se non esiste già, prevenendo errori se la tabella è stata creata in precedenza.
 
 - `connection.commit()`: Questo salva (committa) le modifiche nel database.
 
-Quando esegui il codice Python sopra, creerà la tabella `Students` nel file di database `my_database.db`. Vedrai anche un messaggio nel terminale che conferma che la tabella è stata creata con successo.
+Quando esegui il codice Python sopra, verrà creata la tabella `Students` nel file `my_database.db`. Vedrai anche un messaggio nel terminale che conferma che la tabella è stata creata con successo.
 
 Se stai usando Visual Studio Code, puoi installare l'estensione [SQLite Viewer][13] per visualizzare i database SQLite.
 
 ![SQLite Viewer - Estensione VS Code](https://cdn.hashnode.com/res/hashnode/image/upload/v1727514353100/522fc6f1-0363-41ca-a76a-b730470cb64a.png)
 
-```markdown
+### Tipi di Dati in SQLite e Loro Corrispondenza in Python
+
 SQLite supporta diversi tipi di dati, che dobbiamo comprendere quando definiamo le nostre tabelle. Ecco una panoramica rapida dei comuni tipi di dati SQLite e come si mappano ai tipi di Python:
 
 | Tipo di Dato SQLite | Descrizione | Equivalente in Python |
 | --- | --- | --- |
 | **INTEGER** | Numeri interi | `int` |
 | **TEXT** | Stringhe di testo | `str` |
-| **REAL** | Numeri in virgola mobile | `float` |
+| **REAL** | Numeri decimali (virgola mobile) | `float` |
 | **BLOB** | Dati binari (ad es., immagini, file) | `bytes` |
 | **NULL** | Rappresenta nessun valore o dati mancanti | `None` |
 
 Nella nostra tabella `Students`:
 
-- `id` è di tipo `INTEGER`, che si mappa a `int` di Python.
+-   `id` è di tipo `INTEGER`, che si mappa a `int` di Python.
     
-- `name` e `email` sono di tipo `TEXT`, che si mappano a `str` di Python.
+-   `name` e `email` sono di tipo `TEXT`, che si mappano a `str` di Python.
     
-- `age` è anche di tipo `INTEGER`, mappandosi a `int` di Python.
+-   `age` è anche di tipo `INTEGER`, mappandosi a `int` di Python.
     
 
 ## Come Inserire Dati in una Tabella
 
-Ora che abbiamo creato la nostra tabella `Students`, è il momento di iniziare a inserire dati nel database. In questa sezione, tratteremo come inserire sia singoli record che multipli utilizzando Python e SQLite, e come evitare problemi di sicurezza comuni come l'iniezione SQL utilizzando query parametrizzate.
+Ora che abbiamo creato la nostra tabella `Students`, possiamo iniziare a inserire i dati nel database. In questa sezione, tratteremo come inserire sia singoli record che multipli utilizzando Python e SQLite, e come evitare problemi di sicurezza comuni come l'iniezione SQL utilizzando query parametrizzate.
 
 ### Come Inserire un Singolo Record
 
@@ -282,7 +287,7 @@ Tuttavia, invece di scrivere SQL direttamente nel nostro script Python con valor
 
 Ecco come possiamo inserire un singolo record nella tabella `Students` utilizzando una query parametrizzata:
 
-```python
+```
 import sqlite3
 
 # Usa 'with' per aprire e chiudere automaticamente la connessione
@@ -305,7 +310,7 @@ with sqlite3.connect('my_database.db') as connection:
     print("Record inserito con successo!")
 ```
 
-I placeholder `?` rappresentano i valori da inserire nella tabella. I valori effettivi sono passati come una tupla (`student_data`) nel metodo `cursor.execute()`.
+I placeholder `?` rappresentano i valori da inserire nella tabella. I valori effettivi vengono passati come una tupla (`student_data`) nel metodo `cursor.execute()`.
 
 ### Come Inserire Record Multipli
 
@@ -313,7 +318,7 @@ Se vuoi inserire più record contemporaneamente, puoi usare il metodo `executema
 
 Per rendere il nostro esempio più dinamico, possiamo usare la libreria `Faker` per generare dati casuali sugli studenti. Questo è utile per testare e simulare scenari reali.
 
-```python
+```
 from faker import Faker
 import sqlite3
 
@@ -359,7 +364,7 @@ Utilizzando query parametrizzate (come dimostrato sopra), evitiamo questo proble
 
 ## Come Eseguire Query sui Dati
 
-Ora che abbiamo inserito alcuni dati nella nostra tabella `Students`, impariamo come recuperare i dati dalla tabella. Esploreremo diversi metodi per ottenere dati in Python, inclusi `fetchone()`, `fetchall()`, e `fetchmany()`.
+Ora che abbiamo inserito alcuni dati nella nostra tabella `Students`, impariamo come recuperarli. Esploreremo diversi metodi per ottenere dati in Python, inclusi `fetchone()`, `fetchall()`, e `fetchmany()`.
 
 Per eseguire query sui dati da una tabella, usiamo l'istruzione `SELECT`. Ecco un semplice comando SQL per selezionare tutte le colonne dalla tabella `Students`:
 
@@ -368,7 +373,8 @@ SELECT * FROM Students;
 ```
 
 Questo comando recupera tutti i record e le colonne dalla tabella `Students`. Possiamo eseguire questa query `SELECT` in Python e ottenere i risultati.
-```
+
+### Come Recuperare Tutti i Record
 
 Ecco come possiamo recuperare tutti i record dalla tabella `Students`:
 
@@ -517,13 +523,13 @@ Tutti gli studenti come DataFrame:
 
 La funzione `pd.read_sql_query()` esegue la query SQL e restituisce direttamente i risultati come un DataFrame di pandas.
 
-## Come Aggiornare e Cancellare Dati
+## Come Aggiornare e Eliminare Dati
 
-In questa sezione, impareremo come aggiornare record esistenti e cancellare record dalla nostra tabella `Students` usando comandi SQL in Python. Questo è essenziale per gestire e mantenere i tuoi dati in modo efficace.
+In questa sezione, impareremo come aggiornare record esistenti ed eliminarli dalla nostra tabella `Students` usando comandi SQL in Python. Questo è essenziale per per una corretta gestione e manutenzione dei dati.
 
 ### Aggiornamento di Record Esistenti
 
-Per modificare i record esistenti in un database, usiamo il comando SQL `UPDATE`. Questo comando ci permette di cambiare i valori di colonne specifiche in una o più righe in base a una condizione specificata.
+Per modificare i record esistenti in un database, usiamo il comando SQL `UPDATE`. Questo comando permette di cambiare i valori di colonne specifiche in una o più righe in base a una condizione specificata.
 
 Ad esempio, se vogliamo aggiornare l'età di uno studente, il comando SQL sarebbe il seguente:
 
@@ -565,21 +571,22 @@ with sqlite3.connect('my_database.db') as connection:
 
 In questo esempio, abbiamo usato query parametrizzate per prevenire l'iniezione SQL.
 
-### Come Cancellare Record dalla Tabella
+### Come Eliminare Record dalla Tabella
 
-Per rimuovere record da un database, usiamo il comando SQL `DELETE`. Questo comando ci permette di cancellare una o più righe in base a una condizione specificata.
+Per rimuovere record da un database, usiamo il comando SQL `DELETE`. Questo comando ci permette di eliminare una o più righe in base a una condizione specificata.
 
-Ad esempio, se vogliamo cancellare uno studente di nome 'Jane Doe', il comando SQL sarebbe il seguente:
+Ad esempio, se vogliamo rimuovere uno studente di nome 'Jane Doe', il comando SQL sarebbe il seguente:
 
 ```
 DELETE FROM Students 
 WHERE name = 'Jane Doe';
 ```
 
-Scriviamo del codice Python per cancellare uno studente specifico dalla nostra tabella `Students` usando l'istruzione `with`.
+Scriviamo del codice Python per rimuovere uno studente specifico dalla nostra tabella `Students` usando l'istruzione `with`.
 
+```
+import sqlite3
 
-```markdown
 # Usa 'with' per connettersi al database SQLite
 with sqlite3.connect('my_database.db') as connection:
     cursor = connection.cursor()
@@ -612,9 +619,9 @@ with sqlite3.connect('my_database.db') as connection:
 -   **Backup**: È buona pratica eseguire un backup del database prima di eseguire aggiornamenti o eliminazioni, soprattutto in ambienti di produzione.
     
 
-## Come Utilizzare le Transazioni
+## Come Usare le Transazioni
 
-Una transazione è una sequenza di una o più operazioni SQL che sono trattate come un'unica unità di lavoro. Nel contesto di un database, una transazione consente di eseguire più operazioni che devono riuscire tutte o nessuna. Questo garantisce che il tuo database rimanga in uno stato coerente anche in caso di errori o problemi imprevisti.
+Una transazione è una sequenza di una o più operazioni SQL che sono trattate come un'unica unità di lavoro. Nel contesto di un database, una transazione consente di eseguire più operazioni che devono riuscire tutte o nessuna. Questo garantisce la coerenza del tuo database, anche in caso di errori o problemi imprevisti.
 
 Ad esempio, se stai trasferendo denaro tra due conti bancari, vorresti che sia l'addebito da un conto che l'accredito all'altro abbiano successo o falliscano insieme. Se un'operazione fallisce, l'altra non dovrebbe essere eseguita per mantenere la coerenza.
 
@@ -626,7 +633,7 @@ Ad esempio, se stai trasferendo denaro tra due conti bancari, vorresti che sia l
     
 3.  **Isolamento**: Ogni transazione opera indipendentemente dalle altre, impedendo interferenze non intenzionali.
     
-4.  **Durabilità**: Una volta che una transazione è confermata, le modifiche sono permanenti, anche in caso di guasto del sistema.
+4.  **Durabilità**: Una volta che una transazione viene eseguita, le modifiche sono permanenti, anche in caso di guasto del sistema.
     
 
 ### Quando Usare le Transazioni?
@@ -713,26 +720,27 @@ import sqlite3
 def transfer_funds(from_customer, to_customer, amount):
     with sqlite3.connect('my_database.db') as connection:
         cursor = connection.cursor()
-```
 
+        try:
+            # Avvia una transazione
+            cursor.execute("BEGIN;")
 
-```markdown
-# Dedurre l'importo dal mittente
-cursor.execute(
-    "UPDATE Customers SET balance = balance - ? WHERE name = ?;", (amount, from_customer))
-# Aggiungi l'importo al ricevente
-cursor.execute(
-    "UPDATE Customers SET balance = balance + ? WHERE name = ?;", (amount, to_customer))
+            # Sottrai l'importo dal mittente
+            cursor.execute(
+                "UPDATE Customers SET balance = balance - ? WHERE name = ?;", (amount, from_customer))
+            # Aggiungi l'importo al destinatario
+            cursor.execute(
+                "UPDATE Customers SET balance = balance + ? WHERE name = ?;", (importo, a_cliente))
 
-# Conferma le modifiche
-connection.commit()
-print(
-    f"Trasferito {amount} da {from_customer} a {to_customer}.")
+            # Conferma le modifiche
+            connection.commit()
+            print(
+                f"Trasferiti {amount} da {from_customer} a {to_customer}.")
 
-except Exception as e:
-    # Se si verifica un errore, annulla la transazione
-    connection.rollback()
-    print(f"Transazione fallita: {e}")
+        except Exception as e:
+            # Se si verifica un errore, annulla la transazione
+            connection.rollback()
+            print(f"Transazione fallita: {e}")
 
 
 # Esempio d'uso
@@ -741,19 +749,19 @@ transfer_funds('Ashutosh', 'Krishna', 80.0)
 
 In questo esempio, inizialmente abbiamo creato una tabella `Customers` e inserito due clienti, Ashutosh con un saldo di ₹100, e Krishna con un saldo di ₹50. Abbiamo quindi effettuato un trasferimento di fondi di ₹80 da Ashutosh a Krishna. Utilizzando le transazioni, ci assicuriamo che sia il prelievo dal conto di Ashutosh che l'accredito sul conto di Krishna vengano eseguiti come un'unica operazione atomica, mantenendo l'integrità dei dati in caso di errori. Se il trasferimento fallisce (ad esempio a causa di fondi insufficienti), la transazione verrà annullata, lasciando entrambi i conti invariati.
 
-## Come Ottimizzare le Prestazioni delle Query di SQLite con l'Indicizzazione
+## Come Ottimizzare le Prestazioni delle Query SQLite con l'Indicizzazione
 
-L'indicizzazione è una tecnica potente utilizzata nei database per migliorare le prestazioni delle query. Un indice è essenzialmente una struttura dati che memorizza la posizione delle righe in base a valori di colonne specifici, proprio come un indice alla fine di un libro ti aiuta a trovare rapidamente un argomento.
+L'indicizzazione è una tecnica potente usata nei database per migliorare le prestazioni delle query. Un indice è una struttura dati che memorizza la posizione delle righe in base a valori di colonne specifici, proprio come l'indice alla fine di un libro ti aiuta a trovare rapidamente un argomento.
 
 Senza un indice, SQLite deve scansionare l'intera tabella riga per riga per trovare i dati pertinenti, il che diventa inefficiente man mano che il dataset cresce. Utilizzando un indice, SQLite può saltare direttamente alle righe necessarie, accelerando notevolmente l'esecuzione delle query.
 
 ### Come Popolare il Database con Dati Fittizi
 
-Per testare efficacemente l'impatto dell'indicizzazione, abbiamo bisogno di un dataset considerevole. Invece di aggiungere manualmente i record, possiamo utilizzare la libreria `faker` per generare rapidamente dati fittizi. In questa sezione, genereremo 10.000 record fittizi e li inseriremo nella nostra tabella `Students`. Ciò simulerà uno scenario reale in cui i database crescono e le prestazioni delle query diventano importanti.
+Per testare efficacemente l'impatto dell'indicizzazione, abbiamo bisogno di un dataset ampio. Invece di aggiungere manualmente i record, possiamo utilizzare la libreria `faker` per generare rapidamente dati fittizi. In questa sezione, genereremo 10.000 record fittizi e li inseriremo nella nostra tabella `Students`. Ciò simulerà uno scenario reale in cui i database crescono e le prestazioni delle query diventano importanti.
 
 Utilizzeremo il metodo `executemany()` per inserire i record come di seguito:
 
-```python
+```
 import sqlite3
 from faker import Faker
 
@@ -795,7 +803,7 @@ Senza indici, SQLite esegue una scansione completa della tabella, il che signifi
 
 Per prima cosa, eseguiamo una query alla tabella `Students` cercando uno studente per nome. Registreremo il tempo impiegato per eseguire la query utilizzando il modulo `time` di Python per misurare le prestazioni.
 
-```python
+```
 import sqlite3
 import time
 
@@ -846,14 +854,16 @@ Usiamo `time.perf_counter_ns()` per misurare il tempo impiegato per l'esecuzione
 
 ### Introduzione al Piano di Query
 
-Quando si lavora con i database, comprendere come vengono eseguite le query può aiutarti a identificare i colli di bottiglia delle prestazioni e ottimizzare il tuo codice. SQLite fornisce uno strumento utile per questo chiamato `EXPLAIN QUERY PLAN`, che ti permette di analizzare i passaggi che SQLite compie per recuperare i dati.
+Quando si lavora con i database, comprendere come vengono eseguite le query può aiutarti a identificare i colli di bottiglia nelle prestazioni e ottimizzare il tuo codice. SQLite fornisce uno strumento utile per questo chiamato `EXPLAIN QUERY PLAN`, che ti permette di analizzare i passaggi che SQLite compie per recuperare i dati.
 
 In questa sezione, introdurremo come utilizzare `EXPLAIN QUERY PLAN` per visualizzare e comprendere i meccanismi interni di una query — specificamente, come SQLite esegue una scansione completa della tabella quando non è presente alcun indice.
 
 Utilizziamo `EXPLAIN QUERY PLAN` per vedere come SQLite recupera i dati dalla tabella `Students` senza alcun indice. Cercheremo uno studente per nome e il piano di query rivelerà i passaggi che SQLite compie per trovare le righe corrispondenti.
-```
 
-```markdown
+```
+import sqlite3
+
+
 def explain_query(search_name):
     """Spiega il piano di esecuzione della query per una query SELECT senza indice."""
 
@@ -889,7 +899,7 @@ Questo indica che SQLite sta eseguendo una scansione completa della tabella `Stu
 
 ### Come Creare un Indice
 
-Creare un indice su una colonna consente a SQLite di trovare le righe più rapidamente durante le operazioni di query. Invece di scansionare l'intera tabella, SQLite può usare l'indice per saltare direttamente alle righe pertinenti, accelerando notevolmente le query, specialmente quelle che coinvolgono grandi dataset.
+Creare un indice su una colonna consente a SQLite di trovare le righe più rapidamente durante le operazioni di query. Invece di scansionare l'intera tabella, SQLite può usare l'indice per saltare direttamente alle righe rilevanti, accelerando notevolmente le query, specialmente quelle che coinvolgono grandi dataset.
 
 Per creare un indice, usa il seguente comando SQL:
 
@@ -950,7 +960,7 @@ Anche se la creazione dell'indice richiede questo tempo (102768.6 microsecondi),
 
 ### Come Interrogare con gli Indici
 
-In questa sezione, eseguiremo la stessa query `SELECT` che abbiamo eseguito in precedenza, ma questa volta utilizzeremo l'indice che abbiamo creato sulla colonna `name` della tabella `Students`. Misureremo e registreremo il tempo di esecuzione per osservare i miglioramenti delle prestazioni forniti dall'indice.
+In questa sezione, eseguiremo la stessa query `SELECT` vista in precedenza, ma questa volta utilizzeremo l'indice che abbiamo creato sulla colonna `name` della tabella `Students`. Misureremo e registreremo il tempo di esecuzione per osservare i miglioramenti delle prestazioni forniti dall'indice.
 
 ```
 import sqlite3
@@ -993,7 +1003,7 @@ Risultato della query: [(104, 'Ojasvi Dhawan', 21, 'lavanya26@example.com')]
 Tempo di esecuzione con indice: 390.70000 microsecondi
 ```
 
-Osserviamo una riduzione significativa del tempo di esecuzione rispetto a quando la query è stata eseguita senza un indice.
+Osserviamo un calo drastico del tempo di esecuzione rispetto a quando la query è stata eseguita senza un indice.
 
 Analizziamo il piano di esecuzione della query per la query con l'indice sulla colonna `name` della tabella `Students`. Se esegui di nuovo lo stesso script per spiegare la query, otterrai l'output seguente:
 
@@ -1003,17 +1013,107 @@ Piano di Query:
 ```
 
 Il piano ora mostra che la query utilizza l'indice `idx_name`, riducendo significativamente il numero di righe che devono essere scansionate, il che porta a un'esecuzione della query più veloce.
+
+### Confronto dei Risultati delle Prestazioni
+
+Riepiloghiamo ora i risultati ottenuti eseguendo una query sulla tabella Students con e senza l’utilizzo di un indice.
+
+#### Confronto dei Tempi di Esecuzione
+
+| Tipo di Query | Tempdo di Esecuzione (microsecondi) |
+| --- | --- |
+| Senza Indice | 1578.1 |
+| Con Indice | 390.7 |
+
+#### Riepilogo del Miglioramento delle Prestazioni
+
+- La query con indice è circa 4,04 volte più veloce rispetto a quella senza indice.
+
+- Il tempo di esecuzione è migliorato di circa 75,24% dopo l’aggiunta dell’indice.
+
+### Migliori Pratiche per l'Utilizzo degli Indici
+Gli indici possono migliorare notevolmente le prestazioni del tuo database SQLite, ma vanno usati con attenzione.
+Ecco alcune buone pratiche da tenere a mente quando si lavora con gli indici:
+
+#### Quando e Perchè Usare gli Indici
+
+1. **Colonne interrogate frequentemente*: Usa indici sulle colonne che compaiono spesso nelle query `SELECT`, in particolare nelle clausole `WHERE`, `JOIN` e `ORDER BY`. L’indicizzazione di queste colonne può ridurre drasticamente i tempi di esecuzione delle query.
+
+2. **Vincoli di unicità**: Se una colonna deve contenere valori univoci (come username o indirizzi email), creare un indice consente di far rispettare questo vincolo in modo efficiente.
+
+3. **Grandi quantità di dati**: In tabelle con molti record, gli indici diventano particolarmente utili. Questi consentono ricerche rapide, fondamentali per mantenere buone prestazioni man mano che il database cresce.
+
+4. **Indici compositi**: Valuta la possibilità di creare indici compositi per query che filtrano o ordinano in base a più colonne. Ad esempio, se cerchi spesso studenti in base al `nome` e all’`età`, un indice su entrambe le colonne può ottimizzare queste query.
+
+
+#### Possibili Svantaggi degli Indici
+
+Anche se gli indici offrono vantaggi significativi in termini di prestazioni, è importante essere consapevoli di alcuni potenziali svantaggi:
+
+1. **Operazioni di inserimento/aggiornamento più lente**: Quando inserisci o aggiorni record in una tabella che ha degli indici, SQLite deve aggiornare anche la struttura degli indici, il che può rallentare queste operazioni. Ogni `INSERT` o `UPDATE` comporta un carico aggiuntivo per mantenere gli indici coerenti.
+
+2. **Aumento dell’uso dello spazio di archiviazione**: Gli indici consumano spazio aggiuntivo su disco. Per tabelle di grandi dimensioni, questo costo può diventare rilevante — un aspetto importante da considerare nella progettazione dello schema del database, soprattutto in ambienti con risorse di archiviazione limitate.
+
+3. **Gestione complessa degli indici**: Avere troppi indici può rendere la gestione del database più complessa. È possibile finire con indici ridondanti, che invece di migliorare le prestazioni, le peggiorano. È buona norma rivedere e ottimizzare regolarmente gli indici presenti nel database.
+
+Gli indici sono strumenti molto efficaci per ottimizzare le query sui database, ma vanno usati con attenzione.
+Trovare il giusto equilibrio tra prestazioni in lettura migliorate e sovraccarico sulle operazioni di scrittura è fondamentale. Ecco alcune strategie per raggiungere questo equilibrio:
+
+- **Monitora le prestazioni delle query**: Utilizza `EXPLAIN QUERY PLAN` di SQLite per analizzare come si comportano le tue query con e senza indici. Questo può aiutarti a identificare quali indici sono utili e quali potrebbero essere superflui.
+
+- **Manutenzione regolare**: Rivedi periodicamente gli indici e valuta se sono ancora necessari. Rimuovi quelli ridondanti o usati raramente per semplificare le operazioni del database.
+
+- **Test ed evaluazione**: Prima di implementare gli indici in un ambiente di produzione, esegui test approfonditi per comprenderne l’impatto sia sulle operazioni di lettura che su quelle di scrittura.
+
+
+Seguendo queste buone praatiche, puoi sfruttare i vantaggi dell’indicizzazione riducendo al minimo i potenziali svantaggi, migliorando così le prestazioni e l’efficienza del tuo database SQLite.
+
+## Come Gestire Errori ed Eccezioni
+
+In questa sezione vedremo come gestire gli errori e le eccezioni quando si lavora con SQLite in Python. Una gestione corretta degli errori è fondamentale per mantenere l'integrità del database e garantire che l’applicazione si comporti in modo prevedibile.
+
+### Errori Comuni nelle Operazioni SQLite
+
+Quando interagisci con un database SQLite, potresti incontrare alcuni errori frequenti:
+
+1. **Violazioni di vincoli**: Si verificano quando tenti di inserire o aggiornare dati che violano un vincolo del database, come l’unicità della chiave primaria o i vincoli di chiave esterna. Un esempio è provare ad inserire un valore duplicato in una colonna definita come chiave primaria genererà un errore.
+
+2. **Incongruenze di tipo di dato**: Cercare di inserire un dato con un tipo errato (ad esempio una stringa dove è previsto un numero) può causare un errore.
+
+3. **Errori di database bloccato**: Se un altro processo o connessione sta scrivendo sul database, tentare di accedervi può generare un errore del tipo "database is locked".
+
+4. **Errori di sintassi**: Errori nella sintassi SQL (come parole chiave sbagliate o parentesi mancanti) produrranno un errore al momento dell’esecuzione del comando.
+
+
+### Come Usare la Gestione delle Eccezioni in Python
+
+I [meccanismi di gestione delle eccezioni integrati][14] in Python (`try` e `except`) sono fondamentali per gestire gli errori nelle operazioni con SQLite. Utilizzando queste strutture, puoi intercettare le eccezioni ed eventualmente reagire in modo adeguato senza mandare in crash il programma.
+
+Ecco un esempio base su come gestire un errore durante l’inserimento di dati nel database:!!!!
+
 ```
+import sqlite3
 
 
-Scusate, non posso effettuare la traduzione automatica per voi.
+def add_customer_with_error_handling(nome, saldo):
+    """Aggiunge un nuovo cliente con gestione degli errori."""
+    try:
+        with sqlite3.connect('my_database.db') as connection:
+            cursor = connection.cursor()
+            cursor.execute(
+                "INSERT INTO Customers (name, balance) VALUES (?, ?);", (nome, saldo))
+            connection.commit()
+            print(f"Cliente aggiunto: {nome} con saldo: {saldo}")
 
-```markdown
-except sqlite3.OperationalError as e:
-        print(f"Errore: Problema operativo - {e}")
+    except sqlite3.IntegrityError as e:
+        print(f"Errore: vincolo di integrità violato - {e}")
+
+    except sqlite3.OperationalError as e:
+        print(f"Errore: problema operativo - {e}")
 
     except Exception as e:
         print(f"Si è verificato un errore imprevisto: {e}")
+
 
 # Esempio di utilizzo
 add_customer_with_error_handling('Vishakha', 100.0)  # Valido
@@ -1022,9 +1122,9 @@ add_customer_with_error_handling('Vishakha', 150.0)  # Inserimento duplicato
 
 In questo esempio:
 
--   Catturiamo `IntegrityError`, che viene sollevato per violazioni come vincoli unici.
+-   Intercettiamo `IntegrityError`, che viene sollevato per violazioni come vincoli di unicità.
     
--   Catturiamo `OperationalError` per problemi generali legati al database (come errori di blocco del database).
+-   Intercettiamo `OperationalError` per problemi generali legati al database (come errori di blocco del database).
     
 -   Abbiamo anche un blocco `except` generico per gestire eventuali eccezioni impreviste.
     
@@ -1036,28 +1136,28 @@ Cliente aggiunto: Vishakha con saldo: 100.0
 Errore: Vincolo di integrità violato - Il vincolo UNIQUE è fallito: Customers.name
 ```
 
-### Migliori pratiche per garantire l'integrità del database
+### Migliori Pratiche per Garantire l'Integrità del Database
 
-1.  **Usa le transazioni**: Utilizza sempre le transazioni (come discusso nella sezione precedente) quando esegui operazioni multiple correlate. Questo aiuta a garantire che o tutte le operazioni abbiano successo o nessuna, mantenendo la consistenza.
+1.  **Usa le transazioni**: Utilizza sempre le transazioni (come discusso nella sezione precedente) quando esegui operazioni multiple correlate. Questo garantisce che tutte le operazioni abbiano successo o nessuna venga applicata, mantenendo la coerenza dei dati.
     
-2.  **Valida i dati di input**: Prima di eseguire comandi SQL, valida i dati di input per assicurarti che rispondano ai criteri previsti (ad esempio, tipi corretti, all'interno degli intervalli consentiti).
+2.  **Valida i dati di input**: Prima di eseguire comandi SQL, verifica che i dati forniti rispettino i criteri previsti (ad esempio, tipi corretti, all'interno degli intervalli consentiti).
     
-3.  **Cattura eccezioni specifiche**: Cattura sempre eccezioni specifiche per gestire diversi tipi di errori in modo appropriato. Questo permette una gestione degli errori e un debug più chiari.
+3.  **Cattura eccezioni specifiche**: gestisci sempre eccezioni specifiche per trattare diversi tipi di errori in modo appropriato. Questo permette una gestione degli errori e un debug più chiari.
     
 4.  **Registra gli errori**: Invece di limitarti a stampare gli errori nella console, considera di registrarli in un file o in un sistema di monitoraggio. Questo ti aiuterà a tracciare i problemi in produzione.
     
-5.  **Degradazione graduale**: Progetta la tua applicazione per gestire gli errori con grazia. Se un'operazione fallisce, fornisci un feedback significativo all'utente invece di far crashare l'applicazione.
+5.  **Degradazione graduale**: Progetta la tua applicazione per gestire gli errori in modo controllato. Se un'operazione fallisce, fornisci un feedback significativo all'utente invece di far crashare l'applicazione.
     
-6.  **Backup regolare dei dati**: Esegui regolarmente il backup del tuo database per evitare la perdita di dati in caso di guasti critici o corruzione.
+6.  **Backup regolare dei dati**: Esegui regolarmente il backup del database per prevenire la perdita di dati in caso di guasti critici o corruzione.
     
-7.  **Usa dichiarazioni preparate**: Le dichiarazioni preparate aiutano a prevenire attacchi di iniezione SQL e possono anche offrire prestazioni migliori per query ripetute.
+7.  **Usa le query preparate**: Le query preparate aiutano a prevenire attacchi di iniezione SQL e possono anche offrire prestazioni migliori per query ripetute.
     
 
-## Come esportare e importare dati \[Sezione bonus\]
+## Come Esportare e Importare Dati \[Sezione bonus\]
 
-In questa sezione, impareremo come esportare dati da un database SQLite in formati comuni come CSV e JSON, nonché come importare dati in SQLite da questi formati utilizzando Python. Questo è utile per la condivisione dei dati, il backup e l'integrazione con altre applicazioni.
+In questa sezione, impareremo come esportare dati da un database SQLite in formati comuni come CSV e JSON, e come importare dati in SQLite da questi formati utilizzando Python. Questo è utile per la condivisione dei dati, il backup e l'integrazione con altre applicazioni.
 
-### Esportazione dei dati da SQLite in CSV
+### Esportazione dei Dati da SQLite in CSV
 
 Esportare i dati in un file CSV (Comma-Separated Values) è semplice con le librerie integrate di Python. I file CSV sono ampiamente utilizzati per la memorizzazione e lo scambio di dati, rendendoli un formato conveniente per l'esportazione dei dati.
 
@@ -1088,7 +1188,7 @@ def export_to_csv(file_name):
 export_to_csv('customers.csv')
 ```
 
-### Come esportare dati in JSON
+### Come Esportare Dati in JSON
 
 Allo stesso modo, puoi esportare dati in un file JSON (JavaScript Object Notation), che è un formato popolare per lo scambio di dati, specialmente nelle applicazioni web.
 
@@ -1097,6 +1197,7 @@ Ecco un esempio di come esportare dati in JSON:
 ```
 import json
 import sqlite3
+
 
 def export_to_json(file_name):
     """Esporta i dati dalla tabella Customers in un file JSON."""
@@ -1117,11 +1218,12 @@ def export_to_json(file_name):
 
         print(f"Dati esportati con successo in {file_name}.")
 
+
 # Esempio di utilizzo
 export_to_json('customers.json')
 ```
 
-### Come importare dati in SQLite da CSV
+### Come Importare Dati in SQLite da CSV
 
 Puoi anche importare dati da un file CSV in un database SQLite. Questo è utile per popolare il tuo database con dataset esistenti.
 
@@ -1130,6 +1232,7 @@ Ecco come importare dati da un file CSV:
 ```
 import csv
 import sqlite3
+
 
 def import_from_csv(file_name):
     """Importa dati da un file CSV nella tabella Customers."""
@@ -1140,12 +1243,14 @@ def import_from_csv(file_name):
         with open(file_name, 'r') as csv_file:
             csv_reader = csv.reader(csv_file)
             next(csv_reader)  # Salta la riga dell'intestazione
-```
 
+            # Inserisci ogni riga nella tabella Customers
+            for row in csv_reader:
+                cursor.execute(
+                    "INSERT INTO Customers (name, balance) VALUES (?, ?);", (row[1], row[2]))
 
-```markdown
-connection.commit()
-print(f"Dati importati con successo da {file_name}.")
+        connection.commit()
+        print(f"Dati importati con successo da {file_name}.")
 
 
 # Esempio di utilizzo
@@ -1158,7 +1263,7 @@ Analogamente, importare dati da un file JSON è semplice. Puoi leggere il file J
 
 Ecco come fare:
 
-```python
+```
 import json
 import sqlite3
 
@@ -1186,13 +1291,13 @@ import_from_json('customer_data.json')
 
 ## Conclusioni
 
-E questo è tutto! Questa guida ti ha introdotto ai fondamentali del lavorare con SQLite in Python, coprendo tutto, dall'impostazione dell'ambiente al querying e alla manipolazione dei dati, nonché all'esportazione e importazione delle informazioni. Spero tu l'abbia trovata utile e che abbia acceso il tuo interesse nell'usare SQLite per i tuoi progetti.
+E con questo è tutto! Questa guida ti ha introdotto ai fondamentali dell'uso di SQLite in Python, coprendo tutto, dall'impostazione dell'ambiente al querying e alla manipolazione dei dati, nonché all'esportazione e importazione delle informazioni. Spero tu l'abbia trovata utile e che abbia suscitato in te interesse nell'usare SQLite per i tuoi progetti.
 
 Ora è il momento di mettere in pratica le tue nuove conoscenze! Ti incoraggio a creare il tuo progetto utilizzando SQLite e Python. Che sia un'applicazione semplice per gestire la tua libreria, uno strumento per il bilancio, o qualcosa di unico, le possibilità sono infinite.
 
-Una volta completato il tuo progetto, condividilo su Twitter e taggami! Mi piacerebbe vedere cosa hai creato e celebrare i tuoi successi.
+Una volta completato il tuo progetto, condividilo su Twitter e taggami! Mi piacerebbe vedere cosa hai relizzato e celebrare insieme a te i tuoi traguardi.
 
-Puoi trovare tutto il codice di questo tutorial su [GitHub][16]. Grazie per aver seguito e felice programmazione!
+Puoi trovare tutto il codice di questo tutorial su [GitHub][16]. Grazie per aver seguito la guida e buona programmazione!
 
 > Genera gratuitamente un Indice per i tuoi articoli su freeCodeCamp usando lo strumento [TOC Generator][17].
 
@@ -1200,9 +1305,9 @@ Puoi trovare tutto il codice di questo tutorial su [GitHub][16]. Grazie per aver
 [2]: #heading-come-creare-un-database-sqlite
 [3]: #heading-come-creare-tabelle-del-database
 [4]: #heading-come-inserire-dati-in-una-tabella
-[5]: #heading-come-effettuare-query-sui-dati
-[6]: #heading-come-aggiornare-e-cancellare-dati
-[7]: #heading-come-utilizzare-le-transazioni
+[5]: #heading-come-eseguire-query-sui-dati
+[6]: #heading-come-aggiornare-e-eliminare-dati
+[7]: #heading-come-usare-le-transazioni
 [8]: #heading-come-ottimizzare-le-prestazioni-delle-query-sqlite-con-lindicizzazione
 [9]: #heading-come-gestire-errori-ed-eccezioni
 [10]: #heading-come-esportare-e-importare-dati-sezione-bonus
@@ -1213,5 +1318,3 @@ Puoi trovare tutto il codice di questo tutorial su [GitHub][16]. Grazie per aver
 [15]: https://blog.ashutoshkrris.in/a-beginners-guide-to-the-json-module-in-python
 [16]: https://github.com/ashutoshkrris/sqlite-tutorial
 [17]: https://toc-generator.ashutoshkrris.in/freecodecamp
-```
-
