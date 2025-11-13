@@ -1,11 +1,5 @@
-/**
- * Validates and sanitizes inputs for the auto-translate workflow
- * Prevents code injection, path traversal, and other security issues
- */
-
 module.exports = async ({ github, context, core }) => {
   try {
-    // Whitelist of allowed language labels that trigger auto-translation
     const ALLOWED_LANGUAGES = [
       'chinese',
       'spanish',
@@ -18,7 +12,6 @@ module.exports = async ({ github, context, core }) => {
 
     const labelName = context.payload.label?.name;
 
-    // Check if the label is in the allowed list
     if (!labelName || !ALLOWED_LANGUAGES.includes(labelName.toLowerCase())) {
       core.setOutput('is_valid', 'false');
       core.setOutput('skip_reason', `Label '${labelName}' is not an auto-translate language label`);
@@ -26,7 +19,6 @@ module.exports = async ({ github, context, core }) => {
       return;
     }
 
-    // Validate issue has a body
     const issueBody = context.payload.issue?.body;
     if (!issueBody || issueBody.trim() === '') {
       core.setOutput('is_valid', 'false');
@@ -35,8 +27,6 @@ module.exports = async ({ github, context, core }) => {
       return;
     }
 
-    // Extract and validate URL from issue body
-    // Expected format: [Title](https://www.freecodecamp.org/news/article-slug/)
     const urlPattern = /\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/;
     const match = issueBody.match(urlPattern);
 
@@ -49,7 +39,6 @@ module.exports = async ({ github, context, core }) => {
 
     const articleUrl = match[2];
 
-    // Validate URL is from freecodecamp.org/news
     const validUrlPattern = /^https?:\/\/(www\.)?freecodecamp\.org\/news\/[a-z0-9\-]+\/?$/i;
     if (!validUrlPattern.test(articleUrl)) {
       core.setOutput('is_valid', 'false');
@@ -58,7 +47,6 @@ module.exports = async ({ github, context, core }) => {
       return;
     }
 
-    // Validate issue title format: [lang] Title
     const issueTitle = context.payload.issue?.title;
     if (!issueTitle || issueTitle.trim() === '') {
       core.setOutput('is_valid', 'false');
@@ -67,7 +55,6 @@ module.exports = async ({ github, context, core }) => {
       return;
     }
 
-    // Extract language code from title
     const titleLangPattern = /^\[([a-zA-Z]{2,3})\]/;
     const titleMatch = issueTitle.match(titleLangPattern);
 
@@ -80,7 +67,6 @@ module.exports = async ({ github, context, core }) => {
 
     const langCode = titleMatch[1].toLowerCase();
 
-    // Validate language code matches expected pattern
     const validLangPattern = /^[a-z]{2,3}$/;
     if (!validLangPattern.test(langCode)) {
       core.setOutput('is_valid', 'false');
@@ -89,16 +75,15 @@ module.exports = async ({ github, context, core }) => {
       return;
     }
 
-    // All validations passed
     core.setOutput('is_valid', 'true');
     core.setOutput('article_url', articleUrl);
     core.setOutput('lang_code', langCode);
     core.setOutput('label_name', labelName);
 
-    core.info('✅ All validations passed');
-    core.info(`   Language: ${langCode}`);
-    core.info(`   Article URL: ${articleUrl}`);
-    core.info(`   Label: ${labelName}`);
+    core.info('All validations passed');
+    core.info(`Language: ${langCode}`);
+    core.info(`Article URL: ${articleUrl}`);
+    core.info(`Label: ${labelName}`);
 
   } catch (error) {
     core.setOutput('is_valid', 'false');
