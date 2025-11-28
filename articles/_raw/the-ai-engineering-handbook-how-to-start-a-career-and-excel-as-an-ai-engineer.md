@@ -1,6 +1,6 @@
 ---
 title: The AI Engineering Handbook – How to Start a Career and Excel as an AI Engineer
-date: 2025-02-06T14:53:46.234Z
+date: 2025-07-17T02:17:37.037Z
 author: Tatev Aslanyan
 authorURL: https://www.freecodecamp.org/news/author/tatevaslanyan/
 originalURL: https://www.freecodecamp.org/news/the-ai-engineering-handbook-how-to-start-a-career-and-excel-as-an-ai-engineer/

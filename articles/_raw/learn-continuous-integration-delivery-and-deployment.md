@@ -1,7 +1,7 @@
 ---
 title: "The CI/CD Handbook: Learn Continuous Integration and Delivery with
   GitHub Actions, Docker, and Google Cloud Run"
-date: 2025-02-07T04:51:05.791Z
+date: 2025-07-17T02:10:48.442Z
 author: Prince Onukwili
 authorURL: https://www.freecodecamp.org/news/author/onukwilip/
 originalURL: https://www.freecodecamp.org/news/learn-continuous-integration-delivery-and-deployment/

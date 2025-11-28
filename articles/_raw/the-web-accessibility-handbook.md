@@ -1,6 +1,6 @@
 ---
 title: Everything You Need to Know About Web Accessibility
-date: 2025-04-10T13:17:04.948Z
+date: 2025-07-17T01:59:58.317Z
 author: Kunal Nalawade
 authorURL: https://www.freecodecamp.org/news/author/KunalN25/
 originalURL: https://www.freecodecamp.org/news/the-web-accessibility-handbook/

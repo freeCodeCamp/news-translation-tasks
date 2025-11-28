@@ -1,6 +1,6 @@
 ---
 title: Learn API Fundamentals and Architecture – A Beginner-Friendly Guide
-date: 2025-04-10T13:13:38.910Z
+date: 2025-07-17T02:03:57.312Z
 author: Ikegah Oliver
 authorURL: https://www.freecodecamp.org/news/author/Oliverkrane/
 originalURL: https://www.freecodecamp.org/news/learn-api-fundamentals-and-architecture/
@@ -96,7 +96,7 @@ Some very useful Open APIs include:
 
 -   [TradeWatch][16] – Real-time financial market data
     
--   [SearchApi][17] – Real-time Google SERP API
+-   [SerpAPI’s Search API][17] – Real-time Google SERP API
     
 -   [TwitterApi.io][18] – Access real-time and historical data
     
@@ -148,7 +148,6 @@ REST APIs are built with frameworks like Express.js (Node.js), Django/Flask (Pyt
         
     -   Each resource is identified by a unique URI (Uniform Resource Identifier).
         
-
 2.  HTTP methods:
     
     -   GET: Retrieves a resource.
@@ -161,21 +160,18 @@ REST APIs are built with frameworks like Express.js (Node.js), Django/Flask (Pyt
         
     -   PATCH: Partially updates an existing resource.
         
-
 3.  Data representation:
     
     -   Resources can have multiple representations (for example, JSON, XML).
         
     -   The API responds with the requested representation, allowing data to be structured and parsed easily.
         
-
 4.  HTTP headers and query parameters:
     
     -   HTTP headers provide additional information about the request or response.
         
     -   They can be used for authentication, content negotiation, and other purposes.
         
-
 5.  Statelessness:
     
     -   Each request from a client to a server must contain all the information needed to understand and process the request.
@@ -289,21 +285,18 @@ SOAP APIs are created using frameworks or tools such as Apache CXF, .NET WCF, an
         
     -   It contains the SOAP Header and SOAP Body.
         
-
 2.  SOAP body:
     
     -   This section contains the actual data being exchanged between the client and server.
         
     -   It includes the request or response messages, which are typically structured as XML elements.
         
-
 3.  WSDL (Web Services Description Language):
     
     -   This is an XML document that describes the web service, including its operations, message formats, and data types.
         
     -   It acts as a contract between the client and server, outlining how to interact with the API.
         
-
 4.  SOAP processor:
     
     -   This is the software component that processes SOAP messages.
@@ -395,18 +388,19 @@ GraphQL is a query language and runtime for APIs developed by Facebook. It allow
 #### Key Components
 
 1.  Schema: This is the heart of a GraphQL API. It defines the structure of your data, including the types of objects, their fields, and their relationships. It acts as a contract between the client and server, specifying what data can be queried.
-
+    
 2.  Types: These define the structure of objects in your data. They specify the fields that each object has and the data types of those fields.
-
+    
 3.  Fields: These are the individual pieces of data that can be queried on an object.
-
+    
 4.  Queries: These are requests from the client to retrieve data. They specify the fields that the client wants to recover.
-
+    
 5.  Mutations: These are requests from the client to modify data (create, update, or delete).
-
+    
 6.  Resolvers: These are functions that fetch the data for each field in the schema. They connect the GraphQL schema to the underlying data sources.
-
+    
 7.  Subscriptions: These enable real-time updates. Clients can subscribe to specific events, and the server will push updates whenever they occur.
+    
 
 #### Operation Overview
 
@@ -666,7 +660,7 @@ Looking ahead, the API landscape is set for exciting changes. With AI-driven API
 [14]: #heading-how-to-choose-an-api-architecture
 [15]: #heading-conclusion-and-future-trends
 [16]: https://tradewatch.io/
-[17]: https://www.searchapi.io/
+[17]: http://serpapi.com
 [18]: http://twitterapi.io
 [19]: https://instagram-posts-generator.vercel.app/
 [20]: https://www.freecodecamp.org/news/get-started-with-nodejs/

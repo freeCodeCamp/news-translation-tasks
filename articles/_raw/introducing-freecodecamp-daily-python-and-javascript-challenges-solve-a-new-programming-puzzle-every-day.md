@@ -1,7 +1,7 @@
 ---
 title: Introducing freeCodeCamp Daily Python and JavaScript Challenges – Solve a
   New Programming Puzzle Every Day
-date: 2025-09-06T01:27:08.782Z
+date: 2025-09-08T17:31:17.872Z
 author: Tom Mondloch
 authorURL: https://www.freecodecamp.org/news/author/freeCodeCampTom/
 originalURL: https://www.freecodecamp.org/news/introducing-freecodecamp-daily-python-and-javascript-challenges-solve-a-new-programming-puzzle-every-day/

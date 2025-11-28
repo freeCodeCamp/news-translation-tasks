@@ -20,84 +20,24 @@ jobs:
       project_url: ${{ steps.get_card.outputs.project_url }}
       project_name: ${{ steps.get_card.outputs.project_name }}
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
       - name: Validate command
         id: command_check
-        env:
-          COMMENT: ${{ github.event.comment.body }}
-        run: |
-          # For ease of use, accept both /postedit and /post-edit.
-          if [[ "$COMMENT" == /postedit* || "$COMMENT" == /post-edit* ]]; then
-            echo "command=postedit" >> $GITHUB_OUTPUT
-            echo "target_status=in Postediting" >> $GITHUB_OUTPUT
-            echo "valid_command=true" >> $GITHUB_OUTPUT
-          # We can remove this elif condition for /translate when we move to /postedit command completely.
-          # Keeping this for now to make the old command work during the transition period.
-          elif [[ "$COMMENT" == /translate* ]]; then
-            echo "command=translate" >> $GITHUB_OUTPUT
-            echo "target_status=in Translation" >> $GITHUB_OUTPUT
-            echo "valid_command=true" >> $GITHUB_OUTPUT
-          elif [[ "$COMMENT" == /review* ]]; then
-            echo "command=review" >> $GITHUB_OUTPUT
-            echo "target_status=in Review" >> $GITHUB_OUTPUT
-            echo "valid_command=true" >> $GITHUB_OUTPUT
-          else
-            echo "::warning::Invalid command. The comment must start with /postedit or /review."
-            echo "valid_command=false" >> $GITHUB_OUTPUT
-          fi
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const script = require('./scripts/validateCommand.js');
+            await script.main({github, context, core});
+      
       - name: Get project card
         id: get_card
         if: steps.command_check.outputs.valid_command == 'true'
         uses: actions/github-script@v7
-        env:
-          ISSUE_NODE_ID: ${{ github.event.issue.node_id }}
         with:
           script: |
-            const query = `
-            query ($id: ID!) {
-              node(id: $id) {
-                ... on Issue {
-                  projectsV2(first: 1) {
-                    edges {
-                      node {
-                        id
-                        url
-                        title
-                        items(first: 100) {
-                          edges {
-                            node {
-                              id
-                              content {
-                                ... on Issue {
-                                  id
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-            `;
-            const variables = {
-              id: process.env.ISSUE_NODE_ID
-            };
-            const result = await github.graphql(query, variables);
-            console.log(`Result: ${JSON.stringify(result)}`);
-
-            const cardId = result.node.projectsV2.edges[0].node.items.edges.find(edge => edge.node.content.id === process.env.ISSUE_NODE_ID).node.id;
-            const projectUrl = result.node.projectsV2.edges[0].node.url;
-            const projectName = result.node.projectsV2.edges[0].node.title;
-
-            console.log(`Card ID: ${cardId}`);
-            console.log(`Project URL: ${projectUrl}`);
-            console.log(`Project Name: ${projectName}`);
-
-            core.setOutput('card_id', cardId);
-            core.setOutput('project_url', projectUrl);
-            core.setOutput('project_name', projectName);
+            const script = require('./scripts/getProjectCard.js');
+            await script.main({github, context, core});
           github-token: ${{ secrets.MOVE_CARDS_TOKEN }}
 
   assign_issue:
@@ -126,7 +66,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Checkout # Checkout the scripts in this repo onto the runner
         if: needs.validate_and_get_card.outputs.valid_command == 'true'
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
       - name: Assign issue to the commenter as posteditor
         id: assign_posteditor
         # We can remove the check for 'translate' when we move to /postedit command completely.
@@ -147,8 +87,7 @@ jobs:
         with:
           script: |
             const script = require('./scripts/assignReviewer.js');
-            const projectName = '${{ needs.validate_and_get_card.outputs.project_name }}';
-            await script({github, context, core, projectName});
+            await script({github, context, core, projectName: '${{ needs.validate_and_get_card.outputs.project_name }}'});
       - name: Update project card status
         if: steps.assign_posteditor.outcome == 'success' || steps.assign_reviewer.outcome == 'success'
         uses: titoportas/update-project-fields@v0.1.0

@@ -9,7 +9,7 @@ module.exports = async ({github, context, core, projectName}) => {
     japanese: 'sidemt',
     ukrainian: 'anastasiiauk',
     chinese: 'miyaliu666',
-    korean: 'AlisonYoon',
+    korean: 'scissorsneedfoodtoo',
     'test project': 'sidemt' // for testing
   }
 
