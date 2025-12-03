@@ -1,0 +1,191 @@
+name: Articles Auto Translate
+run-name: ${{ github.event.label.name }} - ${{ github.event.issue.title }}
+
+on:
+  issues:
+    types: [labeled]
+
+env:
+  # Git helper functions for push retry
+  PUSH_RETRY_SCRIPT: |
+    push_with_retry() {
+      local branch=${1:-main}
+      local max_retries=${2:-3}
+      
+      for i in $(seq 1 $max_retries); do
+        if git push origin "$branch"; then
+          echo "Push to $branch successful"
+          return 0
+        else
+          echo "Push failed, attempt $i/$max_retries"
+          if [ $i -lt $max_retries ]; then
+            git pull --rebase origin "$branch" || true
+            sleep 5
+          fi
+        fi
+      done
+      echo "Push failed after $max_retries attempts"
+      return 1
+    }
+
+jobs:
+  auto-translate:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: write
+
+    steps:
+      ### Queue lock: prevent concurrent conflicts
+      - uses: softprops/turnstyle@v1
+        with:
+          poll-interval-seconds: 10
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      ### Check issue body
+      - name: Validate issue body
+        if: ${{ !github.event.issue.body }}
+        run: |
+          echo "::error::Issue body is empty. Please provide article URL."
+          exit 1
+
+      ### Extract language code
+      - name: Extract language code
+        id: lang
+        run: |
+          title="${{ github.event.issue.title }}"
+          LANG_CODE=$(echo "$title" | sed -E 's/^\[([a-zA-Z]+)\].*/\1/')
+          echo "lang=$LANG_CODE" >> $GITHUB_OUTPUT
+          echo "LANG_CODE=$LANG_CODE" >> $GITHUB_ENV
+
+      ### Checkout repository
+      - uses: actions/checkout@v5
+
+      ### Configure Git
+      - name: Setup Git
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git config pull.rebase true
+
+      ### Fetch article and generate Markdown
+      - name: Fetch article and convert to Markdown
+        id: fetch
+        uses: freecodecamp/article-webpage-to-markdown-action@dev
+        with:
+          newsLink: "${{ github.event.issue.body }}"
+          includeSelector: 'span.author-card-name,section.post-content'
+          ignoreSelector: '.ad-wrapper'
+          skipSameArticleCheck: true
+          skipIssueComment: true
+          markDownFilePath: './articles/_tmp/'
+          githubToken: "${{ github.token }}"
+
+      ### Backup fetched Markdown to external secure path (keep original filename)
+      - name: Backup fetched Markdown to /tmp
+        id: backup-md
+        run: |
+          original_file="${{ steps.fetch.outputs.markdown_file_path }}"
+          filename=$(basename "$original_file")
+          BACKUP_PATH="/tmp/$filename"
+          cp "$original_file" "$BACKUP_PATH"
+          echo "path=$BACKUP_PATH" >> $GITHUB_OUTPUT
+          echo "BACKUP_PATH=$BACKUP_PATH" >> $GITHUB_ENV
+          echo "Markdown backed up to $BACKUP_PATH"
+
+      ### Save English raw text and commit to main branch
+      - name: Commit raw article to main
+        run: |
+          file="${{ steps.fetch.outputs.markdown_file_path }}"
+          base=$(basename "$file")
+          lang="${{ steps.lang.outputs.lang }}"
+
+          mkdir -p "./articles/_raw/"
+          cp "$file" "./articles/_raw/$base"
+          [ -f "./articles/$lang/$base" ] || cp "$file" "./articles/$lang/$base"
+
+          git add -f "./articles/_raw/$base" "./articles/$lang/$base" || true
+          git commit -m "Add raw article: $base" || echo "Nothing to commit."
+
+          git fetch origin main
+          git stash push -u -m "Auto-stash before rebase" || true
+          git pull --rebase origin main || true
+          git stash pop || true
+
+          # Use push retry function
+          eval "$PUSH_RETRY_SCRIPT"
+          push_with_retry main
+
+      ### Switch to auto-translate branch (resolve conflicts & clean up temp files)
+      - name: Checkout auto-translate branch
+        run: |
+          # Check merge pending status
+          if [ -f ".git/MERGE_HEAD" ]; then
+            echo "Unfinished merge detected. Aborting..."
+            git merge --abort || git reset --merge
+          fi
+
+          # Clean up temp files to avoid branch contamination
+          rm -rf ./articles/_tmp/
+
+          git fetch origin
+          git checkout -B auto-translate origin/auto-translate
+
+          git merge --strategy=recursive --strategy-option=theirs main || true
+
+      ### Auto-translate article (use secure path)
+      - name: Translate article
+        uses: freeCodeCamp/articles-auto-translate-action@main
+        with:
+          with_issue_title: "${{ github.event.issue.title }}"
+          with_issue_body: "${{ github.event.issue.body }}"
+          with_label_name: "${{ github.event.label.name }}"
+          with_github_token: "${{ github.token }}"
+          with_original_markdown_file_path: "${{ steps.backup-md.outputs.path }}"
+          with_task_fetch_to_save_path: "./articles/_raw/"
+          with_task_translate_openai_api_key: "${{ secrets.OPENAI_API_KEY }}"
+          with_task_translate_to_save_path: "./articles/{lang}/"
+
+      ### Commit translated file
+      - name: Commit translated article
+        run: |
+          base=$(basename "$BACKUP_PATH")
+          lang="${{ env.LANG_CODE }}"
+          translated="./articles/$lang/$base"
+
+          [ -f "$translated" ] || { echo "Translated file missing."; exit 1; }
+
+          git add "$translated"
+          git commit -m "Add translated article: $base" || echo "Nothing to commit."
+
+          git fetch origin auto-translate
+
+          # Safe rebase, resolve conflicts
+          git stash push -u -m "Auto-stash before rebase" || true
+          if [ -f ".git/MERGE_HEAD" ]; then
+            echo "Unfinished merge detected. Aborting..."
+            git merge --abort || git reset --merge
+          fi
+          git pull --rebase origin auto-translate || true
+          git stash pop || true
+
+          # Use push retry function
+          eval "$PUSH_RETRY_SCRIPT"
+          push_with_retry auto-translate
+
+      ### Clean up temp directory
+      - name: Cleanup temp directory
+        run: |
+          rm -rf ./articles/_tmp/
+          git add -u ./articles/_tmp/ || true
+          git commit -m "Cleanup _tmp directory" || echo "Nothing to commit."
+
+          git fetch origin main
+          git stash push -u -m "Auto-stash before rebase" || true
+          git pull --rebase origin main || true
+          git stash pop || true
+
+          # Use push retry function for final cleanup
+          eval "$PUSH_RETRY_SCRIPT"
+          push_with_retry main
