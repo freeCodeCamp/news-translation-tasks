@@ -5,7 +5,7 @@ author: Programming with Shahan
 authorURL: https://www.freecodecamp.org/news/author/codewithshahan/
 originalURL: https://www.freecodecamp.org/news/the-clean-code-handbook/
 posteditor: "Tsukistar"
-proofreader: "Tsukistar"
+proofreader: ""
 ---
 
 构建可扩展的软件应用程序需要编写干净的代码，这种代码简单到任何开发人员都能理解。
@@ -89,7 +89,7 @@ proofreader: "Tsukistar"
 
 到了代码变成遗留代码时，坏代码的变更成本达到100%——现在升级它非常昂贵，而整洁代码仍然更易于管理，仅为45%。
 
-目前，美国关于软件低质量成本的最新分析仍是信息与软件质量联盟（Consortium for Information and Software Quality，CISQ，网站：cisq.org）发布的2022年报告中，经估计，2022年软件低质量给美国经济造成了至少2.41万亿美元的损失，其中技术债务（technical debt）约占1.52万亿美元。
+目前，美国关于软件低质量成本的最新分析仍是信息与软件质量联盟（Consortium for Information and Software Quality，CISQ，网站：cisq.org）发布的2022年报告。在这份报告中，经估计，2022年软件低质量给美国经济造成了至少2.41万亿美元的损失，其中技术债务（technical debt）约占1.52万亿美元。
 
 你可以[在这里阅读更多内容][28]。
 
