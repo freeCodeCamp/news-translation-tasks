@@ -4,45 +4,45 @@ date: 2024-08-27T16:06:20.626Z
 author: Kunal Nalawade
 authorURL: https://www.freecodecamp.org/news/author/kunal-nalawade-25/
 originalURL: https://www.freecodecamp.org/news/js-interview-prep-handbook/
-posteditor: ""
+posteditor: "Cristian Fernando Villca Gutierrez"
 proofreader: ""
 ---
 
-JavaScript es un lenguaje ampliamente utilizado en el desarrollo web y potencia funciones interactivas de prácticamente todos los sitios web. JavaScript hace posible crear páginas web dinámicas y es muy versátil.
+JavaScript es un lenguaje ampliamente utilizado en el desarrollo web y potencia las características interactivas de prácticamente todos los sitios web. JavaScript hace posible crear páginas web dinámicas y es muy versátil.
 
 <!-- more -->
 
-JavaScript sigue siendo uno de los lenguajes de programación más demandados en 2024. Muchas empresas buscan competencia en JavaScript, y en uno de sus marcos como Angular y React. Si eres un aspirante a desarrollador web, comprender lo que estas empresas buscan en las entrevistas es la clave para desbloquear grandes oportunidades.
+JavaScript sigue siendo uno de los lenguajes de programación más demandados en 2024. Muchas empresas buscan competencia en JavaScript, y en uno de sus frameworks como Angular y React. Si eres un aspirante a desarrollador web, comprender lo que estas empresas buscan en las entrevistas es la clave para desbloquear grandes oportunidades.
 
 En este manual, profundizaré en varios conceptos esenciales de JavaScript que debes preparar antes de ir a una entrevista. Equipado con los fundamentos y los siguientes conceptos, te posicionarás como un candidato impresionante en el panorama del desarrollo web.
 
 ## Tabla de Contenidos
 
--   [Cómo Usar las Palabras Clave `var`, `let`, y `const`][1]
--   [¿Qué es el Elevamiento (Hoisting)?][2]
--   [¿Cómo Funcionan los Closures?][3]
--   [Cómo Implementar el Debouncing.][4]
--   [Cómo Implementar el Throttling.][5]
+-   [Cómo Usar las palabras clave `var`, `let`, y `const`][1]
+-   [¿Qué es el elevamiento (Hoisting)?][2]
+-   [¿Cómo funcionan los Closures?][3]
+-   [Cómo implementar el Debouncing.][4]
+-   [Cómo implementar el Throttling.][5]
 -   [¿Qué es el Currying?][6]
--   [¿Cuál es la Diferencia entre `==` y `===`?][7]
--   [¿Cómo Funciona la Palabra Clave `this`?][8]
--   [Cómo Usar los Métodos `call`, `apply` y `bind`][9]
--   [¿Qué Son los Prototipos y la Herencia Prototipal?][10]
--   [‌Cómo Usar el Operador de Expansión (Spread Operator)][11]
--   [¿Cómo Funciona la Desestructuración de Arrays y Objetos?][12]
--   [¿Qué Son las Promesas?][13]
--   [Cómo Usar las Palabras Clave `async` y `await`][14]
--   [¿Qué es un Bucle de Eventos (Event Loop)?][15]
--   [Cómo Funciona la Propagación de Eventos – Burbujeo y Captura][16]
--   [¿Qué Son las Funciones Generadoras?][17]
--   [Cómo Implementar Polyfills para `Array.map()`, `Array.reduce()`, y `Array.filter()`][18]
--   [Reflexiones Adicionales][19]
+-   [¿Cuál es la diferencia entre `==` y `===`?][7]
+-   [¿Cómo funciona la palabra clave `this`?][8]
+-   [Cómo usar los métodos `call`, `apply` y `bind`][9]
+-   [¿Qué son los prototipos y la herencia prototipal?][10]
+-   [‌Cómo usar el operador de expansión (Spread Operator)][11]
+-   [¿Cómo funciona la desestructuración de arrays y objetos?][12]
+-   [¿Qué son las promesas?][13]
+-   [Cómo usar las palabras clave `async` y `await`][14]
+-   [¿Qué es un bucle de eventos (Event Loop)?][15]
+-   [Cómo funciona la propagación de eventos – Burbujeo y Captura][16]
+-   [¿Qué son las funciones generadoras?][17]
+-   [Cómo implementar polyfills para `Array.map()`, `Array.reduce()`, y `Array.filter()`][18]
+-   [Reflexiones adicionales][19]
 
-## Cómo Usar las Palabras Clave `var`, `let`, y `const`
+## Cómo usar las palabras clave `var`, `let`, y `const`
 
 En JavaScript, puedes declarar una variable de tres maneras: usando `var`, `let` y `const`. Es esencial comprender la diferencia entre estas tres.
 
-Una variable `var` tiene un alcance global y de nivel de función. Si la variable se declara globalmente, se puede acceder a ella desde cualquier lugar y si se declara dentro de una función, se puede acceder a ella dentro de esa función.
+Una variable `var` tiene un alcance global y nivel de función. Si la variable se declara globalmente, se puede acceder a ella desde cualquier lugar y si se declara dentro de una función, se puede acceder a ella dentro de esa función.
 
 ```javascript
 var a=5
@@ -88,7 +88,7 @@ arr[1] = 4;
 console.log(arr); // [ 1, 4, 3 ]
 ```
 
-## ¿Qué es el Elevamiento (Hoisting)?
+## ¿Qué es el elevamiento (Hoisting)?
 
 El elevamiento se refiere al comportamiento predeterminado de JavaScript que mueve todas las declaraciones de variables y funciones a la parte superior. Esto significa que puedes usarlas antes de que se declaren.
 
@@ -120,7 +120,7 @@ fiz(); // arroja ReferenceError
 const fiz = () => { console.log("fiz llamada") };
 ```
 
-## ¿Cómo Funcionan los Closures?
+## ¿Cómo funcionan los closures?
 
 Los closures son un concepto importante en JavaScript. Cuando tienes una función dentro de otra función, la función interna tiene acceso a todas las variables de la función externa.
 
@@ -144,17 +144,7 @@ innerFun(); // imprime 3
 Aquí, `fun()` declara e inicializa una variable `count`. Luego, devuelve una función interna que incrementa `count` antes de imprimirla. Ahora, cuando llamas a `innerFun()` en cualquier lugar fuera del método `fun()`, puede seguir accediendo a `count` e incrementarlo.
 
 
-
-```markdown
-Cómo Usar Closures en JavaScript – Una Guía para Principiantes
-
-Los closures son un concepto confuso de JavaScript para aprender, porque es difícil ver cómo se usan realmente. A diferencia de otros conceptos como funciones, variables y objetos, no siempre usas closures conscientemente y directamente. No dices: ¡Oh! Aquí usaré un closure como solución. Pero en…
-
-![favicon](https://cdn.freecodecamp.org/universal/favicons/favicon.ico)Matías HernándezfreeCodeCamp.org
-
-![English-Header-4](https://www.freecodecamp.org/news/content/images/2021/01/English-Header-4.png)
-
-## Cómo Implementar Debouncing
+## Cómo implementar debouncing
 
 El debouncing es una técnica que retrasa la llamada de una función por unos segundos y asegura que siempre haya un retraso entre la llamada a la función y su ejecución.
 
@@ -194,9 +184,7 @@ Las dos primeras llamadas no se ejecutan, mientras que la tercera sí, después 
 
 El debouncing tiene muchas aplicaciones, siendo la más popular la funcionalidad de autocompletar en las barras de búsqueda. He explicado el debouncing en detalle en la siguiente publicación:
 
-[
-
-Debouncing en JavaScript – Explicado Construyendo Funcionalidad de Autocompletar en React
+[Debouncing en JavaScript – Explicado Construyendo Funcionalidad de Autocompletar en React](https://www.freecodecamp.org/news/deboucing-in-react-autocomplete-example/)
 
 Hola lectores, ¡espero que estén bien! Estoy de regreso con otro tutorial sobre desarrollo web. Si eres alguien a quien le gusta desarrollar aplicaciones web con JavaScript y React, entonces esta publicación es para ti. Cuando lanzas una nueva app en producción, quieres asegurarte de que sea fácil de usar. Un sitio web…
 
@@ -204,7 +192,7 @@ Hola lectores, ¡espero que estén bien! Estoy de regreso con otro tutorial sobr
 
 ![photo-1550063873-ab792950096b](https://www.freecodecamp.org/news/content/images/2024/02/photo-1550063873-ab792950096b.jpeg)
 
-## Cómo Implementar Throttling
+## Cómo implementar throttling
 
 El throttling es una técnica que limita la frecuencia con la que se llama a una función. Una función throttled se ejecuta por primera vez y solo puede ser llamada de nuevo después de un cierto retraso. Si se llama dentro del retraso, no ocurre nada.
 
@@ -261,7 +249,7 @@ El throttling también utiliza el concepto de closures. He explicado el throttli
 
 ![throttling-image](https://www.freecodecamp.org/news/content/images/2024/04/throttling-image.jpeg)
 
-## ¿Qué es Currying?
+## ¿Qué es currying?
 
 El currying es una técnica donde una función con múltiples argumentos se transforma en una secuencia de funciones, con cada función tomando un solo argumento y devolviendo otra función. Por ejemplo, considera la función a continuación:
 ```
@@ -301,7 +289,7 @@ Por lo tanto, el currying mejora la modularidad y flexibilidad del código con l
 
 El currying simplifica funciones complejas al descomponerlas en partes más simples y manejables. Esto conduce a un código más limpio y legible.
 
-## ¿Cuál es la Diferencia entre `==` y `===`?
+## ¿Cuál es la diferencia entre `==` y `===`?
 
 Esto es realmente simple, pero muy común en las entrevistas.
 
@@ -316,7 +304,7 @@ console.log(a === b); // false
 -   `==` compara solo el valor de `a` y `b`,
 -   `===` compara tanto el valor como el tipo de dato de `a` y `b`
 
-## ¿Cómo Funciona la Palabra Clave `this`?
+## ¿Cómo funciona la palabra clave `this`?
 
 La palabra clave `this` es el objeto que actualmente estás refiriendo. Su valor se establece según el contexto en el que la estés utilizando. Cuando se refiere globalmente, `this` se refiere al objeto [window][25].
 
@@ -340,7 +328,7 @@ obj.getInfo();
 
 Consulta los [documentos][26] para aprender más sobre la palabra clave `this`.
 
-## Cómo Usar los Métodos `call`, `apply` y `bind`
+## Cómo usar los métodos `call`, `apply` y `bind`
 
 Cuando usas `this` dentro de una función, su valor se establece en el objeto sobre el cual se llama la función. Tomemos un ejemplo:
 
@@ -360,8 +348,8 @@ Para llamar a la función `getInfo()` en un objeto, usa la función `call`. Crea
 const ob1 = { name: 'alex', age: 25 };
 const ob2 = { name: 'marcus', age: 23 };
 
-getInfo.call(ob1); // Name: alex, Age: 25
-getInfo.call(ob2); // Name: marcus, Age: 23
+getInfo.call(ob1); // name: alex, age: 25
+getInfo.call(ob2); // name: marcus, age: 23
 ```
 
 `call` establece el valor de la palabra clave `this` dentro de una función.
@@ -403,7 +391,7 @@ Cuando se llama a `bind` en la función `getInfo()`, devuelve una nueva función
 
 Los tres métodos son similares. Es decir, establecen el valor de la palabra clave `this`. Sin embargo, una diferencia clave en `bind` es que devuelve una nueva función, mientras que `call` y `apply` simplemente llaman a la función.
 
-## ¿Qué son los Prototipos y la Herencia Prototípica?
+## ¿Qué son los prototipos y la herencia prototípica?
 
 La herencia es un concepto en la programación orientada a objetos que permite a un objeto heredar propiedades y métodos de otro objeto. Sin embargo, la herencia funciona de manera diferente en JavaScript.
 
@@ -415,20 +403,20 @@ Entendamos con un ejemplo.
 
 ```javascript
 let animal = {
-    eats: true,
-    walk() {
-        console.log("Animal is walking");
+    come: true,
+    caminar() {
+        console.log("El animal camina");
     }
 };
 
-const rabbit = Object.create(animal);
-rabbit.jumps = true;
-rabbit.walk(); // Animal is walking
+const conejo = Object.create(animal);
+conejo.jumps = true;
+conejo.caminar(); // El animal camina
 ```
 
-`Object.create` crea un nuevo objeto `rabbit` con su prototipo establecido en `animal`. También puedes establecer propiedades adicionales del nuevo objeto.
+`Object.create` crea un nuevo objeto `conejo` con su prototipo establecido en `animal`. También puedes establecer propiedades adicionales del nuevo objeto.
 
-Además, el método `walk()` no existe en `rabbit`, por lo que busca en el prototipo del objeto `animal`. Esto significa que el objeto `rabbit` ha heredado las propiedades y métodos del objeto `animal`.
+Además, el método `caminar()` no existe en `conejo`, por lo que busca en el prototipo del objeto `animal`. Esto significa que el objeto `conejo` ha heredado las propiedades y métodos del objeto `animal`.
 
 ```javascript
 const perro = {
@@ -472,7 +460,7 @@ Prototipos y Herencia en JavaScript – y Por Qué Dicen Que Todo en JS es un Ob
 
 ][28]
 
-## ‌Cómo Usar el Operador Spread
+## ‌Cómo usar el operador Spread
 
 El operador spread se usa para distribuir contenidos de un array u objeto en elementos individuales o recolectar un montón de elementos en un solo objeto. Tiene los siguientes casos de uso:
 
@@ -519,7 +507,7 @@ const numeros = [1, 2];
 fun2(...numeros);
 ```
 
-## Cómo Funcionan la Desestructuración de Arrays y Objetos
+## Cómo funcionan la desestructuración de arrays y objetos
 
 Similar al operador spread, puedes distribuir elementos de un array o un objeto en variables individuales.
 
@@ -543,7 +531,7 @@ console.log(edad); // 22
 console.log(género); // masculino
 ```
 
-## ¿Qué son las Promesas?
+## ¿Qué son las promesas?
 
 Las promesas son un concepto muy importante en JavaScript, casi seguro que se lo preguntarán en entrevistas. Las promesas se utilizan para operaciones asincrónicas en JavaScript como temporizadores o llamadas API.
 
@@ -598,7 +586,7 @@ Las promesas son bloques de construcción importantes para operaciones asincrón
 
 ![cover-1](https://www.freecodecamp.org/news/content/images/2020/11/cover-1.png)
 
-## Cómo Utilizar las Palabras Clave `async` y `await`
+## Cómo utilizar las palabras clave `async` y `await`
 
 La palabra clave `await` pausa la ejecución de una función hasta que una promesa ha sido resuelta o rechazada. `await` solo puede ser usada dentro de una función `async`. Vamos a ver un ejemplo:
 
