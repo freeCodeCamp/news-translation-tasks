@@ -1,26 +1,28 @@
 name: Articles Auto Translate
-run-name: ${{ github.event.label.name }} - ${{ github.event.issue.title }}
+run-name: auto - ${{ github.event.issue.title }}
 
 on:
   issues:
     types: [labeled]
 
 env:
-  # Git helper functions for push retry
+  # Git helper functions for push retry with exponential backoff
   PUSH_RETRY_SCRIPT: |
     push_with_retry() {
       local branch=${1:-main}
-      local max_retries=${2:-3}
-      
+      local max_retries=${2:-4}
+
       for i in $(seq 1 $max_retries); do
         if git push origin "$branch"; then
           echo "Push to $branch successful"
           return 0
         else
-          echo "Push failed, attempt $i/$max_retries"
+          wait_time=$((2 ** i))
+          echo "Push failed, attempt $i/$max_retries. Waiting ${wait_time}s..."
           if [ $i -lt $max_retries ]; then
+            sleep $wait_time
+            git fetch origin "$branch" || true
             git pull --rebase origin "$branch" || true
-            sleep 5
           fi
         fi
       done
@@ -29,38 +31,100 @@ env:
     }
 
 jobs:
+  # First job: Validate the trigger and extract information
+  validate:
+    name: Validate Auto-Translate Trigger
+    runs-on: ubuntu-latest
+    # Only run if the label added is "auto"
+    if: github.event.label.name == 'auto'
+    outputs:
+      lang_code: ${{ steps.extract.outputs.lang_code }}
+      lang_label: ${{ steps.extract.outputs.lang_label }}
+      is_valid: ${{ steps.extract.outputs.is_valid }}
+
+    steps:
+      - name: Validate issue and extract language
+        id: extract
+        run: |
+          # Extract language code from issue title (e.g., "[zh] Article Title" -> "zh")
+          title="${{ github.event.issue.title }}"
+          LANG_CODE=$(echo "$title" | sed -E 's/^\[([a-zA-Z]+)\].*/\1/' | tr '[:upper:]' '[:lower:]')
+
+          # Map language codes to language label names
+          declare -A LANG_MAP=(
+            ["zh"]="chinese"
+            ["es"]="spanish"
+            ["pt"]="portuguese"
+            ["it"]="italian"
+            ["ja"]="japanese"
+            ["ko"]="korean"
+            ["uk"]="ukrainian"
+          )
+
+          LANG_LABEL="${LANG_MAP[$LANG_CODE]:-}"
+
+          # Validate
+          if [ -z "$LANG_CODE" ] || [ -z "$LANG_LABEL" ]; then
+            echo "is_valid=false" >> $GITHUB_OUTPUT
+            echo "::error::Could not extract valid language from title: $title"
+            echo "::error::Expected format: [lang] Title (e.g., [zh] Article Title)"
+            exit 1
+          fi
+
+          # Validate issue body is not empty
+          if [ -z "${{ github.event.issue.body }}" ]; then
+            echo "is_valid=false" >> $GITHUB_OUTPUT
+            echo "::error::Issue body is empty. Please provide article URL."
+            exit 1
+          fi
+
+          echo "lang_code=$LANG_CODE" >> $GITHUB_OUTPUT
+          echo "lang_label=$LANG_LABEL" >> $GITHUB_OUTPUT
+          echo "is_valid=true" >> $GITHUB_OUTPUT
+          echo "Language code: $LANG_CODE, Language label: $LANG_LABEL"
+
   auto-translate:
+    name: Auto Translate Article
+    needs: validate
+    if: needs.validate.outputs.is_valid == 'true'
     runs-on: ubuntu-latest
     permissions:
       issues: write
       contents: write
 
+    # Use language-specific concurrency group so different languages can run in parallel
+    # but same-language translations are queued
+    concurrency:
+      group: auto-translate-${{ needs.validate.outputs.lang_code }}
+      cancel-in-progress: false
+
+    env:
+      LANG_CODE: ${{ needs.validate.outputs.lang_code }}
+      LANG_LABEL: ${{ needs.validate.outputs.lang_label }}
+
     steps:
-      ### Queue lock: prevent concurrent conflicts
+      ### Queue lock: additional protection for same-language concurrent runs
       - uses: softprops/turnstyle@v1
         with:
-          poll-interval-seconds: 10
+          poll-interval-seconds: 15
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      ### Check issue body
-      - name: Validate issue body
-        if: ${{ !github.event.issue.body }}
-        run: |
-          echo "::error::Issue body is empty. Please provide article URL."
-          exit 1
-
-      ### Extract language code
-      - name: Extract language code
-        id: lang
-        run: |
-          title="${{ github.event.issue.title }}"
-          LANG_CODE=$(echo "$title" | sed -E 's/^\[([a-zA-Z]+)\].*/\1/')
-          echo "lang=$LANG_CODE" >> $GITHUB_OUTPUT
-          echo "LANG_CODE=$LANG_CODE" >> $GITHUB_ENV
+      - name: Add processing comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: 'Auto-translation workflow started for language: **${{ env.LANG_CODE }}**. This may take a few minutes...'
+            });
 
       ### Checkout repository
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       ### Configure Git
       - name: Setup Git
@@ -88,24 +152,27 @@ jobs:
         run: |
           original_file="${{ steps.fetch.outputs.markdown_file_path }}"
           filename=$(basename "$original_file")
-          BACKUP_PATH="/tmp/$filename"
+          # Sanitize filename
+          safe_filename=$(echo "$filename" | sed 's/[^a-zA-Z0-9._-]/-/g')
+          BACKUP_PATH="/tmp/$safe_filename"
           cp "$original_file" "$BACKUP_PATH"
           echo "path=$BACKUP_PATH" >> $GITHUB_OUTPUT
+          echo "filename=$safe_filename" >> $GITHUB_OUTPUT
           echo "BACKUP_PATH=$BACKUP_PATH" >> $GITHUB_ENV
+          echo "SAFE_FILENAME=$safe_filename" >> $GITHUB_ENV
           echo "Markdown backed up to $BACKUP_PATH"
 
-      ### Save English raw text and commit to main branch
+      ### Save English raw text ONLY to _raw folder on main branch
+      ### Do NOT copy to language folder yet - that happens after translation
       - name: Commit raw article to main
         run: |
           file="${{ steps.fetch.outputs.markdown_file_path }}"
-          base=$(basename "$file")
-          lang="${{ steps.lang.outputs.lang }}"
+          base="${{ env.SAFE_FILENAME }}"
 
           mkdir -p "./articles/_raw/"
           cp "$file" "./articles/_raw/$base"
-          [ -f "./articles/$lang/$base" ] || cp "$file" "./articles/$lang/$base"
 
-          git add -f "./articles/_raw/$base" "./articles/$lang/$base" || true
+          git add -f "./articles/_raw/$base" || true
           git commit -m "Add raw article: $base" || echo "Nothing to commit."
 
           git fetch origin main
@@ -130,9 +197,22 @@ jobs:
           rm -rf ./articles/_tmp/
 
           git fetch origin
-          git checkout -B auto-translate origin/auto-translate
 
+          # Create or checkout auto-translate branch
+          if git show-ref --verify --quiet refs/remotes/origin/auto-translate; then
+            git checkout -B auto-translate origin/auto-translate
+          else
+            git checkout -b auto-translate
+          fi
+
+          # Merge main to get the raw article
           git merge --strategy=recursive --strategy-option=theirs main || true
+
+      ### Ensure language directory exists
+      - name: Prepare language directory
+        run: |
+          lang="${{ env.LANG_CODE }}"
+          mkdir -p "./articles/$lang/"
 
       ### Auto-translate article (use secure path)
       - name: Translate article
@@ -140,26 +220,44 @@ jobs:
         with:
           with_issue_title: "${{ github.event.issue.title }}"
           with_issue_body: "${{ github.event.issue.body }}"
-          with_label_name: "${{ github.event.label.name }}"
+          with_label_name: "${{ env.LANG_LABEL }}"
           with_github_token: "${{ github.token }}"
-          with_original_markdown_file_path: "${{ steps.backup-md.outputs.path }}"
+          with_original_markdown_file_path: "${{ env.BACKUP_PATH }}"
           with_task_fetch_to_save_path: "./articles/_raw/"
           with_task_translate_openai_api_key: "${{ secrets.OPENAI_API_KEY }}"
           with_task_translate_to_save_path: "./articles/{lang}/"
 
-      ### Commit translated file
+      ### Verify translation was created and commit
       - name: Commit translated article
+        id: commit-translation
         run: |
-          base=$(basename "$BACKUP_PATH")
+          base="${{ env.SAFE_FILENAME }}"
           lang="${{ env.LANG_CODE }}"
           translated="./articles/$lang/$base"
 
-          [ -f "$translated" ] || { echo "Translated file missing."; exit 1; }
+          echo "Checking for translated file: $translated"
+
+          if [ ! -f "$translated" ]; then
+            echo "::error::Translated file not found at: $translated"
+            echo "Listing articles directory contents:"
+            find ./articles -type f -name "*.md" | head -20
+            exit 1
+          fi
+
+          # Verify translation actually happened (file should differ from original)
+          original="./articles/_raw/$base"
+          if [ -f "$original" ]; then
+            if diff -q "$original" "$translated" > /dev/null 2>&1; then
+              echo "::warning::Translated file is identical to original - translation may have failed"
+            else
+              echo "Translation verified: files differ from original"
+            fi
+          fi
 
           git add "$translated"
-          git commit -m "Add translated article: $base" || echo "Nothing to commit."
+          git commit -m "Add translated article ($lang): $base" || echo "Nothing to commit."
 
-          git fetch origin auto-translate
+          git fetch origin auto-translate || true
 
           # Safe rebase, resolve conflicts
           git stash push -u -m "Auto-stash before rebase" || true
@@ -174,9 +272,10 @@ jobs:
           eval "$PUSH_RETRY_SCRIPT"
           push_with_retry auto-translate
 
-      ### Clean up temp directory
+      ### Clean up temp directory on main
       - name: Cleanup temp directory
         run: |
+          git checkout main
           rm -rf ./articles/_tmp/
           git add -u ./articles/_tmp/ || true
           git commit -m "Cleanup _tmp directory" || echo "Nothing to commit."
@@ -189,3 +288,46 @@ jobs:
           # Use push retry function for final cleanup
           eval "$PUSH_RETRY_SCRIPT"
           push_with_retry main
+
+      ### Add success comment
+      - name: Add success comment
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const langCode = '${{ env.LANG_CODE }}';
+            const filename = '${{ env.SAFE_FILENAME }}';
+
+            const message = `Auto-translation completed successfully!
+
+            **Files created:**
+            - Raw article: \`articles/_raw/${filename}\`
+            - Translated article (auto-translate branch): \`articles/${langCode}/${filename}\`
+
+            **Next steps:**
+            1. Contributors can proofread the translation on the \`auto-translate\` branch
+            2. Use \`/postedit\` command to claim this article for post-editing
+            3. When ready, create a PR from \`auto-translate\` to \`main\`
+
+            [View translated file](https://github.com/${{ github.repository }}/blob/auto-translate/articles/${langCode}/${filename})
+            [Edit in github.dev](https://github.dev/${{ github.repository }}/blob/auto-translate/articles/${langCode}/${filename})`;
+
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: message
+            });
+
+      ### Add failure comment
+      - name: Add failure comment
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: 'Auto-translation workflow failed. Please check the [workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details.'
+            });
