@@ -1323,7 +1323,7 @@ También hemos añadido algunos registros para ayudarnos a verificar que la macr
 
 ### Cómo Usar la Macro `cached_fn`
 
-Para hacer que cualquier función sea memoizada o en caché, simplemente la anotamos usando el atributo `cached_fn`:
+Para hacer que cualquier función sea memorizada o en caché, simplemente la anotamos usando el atributo `cached_fn`:
 
 ```
 // src/main.rs
