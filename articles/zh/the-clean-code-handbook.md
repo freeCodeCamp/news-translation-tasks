@@ -176,7 +176,7 @@ function logTotal(user, total) {
     console.log(`User: ${user}, Total: ${total}`);
 }
 
-// 混乱编码：尝试做所有事情
+// 混乱代码：尝试做所有事情
 function calculateAndLogTotal(a, b, user) {
     let total = a + b;
     console.log(`用户: ${user}, 总计: ${total}`);
