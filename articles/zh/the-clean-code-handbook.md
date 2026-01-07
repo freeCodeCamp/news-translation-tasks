@@ -206,7 +206,7 @@ function calculateAndLogTotal(a, b, user) {
 const total = price * quantity;
 ```
 
-这是一个**坏注释**，因为它只是重复了代码已经说明的内容。代码 `price * quantity` 本身已经很清晰，因此这个注释没有增加任何有用的信息。
+这是一个**糟糕的注释**，因为它只是重复了代码已经说明的内容。代码 `price * quantity` 本身已经很清晰，因此这个注释没有增加任何有用的信息。
 
 **好注释：👍**
 
