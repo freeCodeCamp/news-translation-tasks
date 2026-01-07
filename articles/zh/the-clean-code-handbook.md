@@ -173,7 +173,7 @@ function calculateTotal(a, b) {
 }
 
 function logTotal(user, total) {
-    console.log(`用户: ${user}, 总计: ${total}`);
+    console.log(`User: ${user}, Total: ${total}`);
 }
 
 // 混乱编码：尝试做所有事情
