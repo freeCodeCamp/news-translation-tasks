@@ -33,7 +33,7 @@ const PROJECT_QUERY = `
  * @param {Object} params - Parameters from GitHub Actions
  * @returns {Object} - Project card information
  */
-export async function getProjectCard({ github, context, core }) {
+async function getProjectCard({ github, context, core }) {
   const issueNodeId = context.payload.issue.node_id;
 
   const result = await github.graphql(PROJECT_QUERY, { id: issueNodeId });
@@ -77,11 +77,15 @@ export async function getProjectCard({ github, context, core }) {
  * Main function to get project card and set outputs
  * @param {Object} params - Parameters from GitHub Actions
  */
-export async function main({ github, context, core }) {
+async function main({ github, context, core }) {
   try {
     const cardInfo = await getProjectCard({ github, context, core });
 
-    console.table({ cardId, projectUrl, projectName });
+    console.table({
+      cardId: cardInfo.cardId,
+      projectUrl: cardInfo.projectUrl,
+      projectName: cardInfo.projectName
+    });
 
     core.setOutput("card_id", cardInfo.cardId);
     core.setOutput("project_url", cardInfo.projectUrl);
@@ -90,3 +94,5 @@ export async function main({ github, context, core }) {
     core.setFailed(error.message);
   }
 }
+
+module.exports = { getProjectCard, main };
