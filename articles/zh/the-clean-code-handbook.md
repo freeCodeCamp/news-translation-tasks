@@ -670,7 +670,7 @@ try {
 ```
 try {
   const area = calculateArea(rectangle.width, rectangle.height);
-  console.log(`面积: ${area}`);
+  console.log(`Area: ${area}`);
 } catch (error) {
   console.error(error.message);
 }
