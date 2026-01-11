@@ -1,8 +1,7 @@
 ---
 title: Introducing New freeCodeCamp Certifications in the Full Stack Developer
   Curriculum
-date: 2026-01-04T10:30:20.798Z
-author: Quincy Larson
+date: 2025-11-28T02:58:07.056Z
 authorURL: https://www.freecodecamp.org/news/author/quincy/
 originalURL: https://www.freecodecamp.org/news/introducing-freecodecamp-checkpoint-certifications/
 posteditor: ""

@@ -1,6 +1,7 @@
+```markdown
 ---
-title: Everything You Need to Know About Web Accessibility
-date: 2025-04-10T13:17:04.948Z
+title: 您需要知道的关于 Web 无障碍访问的一切
+date: 2025-07-17T01:59:58.317Z
 author: Kunal Nalawade
 authorURL: https://www.freecodecamp.org/news/author/KunalN25/
 originalURL: https://www.freecodecamp.org/news/the-web-accessibility-handbook/
@@ -8,336 +9,316 @@ posteditor: ""
 proofreader: ""
 ---
 
-The web is a great place to access information and connect with people. It has opened up countless opportunities, making life more convenient in many ways.
+互联网是获取信息和与人交流的绝佳平台。它开启了无数的机会，让生活在许多方面变得更加便利。
 
 <!-- more -->
 
-But not everyone experiences the web in the same way. Websites are difficult to use for people who have visual, hearing, or mobility impairments. These barriers make it harder to navigate content, and in some cases, make the web completely inaccessible.
+但并不是所有人都以相同方式体验网络。对于有视觉、听觉或行动障碍的人来说，网站的使用是困难的。这些障碍使得内容的导航更加困难，在某些情况下，使得访问网络完全不可能。
 
-This handbook will help you understand accessibility and how to implement it. Whether you are a beginner or an intermediate developer, you'll learn basic accessibility practices and some advanced techniques. This will help you make your website more inclusive.
+本手册将帮助您理解无障碍访问及其实现方法。无论您是初学者还是中级开发人员，您都将学习基本的无障碍实践和一些高级技术。这将帮助您让站点更加包容。
 
-Let’s get started.
+让我们开始吧。
 
-## Table of Contents
+## 目录
 
--   [What is Accessibility?][1]
+-   [什么是无障碍访问？][1]
     
--   [Basic Accessibility Practices][2]
+-   [基本的无障碍访问实践][2]
     
-    -   [Semantic and Non-Semantic HTML][3]
+    -   [语义化和非语义化 HTML][3]
         
-    -   [Text Content][4]
+    -   [文本内容][4]
         
-    -   [Page Layouts][5]
+    -   [页面布局][5]
         
-    -   [Interactive Elements][6]
+    -   [交互元素][6]
         
-    -   [Keyboard Accessibility][7]
+    -   [键盘可访问性][7]
         
-    -   [Form Labels][8]
+    -   [表单标签][8]
         
-    -   [Links][9]
+    -   [链接][9]
         
-    -   [Table Accessibility][10]
+    -   [表格无障碍访问][10]
         
--   [Additional CSS and JavaScript Practices][11]
+-   [额外的 CSS 和 JavaScript 实践][11]
     
-    -   [Styling Form Elements][12]
+    -   [表单元素样式][12]
         
-    -   [Color Contrast][13]
+    -   [色彩对比][13]
         
-    -   [JavaScript Practices][14]
+    -   [JavaScript 实践][14]
         
--   [Advanced Accessibility Practices: WAI-ARIA][15]
+-   [高级无障碍实践：WAI-ARIA][15]
     
-    -   [The role attribute][16]
+    -   [角色属性][16]
         
-    -   [aria-\* attribute][17]
+    -   [aria-\* 属性][17]
         
-    -   [Dynamic Content Attributes][18]
+    -   [动态内容属性][18]
         
-    -   [Form Validation and Errors][19]
+    -   [表单验证和错误][19]
         
-    -   [Using non-semantic elements as buttons][20]
+    -   [将非语义元素用作按钮][20]
         
--   [Multimedia Accessibility][21]
+-   [多媒体无障碍访问][21]
     
--   [Mobile Accessibility][22]
-    
-
-## What is Accessibility?
-
-Accessibility (A11y) is an important practice in web development that aims to make the website usable (accessible) for all people. This includes people who have disabilities that make it difficult for them to use websites. By making a website accessible to everyone, including people with disabilities, we ensure that they have the same opportunities as we do. We’re also helping to make the web a more inclusive place overall.
-
-What kind of disabilities should we consider? In broad terms:
-
--   Visual impairments: blindness, blurred vision, and colour blindness
-    
--   Hearing impairments: low to no hearing
-    
--   Mobility Impairments: difficulty with physical movement(s)
-    
--   Cognitive Impairments: like Dyslexia and ADHD
+-   [移动无障碍访问][22]
     
 
-People with visual impairments commonly use devices like [screen readers][23] to visualise and understand a website’s content, for example. So a big part of web accessibility is designing a website that can be easily accessed by a screen reader.
+## 什么是无障碍访问？
 
-There are various practices that you, as a developer, can follow to make a website accessible, which I’ll cover in this handbook.
+无障碍访问 (A11y) 是网络开发中的一项重要实践，旨在让网站对所有人可用（可访问）。这包括使残疾人可以更容易地使用网站。通过让网站对每个人都可以访问，包括残疾人，确保他们享有和我们一样的机会。我们也在整体上帮助互联网成为一个更具包容性的地方。
 
-## Basic Accessibility Practices
+我们应考虑哪类残疾？大体上：
 
-Accessibility is not just an added feature on top of a website you’ve already developed. It is a practice that needs to be followed throughout the development process. Whenever you are creating content on the web page, ask yourself if it is really accessible.
-
-Another important point is that accessibility is not just for people with impairments. It benefits everybody by making a website easier to use, thus improving overall user experience.
-
-How do you achieve good accessibility? Well, there are some practices that you should follow while writing HTML, CSS, and JavaScript code. We’ll discuss some basic practices in this section.
-
-Before we get into it, let’s start by understanding what semantic and non-semantic HTML tags are:
-
-### Semantic and Non-semantic HTML
-
-Non-semantic HTML tags do not convey specific meaning or purpose. They can be used for anything, depending on the CSS styling and JavaScript functionality. Examples of non-semantic tags are: `<div>` and `<span>`. These tags are mostly used as containers for wrapping other elements.
-
-Semantic HTML tags clearly describe their purpose to the browser and the developers through their names. They improve code readability and also help with [SEO (Search Engine Optimisation)][24]. Examples of semantic tags include: `<button>`, `<a>`, `<header>`, `<footer>`.
-
-You can find a list of all semantic elements [here][25].
-
-#### Importance of using semantic HTML
-
-An essential part of accessibility is using the correct HTML element for its intended purpose. This means, for example, using a `<button>` tag when you want to render a button.
-
-But why use semantic elements? After all, you can use CSS to make a `<div>` look like a button. True, but using semantic elements is important for the following reasons:
-
--   Semantic elements have built-in styles and functionality that you otherwise would need to add through CSS and JavaScript. This makes them easier to use.
+-   视觉障碍：失明、视力模糊和色盲
     
--   They make the code easier to read and maintain, as you can actually see the elements being used rather than seeing a bunch of divs everywhere.
+-   听觉障碍：低听力到听力完全丧失
     
--   Screen readers can easily read and interpret semantic elements, helping people with visual impairments.
+-   行动障碍：身体动作困难
+    
+-   认知障碍：例如阅读障碍和注意力缺陷多动障碍 (ADHD)
     
 
-In the following sections, we’ll understand basic accessibility practices for each type of content you render on HTML. We'll explore how to use the correct HTML tags for each situation, helping you see how choosing the right tag for its purpose improves accessibility.
+例如，视力障碍者通常使用设备如[屏幕阅读器][23]来可视化和理解网站的内容。因此，网络无障碍访问的一个重要部分是设计一个屏幕阅读器可以轻松访问的网站。
 
-Feel free to test each example with a screen reader. On Mac, use ⌘+F5 to activate VoiceOver, Mac’s built-in screen reader. For Windows, you can use the built-in screen reader called Narrator by pressing Ctrl + Windows Key + Enter.
+作为开发人员，您可以遵循多种实践来使网站无障碍，我将在本手册中介绍。
 
-### Text Content
+## 基本的无障碍访问实践
 
-When writing text content, it’s important to use the correct elements for headings, paragraphs, and lists. Let’s understand with the following examples.
+无障碍访问不仅仅是您已经开发的网站上的一个附加功能。这是一种必须贯穿开发过程的实践。每当您在网页上创建内容时，问问自己它是否真的可访问。
 
-Let’s say you write headings and paragraphs in the following way:
+另一个重要的点是，无障碍访问不仅仅是为了有障碍的人。它通过使网站更易于使用，进而提升整体用户体验，惠及每个人。
 
-```
-<span id="heading1">Heading 1</span>
-<br />
-<br />
-<span id="heading2">Heading 2</span>
-<br />
-<br />
-This is one paragraph
-<br />
-<br />
-This is another paragraph
+如何实现良好的无障碍访问？嗯，当书写 HTML、CSS 和 JavaScript 代码时，您应该遵循一些精良的实践。我们将在本节讨论一些基本实践。
+
+在深入探讨之前，让我们先了解什么是语义化和非语义化 HTML 标签：
+
+### 语义化和非语义化 HTML
+
+非语义化 HTML 标签不会传达特定的含义或目的。根据 CSS 样式和 JavaScript 功能，它们可以用于任何用途。非语义化标签的例子有：`<div>` 和 `<span>`。这些标签主要用作包裹其他元素的容器。
+
+语义化 HTML 标签通过其名称清楚地向浏览器和开发人员描述其用途。它们提高了代码的可读性，并有助于[SEO (搜索引擎优化)][24]。语义化标签的例子包括：`<button>`、`<a>`、`<header>`、`<footer>`。
+
+您可以在[这里][25]找到所有语义元素的列表。
+
+#### 使用语义 HTML 的重要性
+
+无障碍访问的一个重要部分是为其预定目的使用正确的 HTML 元素。这意味着，例如，当您想渲染一个按钮时，使用 `<button>` 标签。
+
+但为何使用语义化元素？毕竟，您可以使用 CSS 让 `<div>` 看起来像按钮。没错，但使用语义化元素很重要，原因如下：
+
+-   语义化元素具有内置的样式和功能，否则您需要通过 CSS 和 JavaScript 添加。这使得它们更易于使用。
+    
+-   它们使代码更易读和维护，因为您可以实际看到正在使用的元素，而不是处处看到一堆 div。
+    
+-   屏幕阅读器可以轻松读取和解释语义化元素，帮助视觉障碍者。
+    
 ```
 
-This approach has the following problems:
+随意使用屏幕阅读器测试每个示例。在 Mac 上，使用 ⌘+F5 激活 VoiceOver，这是 Mac 内置的屏幕阅读器。对于 Windows，你可以通过按 Ctrl + Windows 键 + Enter 来使用内置的屏幕阅读器 Narrator。
 
--   The screen reader won’t be able to distinguish between headings and paragraphs – it would just read out the contents in one go, thus confusing people who depend on screen readers.
-    
--   It’s difficult to style individual paragraphs, since there are no selectors. Even if you add a `<span>` to each one, it requires extra CSS styling.
-    
--   It also contains unnecessary line breaks which can be avoided by using the right elements.
-    
+### 文本内容
 
-The above code is an example of bad semantics. This is what you should do instead:
+在编写文本内容时，使用正确的元素来表示标题、段落和列表非常重要。让我们通过以下示例来理解。
+
+假设你按如下方式编写标题和段落：
 
 ```
-<h1>Heading 1</h1>
-<h2>Heading 2</h2>
-<p>This is one paragraph</p>
-<p>This is another paragraph</p>
+<span id="heading1">标题 1</span>
+<br />
+<br />
+<span id="heading2">标题 2</span>
+<br />
+<br />
+这是一个段落
+<br />
+<br />
+这是另一个段落
 ```
 
-Here, we have used the right semantic elements for the text content, which has the following benefits:
+这种方法存在以下问题：
 
--   A screen reader is able to distinguish the headings from the paragraph text by reading out the heading level before reading the text.
-    
--   `h1`, `h2`, and `p` come with built-in styles and they each render on a new line. This eliminates the need to use line breaks.
-    
--   The code looks cleaner and is much more readable.
-    
+-   屏幕阅读器无法区分标题和段落——它会一口气读出内容，从而让依赖屏幕阅读器的人感到困惑。
+-   很难对单个段落进行样式设计，因为没有选择器。即使你给每个段落添加一个 `<span>`，也需要额外的 CSS 样式。
+-   它还包含不必要的换行符，可以通过使用正确的元素来避免。
 
-#### Lists
-
-To render a list of items, we have the following approaches. The non-semantic approach just groups a bunch of divs together and applies CSS styles to them.
+以上代码是语义不佳的例子。你应该这样做：
 
 ```
-<h2>TODO List</h2>
+<h1>标题 1</h1>
+<h2>标题 2</h2>
+<p>这是一个段落</p>
+<p>这是另一个段落</p>
+```
+
+在这里，我们使用了正确的语义元素来表示文本内容，其好处如下：
+
+-   屏幕阅读器能够通过在阅读文本之前读出标题级别来区分标题和段落文本。
+-   `h1`、`h2` 和 `p` 自带样式并且每个都在新行上呈现。这消除了使用换行符的需要。
+-   代码看起来更清晰，更易于阅读。
+
+#### 列表
+
+为了渲染一个项目列表，我们有以下方法。非语义方法只是将一组 div 组合在一起并应用 CSS 样式。
+
+```
+<h2>待办事项列表</h2>
 <div id="mylist">
-  <div>Make Breakfast</div>
-  <div>Do Laundry</div>
-  <div>Complete blog post</div>
+  <div>做早餐</div>
+  <div>洗衣服</div>
+  <div>完成博客文章</div>
 </div>
 ```
 
-Again, this achieves the desired output but it’s difficult for screen readers to identify this content as a list of items. Instead, use semantic elements:
+同样，这实现了所需的输出，但屏幕阅读器很难将此内容识别为项目列表。相反，使用语义元素：
 
 ```
-<h2>TODO List</h2>
+<h2>待办事项列表</h2>
 <ul id="mylist">
-  <li>Make Breakfast</li>
-  <li>Do Laundry</li>
-  <li>Complete blog post</li>
+  <li>做早餐</li>
+  <li>洗衣服</li>
+  <li>完成博客文章</li>
 </ul>
 ```
 
-This helps screen readers identify the element as an unordered list and read out each item. `<ul>` also comes with default styles and bullet points for each list item. You can also use `<ol/>` for numbered lists, where the screen reader reads out the number on each list item.
+这有助于屏幕阅读器识别元素为无序列表并逐个读出每个项目。`<ul>` 还附带默认样式和每个列表项的项目符号。你也可以使用 `<ol/>` 来表示编号列表，屏幕阅读器会读出每个列表项的编号。
 
-You can test the above examples with Mac’s VoiceOver to see the difference.
+你可以使用 Mac 的 VoiceOver 来测试以上示例，以查看差异。
 
-#### Emphasized Text
+#### 强调文本
 
-Emphasized text refers to highlighted text that gives importance to certain words or phrases within a piece of content. When adding emphasized text, it’s important to use the right semantic elements like [`<strong>`][26] and [`<em>`][27].
+强调文本是指在内容中突出显示的文本，给某些单词或短语增加重要性。在添加强调文本时，使用正确的语义元素如 [`<strong>`][26] 和 [`<em>`][27] 很重要。
 
 ```
-<p>For best results, use <em>fresh ingredients</em> when cooking.</p>
+<p>为了获得最佳效果，烹饪时请使用<em>新鲜食材</em>。</p>
 
-<p>The process of water turning into gas is called <strong>evaporation</strong>.</p>
+<p>水变成气体的过程称为<strong>蒸发</strong>。</p>
 ```
 
-These elements add some built-in styles to the text like _bold_ and _italic_. Also, if you test with VoiceOver, you’ll notice that it puts some emphasis on the text inside these elements. This helps people using screen readers identify emphasised text.
+这些元素为文本添加了一些内置样式，如_粗体_和_斜体_。此外，如果你用 VoiceOver 测试，你会注意到它对这些元素中的文本略显强调。这帮助使用屏幕阅读器的人识别强调文本。
 
-You may also add some colour to the emphasized text. But, there’s no need to add a lot of styles, else it may cause confusion. Visit [MDN Docs-Emphasis and Importance][28] to learn more about text emphasis in HTML.
+你也可以为强调文本添加一些颜色。但不需要添加太多样式，否则可能导致混淆。请访问 [MDN 文档 - emphasis and importance][28] 以了解更多关于 HTML 中文本强调的信息。
 
-#### Abbreviations
+#### 缩写
 
-Next, when writing abbreviations (or acronyms), it’s a good practice to make them visually different and also include the full expansion of the acronym. You can also add some simple styling to the abbreviation. Learn more about abbreviations in [MDN Docs-Abbreviations][29].
+接下来，在编写缩写（或首字母缩略词）时，最好使它们在视觉上有所区别，并包括缩写的完整释义。你还可以为缩写添加一些简单的样式。有关缩写的更多信息，请参阅 [MDN 文档 - abbreviations][29]。
 
-#### Other best practices
+#### 其他最佳实践
 
-Apart from the above, there are a few other practices that are good to follow:
+除了上述内容，还有一些其他做法值得遵循：
 
--   Use clear language, wherever possible. For example, expand abbreviations: instead of Jan, write January.
-    
--   When writing ranges, avoid using dashes if possible, write 1 to 5 instead of 1-5.
-    
--   Avoid using characters that may confuse users when a screen reader reads them out, for example `~` or `*`.
-    
--   Avoid excessive exclamations and emojis.
-    
+- 尽可能使用清晰的语言。例如，展开缩写：不要写 Jan，而是写 January。
+- 在书写范围时，尽量避免使用破折号，写 1 到 5 代替 1-5。
+- 避免使用在屏幕阅读器读出时可能让用户感到困惑的字符，例如 `~` 或 `*`。
+- 避免过多的感叹号和表情符号。
 
-Also, when writing CSS for text content, remember these practices:
+此外，在为文本内容编写 CSS 时，请记住这些实践：
 
--   When using styles like font sizes, line height, and letter spacing, ensure that the text is comfortable to read.
-    
--   Your headings should stand out from the other text, in case you are using CSS styles. Usually, this is achieved by just using the right heading tags.
-    
--   Text color should have 4.5:1 contrast with the background. See the [Color Contrast][30] section for details.
-    
+- 在使用字体大小、行高和字母间距等样式时，确保文本易于阅读。
+- 如果你在使用 CSS 样式，标题应该从其他文本中脱颖而出。通常，这仅通过使用正确的标题标签就可以实现。
+- 文本颜色应该与背景有 4.5:1 的对比度。详细信息请参见[颜色对比][30]部分。
 
-If you want more tips on styling text, visit [MDN Docs - CSS Text Styling][31].
+如果你想获得更多关于文本样式的提示，请访问 [MDN 文档 - CSS 文本样式][31]。
 
-### Page Layouts
+### 页面布局
 
-Page layout is concerned with how the content is laid out on the screen. When you start designing a web page, your first thought is how your content should be positioned on the screen.
+页面布局关注于内容在屏幕上的排列方式。当你开始设计网页时，首先想到的是你的内容应该如何在屏幕上定位。
 
-Typically, a web page consists of a header, nav bar, footer, main content, and sidebar. In the _bad old days_ (phrase borrowed from the docs, sorry), developers used tables to create page layouts consisting of these elements.
+但是表格使布局变得极其复杂且难以维护。表格布局对屏幕阅读器来说也很难读取，影响了可访问性。
 
-But tables made the layouts incredibly complex and hard to maintain. Table layouts are also difficult for screen readers to read, affecting accessibility.
-
-Nowadays, there are much better ways to write page layouts. If you are including a header, nav bar, and footer along with the main content, you can use the following semantic elements:
+如今，有很多更好的方式来编写页面布局。如果您要包含标题、导航栏以及页脚和主要内容，您可以使用以下语义元素：
 
 ```
 <header>
-  <h1>Header</h1>
+  <h1>标题</h1>
   <nav>
-    <!-- main navigation in here -->
+    <!-- 主导航内容 -->
   </nav>
 </header>
 
-<!-- Here is our page's main content -->
+<!-- 这是我们页面的主要内容 -->
 <main>
-  <!-- Main content here -->
+  <!-- 在此添加主要内容 -->
 </main>
 
 <footer>
-  <!-- footer content in here -->
+  <!-- 页脚内容 -->
 </footer>
 ```
 
-Let’s understand each tag used above (skip if you already know):
+让我们理解一下上面使用的每个标签（如果您已经知道，可以略过）：
 
--   `<header>`: Represents the introductory section of a webpage, typically containing headings, logos, or navigation links.
-    
--   `<nav>`: Defines a navigation section that contains links to other parts of the website or page, providing easy access to important sections.
-    
--   `<main>`: Represents the main content area that focusses on the primary purpose of the page or the website, excluding common elements like header, footer, or sidebar (may include sidebar depending on the website).
-    
--   `<footer>`: Represents the bottom section of the web page, typically containing metadata, copyright information, or links to related resources.
-    
+- `<header>`：代表网页的介绍性部分，通常包含标题、标志或导航链接。
+  
+- `<nav>`：定义一个导航部分，其中包含指向网站或页面其他部分的链接，提供对重要部分的便捷访问。
+  
+- `<main>`：代表主要内容区域，专注于页面或网站的主要目的，不包括常见元素如标题、页脚或侧边栏（视具体网站而定，可能包含侧边栏）。
+  
+- `<footer>`：代表网页的底部部分，通常包含元数据、版权信息或相关资源的链接。
 
-These elements are called [sectioning elements][32]. Following are advantages of using these elements:
+这些元素被称为[分段元素][32]。使用这些元素的优点如下：
 
--   The layout is clear with each element clearly describing its purpose, making the code readable and maintainable.
-    
--   Using the right semantic elements makes screen readers identify each part of the layout, thus helping visually impaired users understand how the website is structured.
-    
+- 布局清晰，每个元素清楚地描述了其用途，使代码可读且易于维护。
+  
+- 使用正确的语义元素可以使屏幕阅读器识别布局的每个部分，从而帮助视觉障碍用户理解网站的结构。
 
-Of course, you can write the above layouts by using divs, but sectioning elements provide good semantics and help users understand the type of content they are navigating.
+当然，您可以使用 div 来编写上述布局，但分段元素提供良好的语义，有助于用户理解他们正在浏览的内容类型。
 
-### Interactive Elements
+### 交互式元素
 
-These consist of elements through which a user interacts with the web page. These elements include buttons, form fields, links, and so on.
+这些元素包括用户通过其与网页进行交互的元素。这些元素包括按钮、表单字段、链接等。
 
-#### Keyboard Accessibility
+#### 键盘可访问性
 
-Each interactive element on a web page should be navigable through the keyboard. This gives a user flexibility while navigating your website. Keyboard accessibility is really helpful for people with mobility impairments that may struggle to use a mouse.
+网页上的每个交互式元素都应该可以通过键盘进行导航。这为用户在浏览您网站时提供了灵活性。键盘可访问性对行动不便并可能难以使用鼠标的人来说非常有帮助。
 
-For instance, visit [this][33] page and try to navigate to each interactive element by pressing Tab on your keyboard. You can also press Enter/Spacebar to click on a button or a link. This should give you an idea of what a keyboard-accessible website looks like.
+例如，访问[此][33]页面，并尝试通过按键盘上的 Tab 键导航到每个交互式元素。您也可以按 Enter/空格键来点击按钮或链接。这应该会让您了解键盘可访问的网站是什么样的。
 
-For the most part, using the right semantic elements should ensure keyboard accessibility, as they come with built-in functionality. Check out the following example:
+在大多数情况下，使用正确的语义元素应该确保键盘可访问性，因为它们自带内置功能。请查看以下示例：
 
 ```
 <p>
-  Visit my blog at 
+  访问我的博客 
   <a href="https://www.freecodecamp.org/news/author/KunalN25/">freecodecamp.org</a>
 </p>
 
-<button>Click me</button>
-<button>Click me again</button>
+<button>点击我</button>
+<button>再次点击我</button>
 
 <div>
-  <input type="text" placeholder="Enter your name" />
+  <input type="text" placeholder="输入你的名字" />
 </div>
 ```
 
-Here, we have used the correct semantic elements for the hyperlink, button, and input element. All these elements can be accessed through Tab and interacted with using Enter/Spacebar. Check out other form-related elements in this [list][34].
+在这里，我们为超链接、按钮和输入元素使用了正确的语义元素。所有这些元素都可以通过 Tab 键访问，并使用 Enter/空格键进行交互。请查看表单相关元素的其他内容在这个[列表][34]中。
 
-Some people use a `div` or `span` and make them look like an anchor tag or a button with CSS styling. But this is bad for accessibility for two reasons:
+有些人使用 `div` 或 `span` 并通过 CSS 样式使它们看起来像是锚标签或按钮。但这对可访问性不利，原因有两个：
 
--   `div` and `span` are not tab-able by default. So, even if you do make a `div` look like a button, the user cannot navigate to it using the keyboard.
-    
--   Screen readers won’t be able to identify them as buttons, while in the case of semantic elements, they read these elements out as buttons or links.
-    
+- `div` 和 `span` 默认情况下不能被 Tab 键选中。因此，即使您确实让 `div` 看起来像一个按钮，用户也无法通过键盘导航到它。
+  
+- 屏幕阅读器无法识别它们为按钮，而在语义元素的情况下，它们会将这些元素读作按钮或链接。
 
-But if you absolutely have to use a `div` to create a clickable element, include the following attributes:
+但是如果您绝对需要使用 `div` 创建可点击的元素，请包含以下属性：
 
 ```
-<div id="customButton" role="button" tabindex="0">Click me</div>
+<div id="customButton" role="button" tabindex="0">点击我</div>
 ```
 
-Here, we have added two attributes, `tabindex` and `role`. We’ll understand the `role` attribute in a later section.
+这里，我们添加了两个属性，`tabindex` 和 `role`。我们将在后面的章节中理解 `role` 属性。
 
-The [`tabindex`][35] attribute takes an integer that specifies the tab order of tab-able elements, instead of the default top to bottom tab order. A positive integer means the element is focussed in an order specified by the attribute’s value.
+[`tabindex`][35] 属性接受一个整数，该整数指定可 Tab 的元素的 Tab 顺序，而不是默认的自上而下的 Tab 顺序。正整数表示元素根据属性的值以指定顺序获得焦点。
 
-But using tabindex to change the default tab order is not recommended, as it may cause confusion for keyboard navigators and affect accessibility. And frankly, it’s not necessary.
+但使用 tabindex 改变默认的 Tab 顺序是不建议的，因为这可能会导致键盘导航者的困惑并影响可访问性。而且坦白说，这没有必要。
 
-You should only ever use the following two values:
+您只应使用以下两个值：
 
--   `tabindex=”0”` makes an element tab-able which means it can be accessed through a keyboard in the natural tab order.
-    
--   `tabindex=”-1”` means the element is not reachable via keyboard navigation.
-    
+- `tabindex="0"` 使元素可 Tab，这意味着可以通过键盘以自然的 Tab 顺序对其进行访问。
+  
+- `tabindex="-1"` 表示元素无法通过键盘导航到达。
 
-These attributes make the `div` behave like a button, but there’s a small piece of JS code you still need to add to make the button clickable via Enter/Return:
+这些属性使 `div` 表现得像个按钮，但您仍需添加一小段 JS 代码，以使按钮可以通过 Enter/Return 键点击：
 
 ```
 document.getElementById("customButton").addEventListener("keydown", (event) => {
@@ -347,65 +328,63 @@ document.getElementById("customButton").addEventListener("keydown", (event) => {
 });
 ```
 
-Here, we have added an event listener to the element that listens for the keydown event. If the key pressed is Enter, then it calls the element’s `onclick` method.
+在这里，我们为该元素添加了一个事件监听器，用于监听 keydown 事件。如果按下的键是 Enter，那么它会调用元素的 `onclick` 方法。
 
-If you are using a non-semantic element as a button, you need to add this extra code to make it work like a button. So, only use it if it's absolutely necessary. Otherwise, it's always better to use the correct semantic element in the first place.
+键盘无障碍对于音频和视频控制同样重要。我们将在[多媒体无障碍][36]部分讨论这一点。
 
-Keyboard Accessibility is important for audio and video controls too. We’ll discuss this in the [Multimedia Accessibility][36] section.
+### 表单标签
 
-### Form Labels
+表单标签是描述您需要在表单字段中输入内容的文本。向表单字段添加标签是必要的做法，因为它可以让用户知道如何填写表单。但使用正确的语义元素很重要。
 
-A form label is some text that describes what you need to enter in a form field. Adding labels to form fields is a necessary practice since it lets the user know how to fill the form. But using the right semantic elements is important.
-
-You could do the following and still achieve the desired output:
+您可以执行以下操作，并仍能达到所需的输出：
 
 ```
 Enter name: <input type="text" id="name" name="name" />
 ```
 
-This is not good for screen reader users, as it does not read out what the input field is for. Even if it reads out “Enter name”, the user may not associate it with the input field. Instead, use the `<label>` element for form labels.
+这对屏幕阅读器用户来说不好，因为它不会读出输入字段的用途。即使它读出“Enter name”，用户也可能不会将其与输入字段关联起来。相反，请为表单标签使用 `<label>` 元素。
 
 ```
 <div>
       <label for="name">Enter name:</label>
       <input type="text" id="nameField" name="name" />
-    </div>
+</div>
 ```
 
-The `for` attribute associates the label with the input field. With this, when the screen reader’s focus is on the input field, it reads out the label, followed by “edit field” to let the user know they should enter their name in the input field.
+`for` 属性将标签与输入字段关联在一起。这样，当屏幕阅读器的焦点在输入字段上时，它会读出标签，然后是“edit field”，以便让用户知道他们应该在输入字段中输入名字。
 
-Check out the [form with the label][37] and [form without the label][38] in these examples for more clarity. Use Mac’s Voiceover (⌘+F5) or Windows’ Narrator (Ctrl+Windows+Enter) to see how it reads out the form elements.
+查看这些示例中的[带标签的表单][37]和[不带标签的表单][38]以获得更多清晰的了解。使用Mac的Voiceover (⌘+F5) 或Windows的Narrator (Ctrl+Windows+Enter) 查看它如何读取表单元素。
 
-Using `<label>` offers more advantages:
+使用 `<label>` 有更多优势：
 
--   By linking a `<label>` to an input field with the `for` attribute (clickable association), clicking on the label focuses on the input field.
+-   通过使用 `for` 属性将 `<label>` 与输入字段链接（可点击关联），点击标签会聚焦到输入字段。
     
--   Clickable association with input field helps the user’s select small inputs like [checkboxes][39] or [radio buttons][40].
+-   与输入字段的可点击关联有助于用户选择小型输入，比如[复选框][39]或[单选按钮][40]。
     
--   It follows semantic HTML and specifies that the text is being used as a form label.
+-   它遵循语义HTML，并指定文本被用作表单标签。
     
 
-Lastly, remember that the label text should clearly describe what the user should enter into the field. For examples, “Enter name” or “Enter email”.
+最后，请记住，标签文本应清晰描述用户应在字段中输入的内容。例如，“Enter name”或“Enter email”。
 
-This applies to buttons as well. Ensure that button text is descriptive enough to tell the user what they are clicking on. Vague texts like “Click me!” or “Click here!” are not helpful. Examples of descriptive text are “Submit Form” or “Download Report” that give the users a clear idea of the button’s action.
+这同样适用于按钮。确保按钮文本足够具描述性，以便向用户说明他们在点击什么。像“Click me!” 或“Click here!” 这样的模糊文本是不够的。具有描述性的文本示例有“Submit Form”或“Download Report”，这给用户明确的按钮操作。
 
-Along with these, links also come under interactive elements. But since there are a lot of examples for Links, I’ll discuss them in their own section now.
+除此之外，链接也是属于交互元素。但由于链接有很多示例，我将在他们自己的部分中讨论。
 
-### Links
+### 链接
 
-Links are a key part of web pages as they allow the user to navigate the website. Links serve different purposes: going to a different page in the same website, going to an external website, or downloading something. In this section, you’ll learn about several practices with links that contribute towards accessibility.
+链接是网页的重要组成部分，因为它们允许用户导航网站。链接用途多样：进入同一网站的不同页面、访问外部网站或下载某些内容。在本节中，您将学习一些与链接相关的实践，以提升可访问性。
 
-#### Linking to External Websites
+#### 链接到外部网站
 
-When you add a link that lets users open an external website, including the `target=_blank` attribute opens the link in a new tab.
+当您添加一个链接，允许用户打开一个外部网站时，包括 `target=_blank` 属性可以在新标签页中打开链接。
 
 ```
 <a href="https://www.wikipedia.org/" target="_blank"> Wikipedia </a>
 ```
 
-This is helpful for users as they don’t need to exit the website, saving them from the hassle of navigating back to the website.
+这对用户有帮助，因为他们不需要退出网站，避免了返回网站的麻烦。
 
-Also, if your link opens in a new tab, it’s a good idea to mention it so the screen readers can read it out and help visually impaired users.
+另外，如果您的链接在新标签页中打开，最好提到这一点，以便屏幕阅读器可以读出，让视觉障碍用户了解。
 
 ```
 <a href="https://www.wikipedia.org/" target="_blank" >
@@ -413,7 +392,7 @@ Wikipedia (opens in new tab)
 </a>
 ```
 
-Similarly, if your link opens a non-HTML file, like a pdf or docx, you should mention it:
+类似地，如果您的链接打开的是非HTML文件，比如pdf或docx，您应该提到：
 
 ```
 <a target="_blank" href="jan-salary-slip.pdf">
@@ -421,7 +400,7 @@ Salary-January (PDF)
 </a>
 ```
 
-Alternatively, you can use an icon to indicate a link opening in new tab.
+或者，您可以使用图标来指示在新标签页中打开的链接。
 
 ```
 <a href="https://www.wikipedia.org/" target="_blank">
@@ -430,15 +409,15 @@ Alternatively, you can use an icon to indicate a link opening in new tab.
 </a>
 ```
 
-When using an icon, make sure that you include the alt attribute with description about the image. We’ll understand its purpose in the [Multimedia Accessibility][41] section.
+使用图标时，请确保包含带有图片描述的alt属性。我们将在[多媒体无障碍][41]部分了解其用途。
 
-#### Skip Links
+#### 跳过链接
 
-A skip link is a link element placed at the top of a page that links directly to the main content of the page. This allows the users to skip the headers and all the navigation menus, and directly jump to the main content of the page. This is helpful on websites where there’s lot of repetitive content on top like menus or banners.
+跳过链接是放置在页面顶部的链接元素，直接链接到页面的主要内容。这允许用户跳过标题和所有导航菜单，直接跳转到页面的主要内容。这在顶端有大量重复内容（如菜单或横幅）的网页上特别有用。
 
-Skip links are especially helpful for people who are visually impaired and who might be using screen readers. These links provide a way to bypass repetitive navigation menus and directly access the main content. This also helps keyboard navigators, thus saving time and enhancing the user experience.
+跳过链接对视觉障碍者尤其有帮助，他们可能使用屏幕阅读器。这些链接提供了一种方式来绕过重复的导航菜单，直接访问主要内容。这也帮助了键盘导航者，从而节省时间并提升用户体验。
 
-To add a skip link, add an anchor tag at the very top, just under the body tag, and link it to the main content.
+要添加跳过链接，请在页面最顶部（紧靠body标签下）添加锚标记，并链接到主要内容。
 
 ```
 <body>
@@ -450,32 +429,29 @@ To add a skip link, add an anchor tag at the very top, just under the body tag, 
           <li><a href="/">Home</a></li>
           <li><a href="/about">About</a></li>
           <li><a href="/blog">Blog</a></li>
-          <!-- other nav links -->
+          <!-- 其他导航链接 -->
         </ul>
       </nav>
     </header>
     <main id="main">
-      <!-- Main Content -->
+      <!-- 主要内容 -->
     </main>
 </body>
 ```
 
-The skip link is keyboard accessible and is also read out by the screen reader. Clicking on it takes you straight to the main content. Visit [WebAIM][42] and press Tab on your keyboard to see skip links in action.
+#### 链接样式
 
-#### Link Styling
+默认情况下，由锚标签创建的链接在视觉上与非链接文本不同。这是因为锚标签具有内置样式，例如颜色、[文字装饰][43]、聚焦环（当您使用键盘定位到链接时显示）和悬停效果。
 
-By default, links created with the anchor tag are visually different from non-link text. This is because the anchor tag has built-in styles like colour, [text-decoration][43], focus-ring (displays when you tab on to the link with the keyboard) and hover effects.
+链接应看起来与其他文本不同，以便于辨别。如您在上面所见，浏览器会为您处理，因此您不需要做太多。但如果您要为链接添加适合主题的自定义样式，则需要遵循一些最佳实践：
 
-Links should look different from the other text so they’re easily distinguishable. As you saw above, the browser does that for you, so you don’t need to do much. But if you are adding custom styles to the link that fit in better with your theme, you need to follow some best practices:
+- 链接在默认、[已访问][44]、[聚焦][45] 和 [悬停][46] 状态下应具有不同的颜色。
 
--   Links should have different colors for default, [visited][44], [focus][45] and [hover][46] states.
-    
--   Link text color should be different from the non-link text and should have different styling.
-    
--   Link text color should have a contrast of 3:1 between other text and 4.5:1 contrast between background color. See the [Color Contrast][47] section for more understanding
-    
+- 链接文本颜色应与非链接文本不同，并且应具有不同的样式。
 
-An example of custom styling for links is shown below (from the Docs):
+- 链接文本颜色与其他文本应具有 3:1 的对比度，与背景颜色应具有 4.5:1 的对比度。有关更多理解，请参阅 [颜色对比][47] 部分。
+
+下面展示了一个链接自定义样式示例（来自文档）：
 
 ```
 a {
@@ -495,234 +471,224 @@ a:active {
 }
 ```
 
-With the help of [pseudo-classes][48], this adds different styles for when link is hovered, previously visited, focussed (with the keyboard), or active (when the link is being clicked).
+借助 [伪类][48]，这为链接在悬停、已访问、聚焦（使用键盘）或激活（正在点击链接时）时添加了不同的样式。
 
-You can experiment with different colors and styles, but don’t remove the `cursor: pointer` or `outline` properties. Both are important for people using keyboard navigation.
+您可以尝试不同的颜色和样式，但不要移除 `cursor: pointer` 或 `outline` 属性。这两者对于使用键盘导航的人来说非常重要。
 
-Remember, links already have built-in styles for all the link states. Only add your own if you want something in line with your website’s theme.
+记住，链接已经为所有链接状态提供了内置样式。只有当您需要与网站主题一致时，才添加自己的样式。
 
-#### Avoid using onclick handlers
+#### 避免使用 onclick 处理程序
 
-Links are used to navigate to another web page on the same website or navigate to an external website. Specifying the link in the [href][49] attribute does this for you without any need to add JavaScript code.
+链接用于导航到同一网站上的另一个网页或导航到外部网站。在 [href][49] 属性中指定链接可以为您实现这一点，无需添加 JavaScript 代码。
 
-But some people add an `onclick` attribute to anchor elements, to make them behave like buttons and set `href=”#”` or `href="javascript:void(0)"` to avoid page refresh. This causes unexpected behaviour and may lead to the following problems:
+但有些人会在锚元素中添加 `onclick` 属性，使其表现得像按钮，并将 `href="#"` 或 `href="javascript:void(0)"` 设置为避免页面刷新。这会导致意想不到的行为，并可能导致以下问题：
 
--   Copying or dragging this link adds an unnecessary `#` or `void(0)` to the URL, which does not make sense.
-    
--   Clicking the link immediately scrolls the page to the top, which may lead to the user losing track of where they were.
-    
--   If JavaScript is still downloading, clicking the link does nothing and the web page becomes unresponsive.
-    
+- 复制或拖动此链接会将不必要的 `#` 或 `void(0)` 添加到 URL 中，这没有任何意义。
 
-It is also bad for semantics and accessibility, as people using screen readers may get confused. If you want to add JavaScript functionality on click of an element, just use a `<button>`. Only use links when navigating to a proper URL.
+- 点击链接立即滚动页面到顶部，可能导致用户失去位置。
 
-#### Meaningful Link Text
+- 如果 JavaScript 正在下载中，点击链接没有任何反应，网页变得无响应。
 
-Similar to buttons, when writing link text, keep it meaningful and descriptive and avoid using “Click here” or “Click this”.
+这对语义和可访问性也有不好影响，使用屏幕阅读器的人可能会感到困惑。如果您想在点击元素时添加 JavaScript 功能，请使用 `<button>`。只有在导航到正确的 URL 时才使用链接。
+
+#### 有意义的链接文本
+
+与按钮类似，编写链接文本时，应保持其有意义且具有描述性，避免使用“点击这里”或“点击此处”。
 
 ```
 <p>
-  For more information about accessibility
+  有关无障碍访问的更多信息
   <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility">
-    click here
+    点击这里
   </a>
 </p>
 ```
 
-Instead of the above, do this:
+与其使用上述方式，不如这样做：
 
 ```
 <p>
-  For more information about accessibility, visit
+  有关无障碍访问的更多信息，请访问
   <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility">
-    MDN Docs - Accessibility
+    MDN 文档 - 无障碍访问
   </a>
 </p>
 ```
 
-Check out the [Good Links][50] and [Bad Links][51] examples from the docs. You can also test them with VoiceOver (⌘+F5).
+请查看文档中的 [良好链接][50] 和 [不良链接][51] 示例。您也可以使用 VoiceOver 测试它们（⌘+F5）。
 
-#### Link Proximity
+#### 链接的间距
 
-If your web page has a lot of interactive elements like links and buttons, ensure that they are spaced properly to prevent accidental clicks. This helps people with [Motor Control Issues][52] that may click on the wrong link.
+如果您的网页有很多交互元素，如链接和按钮，确保它们间距适当以防止意外点击。这有助于有 [运动控制问题][52] 的人避免点击错误的链接。
 
-Using the [`margin`][53] property should be enough to ensure spacing.
+使用 [`margin`][53] 属性应足以确保间距。
 
-### Table Accessibility
+### 表格的可访问性
 
-In the page layouts section, we saw that using tables for creating page layouts is an outdated practice. However, tables can still be used if you want to display a large amount of data in tabular form. Incorporating accessibility in tables helps screen readers interpret them and help visually impaired users.
+在页面布局部分，我们看到使用表格创建页面布局是一种过时的做法。然而，如果您想以表格形式显示大量数据，仍然可以使用表格。在表格中结合可访问性有助于屏幕阅读器解释它们，并帮助视障用户。
 
-Check out [MDN Docs - Table Accessibility][54] to understand best practices.
+查看 [MDN Docs - 表格可访问性][54] 以了解最佳实践。
 
-## Additional CSS and JS Practices
+## 其他 CSS 和 JS 实践
 
-Most of your accessibility goals should be achieved with HTML alone. But there are certain things to keep in mind when writing CSS and JavaScript to ensure you don't break accessibility.
+您的大多数可访问性目标应该仅通过 HTML 实现。但在编写 CSS 和 JavaScript 时需要注意某些事项，以确保不会破坏可访问性。
 
-### Styling Form Elements
+### 表单元素的样式
 
-When styling form elements, remember the following:
+在为表单元素设置样式时，请记住以下几点：
 
--   Do not remove the default styles for focus outlines, hover, and disabled state in form elements. You may modify them as per your site design, but they should still be visible.
+- 不要移除表单元素的默认聚焦轮廓、悬停和禁用状态的样式。您可以根据站点设计对其进行修改，但它们仍应可见。
+
+- 确保您的标签和占位文本在视觉上清晰。遵循颜色对比实践（下一节）。
+
+- 对于像按钮和输入这样的可点击区域，确保它们足够大，以便用户可以舒适地点击。
+
+- 成功和错误信息在物理上应与标签和其他文本内容可区分。
+
+### 颜色对比
+
+当您为网站选择颜色时，文本和背景颜色应具有良好的颜色对比。良好的颜色对比确保所有用户都可以轻松阅读文本（这对特别是色盲人士有帮助）。
+
+![推荐的色彩对比度](https://cdn.hashnode.com/res/hashnode/image/upload/v1736175276741/40ee7fe4-110c-4dd1-95f3-4cb7620de032.png)
+
+让我们了解色彩对比度评级：
+
+-   AA 评级指您的色彩对比度应该达到的最低限度，确保网站的内容易于阅读。如上表所示，这要求正文文本的最低对比度为 4.5:1，大字体文本为 3:1，活动用户界面组件和图形对象为 3:1。
     
--   Ensure that your labels and placeholder texts are visually clear. Follow colour contrast practices (next section).
-    
--   For clickable areas like buttons and inputs, ensure they are large enough so the user can click comfortably.
-    
--   Success and Error messages should be physically distinguishable from labels and other text content.
-    
-
-### Color Contrast
-
-When you choose colors for your website, your text and background colour should have a good colour contrast. A good color contrast ensures that the text is easily readable by all users (and it also helps people with color blindness in particular).
-
-The WCAG (Web Content Accessibility Guidelines) recommends the following contrast ratios:
-
-![Recommended Color contrast ratios](https://cdn.hashnode.com/res/hashnode/image/upload/v1736175276741/40ee7fe4-110c-4dd1-95f3-4cb7620de032.png)
-
-Let’s understand the colour contrast ratings:
-
--   AA rating refers to the minimum ratio your colour contrast should be such that the site’s content is readable. As you can see in the table above, this requires a 4.5:1 minimum ratio for body text, a 3:1 ratio for large-scale text, and a 3:1 ratio for active user interface components and graphical objects.
-    
--   AAA rating is the ideal standard for accessibility that ensures high contrast for your website. This requires a 7:1 ratio for body text, a 4.5:1 ratio for large-scale text, and isn’t defined for UI components/graphical objects.
+-   AAA 评级是确保网站高对比度的理想无障碍标准。这要求正文文本的对比度为 7:1，大字体文本为 4.5:1，并且没有规定 UI 组件/图形对象的对比度。
     
 
-Choose a contrast ratio that aligns well with your design, but try to keep it to at least AA rating. To check colour contrast ratio between two colors, you can use the following tools:
+选择一个与您的设计良好契合的对比度，但尽量保持至少 AA 评级。要检查两种颜色之间的色彩对比度，可以使用以下工具：
 
 -   [Color Contrast Checker][55]
+
+-   [Chrome Developer Tools][56] - 识别网站上不符合 AA 和 AAA 评级的文本
     
--   [Chrome Developer Tools][56] - Identifies text in your website not meeting AA and AAA ratings
-    
 
-### JavaScript Practices
+### JavaScript 实践
 
-#### Mouse-specific events
+#### 鼠标专用事件
 
-When you have functionality triggered by events like [mouse-over][57] and [mouse-out][58], they cannot be accessed by people that depend on keyboard navigation. So, to make the functionality accessible by keyboard, you need to add the same event handlers to events like [focus][59] and [blur][60].
+当您有通过[鼠标悬停][57]和[鼠标移出][58]之类的事件触发的功能时，依赖键盘导航的人无法访问这些功能。因此，要让这些功能可通过键盘访问，您需要将相同的事件处理程序添加到[焦点][59]和[失焦][60]等事件中。
 
-#### Client side form validations
+#### 客户端表单验证
 
-When you submit data through a form, the data is validated to check if you have entered valid data. Often, when the data is sent to the server, the server validates the data and lets the UI know if the validation has failed.
+当您通过表单提交数据时，数据将被验证以检查您是否输入了有效数据。通常，当数据发送到服务器时，服务器会验证数据并通知用户界面验证是否失败。
 
-To make the website user-friendly, it helps to add form validations on the client-side, so users can get instant feedback if they have entered incorrect data, since the server-side mechanism may take time. This is a very small step towards improving user experience.
+为了使网站更加用户友好，可以在客户端添加表单验证，这样用户在输入错误数据时可以立即获得反馈，因为服务器端机制可能需要时间。这是改善用户体验的一小步。
 
-Check out the [Form Validation][61] Example to understand more.
+查看[表单验证][61]示例以了解更多信息。
 
-Apart from the above, one thing you should remember is not to use JavaScript for anything and everything. JavaScript can be used to generate any form of HTML and dynamically apply CSS styling. It is very helpful if you have dynamic content on your website.
+除了上述内容外，您还应记住不要将 JavaScript 用于所有事情。JavaScript 可以用来生成任何形式的 HTML 并动态应用 CSS 样式。如果您的网站有动态内容，这是非常有用的。
 
-But if you have too much HTML generated by JavaScript, it gets hard for screen readers to keep track of the dynamic changes. This makes the website difficult to read for impaired users. So, make sure you don't overuse JavaScript when simple HTML would be enough.
+但是，如果 JavaScript 生成了太多 HTML，屏幕阅读器将很难跟踪动态更改。这会使视障用户难以阅读网站。因此，请确保在简单 HTML 就足够的情况下不要过度使用 JavaScript。
 
-Accessibility for dynamic content updates is covered in the next section.
+动态内容更新的可访问性将在下一部分中介绍。
 
-## Advanced Accessibility Practices: WAI-ARIA
+## 高级可访问性实践：WAI-ARIA
 
-As applications started to get bigger and more complex, developers started needing a new set of accessibility features. Semantic elements alone were not enough, especially for complex elements like date pickers and custom widgets.
+随着应用程序变得越来越大和复杂，开发人员开始需要一套新的可访问性功能。仅有语义元素是不够的，尤其是对于日期选择器和自定义小部件等复杂元素。
 
-Depending on semantic HTML does not help when content is updated dynamically on the web page. Nowadays, all websites built with JavaScript have content that isn’t loaded initially, but updated dynamically based on user interactions.
+当网页上动态更新内容时，依赖于语义 HTML 并没有帮助。如今，所有用 JavaScript 构建的网站都包含未初始加载的内容，而是根据用户交互动态更新。
 
-WAI-ARIA (Web Accessibility Initiative - Accessible Rich Internet Applications) was introduced to add more accessibility features wherever they were needed. It defines a set of HTML attributes that you can use to provide additional semantics to your website and improve accessibility.
+引入 WAI-ARIA（Web 可访问性计划 - 可访问的丰富互联网应用程序）是为了在需要的地方添加更多可访问性功能。它定义了一组 HTML 属性，您可以使用这些属性为网站提供额外的语义并提高可访问性。
 
-In the following sections, you’ll learn which attributes were introduced and how you can use them to enhance accessibility.
+在接下来的部分中，您将了解引入了哪些属性以及如何使用它们来增强可访问性。
 
-### The `role` attribute
+### `role` 属性
 
-The `role` attribute helps add semantic information to non-semantic elements by defining their “role” on the web page. With roles, screen readers can accurately read non-semantic elements and help identify them for people with disabilities.
+`role` 属性通过定义页面上的“角色”帮助为非语义元素添加语义信息。通过“角色”，屏幕阅读器可以准确地读取非语义元素并帮助为残障人士识别它们。
 
-W3C defines several roles that you can use, depending on their purpose. But keep in mind that you should only use `role` when necessary. In most cases, it’s better to just use the right semantic elements like `<button>`, `<nav>`, `<header>`, and so on.
+W3C 定义了多个可根据用途使用的角色。但请记住，仅在必要时使用 `role`。在大多数情况下，更好的办法是直接使用正确的语义元素，如 `<button>`、`<nav>`、`<header>` 等。
 
-But, when semantic elements are not fulfilling your purpose, roles can help. So, let’s understand how to use them with some examples:
+但是，当语义元素无法满足需求时，角色可以提供帮助。让我们通过一些示例了解如何使用它们：
 
-If you want to create a button with custom `div`, adding the `role` attribute specifies that this element is being used as a button.
+如果您想用自定义 `div` 创建按钮，添加 `role` 属性可以指定此元素用作按钮。
 
-```
-<div role="button" tabindex="0">Click Me</div>
+```html
+<div role="button" tabindex="0">点击我</div>
 ```
 
-When you test this with Mac’s VoiceOver (⌘+F5), it reads out the element as a button. As discussed before, always include the `tabindex` attribute.
+当您使用 Mac 的 VoiceOver (⌘+F5) 进行测试时，它会将元素读作按钮。如前所述，请始终包含 `tabindex` 属性。
 
-But if you want to use a `div` instead of a button, you still need to add JavaScript functionality, as explained in the the [Keyboard Accessibility][62] section.
+但是，如果您想使用 `div` 而不是按钮，您仍然需要添加 JavaScript 功能，如[键盘可访问性][62]部分所述。
 
-Another example is if you are writing a custom link. You can use the following role, so that the screen reader interprets this as a link:
+另一个示例是如果您正在编写自定义链接。您可以使用以下角色，使屏幕阅读器将其解释为链接：
 
-```
-<div role="link">Visit our website</div>
-```
-
-Apart from interactive elements, `role` attribute can also be used to define elements as navigation menus, side bars, banners, etc. If you are using non-semantic elements for these purposes, always include a role, like the following:
-
-```
-<div role="navigation">
-    <!-- Navigation menu items -->
-</div>
+```html
+<div role="link">访问我们的网站</div>
 ```
 
-In this case, the screen reader announces this as a navigation area.
+除了交互元素外，`role` 属性还可用于将元素定义为导航菜单、侧边栏、横幅等。如果您使用非语义元素用于这些目的，请始终包括一个角色，如下所示：
 
-Also, if you have an element that serves as an alert for the user, including the following role makes the screen reader announce it as soon as it shows up on the screen, even if it doesn’t have focus:
+在这种情况下，屏幕阅读器会将其宣布为导航区域。
+
+另外，如果您有一个元素作为用户的警报，只要包含以下角色，即使它没有焦点，屏幕阅读器也会在它显示在屏幕上时立即宣布：
 
 ```
 <div role="alert">
-  Please respond to this alert
+  请回应此警报
 </div>
 ```
 
-You can find the full list of available roles at [MDN Docs: WAI-ARIA Roles][63].
+您可以在 [MDN Docs: WAI-ARIA Roles][63] 找到可用角色的完整列表。
 
-### aria-\* attributes
+### aria-\* 属性
 
-Apart from `role`, ARIA (Accessible Rich Internet Applications) defines extra attributes to enhance the accessibility of web applications. These attributes give screen readers more information about elements, helping people with disabilities better understand them.
+除了 `role` 之外，ARIA（Accessible Rich Internet Applications，可访问的丰富互联网应用程序）定义了额外的属性来增强网页应用程序的可访问性。这些属性为屏幕阅读器提供了更多关于元素的信息，帮助残障人士更好地理解它们。
 
-If native semantic elements or the `role` attribute alone are not sufficient, aria-\* attributes can provide extra context. You can find a full list of these attributes in [MDN Docs-ARIA][64].
+如果原生语义元素或 `role` 属性本身不够充分，aria-\* 属性可以提供更多上下文。您可以在 [MDN Docs-ARIA][64] 中找到这些属性的完整列表。
 
-In the following sections, we’ll see how role and aria-\* attributes can improve accessibility. We won’t cover all the attributes here, but we’ll focus on the most commonly used ones.
+在接下来的章节中，我们将看到如何使用 role 和 aria-\* 属性来提高可访问性。我们在这里不会涵盖所有的属性，但会专注于最常用的那些。
 
-### Dynamic Content Updates
+### 动态内容更新
 
-When a web page loads for the first time, its content is read out by the screen reader. But screen readers cannot capture dynamic content, that is content that gets added or removed.
+当网页首次加载时，其内容会被屏幕阅读器读出。但屏幕阅读器无法捕捉动态内容，也就是被添加或移除的内容。
 
-For example, when a web page is showing live sport updates, it gets updated almost every minute. Screen readers will only read out the content displayed when the page is first rendered, but don’t show dynamic updates.
+例如，当一个网页正在显示实时体育更新时，内容几乎每分钟都会更新。屏幕阅读器只会读出页面首次呈现时显示的内容，而不会显示动态更新。
 
-This is not really a problem for many users, but for people with visual impairments, screen readers may not be able to read the changes on the page. Most modern websites are dynamic in nature, so it’s important to consider accessibility of dynamic content updates.
+这对于许多用户来说并不是真正的问题，但对于视觉障碍者来说，屏幕阅读器可能无法读取页面上的变化。大多数现代网站本质上是动态的，因此考虑动态内容更新的可访问性很重要。
 
-Check out the [aria-no-live][65] example from MDN Docs. It loads a new quote every 10 seconds, which you can see clearly as a user with no visual impairment. But the screen reader only reads the initial page content and does not announce the updates. This is not good for accessibility.
+查看来自 MDN Docs 的 [aria-no-live][65] 示例。它每 10 秒加载一个新引用，作为没有视觉障碍的用户，您可以清楚地看到这一点。但屏幕阅读器只会读取最初的页面内容，不会宣布更新。这对可访问性不好。
 
-To fix this, WAI-ARIA provides the [`aria-live`][66] attribute that makes the screen reader read out content that is updated. You can add this attribute to the element that contains the dynamic content.
+为了解决这个问题，WAI-ARIA 提供了 [`aria-live`][66] 属性，使屏幕阅读器读出更新的内容。您可以将此属性添加到包含动态内容的元素中。
 
-It takes the following three values:
+它采用以下三个值：
 
--   `aria-live="off"`: Default value that means no content is read out
+- `aria-live="off"`：默认值，表示没有内容被读出
     
--   `aria-live="polite"` Updates only announced when the user is idle
+- `aria-live="polite"`：仅当用户空闲时才宣布更新
     
--   `aria-live="assertive"`: Content read out as soon as it is updated.
+- `aria-live="assertive"`：内容在更新后立即被读出。
     
 
-Depending on the importance of the update, you can decide which value to use.
+根据更新的重要性，您可以决定使用哪个值。
 
 ```
 <div aria-live="polite">
-    <!-- Dynamic Content here -->
+    <!-- 动态内容在这里 -->
 </div>
 ```
 
-In this case, the screen reader waits till the user is done with their current task before announcing the update.
+在这种情况下，屏幕阅读器会等到用户完成当前任务后才宣布更新。
 
-You can add more detail here. With the above attribute, only the text that is updated is read out. But, screen reader users may get confused as to which part of the page is being read out. So, it is helpful if the entire element is read out.
+您可以在这里添加更多细节。使用上述属性，只有更新的文本会被读出。但屏幕阅读器用户可能会对页面中被读出的部分感到困惑。因此，如果整个元素被读出会很有帮助。
 
 ```
 <div aria-live="assertive" aria-atomic="true">
-    <!-- Dynamic Content here -->
+    <!-- 动态内容在这里 -->
 </div>
 ```
 
-The [`aria-atomic`][67] attribute tells screen readers to read out the entire element as a single atomic unit. This avoids confusion for visually impaired users. Check out the [aria-live][68] example from MDN Docs with Mac’s VoiceOver (⌘+F5). It reads out the entire element when the content is updated.
+[`aria-atomic`][67] 属性告诉屏幕阅读器将整个元素作为一个原子单位读出。这避免了视觉障碍用户的困惑。查看来自 MDN Docs 的 [aria-live][68] 示例与 Mac 的 VoiceOver (⌘+F5)。当内容更新时，它会读出整个元素。
 
-### Form Validation and Errors
+### 表单验证和错误
 
-Let’s say you have added some validation to your form through JavaScript. When the validation fails, an error message gets added on the screen. For example, a required message shows up if you have missed a field.
+假设您通过 JavaScript 为您的表单添加了一些验证。当验证失败时，屏幕上会添加错误消息。例如，如果您错过了一个字段，则会显示一个必需消息。
 
-The implementation for error handling involves creating an element containing an error message or a list of errors that render on certain conditions, depending on the JavaScript code. Just as we discussed in the previous section, the screen reader does not read out new content updates.
+错误处理的实现涉及创建一个包含错误消息或在某些条件下根据 JavaScript 代码渲染的错误列表的元素。正如我们在上一节中讨论的，屏幕阅读器不会读出新内容更新。
 
-So, we should make sure that the screen reader reads out the error message as soon as it shows up, to let visually impaired users know that an error has been thrown. We can use the following attributes for this purpose:
+因此，我们应该确保屏幕阅读器在错误消息出现时立即读出，以便视觉障碍用户知道已抛出错误。为此，我们可以使用以下属性：
 
 ```
 <div class="errors" role="alert" aria-relevant="all">
@@ -730,177 +696,173 @@ So, we should make sure that the screen reader reads out the error message as so
 </div>
 ```
 
-The [`alert`][69] role does two things. It semantically identifies this element as a piece of important information. Secondly, this role turns the element into a [live][70] region which means the screen reader is notified immediately if there are any changes.
+[`alert`][69] 角色有两个作用。首先，它在语义上将此元素标识为一段重要信息。其次，此角色将该元素变成一个 [live][70] 区域，这意味着屏幕阅读器会在有任何更改时立即通知。
 
-The [`aria-relevant`][71] attribute describes what changes need to be announced in a live region. The attribute takes a space-separated list of the following values:
+[`aria-relevant`][71] 属性描述了在 live 区域中需要宣布的更改。该属性采用以下值的空格分隔列表：
 
--   `additions`: Announces new content added to the live region
+- `additions`：宣布添加到 live 区域的新内容
     
--   `removals`: Content removed from the live region is read out
+- `removals`：读出从 live 区域移除的内容
     
--   `text`: Announces any modifications to existing content.
+- `text`：宣布对现有内容的任何修改。
     
 
-It also takes a value `all` which is a shorthand for `additions removals text`, meaning all three types of content are read out.
+它还接受值 `all`，这是 `additions removals text` 的简写，表示读出所有三种类型的内容。
 
-You can check the [Form Validation Example][72] from the MDN Docs.
-
-Next, let’s see what to do if we want to mark certain fields as required. Normally, we’d add visual cues like a `*` and the following message at the top of the form:
+您可以检查来自 MDN Docs 的 [Form Validation Example][72]。
 
 ```
-<p>Fields marked with an asterisk (*) are required.</p>
+<p>标有星号 (*) 的字段是必填项。</p>
 ```
 
-This is helpful for regular users, but visually impaired users may get confused as to which fields are required. To make it easier for them, we can use the [`aria-required`][73] attribute.
+这对于普通用户很有帮助，但视力障碍用户可能会对哪些字段是必填项感到困惑。为了让他们更容易辨别，我们可以使用 [`aria-required`][73] 属性。
 
 ```
 <input type="text" name="name" id="name" aria-required="true" />
 ```
 
-With this attribute, the screen reader mentions this field as “required” while reading it out.
+使用此属性，当屏幕阅读器朗读时，会提到该字段为“必填”。
 
-When you are creating input fields, it’s important to include a label, as some screen readers do not read out placeholder text. If you don’t want to include a label field, here are the following alternatives:
+在创建输入字段时，重要的是要包含标签，因为一些屏幕阅读器不会朗读占位符文本。如果您不想包含标签字段，有以下替代方案：
 
-You can use the `aria-label` attribute to add labels to input fields that do not have a label associated with them.
+您可以使用 `aria-label` 属性为没有关联标签的输入字段添加标签。
 
 ```
-<input type="email" name="email" aria-label="Enter email" />
+<input type="email" name="email" aria-label="输入邮箱" />
 ```
 
-This attribute provides some text to be read out by a screen reader to describe the input field.
+此属性提供了一些文本供屏幕阅读器朗读，以描述输入字段。
 
-You can go one step further and use the `aria-labelledby` attribute that uses another element to act as a label for the input field. For example:
+您可以更进一步，使用 `aria-labelledby` 属性，它使用另一个元素作为输入字段的标签。例如：
 
 ```
 <div>
-  <span id="emailLabel">Enter your email</span>
+  <span id="emailLabel">输入您的邮箱</span>
   <input type="email" name="email" aria-labelledby="emailLabel" />
 </div>
 ```
 
-The screen reader reads out the text inside the `<span>` element to describe the input element. This is similar to having a `<label>` with a `for` attribute. You can also use this attribute to reference other interactive elements like `<button>` or `<a>` that do not have a label field to reference them.
+屏幕阅读器会朗读 `<span>` 元素内的文本来描述输入元素。这与 `<label>` 的 `for` 属性类似。您还可以使用此属性引用其他交互元素，如 `<button>` 或 `<a>`，这些元素没有标签字段来引用它们。
 
-Keep in mind that the `aria-labelledby` attribute only defines an accessible name for the element – it does not provide other functionality like clicking on the label to focus on the input element. It’s better to use `<label>` with a `for` attribute.
+请记住，`aria-labelledby` 属性仅为元素定义了一个可访问的名称——它不提供其他功能，比如点击标签聚焦到输入元素。使用带有 `for` 属性的 `<label>` 更好。
 
-We have already discussed form labels in the [Interactive Elements][74] section.
+我们已经在 [交互元素][74] 部分讨论了表单标签。
 
-You’ve now seen some of the different attributes that WAI-ARIA offers and how they enhance accessibility. You can visit [MDN Docs: WAI-ARIA][75] to check out additional details I may have missed.
+您现在了解了一些 WAI-ARIA 提供的不同属性以及它们如何增强可访问性。您可以访问 [MDN Docs: WAI-ARIA][75] 查看我可能遗漏的其他详细信息。
 
-Before we move on, remember one thing: _use WAI-ARIA only when necessary_. Usually, semantic elements are able to achieve majority of your accessibility goals. Don’t over-use WAI-ARIA as they might end up complicating your code.
+在我们继续之前，请记住一件事：_仅在必要时使用 WAI-ARIA_。通常情况下，语义元素可以实现您的大多数可访问性目标。不要过度使用 WAI-ARIA，因为它们可能会使您的代码复杂化。
 
-## Multimedia Accessibility
+## 多媒体可访问性
 
-A website’s content is not restricted to text. It also often consists of multimedia content like images, audio, and video. In a lot of cases, multimedia content is easier to understand than text content. While this is true for many users, it poses challenges for users with disabilities.
+网站的内容不限于文本。它通常还包括多媒体内容，如图像、音频和视频。在很多情况下，多媒体内容比文本内容更容易理解。虽然这对许多用户来说是事实，但它给残障用户带来了挑战。
 
-People with visual impairments cannot see images and people who are deaf or hard of hearing cannot easily interpret audio content. So, as developers, it’s our job to make this type of content accessible for everyone. Let’s understand how to make this possible:
+视力障碍者无法看到图像，听力障碍者或听力不佳者无法轻松理解音频内容。因此，作为开发人员，我们的工作是让这种内容对每个人都可访问。让我们了解如何做到这一点：
 
-### Images
+### 图像
 
-Since people with visual impairments cannot see images, they depend on a screen reader to describe the image. Just writing an `img` tag with `src` attribute does not help.
+由于视力障碍者无法查看图像，他们依赖屏幕阅读器描述图像。仅编写带有 `src` 属性的 `img` 标签无济于事。
 
 ```
 <img src="temple.jpg" />
 ```
 
-By default, the screen reader reads out the file path or URL of the image. A file name might give some idea of the image, but still does not describe it.
+默认情况下，屏幕阅读器会朗读图像的文件路径或 URL。文件名可能提供一些关于图像的想法，但仍不足以描述它。
 
-So, it’s helpful to add an `alt` attribute to an `img`. The `alt` attribute provides an alternate text for the image, and its purpose is to describe the image.
-
-```
-<img
-  src="temple.jpg"
-  alt="The Meenakshi Temple, situated in Madurai, a South Indian City is dedicated to goddess Meenakshi, a form of Parvati"
-/>
-```
-
-Here, instead of reading the file path, the screen reader reads out the alternate text – that is, the value of the `alt` attribute. The alternate text should provide a description of the image to help users understand what it’s conveying. So, instead of just saying “Temple”, the user knows which temple is being depicted in the image.
-
-You can also add extra context to the image with the `title` attribute.
+因此，最好为 `img` 添加一个 `alt` 属性。`alt` 属性为图像提供替代文本，其目的是描述图像。
 
 ```
 <img
   src="temple.jpg"
-  alt="The Meenakshi Temple, situated in Madurai, a South Indian City is dedicated to goddess Meenakshi, a form of Parvati"
-  title="The Meenakshi Temple"
+  alt="Madurai 市的 Meenakshi 神庙，南印度的城市，奉于女神 Meenakshi，Parvati 的化身"
 />
 ```
 
-When focussed on the image, the screen reader reads out the `alt` text and the title.
+在这里，屏幕阅读器不会读出文件路径，而是读出替代文本——即 `alt` 属性的值。替代文本应提供图像描述，以帮助用户了解它传达的内容。因此，用户可以知道图像展示的是哪个神庙，而不仅仅是“一座神庙”。
 
-Let’s take another example which uses an alternative to the `alt` attribute:
+您还可以使用 `title` 属性为图像添加额外的上下文。
+
+```
+<img
+  src="temple.jpg"
+  alt="Madurai 市的 Meenakshi 神庙，南印度的城市，奉于女神 Meenakshi，Parvati 的化身"
+  title="Meenakshi 神庙"
+/>
+```
+
+聚焦于图像时，屏幕阅读器会朗读 `alt` 文本和标题。
+
+让我们看另一个使用 `alt` 属性替代方案的示例：
 
 ```
 <img src="temple.jpg" aria-labelledby="temple-label" />
 <p id="temple-label">
-  The Meenakshi Temple, situated in Madurai, a South Indian City is dedicated to
-  goddess Meenakshi, a form of Parvati
+  Madurai 市的 Meenakshi 神庙，南印度的城市，奉于女神 Meenakshi，Parvati 的化身
 </p>
 ```
 
-Here, instead of using the `alt` attribute, we have used the `aria-labelledby` attribute to link the paragraph element to the image. The text inside `p` acts as an alternate text for the image. This is helpful if you need to use the same text as an alternate text for different images.
+在此，我们没有使用 `alt` 属性，而是使用 `aria-labelledby` 属性将段落元素链接到图像。`p` 内的文本充当图像的替代文本。如果您需要为不同的图像使用相同的替代文本，这很有用。
 
-Sometimes, we use images as icons for headers and navigation menus, just for decoration. Usually, these images are not relevant to understand the content of the page. In these cases, you add an empty `alt` attribute.
+有时，我们将图像用作标题和导航菜单的图标，仅用于装饰。通常，这些图像与理解页面内容无关。在这种情况下，您可以添加一个空的 `alt` 属性。
 
 ```
 <h3>
   <img src="page-icon.png" alt="" />
-  History of Meenakshi Temple 
+  Meenakshi 神庙的历史
 </h3>
 ```
 
-If you skip the `alt` attribute, the screen reader reads out the entire image URL. To avoid this, use an empty `alt` attribute, so the screen reader simply announces it as an image and moves on, preventing unnecessary distractions for users.
+如果您省略 `alt` 属性，屏幕阅读器会读出整个图像 URL。为避免这种情况，使用空的 `alt` 属性，这样屏幕阅读器只会宣布它是一个图像然后继续，从而防止对用户造成不必要的干扰。
+```
 
-You can also use `role=”presentation”` to skip reading the image path or alternative text.
+### 音频和视频
 
-### Audio and video
-
-When using the [<audio>][76] and [<video>][77] elements, remember to include multiple sources – that is, provide the audio and video in different formats. For browsers that do not support the formats you have mentioned, include a fallback download link so they can access the resource.
+当使用 [<audio>][76] 和 [<video>][77] 元素时，请记得包含多个源文件，即以不同的格式提供音频和视频。对于不支持您提供的格式的浏览器，添加一个备用下载链接，以便它们可以访问资源。
 
 ```
 <audio controls>
   <source src="audio.mp3" type="audio/mpeg" />
   <source src="audio.ogg" type="audio/ogg" />
   <p>
-    Your browser doesn't support HTML video. Here is a
-    <a href="video.mp3">link to the video</a> instead.
+    您的浏览器不支持 HTML 视频。这里是
+    <a href="video.mp3">视频链接</a>。
   </p>
 </audio>
 <video controls>
   <source src="video.mp4" type="video/mp4" />
   <source src="video.webm" type="video/webm" />
   <p>
-    Your browser doesn't support HTML5 video. Here is a
-    <a href="video.mp4">link to the video</a> instead.
+    您的浏览器不支持 HTML5 视频。这里是
+    <a href="video.mp4">视频链接</a>。
   </p>
 </video>
 ```
 
-Next, let’s understand the shortcomings of using native HTML controls for audio and video.
+接下来，让我们了解使用原生 HTML 音视频控件的不足之处。
 
--   They cannot be styled with CSS, so they may not align with your website’s theme.
+-   它们无法使用 CSS 样式化，因此可能与您的网站主题不符。
     
--   The play/pause buttons are not keyboard accessible.
+-   播放/暂停按钮不支持键盘访问。
     
--   They don’t have functionality to forward or rewind the video.
+-   它们不具备快进或倒带功能。
     
 
-To overcome these limitations, we’ll create our custom video player in the next steps. To start, let’s create a container for the video content:
+为了克服这些限制，我们将在接下来的步骤中创建自定义的视频播放器。首先，让我们为视频内容创建一个容器：
 
 ```
 <div class="controls">
-  <button class="play-pause">Play</button>
-  <button class="stop">Reset Video</button>
+  <button class="play-pause">播放</button>
+  <button class="stop">重置视频</button>
 </div>
 ```
 
-These will work as the play/pause and reset buttons. Then, let’s remove the `controls` attribute from the `<video>` to replace them with our custom controls.
+这些将作为播放/暂停和重置按钮。然后，让我们从 `<video>` 中移除 `controls` 属性，以用我们的自定义控件替代它们。
 
 ```
 const videoPlayer = document.querySelector("video");
 videoPlayer.removeAttribute("controls");
 ```
 
-Why do we remove it at run time? Let’s say JavaScript does not load due to some issue. In this case, the user can still use the native controls. Next, let’s add some functionality to our buttons:
+为什么要在运行时移除它？假设 JavaScript 因为某些问题未能加载。在这种情况下，用户仍然可以使用原生控件。接下来，让我们为按钮添加一些功能：
 
 ```
 const playPauseBtn = document.querySelector(".play-pause");
@@ -909,60 +871,60 @@ const resetBtn = document.querySelector(".reset");
 playPauseBtn.onclick = () => {
   if (videoPlayer.paused) {
     videoPlayer.play();
-    playPauseBtn.textContent = "Pause";
+    playPauseBtn.textContent = "暂停";
   } else {
     videoPlayer.pause();
-    playPauseBtn.textContent = "Play";
+    playPauseBtn.textContent = "播放";
   }
 };
 
 resetBtn.onclick = () => {
   videoPlayer.pause();
   videoPlayer.currentTime = 0;
-  playPauseBtn.textContent = "Play";
+  playPauseBtn.textContent = "播放";
 };
-```
+``` 
 
--   The video player object is of type [`HTMLMediaElement`][78], that contains several methods you can use to control the video.
+-   视频播放器对象是类型为 [`HTMLMediaElement`][78] 的，它包含几个可以用来控制视频的方法。
     
--   For the play/pause button, we add a toggling functionality, with the `play()` and `pause()` methods.
+-   对于播放/暂停按钮，我们增加了切换功能，使用 `play()` 和 `pause()` 方法。
     
--   To reset the video, we pause it and set the current time to 0.
+-   要重置视频，我们暂停视频并将当前时间设为 0。
     
 
-Now, our custom video player is keyboard accessible, and able to be styled with CSS. You can also add additional functionality like forward/rewind, a timer, and a progress bar. The steps are similar for a custom audio player.
+现在，我们的自定义视频播放器支持键盘访问并能够使用 CSS 样式化。您还可以添加额外功能，比如快进/倒带、计时器和进度条。自定义音频播放器的步骤类似。
 
-Check out the [MDN Docs][79] for more detail about this functionality.
+查看 [MDN 文档][79] 了解有关此功能的更多细节。
 
-#### Audio Transcripts
+#### 音频文稿
 
-People who are deaf or hard of hearing cannot easily access audio content. So to make it accessible, you need to add transcripts under any audio or video form of content.
+听觉障碍者无法轻松访问音频内容。因此，为了让其更具可访问性，您需要在任何音频或视频内容下添加文本记录。
 
-If you run a business, you could pay a professional to do the transcripts. Check out the [docs][80] for options. To show the transcript on the UI, you could use a show/hide panel. Referring to the docs, see the [audio transcript UI][81] ([source code][82]) for an example.
+如果您经营一家企业，您可以支付专业人士做文本记录。查看 [文档][80] 以了解选项。要在 UI 上显示文本记录，可以使用显示/隐藏面板。参考文档，请参见 [音频文本记录 UI][81]（[源代码][82]）作为示例。
 
-If the audio is a recording of some presentation, you should attach links to any documents or presentation decks. Also, include a description for any visual content being referenced.
+如果音频是某场演讲的录音，您应该附上任何文档或演示幻灯片的链接。此外，还应包含所引用的任何视觉内容的描述。
 
-#### Video Closed Captioning and Subtitles
+#### 视频字幕和副标题
 
-First, let’s understand the difference between captions and subtitles. They are implemented in a similar way and visually, they look the same – but their purposes are different.
+首先，让我们了解字幕和副标题之间的区别。它们的实现方式相似，视觉上看起来相同，但目的不同。
 
-Captions denote who’s speaking and describe other sound effects in the video. They are mostly added with people who are deaf or hard of hearing in mind. Subtitles help people who don’t understand the language being spoken in the video, by translating it to text that uses the language of their choice.
+字幕表示谁在讲话并描述视频中的其他声音效果。它们主要是为那些听觉障碍人士添加的。副标题则通过将视频中的语言翻译为用户选择的语言来帮助那些不懂视频中语言的人。
 
-Let’s see how to add subtitles to your videos. We write subtitles in WebVTT, a format that contains text along with the range of timestamps indicating which text you want in each part of the video. Following is an example of a subtitles file:
+让我们看看如何为视频添加副标题。我们用 WebVTT 编写副标题，这种格式包含文本以及指示您希望在每个视频部分中显示哪些文本的时间戳范围。下面是一个副标题文件的示例：
 
 ```
 WEBVTT
 
 1
 00:00:01.230 --> 00:00:02.606
-This is the first subtitle.
+这是第一条字幕。
 
 2
 00:00:04.739 --> 00:00:06.074
-This is the second.
+这是第二条。
 ```
 
-Save this file and name it with a `.vtt` extension. To link this file to your video, include it in a [`<track>`][83] element:
+将此文件保存并命名为 `.vtt` 扩展名。要将此文件链接到您的视频中，请在 [`<track>`][83] 元素中包含它：
 
 ```
 <video controls>
@@ -977,63 +939,60 @@ Save this file and name it with a `.vtt` extension. To link this file to your vi
 </video>
 ```
 
-You should include the `<track>` element inside the `<video>` element and placed after all the sources. It has the following attributes:
+您应该将 `<track>` 元素放在 `<video>` 元素内，并放置在所有源后面。它具有以下属性：
 
--   `kind` mentions the type of file being referenced.
+-   `kind` 指明所引用文件的类型。
     
--   `srclang` indicates the language the subtitles are in.
+-   `srclang` 指示字幕使用的语言。
     
--   `label` indicates the text that is shown while the user is selecting a language
+-   `label` 指示用户在选择语言时显示的文本。
     
--   `src` is the path or URL of the subtitles file, that is the `.vtt` file we created previously.
-    
+-   `src` 是指向字幕文件的路径或 URL，即我们之前创建的 `.vtt` 文件。
 
-This will show subtitles for the specified timestamps. This will not only help people with hearing impairments, but is also useful for people who don’t understand the language, or those who are working in a noisy environment.
+对于视力障碍者，您还可以在视频的某些部分包含描述特定视觉效果的文本。屏幕阅读器将读取这些文本。
 
-For people who are visually impaired, you could also include text that describes certain visuals in parts of the video. This text would be read out by screen reader.
+您还可以为字幕菜单和字幕文本添加自定义样式。查看 [MDN 文档 - 向 HTML 视频添加字幕和说明][84] 了解实现。
 
-You can also add custom styling to subtitle menu and subtitle text. Check out [MDN Docs - Adding captions and subtitles to HTML video][84] for the implementation.
+## 移动设备的可访问性
 
-## Mobile Accessibility
+到目前为止，我们已经介绍了许多关键的可访问性实践，它们在手机上也应该能够很好地工作。但对于移动用户，您还可以考虑遵循一些额外的注意事项。
 
-We have covered many key accessibility practices so far, and they should work well on mobile phones as well. But there are some additional considerations you can follow for mobile users.
+首先，我们来讨论一下特定于鼠标的事件。我们已经在 [JavaScript 实践][85] 部分中看到了如何让特定于鼠标的事件更加可访问。像 [mousedown][86] 或 [mouseup][87] 这样的事件通常用于拖放功能。
 
-First, let’s talk about mouse-specific events. We have already seen how to make mouse-specific events accessible in the [JavaScript Practices][85] section. Events like [mousedown][86] or [mouseup][87] are often used for drag and drop functionalities.
-
-But these are not accessible for touchscreen users, so you should add the same functionality to touch-specific events like [touchstart][88] and [touchend][89]. The following example is in the context of drag and drop:
+但这些对触摸屏用户来说并不友好，因此您应该为特定于触摸的事件（如 [touchstart][88] 和 [touchend][89]）添加相同的功能。以下示例是在拖放的情况下：
 
 ```
 source.ontouchstart = (e) => {
-  // initiate drag
+  // 初始化拖动
 };
 
 dest.ontouchend = (e) => {
-   // drop
+   // 放下
 };
 ```
 
-Next, you have to ensure that you are following responsive design when designing your web pages. Responsive designs make sure the website looks good on both desktop and mobile phones. I have written a detailed guide on [responsive design][90], so check it out if you are interested.
+接下来，您需要确保在设计网页时遵循响应式设计。响应式设计可确保网站在桌面和手机上都看起来不错。我写了一篇关于 [响应式设计][90] 的详细指南，如果您感兴趣，请查看。
 
-Some other mobile accessibility practices that are good to know:
+其他一些值得了解的移动可访问性实践：
 
--   Do not disable zoom on your website. Both fully-sighted users as well as those who have visual impairments may need to zoom in to read the website’s content on smaller screens.
+-   不要在您的网站上禁用缩放。无论是完全正常视力的用户还是有视力障碍的用户，都可能需要放大以阅读小屏幕上的网站内容。
     
--   When writing navigation menus, you’d normally conceal it and provide a hamburger icon to open it, as the screen is much shorter/smaller on a mobile phone. In these cases, the hamburger menu should be easily accessible. Check out the example of a [good hamburger menu][91] from the docs, in mobile view.
+-   在编写导航菜单时，您通常会将其隐藏并提供一个汉堡图标来打开它，因为在手机上屏幕更短/更小。在这些情况下，汉堡菜单应易于访问。查看文档中的 [良好的汉堡菜单][91] 示例，了解移动视图。
     
--   When creating forms, try to minimise the amount of typing the user needs to do, as it can get annoying for mobile users. This is especially important if your website is primarily designed for mobile users. Check out the [docs][92] for examples.
+-   在创建表单时，尽量减少用户需要键入的内容，因为这可能会让移动用户感到烦恼。如果您的网站主要面向移动用户，这一点尤为重要。查看 [文档][92] 了解示例。
     
 
-Visit [MDN Docs-Mobile Accessibility][93] if you want to learn more.
+如果您想了解更多，请访问 [MDN Docs-移动设备可访问性][93]。
 
-## Testing Accessibility with Tools
+## 使用工具测试可访问性
 
-There are several tools you can use to test the accessibility of your page. [Lighthouse][94] in Chrome Developer Tools is an open source tool that analyses a web page for performance, accessibility, SEO, and more. It generates a report on how a page performs in these areas.
+您可以使用多种工具来测试页面的可访问性。Chrome 开发者工具中的 [Lighthouse][94] 是一个开源工具，可分析网页的性能、可访问性、SEO 等。它会生成有关页面在这些方面表现的报告。
 
-Let’s see how it helps in analysing the accessibility of a page:
+让我们看看它如何帮助分析页面的可访问性：
 
-Open Chrome Dev Tools and navigate to the Lighthouse tab. Click on “Analyse Page Load” and wait for a few seconds. It will show a report that contains info on how your web page scored on Accessibility and other metrics. It will list down any accessibility issues you may have.
+打开 Chrome 开发者工具并导航到 Lighthouse 标签。点击“Analyse Page Load”并等待几秒钟。它将显示报告，包含网页在可访问性和其他指标上的得分信息。它还会列出您遇到的任何可访问性问题。
 
-Let’s take the following example:
+以下是一个例子：
 
 ```
 <h1>Welcome</h1>
@@ -1045,43 +1004,41 @@ Let’s take the following example:
 </form>
 ```
 
-When tested with the Lighthouse audit, it yields the following results:
+通过 Lighthouse 审核测试时，结果如下：
 
-![Lighthouse audit with accessibility issues](https://cdn.hashnode.com/res/hashnode/image/upload/v1739631885589/c886f304-aba2-44ac-8d75-88fac2f60c55.png)
+![具有可访问性问题的 Lighthouse 审核](https://cdn.hashnode.com/res/hashnode/image/upload/v1739631885589/c886f304-aba2-44ac-8d75-88fac2f60c55.png)
 
-As you can see, it’s scored 74 on accessibility, meaning there is room for improvement. It has also shown the accessibility issues within your HTML code, as you might have guessed looking at the code:
+如您所见，它在可访问性上得了 74 分，意味着还有提升空间。它还显示了您 HTML 代码中的可访问性问题，就像您看到代码时可能猜到的：
 
--   Image elements do not have `alt` attribute
+-   图像元素没有 `alt` 属性
     
--   Form input does not have a label
+-   表单输入没有标签
     
--   `tabindex` value is greater than 0.
-    
-
-Let’s correct these issues and run the test again:
-
-![Lighthouse audit with good accessibility](https://cdn.hashnode.com/res/hashnode/image/upload/v1739632090527/2db4798a-53d3-4010-9756-83de8b0f208a.png)
-
-This time, it has scored 100 on Accessibility since we have followed all the basic practices.
-
-As you can see, this is a really simple HTML page, and it’s much harder to achieve a score of 100 for large websites. But, you should aim to achieve as high a score as possible. This shouldn’t be too challenging if you make accessibility a part of your development process.
-
-The accessibility score on it’s own does not mean your website is fully accessible. You also need to test the following:
-
--   Manual testing with a screen reader (Mac’s Voiceover or Windows’ Narrator).
-    
--   Keyboard accessibility – test whether each and every part of your website is keyboard accessible
-    
--   Simulating your website with different color contrasts for different visual impairments.
+-   `tabindex` 值大于 0。
     
 
-For simulating, Chrome Developer Tools provides a Rendering tool to emulate your website on different preferences, like light/dark mode, high/low color contrast, reduced motion and various visual impairments.
+让我们纠正这些问题并再次运行测试：
 
-To access it, open Developer Tools, do ⌘+shift+P (Ctrl+Shift+P on Windows) and type “Rendering”. It will open the following window:
+![具有良好可访问性的 Lighthouse 审核](https://cdn.hashnode.com/res/hashnode/image/upload/v1739632090527/2db4798a-53d3-4010-9756-83de8b0f208a.png)
 
-![Rendering tool](https://cdn.hashnode.com/res/hashnode/image/upload/v1741959781294/36f6c233-9326-4acb-a551-e95a56a87d8a.png)
+这次，由于我们遵循了所有基本实践，它在可访问性上得到了 100 分。
 
-If you have added media queries like the following, you can select these preferences and test whether your website behaves accordingly:
+正如您所看到的，这是一个非常简单的 HTML 页面，而对于大型网站，要获得 100 分要困难得多。但是，您应该力争尽可能高的得分。如果您将可访问性作为开发过程的一部分，这应该不会太具挑战性。
+
+可访问性分数本身并不意味着您的网站完全可访问。您还需要测试以下几个方面：
+
+-   使用屏幕阅读器进行手动测试（Mac 的 Voiceover 或 Windows 的 Narrator）。
+    
+-   键盘可访问性 – 测试网站的每个部分是否都可以通过键盘访问
+    
+-   以不同的色彩对比度模拟您的网站，以适应不同的视觉障碍。
+    
+
+为了模拟，Chrome 开发者工具提供了一个 Rendering 工具来模拟您网站在不同偏好下的显示效果，如浅色/深色模式、高/低对比度、减小动效及各种视觉障碍。
+
+要访问它，请打开开发者工具，按下 ⌘+shift+P（Windows 上为 Ctrl+Shift+P）并键入“Rendering”。它将打开以下窗口：
+
+![Rendering 工具](https://cdn.hashnode.com/res/hashnode/image/upload/v1741959781294/36f6c233-9326-4acb-a551-e95a56a87d8a.png)
 
 ```
 @media (prefers-reduced-motion) {
@@ -1091,27 +1048,27 @@ If you have added media queries like the following, you can select these prefere
 }
 ```
 
-So, when you select `prefers-reduced-motion`, you can test if all the animations have been disabled, and how your website functions.
+因此，当你选择 `prefers-reduced-motion` 时，可以测试所有的动画是否已被禁用，以及网站的功能如何。
 
-Apart from the Developer Tools, there’s an NPM plugin called [eslint-plugin-jsx-a11y][95] that evaluates React JSX code for accessibility issues.
+除了开发者工具，还有一个 NPM 插件，名为 [eslint-plugin-jsx-a11y][95]，用于评估 React JSX 代码的可访问性问题。
 
-You can find all the code snippets on [GitHub][96].
+你可以在 [GitHub][96] 上找到所有代码片段。
 
-## Conclusion
+## 结论
 
-Accessibility isn’t just a feature added on top of your code – it should be a part of the development process. When you make a website accessible to everyone, it not only increases your user base, but also promotes inclusivity.
+可访问性不仅仅是你代码之上的一个功能，它应该是开发过程的一部分。当你让网站对所有人可访问时，不仅能够增加用户基础，还能促进包容性。
 
-Even though the primary benefactors of accessibility are people with disabilities, it also benefits other users by making the website easier to use overall. A lot of the practices mentioned in the article, like using semantic elements, adding the right attributes, and so on are very easy to follow and go a long way towards ensuring accessibility.
+尽管可访问性的主要受益者是残障人士，但它也通过让网站整体更容易使用而惠及其他用户。文章中提到的许多实践，比如使用语义元素，添加正确的属性等，都是非常容易遵循的，并且在确保可访问性方面有很长的路要走。
 
-If you are a beginner, you have already done a great job learning about accessibility. Start including simple accessibility practices in your projects. Over time, including these practices will become a natural habit.
+如果你是初学者，已经在学习有关可访问性的内容方面做得很好了。开始在你的项目中加入简单的可访问性实践。随着时间的推移，包含这些实践将成为一种自然的习惯。
 
-I hope this handbook becomes your go-to resource for anything related to accessibility. If you think I've missed something or need clarification on any concepts, feel free to reach out to me on Twitter. For more content on web development, check out out my profile.
+我希望这本手册成为你与可访问性相关内容的首选资源。如果你觉得我遗漏了一些内容，或者需要解释任何概念，可以在 Twitter 上联系我。想了解更多关于 web 开发的内容，请查看我的个人资料。
 
-### References
+### 参考资料
 
--   [MDN Docs-Accessibility][97]
+-   [MDN 文档-可访问性][97]
     
--   [Web Dev Simplified- Guide on Accessibility][98]
+-   [Web Dev Simplified- 可访问性指南][98]
     
 
 [1]: #heading-what-is-accessibility
@@ -1212,3 +1169,5 @@ I hope this handbook becomes your go-to resource for anything related to accessi
 [96]: https://github.com/KunalN25/accessibilityguide
 [97]: https://developer.mozilla.org/en-US/docs/Web/Accessibility
 [98]: https://www.youtube.com/watch?v=2oiBKSjOOFE
+```
+
