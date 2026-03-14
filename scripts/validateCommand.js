@@ -33,7 +33,7 @@ async function main({ github, context, core }) {
   core.setOutput("target_status", result.targetStatus);
 
   if (!result.isValid) {
-    core.setFailed(
+    core.warning(
       "Invalid command. The comment must start with /postedit or /review."
     );
   }

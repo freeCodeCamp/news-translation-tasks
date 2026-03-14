@@ -206,7 +206,7 @@ jobs:
           fi
 
           # Merge main to get the raw article
-          git merge --strategy=recursive --strategy-option=theirs main || true
+          git merge -X theirs main || true
 
       ### Ensure language directory exists
       - name: Prepare language directory
