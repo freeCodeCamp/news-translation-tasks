@@ -8,7 +8,10 @@ on:
 jobs:
   close-pr-if-not-main:
     runs-on: ubuntu-latest
-    
+    permissions:
+      pull-requests: write
+      issues: write
+
     steps:
       - name: Close PRs
         uses: actions/github-script@v7
