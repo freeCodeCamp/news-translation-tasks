@@ -1,208 +1,235 @@
-# Welcome to our Article Localization Workflow
+# freeCodeCamp News Translation Tasks
+
+A collaborative localization repository for translating and post-editing freeCodeCamp news articles into multiple languages. Contributors work through GitHub Issues and automated workflows to produce high-quality translated articles ready for publication.
+
+---
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Supported Languages](#supported-languages)
+- [How to Contribute](#how-to-contribute)
+  - [(A) Traditional Translation](#a-traditional-translation)
+  - [(B) Post-Editing (AI-assisted)](#b-post-editing-ai-assisted)
+- [Repository Structure](#repository-structure)
+- [Automation Architecture](#automation-architecture)
+  - [Workflows](#workflows)
+  - [Slash Commands](#slash-commands)
+  - [Scripts](#scripts)
+- [Developer Guide](#developer-guide)
+  - [Secrets & Tokens Required](#secrets--tokens-required)
+  - [Known Issues & Pain Points](#known-issues--pain-points)
+  - [Pending Tasks & Roadmap](#pending-tasks--roadmap)
+- [Tips for Contributors](#tips-for-contributors)
+
+---
+
+## Overview
+
+This repository manages the end-to-end localization workflow for freeCodeCamp news articles:
+
+1. English articles are fetched from the freeCodeCamp website and saved as Markdown in `articles/_raw/`.
+2. Articles are auto-translated via the OpenAI API and saved on the `auto-translate` branch under `articles/{lang}/`.
+3. Human contributors claim articles, post-edit AI translations (or translate from scratch), and submit PRs targeting `main`.
+4. Language leads review and merge, then publish to the freeCodeCamp publication platform.
+
+**Sign up to contribute:** [Contributor Sign-Up Form](https://forms.gle/1w8umSbTF4JTPwyj9)
+
+---
+
+## Supported Languages
+
+| Code | Language   | Language Lead         |
+|------|------------|-----------------------|
+| `zh` | Chinese    | @miyaliu666            |
+| `es` | Spanish    | @RafaelDavisH          |
+| `pt` | Portuguese | @DanielRosa74          |
+| `it` | Italian    | @Dario-DC              |
+| `ja` | Japanese   | @sidemt                |
+| `ko` | Korean     | @scissorsneedfoodtoo   |
+| `uk` | Ukrainian  | @anastasiiauk          |
+
+---
+
+## How to Contribute
+
+### (A) Traditional Translation
 
-## Hey there, awesome community!
+1. Browse the GitHub Project board for your language and pick an available issue.
+2. Comment `/translate` on the issue — this assigns it to you and moves the card to **In Translation**.
+3. Translate the article and commit it to the `auto-translate` branch under `articles/{lang}/`.
+4. When finished, comment `/review` — this notifies the language lead and moves the card to **In Review**.
+
+### (B) Post-Editing (AI-assisted)
+
+1. Browse the GitHub Project board for your language and pick an available issue.
+2. Comment `/postedit` on the issue — this assigns it to you and moves the card to **In Postediting**.
+3. Open the file via the link in the issue comment (direct link to `github.dev` on the `auto-translate` branch).
+4. In the `posteditor` front-matter field, enter your Ghost username.
+5. Review and fix the AI translation: mistranslations, missing content, awkward phrasing, backtick wrapping errors, untranslated segments.
+6. Commit your changes and open a PR from your fork/branch **targeting `main`** (not `auto-translate`).
+7. Comment `/review` on the issue to notify the language lead.
 
-Excited to have you on board for our localization mission! Here's a simple guide to get you started:
+> PRs that target any branch other than `main` are automatically closed with instructions to retarget.
 
-Please sign up through [this form](https://forms.gle/1w8umSbTF4JTPwyj9) if you have not already done so. This will enable us to send you an invitation to join the "news-translation-tasks" as a Collaborator. 
+---
 
-**Can't wait to have you officially join the team!**
+## Repository Structure
 
-## Two methods for our localization
+```
+news-translation-tasks/
+├── .github/
+│   └── workflows/
+│       ├── ArticlesAutoTranslate.yml   # Auto-fetch + AI-translate on "auto" label
+│       ├── slash-command-action.yml    # Handles /postedit, /translate, /review
+│       └── close-non-main-prs.yml     # Auto-closes PRs not targeting main
+├── articles/
+│   ├── _raw/        # Original English Markdown files (source of truth)
+│   ├── zh/          # Chinese translations
+│   ├── es/          # Spanish translations
+│   ├── pt/          # Portuguese translations
+│   ├── it/          # Italian translations
+│   ├── ja/          # Japanese translations
+│   └── uk/          # Ukrainian translations
+├── scripts/
+│   ├── validateCommand.js   # Parses and validates slash commands
+│   ├── getProjectCard.js    # Fetches GitHub Projects v2 card via GraphQL
+│   ├── assignPosteditor.js  # Assigns issue to the commenter
+│   └── assignReviewer.js    # Assigns issue to the language lead
+└── images/                  # Screenshots used in this README
+```
 
-We are currently localizing handbooks and articles in two ways:
+---
 
-- **(A) Traditional translation process**: As a collaborator, you can pick an article, translate it, and submit it for review.
+## Automation Architecture
 
-- **(B) Post-editing process**: As a collaborator, you can pick an AI-translated article to [post-edit](https://en.wikipedia.org/wiki/Postediting), ensuring it's grammatically correct and fixing any possible AI errors, such as untranslated words or paragraphs, missing content, or incorrectly wrapped paragraphs in backticks.
+### Workflows
 
-In both localization methods, the collaborator's meticulous revision is crucial, especially on AI-translated handbooks and articles, since AI translations are known to make mistakes or miss certain details.
+#### `ArticlesAutoTranslate.yml`
+Triggered when the `auto` label is added to an issue.
 
-Please take a look and decide which of these two methods you would like to collaborate on.
+**Flow:**
+1. **Validate** — extracts language code from issue title (e.g. `[zh] Article Title`), verifies the issue body contains an article URL.
+2. **Fetch** — calls `freecodecamp/article-webpage-to-markdown-action` to convert the article webpage to Markdown; saves the raw file to `articles/_raw/` on `main`.
+3. **Translate** — switches to the `auto-translate` branch, calls `freeCodeCamp/articles-auto-translate-action` (OpenAI API) to produce the translated file under `articles/{lang}/`.
+4. **Commit & Push** — commits both the raw and translated files with retry/rebase logic.
+5. **Comment** — posts a success or failure comment on the issue with links to the translated file.
 
-## (A) Traditional translation process
+Concurrency is grouped by language code so different languages run in parallel but same-language jobs queue.
 
-### Pick Your Article
-Once you're in as a Collaborator, it's time to choose which article you'd like to work on. Check out the list of available issues/articles and pick the one that speaks to you from the Project of the spoken language you would like to help on.
+#### `slash-command-action.yml`
+Triggered on new issue comments that start with `/`.
 
-### Claim Your Article
-Found the perfect piece to translate? Awesome! Just comment /translate on the issue. This will automatically assign the issue to you and move the card to the "in Translation" status.
+**Supported commands:**
 
-*It may take a few minutes before the GitHub Actions workflow responds to the command. When it's done, it will add a comment "@username We have assigned this article to you."
+| Command      | Effect                                           |
+|--------------|--------------------------------------------------|
+| `/postedit`  | Assigns issue to commenter → moves to **In Postediting** |
+| `/post-edit` | Alias for `/postedit`                            |
+| `/translate` | Assigns issue to commenter → moves to **In Translation** |
+| `/review`    | Assigns issue to the language lead → moves to **In Review** |
 
-### Ready for Review
-After you've translated your piece, give us a heads up by commenting /review. This will automatically move the card to the "in Review" status and let our Language Leads or Proofreaders know that it's time to revise your translation and prepare before potentially publishing it.
+**Flow:**
+1. `validateCommand.js` — validates command and outputs `valid_command`, `command`, `target_status`.
+2. `getProjectCard.js` — fetches the project card ID and URL via GitHub GraphQL API (requires `MOVE_CARDS_TOKEN`).
+3. `assignPosteditor.js` or `assignReviewer.js` — assigns the issue.
+4. `titoportas/update-project-fields` — updates the project card status.
 
-## (B) Post-editing process
+#### `close-non-main-prs.yml`
+Triggered on any PR that targets a branch other than `main`. Automatically closes the PR and posts a comment instructing the contributor to retarget to `main`.
 
-There are machine-translated markdown files in this repository. Select an article and revise it. Then, open a PR to propose the changes. The language lead will review your PR and publish it in our publication.
+---
 
-Here are the detailed steps.
+### Slash Commands
 
-### Select the article to work on
+| Command      | Valid From | Target Status    |
+|--------------|------------|------------------|
+| `/postedit`  | Anyone     | In Postediting   |
+| `/post-edit` | Anyone     | In Postediting   |
+| `/translate` | Anyone     | In Translation   |
+| `/review`    | Assignee   | In Review        |
 
-1. Select an article from the list of articles to be post-edited. 
+> `/review` verifies the commenter is the current assignee before handing off to the language lead.
 
-Check out the list of available articles in the GitHub Projects of your language, and pick the issue that you'd like to work on.
+---
 
-2. Comment `/postedit` on the issue. This will automatically assign the issue to you and move the card to the "in Postediting" status.
+### Scripts
 
-*It may take a few minutes before the GitHub Actions workflow responds to the command. When it's done, it will add a comment "@username We have assigned this article to you."
+| File                   | Purpose                                                       |
+|------------------------|---------------------------------------------------------------|
+| `validateCommand.js`   | Parses comment text, maps commands to statuses, sets outputs  |
+| `getProjectCard.js`    | GraphQL query to find the Projects v2 card for the issue      |
+| `assignPosteditor.js`  | Adds commenter as assignee; rejects if already assigned       |
+| `assignReviewer.js`    | Adds language lead as assignee; verifies commenter is assignee |
 
-3. Make a note of the issue number that starts with #. You will need it later when you open a pull request.
+---
 
-### Post-edit the machine translated file
+## Developer Guide
 
-Note: If you are already used to working with fork and pull requests, you can use any method you like, such as working on your local machine or using Codespaces.
+### Secrets & Tokens Required
 
-In this guide, we will explain the steps using [github.dev web-based editor](https://docs.github.com/en/codespaces/the-githubdev-web-based-editor).
+| Secret             | Used By                          | Scope Required                          |
+|--------------------|----------------------------------|-----------------------------------------|
+| `GITHUB_TOKEN`     | All workflows (auto-provisioned) | `issues: write`, `contents: write`, `pull-requests: write` |
+| `MOVE_CARDS_TOKEN` | `slash-command-action.yml`       | PAT with `project` scope (Projects v2)  |
+| `OPENAI_API_KEY`   | `ArticlesAutoTranslate.yml`      | OpenAI API key for translation          |
 
-1. In the issue, you can find a comment like this:
-![Issue comment containing links to relevant files](images/gh-issue-link.png)
+> `MOVE_CARDS_TOKEN` must be a classic or fine-grained PAT — the built-in `GITHUB_TOKEN` cannot manage Projects v2 items.
 
-Click the link **click to open github.dev**. It will open the machine-translated file in the github.dev editor. It looks just like VS Code. You will notice that the GitHub Actions workflow changes the branch to `auto-translate`, like this: `https://github.dev/freeCodeCamp/news-translation-tasks/blob/auto-translate/articles/zh/learn-typescript-with-react-handbook.md`.
+---
 
-2. In the "posteditor" field at the beginning of the file, write your Ghost username.
-![Update posteditor field](images/ghdev-name.png)
+### Known Issues & Pain Points
 
-3. To see the original article in English, you can `Ctrl + click` the original URL to open the original article in your browser. Or you can find the original markdown file in the `articles/_raw` directory with the same file name. Be careful not to edit the raw file.
+1. **`auto-translate` branch divergence** — The `auto-translate` branch is long-lived and shared across all languages. Concurrent runs for the same language are serialized via `softprops/turnstyle` and concurrency groups, but merge conflicts can still accumulate over time as the branch diverges from `main`. Periodic rebases or branch resets may be needed.
 
-4. Go through the translated file and make changes, such as fixing mistranslations or improving awkward phrasing. This process of revising machine translation is called post-editing.
+2. **Revert history** — The `articles-auto-translate-action` has been reverted and re-applied (`d77685d` / `e264dc4`). The action at `freeCodeCamp/articles-auto-translate-action@main` is the canonical one; changes to that action's interface will break the translate step silently unless the `with_task_translate_to_save_path` placeholder (`{lang}`) convention is respected.
 
-5. You can temporarily save your work with keyboard shortcut `Ctrl + S`. This way, the changes will be saved in your browser's local storage.
+3. **`/review` does not remove previous assignee** — When `/review` is used, the language lead is *added* as an assignee but the posteditor is not removed. This can make it unclear who is currently responsible for the issue.
 
-If you want to make sure you don't lose your work, it would be better to commit it. This will be explained in the next step.
+4. **Language lead list is hardcoded** — `assignReviewer.js` contains a hardcoded map of language-to-lead usernames. Adding a new language or changing a lead requires a code change and a deploy.
 
-### Commit your changes
+5. **No Korean (`ko`) articles directory** — The `LANG_MAP` in `ArticlesAutoTranslate.yml` includes `ko`, but the `articles/ko/` directory does not exist in the repo. First auto-translate run for Korean will create it, but `mkdir -p` in the workflow handles this gracefully.
 
-When you are done with the post-editing, or you would like to save your changes so that you can resume your work later, you can commit your changes.
+6. **`softprops/turnstyle` timeout** — There is no explicit timeout on the turnstyle action. If a workflow run hangs, subsequent same-language runs will queue indefinitely and must be cancelled manually.
 
-By committing and pushing, you can save your changes on GitHub.
+---
 
-1. In the left sidebar, click `Source Control` icon.
-![Source Control icon](images/ghdev-source-control.png)
+### Pending Tasks & Roadmap
 
-2. Click `+` next to the file you've changed to stage your changes.
-![Stage Changes icon](images/ghdev-stage.png)
+- [ ] **Remove `/translate` command deprecation** — The README and workflow still support `/translate` for backwards compatibility. Once all existing issues are resolved, this alias should be removed to reduce confusion (`slash-command-action.yml` line 73).
+- [ ] **Add `/unassign` command** — Contributors sometimes claim articles and go inactive. A `/unassign` command would let them release the issue or allow leads to do so.
+- [ ] **Dynamic language lead configuration** — Move the language lead map from `assignReviewer.js` into a config file (e.g., `config/language-leads.json`) so leads can be updated without touching script logic.
+- [ ] **Workflow observability** — Add a summary step to `ArticlesAutoTranslate.yml` that posts a structured job summary (GitHub Actions `$GITHUB_STEP_SUMMARY`) so run results are visible without opening individual log lines.
+- [ ] **Auto-translate action pinning** — The workflow pins `freeCodeCamp/articles-auto-translate-action@main`, which means any breaking change to that action will break this workflow without notice. Pin to a specific tag or SHA once the action is stable.
+- [ ] **Post-edit quality gate** — No automated check verifies that a post-edited file actually differs meaningfully from the raw AI translation before a PR is merged. A diff-based lint or word-count heuristic could help flag unedited submissions.
 
-3. In the commit message, enter the translated title of the article. (If you make multiple commits, use a commit message that describes the change you've made.)
-![Commit message](images/ghdev-commit-msg.png)
+---
 
-4. Click `Commit & Push`. 
-![Commit & Push](images/ghdev-commit.png)
+## Tips for Contributors
 
-5. You will be prompted to name the new branch. It would be helpful to give it a short, descriptive name so that you can easily find it later. Press Enter to confirm.
-![Name new branch](images/ghdev-branch-name.png)
+### Tables of Contents in non-Latin scripts
 
-6. Your changes will automatically be pushed to your branch in your fork on GitHub. If the following pop-up appears, click `Switch to Fork`  
-![Switch to Fork](images/ghdev-switch-fork.png)
-
-6. It will switch to the new branch you have just created, and you can continue working there. You can find the file you were working on in the Explorer.
-![New branch in fork](images/ghdev-fork-branch.png)
-
-### Create a pull request
-
-1. After you've finished post-editing the entire file and committed all the changes, click the branch name at the bottom and select `Open Branch on Github...`.
-![Open Branch on Github](images/ghdev-open-branch.png)
-
-2. It will open your branch on github.com. Click `Compare & pull request` button.
-![Open Branch on Github](images/compare-and-pr.png)
-
-3. It will open the page to create a new pull request.
-
-Check the following points:
-- The base repository (on the left) should be `freeCodeCamp/news-translation-tasks` and click the default branch `auto-translate` to select `main`
-- The head repository (on the right) should be `[your username]/news-translation-tasks` and the branch should be `[your branch name]`
-- The pull request title should be the translated title of the article
-- Follow the checklist and put an x in each of the checkboxes
-- Enter the issue number in `Closes #XXXXX` format.
-
-![Create pull request](images/create-pr.png)
-
-4. Click `Create pull request`. This will open the pull request and automatically notify the language lead.
-
-Wait for the language lead to review your pull request. If you get feedback comments, make changes accordingly.
-
-When the review is done, the language lead will merge your pull request.
-
-5. Final Review and Publication Preparation
-
-Once your pull request is merged, the language lead will take over the final steps. This includes a through final revision to ensure quality and consistency. The language lead will also handle the transfer of the content to our publication platform, complete with a thumbnail, slug, tags, and the link to the original English article.
-
-**What is next ?** You are free to pick another translation and repeat the same process 1-4. 
-
-Thank you ahead of time!
-
-## Developer Documentation
-
-### Slash Command Workflow Architecture
-
-The slash command system has been refactored to use modular JavaScript components for better maintainability and readability. The workflow is now organized as follows:
-
-#### Structure
-
-- **`scripts/validateCommand.js`** - Handles command validation logic
-  - Validates `/postedit`, `/translate`, and `/review` commands
-  - Supports both `/postedit` and `/post-edit` formats
-  - Returns command type and target status
-
-- **`scripts/getProjectCard.js`** - Handles project card retrieval
-  - Fetches project associations using GraphQL
-  - Validates project structure and card existence
-  - Provides clear error messages for debugging
-
-- **`scripts/assignPosteditor.js`** - Assigns issues to posteditors
-- **`scripts/assignReviewer.js`** - Assigns issues to reviewers
-
-#### Workflow Flow
-
-1. **Command Validation** → Validates the slash command format
-2. **Project Card Lookup** → Retrieves project card information
-3. **Issue Assignment** → Assigns to appropriate user
-4. **Status Update** → Updates project card status
-
-#### Error Handling
-
-The system includes comprehensive error handling:
-- Project association validation
-- Card existence verification
-- Clear error messages for users
-- Graceful failure modes
-
-#### Maintenance Benefits
-
-- **Separation of Concerns**: Each script has a single responsibility
-- **Testability**: Individual modules can be tested independently
-- **Readability**: JavaScript code has proper syntax highlighting
-- **Reusability**: Components can be reused across different workflows
-
-## Tips
-
-### How to add a table of contents
-Some articles have a table of contents. When you translate into languages that don't automatically convert to the English alphabet, such as Asian or Cyrillic languages, you may have to set the title and id manually.
-
-For example:
+When translating into languages with non-Latin scripts (Chinese, Japanese, Korean, Ukrainian, etc.), heading anchors must be set manually:
 
 ```md
 ## Table of Contents
 
--   [Heading in your language](#heading-in-english)
--   [什么是记忆化](#what-is-memoization)
-    -   [什么时候使用记忆化](#when-to-memoize)
-
-<h2 id="heading-in-english">Heading in your language</h2>
+- [什么是记忆化](#what-is-memoization)
+    - [什么时候使用记忆化](#when-to-memoize)
 
 <h2 id="what-is-memoization">什么是记忆化</h2>
-
 <h3 id="when-to-memoize">什么时候使用记忆化</h3>
 ```
 
-### How to add a caption to an image
-To add a caption to an image in markdown, you can use the code like this:
+### Image captions
 
 ```md
 <figure class="kg-card kg-card-image kg-card-hascaption">
-    <img src="https://www.freecodecamp.org/news/content/images/2022/10/Screen_Shot_2022-07-28_at_10.54.06.png" alt="VSCode 中的 Go 扩展" class="kg-image">
-    <figcaption>Go extension in VSCode</figcaption>
+    <img src="https://www.freecodecamp.org/news/content/images/..." alt="Alt text" class="kg-image">
+    <figcaption>Caption in target language</figcaption>
 </figure>
 ```
+
+### Finding the original article
+
+The original English Markdown is always available in `articles/_raw/` under the same filename as the translated file. Do not edit files in `_raw/`.
